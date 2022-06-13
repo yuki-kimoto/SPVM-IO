@@ -180,8 +180,10 @@ class TestCase::Lib::IO::File {
     while (my $line = $io_file->readline) {
       $lstrings->push($line);
     }
+
     my $strings = $lstrings->to_array;
     
+
     unless (Fn->equals_array_string($strings, ["abcd\n", "fghi\n", "klm\n"])) {
       return 0;
     }
