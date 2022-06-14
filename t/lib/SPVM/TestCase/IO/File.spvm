@@ -1,4 +1,4 @@
-class TestCase::Lib::IO::File {
+class TestCase::IO::File {
   use IO::File;
   use StringList;
   use Fn;
