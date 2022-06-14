@@ -1,5 +1,9 @@
 Revision history for SPVM::IO
 
+0.04  2022-06-14
+        [CHANGES]
+        * Fix tests
+
 0.03  2022-06-13
         [CHANGES]
         * Catch up with latest SPVM.
