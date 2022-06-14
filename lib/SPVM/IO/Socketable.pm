@@ -1,6 +1,4 @@
-package SPVM::IO::Socket;
-
-our $VERSION = '0.01';
+package SPVM::IO::Socketable;
 
 1;
 
