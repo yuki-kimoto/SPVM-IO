@@ -1,13 +1,15 @@
+use Test::More;
 
 use strict;
 use warnings;
-use lib "t/lib";
+use FindBin;
+use lib "$FindBin::Bin/lib";
 
-use TestFile;
-
-use Test::More;
+BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build" };
 
 use SPVM 'TestCase::Lib::IO::File';
+
+use TestFile;
 
 sub slurp_binmode {
   my ($output_file) = @_;

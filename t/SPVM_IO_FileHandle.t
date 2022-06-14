@@ -1,8 +1,11 @@
+use Test::More;
+
 use strict;
 use warnings;
-use lib "t/lib";
+use FindBin;
+use lib "$FindBin::Bin/lib";
 
-use Test::More;
+BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build" };
 
 use SPVM 'TestCase::Lib::IO::FileHandle';
 
