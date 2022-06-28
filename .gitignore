@@ -52,3 +52,4 @@ solo/.spvm_build/*
 SPVM.def
 .spvm_build
 .vscode
+MANIFEST.bak

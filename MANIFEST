@@ -1,4 +1,5 @@
 Changes
+cpanm
 lib/SPVM/IO.pm
 lib/SPVM/IO/File.c
 lib/SPVM/IO/File.config
@@ -14,6 +15,10 @@ lib/SPVM/IO/Select.c
 lib/SPVM/IO/Select.config
 lib/SPVM/IO/Select.pm
 lib/SPVM/IO/Select.spvm
+lib/SPVM/IO/Socket/Fn.c
+lib/SPVM/IO/Socket/Fn.config
+lib/SPVM/IO/Socket/Fn.pm
+lib/SPVM/IO/Socket/Fn.spvm
 lib/SPVM/IO/Socket/INET.c
 lib/SPVM/IO/Socket/INET.config
 lib/SPVM/IO/Socket/INET.pm
