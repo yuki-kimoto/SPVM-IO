@@ -1,10 +1,10 @@
-package SPVM::IO::Socketable;
+package SPVM::IO::Socket;
 
 1;
 
 =head1 NAME
 
-SPVM::IO::Socket - Interface of Socket
+SPVM::IO::Socket - Socket
 
 =head1 SYNOPSYS
   

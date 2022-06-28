@@ -15,6 +15,8 @@ lib/SPVM/IO/Select.c
 lib/SPVM/IO/Select.config
 lib/SPVM/IO/Select.pm
 lib/SPVM/IO/Select.spvm
+lib/SPVM/IO/Socket.pm
+lib/SPVM/IO/Socket.spvm
 lib/SPVM/IO/Socket/Fn.c
 lib/SPVM/IO/Socket/Fn.config
 lib/SPVM/IO/Socket/Fn.pm
@@ -23,8 +25,6 @@ lib/SPVM/IO/Socket/INET.c
 lib/SPVM/IO/Socket/INET.config
 lib/SPVM/IO/Socket/INET.pm
 lib/SPVM/IO/Socket/INET.spvm
-lib/SPVM/IO/Socketable.pm
-lib/SPVM/IO/Socketable.spvm
 Makefile.PL
 MANIFEST			This list of files
 README.md
