@@ -9,8 +9,8 @@ lib/SPVM/IO/FileHandle.c
 lib/SPVM/IO/FileHandle.config
 lib/SPVM/IO/FileHandle.pm
 lib/SPVM/IO/FileHandle.spvm
-lib/SPVM/IO/Handlable.pm
-lib/SPVM/IO/Handlable.spvm
+lib/SPVM/IO/Handle.pm
+lib/SPVM/IO/Handle.spvm
 lib/SPVM/IO/Select.c
 lib/SPVM/IO/Select.config
 lib/SPVM/IO/Select.pm

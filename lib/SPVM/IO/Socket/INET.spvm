@@ -1,8 +1,4 @@
 class IO::Socket::INET extends IO::Socket {
-  
-  interface IO::Handlable;
-
-  method is_io_handlable : int () { return 1; }
 
   has handle : int;
   
