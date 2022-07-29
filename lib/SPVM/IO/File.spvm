@@ -21,7 +21,6 @@ class IO::File extends IO::Handle : precompile {
   native method read : int ($buf : byte[]);
   native method readline : string ();
   
-  native static method unlink : void ($file : string);
   native static method rename : void ($src_file : string, $dist_file : string);
   
   private native static method init_constant_values : void ();
