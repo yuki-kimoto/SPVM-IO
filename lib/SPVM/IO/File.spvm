@@ -13,10 +13,10 @@ class IO::File extends IO::Handle : precompile {
   has fh : private IO::FileHandle;
   has auto_flush : rw byte;
   
-  native static method open : IO::File ($file_name : string, $mode : string);
+  native static method open : IO::File ($file_name : string, $open_mode : string);
   native method print : void ($string : string);
   native method flush : void ();
-  native method read : int ($buf : byte[]);
+  native method read : int ($bufer : mutable string);
   native method readline : string ();
   
   private native static method init_constant_values : void ();
@@ -28,13 +28,13 @@ class IO::File extends IO::Handle : precompile {
   method slurp : string ($file : string) {
     
     my $buffer_length = 4096;
-    my $buffer = new byte[$buffer_length];
+    my $buffer = (mutable string)new_string_len $buffer_length;
     my $string = "";
     while (1) {
       my $read_length = $self->read($buffer);
       
       if ($read_length < $buffer_length) {
-        $string .= (string)Array->copy_range_byte((byte[])$buffer, 0, $read_length);
+        $string .= Fn->substr($buffer, 0, $read_length);
         last;
       }
       else {

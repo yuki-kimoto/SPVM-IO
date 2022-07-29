@@ -6,11 +6,16 @@
   [Incompatible Changes]
     * Remove undocumented Fn->unlink method.
     * Remove undocumented Fn->rename method,
-    * Changed the undocumented definition of fh field
+    * Changed the undocumented definition of fh field of IO::File
       [Before]
       has fh : private ro IO::FileHandle;
       [After]
       has fh : private IO::FileHandle;
+    * Changed the undocumented definition read method of IO::File
+      [Before]
+      method read : int ($bufer : byte[]);
+      [After]
+      method read : int ($bufer : mutable string);
 0.07 2022-06-30
   [New Features]
     * Add SPVM::IO::Handle module
