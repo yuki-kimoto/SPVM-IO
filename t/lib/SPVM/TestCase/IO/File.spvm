@@ -303,7 +303,6 @@ class TestCase::IO::File {
 
     {
       my $line = $io_file->readline;
-      $line = Fn->chompr($line);
       unless ($line == undef) {
         return 0;
       }
@@ -371,7 +370,6 @@ class TestCase::IO::File {
 
     {
       my $line = $io_file->readline;
-      $line = Fn->chompr($line);
       unless ($line == undef) {
         return 0;
       }
@@ -411,7 +409,6 @@ class TestCase::IO::File {
 
     {
       my $line = $io_file->readline;
-      $line = Fn->chompr($line);
       unless ($line == undef) {
         return 0;
       }
