@@ -11,14 +11,6 @@ int32_t SPVM__IO__File__init_constant_values(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   int32_t e;
   
-  
-  env->set_class_var_int_by_name(env, stack, "IO::File", "$SEEK_SET", SEEK_SET, &e, FILE_NAME, __LINE__);
-  if (e) { return e; }
-  env->set_class_var_int_by_name(env, stack, "IO::File", "$SEEK_CUR", SEEK_CUR, &e, FILE_NAME, __LINE__);
-  if (e) { return e; }
-  env->set_class_var_int_by_name(env, stack, "IO::File", "$SEEK_END", SEEK_END, &e, FILE_NAME, __LINE__);
-  if (e) { return e; }
-
   env->set_class_var_int_by_name(env, stack, "IO::File", "$STDIN", fileno(stdin), &e, FILE_NAME, __LINE__);
   if (e) { return e; }
   env->set_class_var_int_by_name(env, stack, "IO::File", "$STDOUT", fileno(stdout), &e, FILE_NAME, __LINE__);

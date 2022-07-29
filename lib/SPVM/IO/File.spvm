@@ -3,9 +3,6 @@ class IO::File extends IO::Handle : precompile {
   use Fn;
   use Array;
 
-  our $SEEK_SET : ro int;
-  our $SEEK_CUR : ro int;
-  our $SEEK_END : ro int;
   our $STDIN : ro int;
   our $STDOUT : ro int;
   our $STDERR : ro int;

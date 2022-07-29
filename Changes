@@ -16,6 +16,11 @@
       method read : int ($bufer : byte[]);
       [After]
       method read : int ($bufer : mutable string);
+    * Remove the undocumented following class variables
+      our $SEEK_SET : ro int;
+      our $SEEK_CUR : ro int;
+      our $SEEK_END : ro int;
+
 0.07 2022-06-30
   [New Features]
     * Add SPVM::IO::Handle module
