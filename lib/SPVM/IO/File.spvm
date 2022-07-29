@@ -10,7 +10,7 @@ class IO::File extends IO::Handle : precompile {
   our $STDOUT : ro int;
   our $STDERR : ro int;
 
-  has fh : private ro IO::FileHandle;
+  has fh : private IO::FileHandle;
   has auto_flush : rw byte;
   
   native static method open : IO::File ($file_name : string, $mode : string);
