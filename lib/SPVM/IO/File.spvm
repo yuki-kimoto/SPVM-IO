@@ -3,23 +3,15 @@ class IO::File extends IO::Handle : precompile {
   use Fn;
   use Array;
   
-  # INIT block
-  INIT {
-    &init_constant_values();
-  }
-  
-  # Class variables
-  our $STDIN : ro int;
-  our $STDOUT : ro int;
-  our $STDERR : ro int;
-  
   # Fields
   has auto_flush : rw byte;
   has fh : private IO::FileHandle;
   
   # Class methods
+  native static method STDERR : int ();
+  native static method STDIN : int ();
+  native static method STDOUT : int ();
   native static method open : IO::File ($file_name : string, $open_mode : string);
-  private native static method init_constant_values : void ();
   
   # Instance methods
   native method flush : void ();

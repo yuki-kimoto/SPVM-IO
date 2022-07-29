@@ -20,6 +20,15 @@
       our $SEEK_SET : ro int;
       our $SEEK_CUR : ro int;
       our $SEEK_END : ro int;
+    * Change the undocumented following definitions
+      [Before]
+      our $STDIN : ro int;
+      our $STDOUT : ro int;
+      our $STDERR : ro int;
+      [After]
+      native static method STDERR : int ();
+      native static method STDIN : int ();
+      native static method STDOUT : int ();
 
 0.07 2022-06-30
   [New Features]
