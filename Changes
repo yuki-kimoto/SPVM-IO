@@ -4,7 +4,8 @@
   [Improve Exception Messages]
     * Improve IO::FileHandle exception messages.
   [Incompatible Changes]
-    * Remove undocumented Fn->unlink method
+    * Remove undocumented Fn->unlink method.
+    * Remove undocumented Fn->rename method,
 0.07 2022-06-30
   [New Features]
     * Add SPVM::IO::Handle module

@@ -282,25 +282,3 @@ int32_t SPVM__IO__File__flush(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   return 0;
 }
-
-int32_t SPVM__IO__File__rename(SPVM_ENV* env, SPVM_VALUE* stack) {
-  (void)env;
-
-  // Srouce src_file
-  void* obj_src_file = stack[0].oval;
-  if (!obj_src_file) { return env->die(env, stack, "Source file name must be defined", FILE_NAME, __LINE__); }
-  const char* src_file = (const char*)env->get_elems_byte(env, stack, obj_src_file);
-
-  // Dist dist_file
-  void* obj_dist_file = stack[1].oval;
-  if (!obj_dist_file) { return env->die(env, stack, "Dist file name must be defined", FILE_NAME, __LINE__); }
-  const char* dist_file = (const char*)env->get_elems_byte(env, stack, obj_dist_file);
-  
-  int32_t ret = rename(src_file, dist_file);
-  
-  if (ret != 0) {
-    return env->die(env, stack, "Can't rename %s to %s", src_file, dist_file, FILE_NAME, __LINE__);
-  }
-  
-  return 0;
-}

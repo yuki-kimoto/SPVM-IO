@@ -14,14 +14,10 @@ class IO::File extends IO::Handle : precompile {
   has auto_flush : rw byte;
   
   native static method open : IO::File ($file_name : string, $mode : string);
-  
   native method print : void ($string : string);
   native method flush : void ();
-  
   native method read : int ($buf : byte[]);
   native method readline : string ();
-  
-  native static method rename : void ($src_file : string, $dist_file : string);
   
   private native static method init_constant_values : void ();
   
