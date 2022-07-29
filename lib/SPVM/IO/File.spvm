@@ -2,26 +2,31 @@ class IO::File extends IO::Handle : precompile {
   use IO::FileHandle;
   use Fn;
   use Array;
-
-  our $STDIN : ro int;
-  our $STDOUT : ro int;
-  our $STDERR : ro int;
-
-  has fh : private IO::FileHandle;
-  has auto_flush : rw byte;
   
-  native static method open : IO::File ($file_name : string, $open_mode : string);
-  native method print : void ($string : string);
-  native method flush : void ();
-  native method read : int ($bufer : mutable string);
-  native method readline : string ();
-  
-  private native static method init_constant_values : void ();
-  
+  # INIT block
   INIT {
     &init_constant_values();
   }
-
+  
+  # Class variables
+  our $STDIN : ro int;
+  our $STDOUT : ro int;
+  our $STDERR : ro int;
+  
+  # Fields
+  has auto_flush : rw byte;
+  has fh : private IO::FileHandle;
+  
+  # Class methods
+  native static method open : IO::File ($file_name : string, $open_mode : string);
+  private native static method init_constant_values : void ();
+  
+  # Instance methods
+  native method flush : void ();
+  native method print : void ($string : string);
+  native method read : int ($bufer : mutable string);
+  native method readline : string ();
+  
   method slurp : string ($file : string) {
     
     my $buffer_length = 4096;
