@@ -283,23 +283,6 @@ int32_t SPVM__IO__File__flush(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__File__unlink(SPVM_ENV* env, SPVM_VALUE* stack) {
-  (void)env;
-
-  // File
-  void* obj_file = stack[0].oval;
-  if (!obj_file) { return env->die(env, stack, "File name must be defined", FILE_NAME, __LINE__); }
-  const char* file = (const char*)env->get_elems_byte(env, stack, obj_file);
-  
-  int32_t ret = remove(file);
-  
-  if (ret != 0) {
-    return env->die(env, stack, "Can't remove file %s", file, FILE_NAME, __LINE__);
-  }
-  
-  return 0;
-}
-
 int32_t SPVM__IO__File__rename(SPVM_ENV* env, SPVM_VALUE* stack) {
   (void)env;
 
