@@ -48,7 +48,7 @@ int32_t SPVM__IO__File__readline(SPVM_ENV* env, SPVM_VALUE* stack) {
   void* obj_self = stack[0].oval;
   
   // File fh
-  void* obj_io_file = env->get_field_object_by_name(env, stack, obj_self, "IO::File", "fh", "IO::FileHandle", &e, FILE_NAME, __LINE__);
+  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "fh", &e, FILE_NAME, __LINE__);
   if (e) { return e; }
 
   FILE* fh = (FILE*)env->get_pointer(env, stack, obj_io_file);
@@ -127,7 +127,7 @@ int32_t SPVM__IO__File__read(SPVM_ENV* env, SPVM_VALUE* stack) {
   void* obj_self = stack[0].oval;
   
   // File fh
-  void* obj_io_file = env->get_field_object_by_name(env, stack, obj_self, "IO::File", "fh", "IO::FileHandle", &e, FILE_NAME, __LINE__);
+  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "fh", &e, FILE_NAME, __LINE__);
   if (e) { return e; }
 
   FILE* fh = (FILE*)env->get_pointer(env, stack, obj_io_file);
@@ -161,7 +161,7 @@ int32_t SPVM__IO__File__print(SPVM_ENV* env, SPVM_VALUE* stack) {
   void* obj_self = stack[0].oval;
   
   // File fh
-  void* obj_io_file = env->get_field_object_by_name(env, stack, obj_self, "IO::File", "fh", "IO::FileHandle", &e, FILE_NAME, __LINE__);
+  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "fh", &e, FILE_NAME, __LINE__);
   if (e) { return e; }
 
 
@@ -258,7 +258,7 @@ int32_t SPVM__IO__File__open(SPVM_ENV* env, SPVM_VALUE* stack) {
     void* obj_fh = env->new_pointer_by_name(env, stack, "IO::FileHandle", fh, &e, __FILE__, __LINE__);
     if (e) { return e; }
 
-    env->set_field_object_by_name(env, stack, obj_io_file, "IO::File", "fh", "IO::FileHandle", obj_fh, &e, FILE_NAME, __LINE__);
+    env->set_field_object_by_name_v2(env, stack, obj_io_file, "IO::File", "fh", obj_fh, &e, FILE_NAME, __LINE__);
     if (e) { return e; }
     
     stack[0].oval = obj_io_file;
@@ -280,7 +280,7 @@ int32_t SPVM__IO__File__flush(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   // File fh
   int32_t e;
-  void* obj_io_file = env->get_field_object_by_name(env, stack, obj_self, "IO::File", "fh", "IO::FileHandle", &e, FILE_NAME, __LINE__);
+  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "fh", &e, FILE_NAME, __LINE__);
   if (e) { return e; }
 
   FILE* fh = (FILE*)env->get_pointer(env, stack, obj_io_file);

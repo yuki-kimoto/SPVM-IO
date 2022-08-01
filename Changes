@@ -1,3 +1,9 @@
+0.09 2022-08-01
+  [Internal Ineffective Changes]
+    * Use get_field_object_by_name_v2 in SPVM/IO/File.c
+    * Use set_field_object_by_name_v2 in SPVM/IO/File.c
+  [Pre Requirement Changes]
+    * SPVM 0.9632 is needed.
 0.08 2022-07-30
   [Test Fix]
     * Fix testing bug that occur upgrading to SPVM 0.9630.
