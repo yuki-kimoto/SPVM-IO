@@ -20,7 +20,6 @@ class IO::File extends IO::Handle : precompile {
   }
   
   # Instance methods
-  native method flush : void ();
   native method print : void ($string : string);
   native method read : int ($bufer : mutable string);
   native method readline : string ();
@@ -89,7 +88,7 @@ class IO::File extends IO::Handle : precompile {
     return Sys::IO->ferror($stream);
   }
   
-  method flush_v2 : int () {
+  method flush : int () {
     my $stream = $self->{stream};
     
     return Sys::IO->fflush($stream);

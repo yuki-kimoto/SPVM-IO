@@ -275,28 +275,6 @@ int32_t SPVM__IO__File__open(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__File__flush(SPVM_ENV* env, SPVM_VALUE* stack) {
-  (void)env;
-
-  // Self
-  void* obj_self = stack[0].oval;
-  
-  // File stream
-  int32_t e;
-  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "stream", &e, FILE_NAME, __LINE__);
-  if (e) { return e; }
-
-  FILE* stream = (FILE*)env->get_pointer(env, stack, obj_io_file);
-  
-  int32_t ret = fflush(stream);//IO::File::flush (Don't remove this comment for tests)
-  
-  if (ret != 0) {
-    return env->die(env, stack, "Can't flash to file", FILE_NAME, __LINE__);
-  }
-  
-  return 0;
-}
-
 int32_t SPVM__IO__File__ftruncate(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   int32_t fd = stack[0].ival;

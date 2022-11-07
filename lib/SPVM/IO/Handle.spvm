@@ -63,8 +63,8 @@ class IO::Handle {
     $self->(IO::Handle::Interface)->error;
   }
 
-  method flush_v2 : int () {
-    $self->(IO::Handle::Interface)->flush_v2;
+  method flush : int () {
+    $self->(IO::Handle::Interface)->flush;
   }
 
   method truncate : int ($length : long) {
