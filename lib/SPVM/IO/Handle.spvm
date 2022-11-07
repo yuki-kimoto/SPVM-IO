@@ -48,6 +48,10 @@ class IO::Handle {
     # my $formated_string = Format->sprintf($format, $args);
     # return $self->print_v2($formated_string);
   }
+
+  method clearerr : void () {
+    $self->(IO::Handle::Interface)->clearerr;
+  }
 }
 
 =pod TODO

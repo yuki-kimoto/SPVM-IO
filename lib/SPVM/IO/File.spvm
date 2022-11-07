@@ -69,4 +69,11 @@ class IO::File extends IO::Handle : precompile {
     
     return Sys::IO->fwrite($string, 1, $length, $file_stream);
   }
+
+  method clearerr : void () {
+    
+    my $file_stream = $self->{file_stream};
+    
+    Sys::IO->clearerr($file_stream);
+  }
 }
