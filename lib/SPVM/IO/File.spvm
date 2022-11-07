@@ -82,4 +82,18 @@ class IO::File extends IO::Handle : precompile {
     
     return Sys::IO->ferror($file_stream);
   }
+
+  method flush_v2 : int () {
+    my $file_stream = $self->{file_stream};
+    
+    return Sys::IO->fflush($file_stream);
+  }
+
+  method truncate : int ($legnth : long) {
+    my $fileno = $self->fileno;
+    
+    return IO::File->ftruncate($fileno, $legnth);
+  }
+
+  native static method ftruncate : int ($fd : int, $length : long);
 }

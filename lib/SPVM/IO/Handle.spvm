@@ -2,6 +2,8 @@ class IO::Handle {
   use Sys::IO;
   use Fn;
   use Format;
+
+  use IO::File;
   
   interface IO::Handle::Interface;
   
@@ -56,6 +58,15 @@ class IO::Handle {
   method error : int () {
     $self->(IO::Handle::Interface)->error;
   }
+
+  method flush_v2 : int () {
+    $self->(IO::Handle::Interface)->flush_v2;
+  }
+
+  method truncate : int ($length : long) {
+    return $self->(IO::Handle::Interface)->truncate($length);
+  }
+
 }
 
 =pod TODO
@@ -75,6 +86,10 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *printf ( FMT, [ARGS] )
 *getc
 *clearerr
+*error
+*flush
+*truncate ( LEN )
+
 
 fcntl( FUNCTION, SCALAR )
 format_write( [FORMAT_NAME] )
@@ -84,7 +99,6 @@ say ( ARGS )
 stat
 sysread ( BUF, LEN, [OFFSET] )
 syswrite ( BUF, [LEN, [OFFSET]] )
-truncate ( LEN )
 autoflush ( [BOOL] )                         $|
 format_page_number( [NUM] )                  $%
 format_lines_per_page( [NUM] )               $=
@@ -101,9 +115,6 @@ output_record_separator( [STR] )      $\
 input_record_separator( [STR] )       $/
 Furthermore, for doing normal I/O you might need these:
 
-
-
-
 fdopen ( FD, MODE )
 
 getline
@@ -112,12 +123,9 @@ getlines
 
 ungetc ( ORD )
 
-error
 
 
 sync
-
-flush
 
 printflush ( ARGS )
 

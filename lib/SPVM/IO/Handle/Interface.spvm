@@ -16,4 +16,8 @@ class IO::Handle::Interface : interface_t {
   method clearerr : void ();
 
   method error : int ();
+
+  method flush_v2 : int ();
+
+  method truncate : int ($legnth : long);
 }

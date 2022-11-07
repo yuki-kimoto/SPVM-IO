@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <errno.h>
 
+#include <unistd.h>
+#include <sys/types.h>
+
 static const char* FILE_NAME = "IO/File.c";
 
 int32_t SPVM__IO__File__STDERR(SPVM_ENV* env, SPVM_VALUE* stack) {
@@ -290,6 +293,25 @@ int32_t SPVM__IO__File__flush(SPVM_ENV* env, SPVM_VALUE* stack) {
   if (ret != 0) {
     return env->die(env, stack, "Can't flash to file", FILE_NAME, __LINE__);
   }
+  
+  return 0;
+}
+
+int32_t SPVM__IO__File__ftruncate(SPVM_ENV* env, SPVM_VALUE* stack) {
+  
+  int32_t e = 0;
+  
+  int32_t fd = stack[0].ival;
+  
+  int64_t length = stack[1].lval;
+  
+  int32_t status = ftruncate(fd, length);
+  if (status != -1) {
+    env->die(env, stack, "[System Error]ftruncate failed:%s.", env->strerror(env, stack, errno, 0), FILE_NAME, __LINE__);
+    return SPVM_NATIVE_C_CLASS_ID_ERROR_SYSTEM;
+  }
+  
+  stack[0].ival = status;
   
   return 0;
 }
