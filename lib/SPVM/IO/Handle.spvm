@@ -71,6 +71,9 @@ class IO::Handle {
     return $self->(IO::Handle::Interface)->ioctl($request, $request_arg);
   }
 
+  method ungetc : int ($c : int) {
+    return $self->(IO::Handle::Interface)->ungetc($c);
+  }
 }
 
 =pod TODO
@@ -93,11 +96,12 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *error
 *flush
 *truncate ( LEN )
+*ioctl( FUNCTION, SCALAR )
+*ungetc ( ORD )
 
 
 fcntl( FUNCTION, SCALAR )
 format_write( [FORMAT_NAME] )
-ioctl( FUNCTION, SCALAR )
 read ( BUF, LEN, [OFFSET] )
 say ( ARGS )
 stat
@@ -125,7 +129,6 @@ getline
 
 getlines
 
-ungetc ( ORD )
 
 
 
