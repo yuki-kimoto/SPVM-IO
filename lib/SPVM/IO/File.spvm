@@ -20,7 +20,6 @@ class IO::File extends IO::Handle : precompile {
   }
   
   # Instance methods
-  native method print : void ($string : string);
   native method read : int ($bufer : mutable string);
   native method readline : string ();
   
@@ -66,7 +65,7 @@ class IO::File extends IO::Handle : precompile {
     return Sys::IO->getc($stream);
   }
   
-  method print_v2 : int ($string : string) {
+  method print : int ($string : string) {
     
     my $stream = $self->{stream};
     

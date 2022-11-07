@@ -46,13 +46,13 @@ class IO::Handle {
     return $self->(IO::Handle::Interface)->getc;
   }
 
-  method print_v2 : int ($string : string) {
-    return $self->(IO::Handle::Interface)->print_v2($string);
+  method print : int ($string : string) {
+    return $self->(IO::Handle::Interface)->print($string);
   }
 
   method printf : int ($format : string, $args : object[]...) {
-    # my $formated_string = Format->sprintf($format, $args);
-    # return $self->print_v2($formated_string);
+    my $formated_string = Format->sprintf($format, $args);
+    return $self->print($formated_string);
   }
 
   method clearerr : void () {

@@ -155,48 +155,6 @@ int32_t SPVM__IO__File__read(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__File__print(SPVM_ENV* env, SPVM_VALUE* stack) {
-  (void)env;
-
-  int32_t e;
-
-  // Self
-  void* obj_self = stack[0].oval;
-  
-  // File stream
-  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "stream", &e, FILE_NAME, __LINE__);
-  if (e) { return e; }
-
-
-  FILE* stream = (FILE*)env->get_pointer(env, stack, obj_io_file);
-  
-  void* string = stack[1].oval;
-  
-  const char* bytes = (const char*)env->get_elems_byte(env, stack, string);
-  int32_t string_length = env->length(env, stack, string);
-  
-  // Print
-  if (string_length > 0) {
-    int32_t write_length = fwrite(bytes, 1, string_length, stream);
-    if (write_length != string_length) {
-      return env->die(env, stack, "Can't print string to file handle", FILE_NAME, __LINE__);
-    }
-  }
-
-  // Flush buffer to file handle if auto flush is true
-  int8_t auto_flush = env->get_field_byte_by_name(env, stack, obj_self, "IO::File", "auto_flush", &e, FILE_NAME, __LINE__);
-  if (e) { return e; }
-
-  if (auto_flush) {
-    int32_t ret = fflush(stream);//IO::File::print (Don't remove this comment for tests)
-    if (ret != 0) {
-      return env->die(env, stack, "Can't flush buffer to file handle", FILE_NAME, __LINE__);
-    }
-  }
-  
-  return 0;
-}
-
 int32_t SPVM__IO__File__open(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   // File name

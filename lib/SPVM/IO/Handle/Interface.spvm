@@ -9,7 +9,7 @@ class IO::Handle::Interface : interface_t {
 
   method getc : int ();
 
-  method print_v2 : int ($string : string);
+  method print : int ($string : string);
 
   method printf : int ($format : string, $args : object[]...);
   
