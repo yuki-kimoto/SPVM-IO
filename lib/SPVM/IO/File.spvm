@@ -1,11 +1,14 @@
 class IO::File extends IO::Handle : precompile {
+  use Sys::IO;
   use IO::FileHandle;
   use Fn;
   use Array;
+  use Sys::IO::FileStream;
   
   # Fields
   has auto_flush : rw byte;
   has fh : private IO::FileHandle;
+  has file_stream : private Sys::IO::FileStream;
   
   # Class methods
   native static method STDERR : int ();
@@ -36,5 +39,34 @@ class IO::File extends IO::Handle : precompile {
       }
     }
     return $string;
+  }
+  
+  method close : int () {
+    my $file_stream = $self->{file_stream};
+    return Sys::IO->fclose($file_stream);
+  }
+
+  method eof : int () {
+    my $file_stream = $self->{file_stream};
+    return Sys::IO->feof($file_stream);
+  }
+  
+  method fileno : int () {
+    my $file_stream = $self->{file_stream};
+    return Sys::IO->fileno($file_stream);
+  }
+  
+  method getc : int () {
+    my $file_stream = $self->{file_stream};
+    return Sys::IO->getc($file_stream);
+  }
+
+  method print_v2 : int ($string : string) {
+    
+    my $file_stream = $self->{file_stream};
+    
+    my $length = length $string;
+    
+    return Sys::IO->fwrite($string, 1, $length, $file_stream);
   }
 }

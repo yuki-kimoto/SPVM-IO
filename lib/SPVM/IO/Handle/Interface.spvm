@@ -1,0 +1,15 @@
+class IO::Handle::Interface : interface_t {
+  required method has_interfaces : int ();
+  
+  method close : int ();
+
+  method eof : int ();
+
+  method fileno : int ();
+
+  method getc : int ();
+
+  method print_v2 : int ($string : string);
+
+  method printf : int ($format : string, $args : object[]...);
+}

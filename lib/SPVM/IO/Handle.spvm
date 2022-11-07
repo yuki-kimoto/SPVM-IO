@@ -1,1 +1,118 @@
-class IO::Handle;
+class IO::Handle {
+  use Sys::IO;
+  use Fn;
+  use Format;
+  
+  interface IO::Handle::Interface;
+  
+  # Class methods
+  static method new : IO::Handle () {
+    my $self = new IO::Handle;
+    
+    $self->init();
+    
+    return $self;
+  }
+  
+  static method new_from_fd : IO::Handle ($fd : int, $mode = 0666 : int) {
+    
+  }
+
+  method has_interfaces : int () { return 1; }
+  
+  method init : void () {
+    
+  }
+  
+  method close : int () {
+    return $self->(IO::Handle::Interface)->close;
+  }
+
+  method eof : int () {
+    return $self->(IO::Handle::Interface)->eof;
+  }
+
+  method fileno : int () {
+    return $self->(IO::Handle::Interface)->fileno;
+  }
+
+  method getc : int () {
+    return $self->(IO::Handle::Interface)->getc;
+  }
+
+  method print_v2 : int ($string : string) {
+    return $self->(IO::Handle::Interface)->print_v2($string);
+  }
+
+  method printf : int ($format : string, $args : object[]...) {
+    # my $formated_string = Format->sprintf($format, $args);
+    # return $self->print_v2($formated_string);
+  }
+}
+
+=pod TODO
+
+new ()
+Creates a new IO::Handle object.
+
+new_from_fd ( FD, MODE )
+Creates an IO::Handle like new does. It requires two parameters, which are passed to the method fdopen; if the fdopen fails, the object is destroyed. Otherwise, it is returned to the caller.
+
+
+*new
+*close
+*eof
+*fileno
+*print ( ARGS )
+*printf ( FMT, [ARGS] )
+*getc
+
+fcntl( FUNCTION, SCALAR )
+format_write( [FORMAT_NAME] )
+ioctl( FUNCTION, SCALAR )
+read ( BUF, LEN, [OFFSET] )
+say ( ARGS )
+stat
+sysread ( BUF, LEN, [OFFSET] )
+syswrite ( BUF, [LEN, [OFFSET]] )
+truncate ( LEN )
+autoflush ( [BOOL] )                         $|
+format_page_number( [NUM] )                  $%
+format_lines_per_page( [NUM] )               $=
+format_lines_left( [NUM] )                   $-
+format_name( [STR] )                         $~
+format_top_name( [STR] )                     $^
+input_line_number( [NUM])                    $.
+
+format_line_break_characters( [STR] ) $:
+format_formfeed( [STR])               $^L
+output_field_separator( [STR] )       $,
+output_record_separator( [STR] )      $\
+ 
+input_record_separator( [STR] )       $/
+Furthermore, for doing normal I/O you might need these:
+
+
+
+
+fdopen ( FD, MODE )
+
+getline
+
+getlines
+
+ungetc ( ORD )
+
+error
+
+clearerr
+
+sync
+
+flush
+
+printflush ( ARGS )
+
+blocking ( [ BOOL ] )
+
+=cut
