@@ -7,7 +7,6 @@ class IO::Handle {
   
   has autoflush : rw byte;
   has input_line_number : ro int;
-  has binmode : rw byte;
   
   interface IO::Handle::Interface;
   
