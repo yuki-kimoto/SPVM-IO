@@ -6,7 +6,8 @@ class IO::Handle {
   use IO::File;
   
   has autoflush : rw byte;
-  has input_line_number : rw int;
+  has input_line_number : ro int;
+  has binmode : rw byte;
   
   interface IO::Handle::Interface;
   
@@ -117,12 +118,8 @@ stat
 sysread ( BUF, LEN, [OFFSET] )
 syswrite ( BUF, [LEN, [OFFSET]] )
 
-format_line_break_characters( [STR] ) $:
-format_formfeed( [STR])               $^L
-output_field_separator( [STR] )       $,
-output_record_separator( [STR] )      $\
- 
 input_record_separator( [STR] )       $/
+
 Furthermore, for doing normal I/O you might need these:
 
 fdopen ( FD, MODE )
