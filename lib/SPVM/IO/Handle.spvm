@@ -52,6 +52,10 @@ class IO::Handle {
   method clearerr : void () {
     $self->(IO::Handle::Interface)->clearerr;
   }
+  
+  method error : int () {
+    $self->(IO::Handle::Interface)->error;
+  }
 }
 
 =pod TODO
@@ -70,6 +74,7 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *print ( ARGS )
 *printf ( FMT, [ARGS] )
 *getc
+*clearerr
 
 fcntl( FUNCTION, SCALAR )
 format_write( [FORMAT_NAME] )
@@ -109,7 +114,6 @@ ungetc ( ORD )
 
 error
 
-clearerr
 
 sync
 

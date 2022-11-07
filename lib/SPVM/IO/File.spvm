@@ -76,4 +76,10 @@ class IO::File extends IO::Handle : precompile {
     
     Sys::IO->clearerr($file_stream);
   }
+
+  method error : int () {
+    my $file_stream = $self->{file_stream};
+    
+    return Sys::IO->ferror($file_stream);
+  }
 }
