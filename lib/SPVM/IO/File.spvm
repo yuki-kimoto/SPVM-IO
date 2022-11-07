@@ -1,6 +1,5 @@
 class IO::File extends IO::Handle : precompile {
   use Sys::IO;
-  use IO::FileHandle;
   use Fn;
   use Array;
   use Sys::IO::FileStream;
@@ -8,14 +7,17 @@ class IO::File extends IO::Handle : precompile {
   
   # Fields
   has auto_flush : rw byte;
-  has fh : private IO::FileHandle;
-  has file_stream : private Sys::IO::FileStream;
+  has stream : private Sys::IO::FileStream;
   
   # Class methods
   native static method STDERR : int ();
   native static method STDIN : int ();
   native static method STDOUT : int ();
   native static method open : IO::File ($file_name : string, $open_mode : string);
+  
+  method DESTROY : void () {
+    $self->flush;
+  }
   
   # Instance methods
   native method flush : void ();
@@ -43,51 +45,54 @@ class IO::File extends IO::Handle : precompile {
   }
   
   method close : int () {
-    my $file_stream = $self->{file_stream};
-    return Sys::IO->fclose($file_stream);
+    my $stream = $self->{stream};
+    
+    my $status = Sys::IO->fclose($stream);
+    
+    return $status;
   }
   
   method eof : int () {
-    my $file_stream = $self->{file_stream};
-    return Sys::IO->feof($file_stream);
+    my $stream = $self->{stream};
+    return Sys::IO->feof($stream);
   }
   
   method fileno : int () {
-    my $file_stream = $self->{file_stream};
-    return Sys::IO->fileno($file_stream);
+    my $stream = $self->{stream};
+    return Sys::IO->fileno($stream);
   }
   
   method getc : int () {
-    my $file_stream = $self->{file_stream};
-    return Sys::IO->getc($file_stream);
+    my $stream = $self->{stream};
+    return Sys::IO->getc($stream);
   }
   
   method print_v2 : int ($string : string) {
     
-    my $file_stream = $self->{file_stream};
+    my $stream = $self->{stream};
     
     my $length = length $string;
     
-    return Sys::IO->fwrite($string, 1, $length, $file_stream);
+    return Sys::IO->fwrite($string, 1, $length, $stream);
   }
   
   method clearerr : void () {
     
-    my $file_stream = $self->{file_stream};
+    my $stream = $self->{stream};
     
-    Sys::IO->clearerr($file_stream);
+    Sys::IO->clearerr($stream);
   }
   
   method error : int () {
-    my $file_stream = $self->{file_stream};
+    my $stream = $self->{stream};
     
-    return Sys::IO->ferror($file_stream);
+    return Sys::IO->ferror($stream);
   }
   
   method flush_v2 : int () {
-    my $file_stream = $self->{file_stream};
+    my $stream = $self->{stream};
     
-    return Sys::IO->fflush($file_stream);
+    return Sys::IO->fflush($stream);
   }
   
   method truncate : int ($legnth : long) {
@@ -103,9 +108,9 @@ class IO::File extends IO::Handle : precompile {
   }
 
   method ungetc : int ($c : int) {
-    my $file_stream = $self->{file_stream};
+    my $stream = $self->{stream};
     
-    return IO::File->native_ungetc($c, $file_stream);
+    return IO::File->native_ungetc($c, $stream);
   }
 
   method sync : int () {

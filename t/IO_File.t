@@ -40,25 +40,6 @@ my $test_dir = "$FindBin::Bin";
     ok(SPVM::TestCase::IO::File->test_flush($file));
     my $output = slurp_binmode($file);
     is($output, 'Hello');
-
-    # This is not real tests, but I can't know the way to test buffer
-    my $stdout_source = slurp_binmode('blib/lib/SPVM/IO/File.c');
-    like($stdout_source, qr|\Qfflush(fh);//IO::File::flush|);
-  }
-}
-
-# auto_flush
-{
-  # test_auto_flush
-  {
-    my $file = "$test_dir/test_files_tmp/io_file_test_auto_flush.txt";
-    ok(SPVM::TestCase::IO::File->test_auto_flush($file));
-    my $output = slurp_binmode($file);
-    is($output, 'Hello');
-
-    # This is not real tests, but I can't know the way to test buffer
-    my $stdout_source = slurp_binmode('blib/lib/SPVM/IO/File.c');
-    like($stdout_source, qr|\Qfflush(fh);//IO::File::print|);
   }
 }
 

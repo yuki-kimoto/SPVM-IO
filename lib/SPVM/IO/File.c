@@ -50,13 +50,13 @@ int32_t SPVM__IO__File__readline(SPVM_ENV* env, SPVM_VALUE* stack) {
   // Self
   void* obj_self = stack[0].oval;
   
-  // File fh
-  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "fh", &e, FILE_NAME, __LINE__);
+  // File stream
+  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "stream", &e, FILE_NAME, __LINE__);
   if (e) { return e; }
 
-  FILE* fh = (FILE*)env->get_pointer(env, stack, obj_io_file);
+  FILE* stream = (FILE*)env->get_pointer(env, stack, obj_io_file);
 
-  if (fh == NULL) {
+  if (stream == NULL) {
     stack[0].oval = NULL;
     return 0;
   }
@@ -70,7 +70,7 @@ int32_t SPVM__IO__File__readline(SPVM_ENV* env, SPVM_VALUE* stack) {
   int32_t pos = 0;
   int32_t end_is_eof = 0;
   while (1) {
-    int32_t ch = fgetc(fh);
+    int32_t ch = fgetc(stream);
     if (ch == EOF) {
       end_is_eof = 1;
       break;
@@ -129,11 +129,11 @@ int32_t SPVM__IO__File__read(SPVM_ENV* env, SPVM_VALUE* stack) {
   // Self
   void* obj_self = stack[0].oval;
   
-  // File fh
-  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "fh", &e, FILE_NAME, __LINE__);
+  // File stream
+  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "stream", &e, FILE_NAME, __LINE__);
   if (e) { return e; }
 
-  FILE* fh = (FILE*)env->get_pointer(env, stack, obj_io_file);
+  FILE* stream = (FILE*)env->get_pointer(env, stack, obj_io_file);
 
   // Buffer
   void* obj_buffer = stack[1].oval;
@@ -148,7 +148,7 @@ int32_t SPVM__IO__File__read(SPVM_ENV* env, SPVM_VALUE* stack) {
     return 0;
   }
   
-  int32_t read_length = fread(buffer, 1, buffer_length, fh);
+  int32_t read_length = fread(buffer, 1, buffer_length, stream);
   
   stack[0].ival = read_length;
   
@@ -163,12 +163,12 @@ int32_t SPVM__IO__File__print(SPVM_ENV* env, SPVM_VALUE* stack) {
   // Self
   void* obj_self = stack[0].oval;
   
-  // File fh
-  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "fh", &e, FILE_NAME, __LINE__);
+  // File stream
+  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "stream", &e, FILE_NAME, __LINE__);
   if (e) { return e; }
 
 
-  FILE* fh = (FILE*)env->get_pointer(env, stack, obj_io_file);
+  FILE* stream = (FILE*)env->get_pointer(env, stack, obj_io_file);
   
   void* string = stack[1].oval;
   
@@ -177,7 +177,7 @@ int32_t SPVM__IO__File__print(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   // Print
   if (string_length > 0) {
-    int32_t write_length = fwrite(bytes, 1, string_length, fh);
+    int32_t write_length = fwrite(bytes, 1, string_length, stream);
     if (write_length != string_length) {
       return env->die(env, stack, "Can't print string to file handle", FILE_NAME, __LINE__);
     }
@@ -188,7 +188,7 @@ int32_t SPVM__IO__File__print(SPVM_ENV* env, SPVM_VALUE* stack) {
   if (e) { return e; }
 
   if (auto_flush) {
-    int32_t ret = fflush(fh);//IO::File::print (Don't remove this comment for tests)
+    int32_t ret = fflush(stream);//IO::File::print (Don't remove this comment for tests)
     if (ret != 0) {
       return env->die(env, stack, "Can't flush buffer to file handle", FILE_NAME, __LINE__);
     }
@@ -250,18 +250,18 @@ int32_t SPVM__IO__File__open(SPVM_ENV* env, SPVM_VALUE* stack) {
   }
   
   errno = 0;
-  FILE* fh = fopen(file_name, real_mode);
+  FILE* stream = fopen(file_name, real_mode);
   
-  if (fh) {
+  if (stream) {
     int32_t e;
 
     void* obj_io_file = env->new_object_by_name(env, stack, "IO::File", &e, __FILE__, __LINE__);
     if (e) { return e; }
 
-    void* obj_fh = env->new_pointer_by_name(env, stack, "IO::FileHandle", fh, &e, __FILE__, __LINE__);
+    void* obj_stream = env->new_pointer_by_name(env, stack, "Sys::IO::FileStream", stream, &e, __FILE__, __LINE__);
     if (e) { return e; }
 
-    env->set_field_object_by_name_v2(env, stack, obj_io_file, "IO::File", "fh", obj_fh, &e, FILE_NAME, __LINE__);
+    env->set_field_object_by_name_v2(env, stack, obj_io_file, "IO::File", "stream", obj_stream, &e, FILE_NAME, __LINE__);
     if (e) { return e; }
     
     stack[0].oval = obj_io_file;
@@ -281,14 +281,14 @@ int32_t SPVM__IO__File__flush(SPVM_ENV* env, SPVM_VALUE* stack) {
   // Self
   void* obj_self = stack[0].oval;
   
-  // File fh
+  // File stream
   int32_t e;
-  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "fh", &e, FILE_NAME, __LINE__);
+  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "stream", &e, FILE_NAME, __LINE__);
   if (e) { return e; }
 
-  FILE* fh = (FILE*)env->get_pointer(env, stack, obj_io_file);
+  FILE* stream = (FILE*)env->get_pointer(env, stack, obj_io_file);
   
-  int32_t ret = fflush(fh);//IO::File::flush (Don't remove this comment for tests)
+  int32_t ret = fflush(stream);//IO::File::flush (Don't remove this comment for tests)
   
   if (ret != 0) {
     return env->die(env, stack, "Can't flash to file", FILE_NAME, __LINE__);
