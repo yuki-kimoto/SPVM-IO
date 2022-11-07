@@ -67,6 +67,10 @@ class IO::Handle {
     return $self->(IO::Handle::Interface)->truncate($length);
   }
 
+  method ioctl : int ($request : int, $request_arg = undef : object of Byte|Short|Int|Long|Float|Double|object) {
+    return $self->(IO::Handle::Interface)->ioctl($request, $request_arg);
+  }
+
 }
 
 =pod TODO

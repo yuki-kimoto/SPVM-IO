@@ -20,4 +20,6 @@ class IO::Handle::Interface : interface_t {
   method flush_v2 : int ();
 
   method truncate : int ($legnth : long);
+
+  method ioctl : int ($request : int, $request_arg = undef : object of Byte|Short|Int|Long|Float|Double|object);
 }

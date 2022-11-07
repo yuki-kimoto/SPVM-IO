@@ -4,6 +4,7 @@ class IO::File extends IO::Handle : precompile {
   use Fn;
   use Array;
   use Sys::IO::FileStream;
+  use Sys::Ioctl;
   
   # Fields
   has auto_flush : rw byte;
@@ -45,7 +46,7 @@ class IO::File extends IO::Handle : precompile {
     my $file_stream = $self->{file_stream};
     return Sys::IO->fclose($file_stream);
   }
-
+  
   method eof : int () {
     my $file_stream = $self->{file_stream};
     return Sys::IO->feof($file_stream);
@@ -60,7 +61,7 @@ class IO::File extends IO::Handle : precompile {
     my $file_stream = $self->{file_stream};
     return Sys::IO->getc($file_stream);
   }
-
+  
   method print_v2 : int ($string : string) {
     
     my $file_stream = $self->{file_stream};
@@ -69,31 +70,37 @@ class IO::File extends IO::Handle : precompile {
     
     return Sys::IO->fwrite($string, 1, $length, $file_stream);
   }
-
+  
   method clearerr : void () {
     
     my $file_stream = $self->{file_stream};
     
     Sys::IO->clearerr($file_stream);
   }
-
+  
   method error : int () {
     my $file_stream = $self->{file_stream};
     
     return Sys::IO->ferror($file_stream);
   }
-
+  
   method flush_v2 : int () {
     my $file_stream = $self->{file_stream};
     
     return Sys::IO->fflush($file_stream);
   }
-
+  
   method truncate : int ($legnth : long) {
     my $fileno = $self->fileno;
     
     return IO::File->ftruncate($fileno, $legnth);
   }
-
+  
+  method ioctl : int ($request : int, $request_arg = undef : object of Byte|Short|Int|Long|Float|Double|object) {
+    my $fileno = $self->fileno;
+    
+    return Sys::Ioctl->ioctl($fileno, $request, $request_arg);
+  }
+  
   native static method ftruncate : int ($fd : int, $length : long);
 }
