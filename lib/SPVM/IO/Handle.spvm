@@ -77,6 +77,10 @@ class IO::Handle {
   method ungetc : int ($c : int) {
     return $self->(IO::Handle::Interface)->ungetc($c);
   }
+
+  method sync : int () {
+    return $self->(IO::Handle::Interface)->sync;
+  }
 }
 
 =pod TODO
@@ -103,7 +107,7 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *ungetc ( ORD )
 *autoflush ( [BOOL] )                         $|
 *input_line_number( [NUM])                    $.
-
+*sync
 
 fcntl( FUNCTION, SCALAR )
 format_write( [FORMAT_NAME] )
@@ -126,8 +130,6 @@ fdopen ( FD, MODE )
 getline
 
 getlines
-
-sync
 
 printflush ( ARGS )
 

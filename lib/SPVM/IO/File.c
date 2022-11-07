@@ -334,3 +334,18 @@ int32_t SPVM__IO__File__native_ungetc(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   return 0;
 }
+
+int32_t SPVM__IO__File__fsync(SPVM_ENV* env, SPVM_VALUE* stack) {
+  
+  int32_t fd = stack[0].ival;
+  
+  int32_t status = fsync(fd);
+  if (status != -1) {
+    env->die(env, stack, "[System Error]fsync failed:%s.", env->strerror(env, stack, errno, 0), FILE_NAME, __LINE__);
+    return SPVM_NATIVE_C_CLASS_ID_ERROR_SYSTEM;
+  }
+  
+  stack[0].ival = status;
+  
+  return 0;
+}
