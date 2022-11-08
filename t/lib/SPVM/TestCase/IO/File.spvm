@@ -416,11 +416,11 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method test_slurp : int ($file : string) {
+  static method test_getlines : int ($file : string) {
     {
       my $io_file = IO::File->new($file, "<");
       
-      my $string = $io_file->slurp($file);
+      my $string = $io_file->getlines($file);
       
       unless ($string eq "abcd\nfghi\nklm\n") {
         return 0;

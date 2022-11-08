@@ -122,10 +122,10 @@ my $test_dir = "$FindBin::Bin";
   }
 }
 
-# slurp
+# getlines
 {
   my $sp_file = SPVM::new_string("$test_dir/test_files_tmp/fread.txt");
-  ok(SPVM::TestCase::IO::File->test_slurp($sp_file));
+  ok(SPVM::TestCase::IO::File->test_getlines($sp_file));
 }
 
 

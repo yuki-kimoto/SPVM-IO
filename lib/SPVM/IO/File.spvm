@@ -78,7 +78,7 @@ class IO::File extends IO::Handle : precompile {
   # Instance methods
   native method getline : string ();
   
-  method slurp : string ($file : string) {
+  method getlines : string ($file : string) {
     
     my $buffer_length = 4096;
     my $buffer = (mutable string)new_string_len $buffer_length;
