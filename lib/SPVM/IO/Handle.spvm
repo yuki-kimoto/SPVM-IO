@@ -3,7 +3,8 @@ class IO::Handle {
   use Fn;
   use Format;
   use Scope::Guard;
-
+  use Sys::Stat;
+ 
   use IO::File;
   
   has autoflush : rw byte;
@@ -109,6 +110,12 @@ class IO::Handle {
     
     return IO::File->fsync($fileno);
   }
+
+  method stat : int ($stat : Sys::Stat) {
+    my $fileno = $self->fileno;
+    
+    return IO::File->fstat($fileno, $stat);
+  }
 }
 
 =pod TODO
@@ -138,18 +145,16 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *sync
 *printflush ( ARGS )
 *say ( ARGS )
+*stat
 
 fcntl( FUNCTION, SCALAR )
 write ( BUF, LEN [, OFFSET ] )
 read ( BUF, LEN, [OFFSET] )
 sysread ( BUF, LEN, [OFFSET] )
 syswrite ( BUF, [LEN, [OFFSET]] )
-stat
 fdopen ( FD, MODE )
 getline
 getlines
-
-
 blocking ( [ BOOL ] )
 
 =cut

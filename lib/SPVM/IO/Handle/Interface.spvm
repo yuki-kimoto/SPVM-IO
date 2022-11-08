@@ -1,4 +1,6 @@
 class IO::Handle::Interface : interface_t {
+  use Sys::Stat;
+  
   required method has_interfaces : int ();
   
   method close : int ();
@@ -28,4 +30,6 @@ class IO::Handle::Interface : interface_t {
   method ungetc : int ($c : int);
 
   method sync : int ();
+
+  method stat : int ($stat : Sys::Stat);
 }

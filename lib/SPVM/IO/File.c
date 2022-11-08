@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include <unistd.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 static const char* FILE_NAME = "IO/File.c";
 
@@ -282,6 +283,41 @@ int32_t SPVM__IO__File__fsync(SPVM_ENV* env, SPVM_VALUE* stack) {
   }
   
   stack[0].ival = status;
+  
+  return 0;
+}
+
+int32_t SPVM__IO__File__fstat_raw(SPVM_ENV* env, SPVM_VALUE* stack) {
+
+  int32_t e = 0;
+  
+  int32_t fd = stack[0].ival;
+  
+  void* obj_stat = stack[1].oval;
+  
+  if (!obj_stat) {
+    return env->die(env, stack, "The $stat must be defined", FILE_NAME, __LINE__);
+  }
+  
+  struct stat* stat_buf = env->get_pointer(env, stack, obj_stat);
+  
+  int32_t status = fstat(fd, stat_buf);
+
+  stack[0].ival = status;
+  
+  return 0;
+}
+
+int32_t SPVM__IO__File__fstat(SPVM_ENV* env, SPVM_VALUE* stack) {
+
+  SPVM__IO__File__fstat_raw(env, stack);
+  
+  int32_t status = stack[0].ival;
+
+  if (status == -1) {
+    env->die(env, stack, "[System Error]fstat failed:%s", env->strerror(env, stack, errno, 0), FILE_NAME, __LINE__);
+    return SPVM_NATIVE_C_CLASS_ID_ERROR_SYSTEM;
+  }
   
   return 0;
 }

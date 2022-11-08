@@ -4,6 +4,7 @@ class IO::File extends IO::Handle : precompile {
   use Array;
   use Sys::IO::FileStream;
   use Sys::Ioctl;
+  use Sys::Stat;
   
   # Fields
   has auto_flush : rw byte;
@@ -104,4 +105,6 @@ class IO::File extends IO::Handle : precompile {
   native static method native_ungetc : int ($c : int, $stream : Sys::IO::FileStream);
 
   native static method fsync : int ($fd : int);
+
+  native static method fstat : int ($fd : int, $stat : Sys::Stat);
 }
