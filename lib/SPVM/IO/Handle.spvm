@@ -10,7 +10,7 @@ class IO::Handle {
   use Sys::IO::Constant as IO;
   use Sys::Ioctl::Constant as IOCTL;
   
-  has autoflush : rw byte;
+  has autoflush : wo byte;
   has input_line_number : ro int;
   
   interface IO::Handle::Interface;
@@ -32,6 +32,10 @@ class IO::Handle {
   
   method init : void () {
     
+  }
+  
+  method get_autoflush : byte () {
+    return $self->{autoflush};
   }
   
   method close : int () {
@@ -84,7 +88,7 @@ class IO::Handle {
   }
 
   method printflush : int ($string : string) {
-    my $old_autoflush = $self->autoflush;
+    my $old_autoflush = $self->get_autoflush;
     
     # Restores the autoflush field at the end of the scope.
     my $handle = $self;
