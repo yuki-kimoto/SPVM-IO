@@ -4,8 +4,11 @@ class IO::Handle {
   use Format;
   use Scope::Guard;
   use Sys::Stat;
+  use Sys;
  
   use IO::File;
+  use Sys::IO::Constant as IO;
+  use Sys::Ioctl::Constant as IOCTL;
   
   has autoflush : rw byte;
   has input_line_number : ro int;
@@ -116,13 +119,36 @@ class IO::Handle {
     
     return IO::File->fstat($fileno, $stat);
   }
-  
-  method blocking : int () {
+
+  method fcntl : int ($command : int, $command_arg = undef : object of Int|Sys::IO::Flock|object) {
+    my $fileno = $self->fileno;
     
+    return Sys::IO->fcntl($fileno, $command, $command_arg);
   }
   
-  method set_blocking : int ($blocking : int) {
+  method set_blocking : void ($blocking : int) {
+    unless ($blocking >= 0) {
+      die "The $blocking must be greater than or equal to 0";
+    }
     
+    my $fileno = $self->fileno;
+    
+    if (Sys->defined("_WIN32")) {
+      my $flags = Int->new(!$blocking);
+      $self->ioctl(IOCTL->FIONBIO, $flags);
+    }
+    else {
+      my $newmode = 0;
+      if ($blocking == 0) {
+        $newmode &= ~IO->O_NDELAY;
+        $newmode |= IO->O_NONBLOCK;
+      }
+      else {
+        $newmode &= ~(IO->O_NDELAY|IO->O_NONBLOCK);
+      }
+      
+      $self->fcntl(IO->F_SETFL, $newmode);
+    }
   }
 }
 
@@ -154,8 +180,9 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *printflush ( ARGS )
 *say ( ARGS )
 *stat
+*fcntl( FUNCTION, SCALAR )
+*blocking ( [ BOOL ] )
 
-fcntl( FUNCTION, SCALAR )
 write ( BUF, LEN [, OFFSET ] )
 read ( BUF, LEN, [OFFSET] )
 sysread ( BUF, LEN, [OFFSET] )
@@ -163,6 +190,5 @@ syswrite ( BUF, [LEN, [OFFSET]] )
 fdopen ( FD, MODE )
 getline
 getlines
-blocking ( [ BOOL ] )
 
 =cut
