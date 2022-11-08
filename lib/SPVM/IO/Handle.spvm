@@ -124,6 +124,14 @@ class IO::Handle {
     return IO::File->fstat($fileno, $stat);
   }
 
+  method getline : string () {
+    return $self->(IO::Handle::Interface)->getline;
+  }
+
+  method getlines : string () {
+    return $self->(IO::Handle::Interface)->getlines;
+  }
+
   method fcntl : int ($command : int, $command_arg = undef : object of Int|Sys::IO::Flock|object) {
     my $fileno = $self->fileno;
     
@@ -206,9 +214,9 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *read ( BUF, LEN, [OFFSET] )
 *sysread ( BUF, LEN, [OFFSET] )
 *syswrite ( BUF, [LEN, [OFFSET]] )
+*getline
+*getlines
 
 fdopen ( FD, MODE )
-getline
-getlines
 
 =cut

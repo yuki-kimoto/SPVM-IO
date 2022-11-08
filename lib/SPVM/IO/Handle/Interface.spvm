@@ -44,4 +44,8 @@ class IO::Handle::Interface : interface_t {
   method syswrite : int ($buffer : string, $length : int, $offset = 0 : int);
   
   method sysread : int ($buffer : mutable string, $length : int, $offset = 0 : int);
+
+  method getline : string ();
+  
+  method getlines : string ();
 }

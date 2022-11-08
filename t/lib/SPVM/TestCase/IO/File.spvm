@@ -420,7 +420,7 @@ class TestCase::IO::File {
     {
       my $io_file = IO::File->new($file, "<");
       
-      my $string = $io_file->getlines($file);
+      my $string = $io_file->getlines;
       
       unless ($string eq "abcd\nfghi\nklm\n") {
         return 0;
