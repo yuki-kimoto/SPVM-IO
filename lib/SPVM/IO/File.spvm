@@ -11,14 +11,57 @@ class IO::File extends IO::Handle : precompile {
   has stream : private Sys::IO::FileStream;
   
   # Class methods
-  native static method open : IO::File ($file_name : string, $open_mode : string);
-  
-  static method new : IO::File () {
+
+  static method new : IO::File ($file_name = undef : string, $open_mode = undef : string) {
     my $self = new IO::File;
     
     $self->init;
     
+    if ($file_name) {
+      $self->open($file_name, $open_mode);
+    }
+    
     return $self;
+  }
+
+  method open : void ($file_name : string, $open_mode : string) {
+    
+    my $valid_mode = 0;
+    my $real_mode : string;
+    if ($open_mode eq "<") {
+      $valid_mode = 1;
+      $real_mode = "rb";
+    }
+    elsif ($open_mode eq ">") {
+      $valid_mode = 1;
+      $real_mode = "wb";
+    }
+    elsif ($open_mode eq ">>") {
+      $valid_mode = 1;
+      $real_mode = "wa";
+    }
+    elsif ($open_mode eq "+<") {
+      $valid_mode = 1;
+      $real_mode = "r+b";
+    }
+    elsif ($open_mode eq "+>") {
+      $valid_mode = 1;
+      $real_mode = "w+b";
+    }
+    elsif ($open_mode eq "+>>") {
+      $valid_mode = 1;
+      $real_mode = "a+b";
+    }
+    else {
+      $valid_mode = 0;
+    }
+    unless ($valid_mode) {
+      die "Invalid open mode $open_mode";
+    }
+    
+    my $stream = Sys::IO->fopen($file_name, $real_mode);
+    
+    $self->{stream} = $stream;
   }
   
   method init : void () {
@@ -26,7 +69,9 @@ class IO::File extends IO::Handle : precompile {
   }
   
   method DESTROY : void () {
-    $self->flush;
+    if ($self->{stream}) {
+      $self->flush;
+    }
   }
   
   # Instance methods
