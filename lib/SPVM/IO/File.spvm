@@ -5,6 +5,7 @@ class IO::File extends IO::Handle : precompile {
   use Sys::IO::FileStream;
   use Sys::Ioctl;
   use Sys::Stat;
+  use StringBuffer;
   
   # Fields
   has auto_flush : rw byte;
@@ -81,18 +82,21 @@ class IO::File extends IO::Handle : precompile {
     
     my $buffer_length = 4096;
     my $buffer = (mutable string)new_string_len $buffer_length;
-    my $string = "";
+    my $string_buffer = StringBuffer->new;
     while (1) {
       my $read_length = $self->read($buffer, length $buffer);
       
       if ($read_length < $buffer_length) {
-        $string .= Fn->substr($buffer, 0, $read_length);
+        $string_buffer->push(Fn->substr($buffer, 0, $read_length));
         last;
       }
       else {
-        $string .= (string)$buffer;
+        $string_buffer->push($buffer);
       }
     }
+    
+    my $string = $string_buffer->to_string;
+    
     return $string;
   }
   
