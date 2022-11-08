@@ -11,39 +11,6 @@
 
 static const char* FILE_NAME = "IO/File.c";
 
-int32_t SPVM__IO__File__STDERR(SPVM_ENV* env, SPVM_VALUE* stack) {
-
-#ifdef stderr
-  stack[0].ival = fileno(stderr);
-#else
-  return env->die(env, stack, "stderr is not defined in this system", FILE_NAME, __LINE__);
-#endif
-  
-  return 0;
-}
-
-int32_t SPVM__IO__File__STDIN(SPVM_ENV* env, SPVM_VALUE* stack) {
-
-#ifdef stdin
-  stack[0].ival = fileno(stdin);
-#else
-  return env->die(env, stack, "stdin is not defined in this system", FILE_NAME, __LINE__);
-#endif
-  
-  return 0;
-}
-
-int32_t SPVM__IO__File__STDOUT(SPVM_ENV* env, SPVM_VALUE* stack) {
-
-#ifdef stdout
-  stack[0].ival = fileno(stdout);
-#else
-  return env->die(env, stack, "stdout is not defined in this system", FILE_NAME, __LINE__);
-#endif
-  
-  return 0;
-}
-
 int32_t SPVM__IO__File__readline(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   int32_t e;
