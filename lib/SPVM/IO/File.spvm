@@ -33,7 +33,6 @@ class IO::File extends IO::Handle : precompile {
   }
   
   # Instance methods
-  native method read : int ($bufer : mutable string);
   native method readline : string ();
   
   method slurp : string ($file : string) {
@@ -42,7 +41,7 @@ class IO::File extends IO::Handle : precompile {
     my $buffer = (mutable string)new_string_len $buffer_length;
     my $string = "";
     while (1) {
-      my $read_length = $self->read($buffer);
+      my $read_length = $self->read($buffer, length $buffer);
       
       if ($read_length < $buffer_length) {
         $string .= Fn->substr($buffer, 0, $read_length);

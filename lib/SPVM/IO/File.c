@@ -123,39 +123,6 @@ int32_t SPVM__IO__File__readline(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__File__read(SPVM_ENV* env, SPVM_VALUE* stack) {
-  
-  int32_t e;
-  
-  // Self
-  void* obj_self = stack[0].oval;
-  
-  // File stream
-  void* obj_io_file = env->get_field_object_by_name_v2(env, stack, obj_self, "IO::File", "stream", &e, FILE_NAME, __LINE__);
-  if (e) { return e; }
-
-  FILE* stream = (FILE*)env->get_pointer(env, stack, obj_io_file);
-
-  // Buffer
-  void* obj_buffer = stack[1].oval;
-  if (obj_buffer == NULL) {
-    stack[0].ival = 0;
-    return 0;
-  }
-  char* buffer = (char*)env->get_elems_byte(env, stack, obj_buffer);
-  int32_t buffer_length = env->length(env, stack, obj_buffer);
-  if (buffer_length == 0) {
-    stack[0].ival = 0;
-    return 0;
-  }
-  
-  int32_t read_length = fread(buffer, 1, buffer_length, stream);
-  
-  stack[0].ival = read_length;
-  
-  return 0;
-}
-
 int32_t SPVM__IO__File__open(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   // File name
