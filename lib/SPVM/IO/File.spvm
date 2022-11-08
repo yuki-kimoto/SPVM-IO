@@ -25,6 +25,16 @@ class IO::File extends IO::Handle : precompile {
     return $self;
   }
 
+  static method new_from_fd : IO::Handle ($fd : int, $open_mode = undef : string) {
+    my $self = new IO::File;
+    
+    $self->init;
+    
+    $self->fdopen($fd, $open_mode);
+    
+    return $self;
+  }
+
   method open : void ($file_name : string, $open_mode : string) {
     
     my $valid_mode = 0;
@@ -64,7 +74,47 @@ class IO::File extends IO::Handle : precompile {
     
     $self->{stream} = $stream;
   }
-  
+
+  method fdopen : void ($fd : int, $open_mode : string) {
+    
+    my $valid_mode = 0;
+    my $real_mode : string;
+    if ($open_mode eq "<") {
+      $valid_mode = 1;
+      $real_mode = "rb";
+    }
+    elsif ($open_mode eq ">") {
+      $valid_mode = 1;
+      $real_mode = "wb";
+    }
+    elsif ($open_mode eq ">>") {
+      $valid_mode = 1;
+      $real_mode = "wa";
+    }
+    elsif ($open_mode eq "+<") {
+      $valid_mode = 1;
+      $real_mode = "r+b";
+    }
+    elsif ($open_mode eq "+>") {
+      $valid_mode = 1;
+      $real_mode = "w+b";
+    }
+    elsif ($open_mode eq "+>>") {
+      $valid_mode = 1;
+      $real_mode = "a+b";
+    }
+    else {
+      $valid_mode = 0;
+    }
+    unless ($valid_mode) {
+      die "Invalid open mode $open_mode";
+    }
+    
+    my $stream = Sys::IO->fdopen($fd, $real_mode);
+    
+    $self->{stream} = $stream;
+  }
+
   method init : void () {
     $self->SUPER::init;
   }

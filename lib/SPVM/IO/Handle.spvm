@@ -24,10 +24,6 @@ class IO::Handle {
     return $self;
   }
   
-  static method new_from_fd : IO::Handle ($fd : int, $mode = 0666 : int) {
-    
-  }
-
   method has_interfaces : int () { return 1; }
   
   method init : void () {
@@ -182,14 +178,8 @@ class IO::Handle {
 
 =pod TODO
 
-new ()
-Creates a new IO::Handle object.
-
-new_from_fd ( FD, MODE )
-Creates an IO::Handle like new does. It requires two parameters, which are passed to the method fdopen; if the fdopen fails, the object is destroyed. Otherwise, it is returned to the caller.
-
-
 *new
+*new_from_fd ( FD, MODE )
 *close
 *eof
 *fileno
@@ -216,7 +206,6 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *syswrite ( BUF, [LEN, [OFFSET]] )
 *getline
 *getlines
-
-fdopen ( FD, MODE )
+*fdopen ( FD, MODE )
 
 =cut
