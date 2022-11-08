@@ -67,22 +67,10 @@ class IO::Handle {
     $self->(IO::Handle::Interface)->flush;
   }
 
-  method truncate : int ($length : long) {
-    return $self->(IO::Handle::Interface)->truncate($length);
-  }
-
-  method ioctl : int ($request : int, $request_arg = undef : object of Byte|Short|Int|Long|Float|Double|object) {
-    return $self->(IO::Handle::Interface)->ioctl($request, $request_arg);
-  }
-
   method ungetc : int ($c : int) {
     return $self->(IO::Handle::Interface)->ungetc($c);
   }
 
-  method sync : int () {
-    return $self->(IO::Handle::Interface)->sync;
-  }
-  
   method printflush : int ($string : string) {
     my $old_autoflush = $self->autoflush;
     
@@ -94,6 +82,24 @@ class IO::Handle {
     
     $self->set_autoflush(1);
     $self->print($string);
+  }
+
+  method truncate : int ($legnth : long) {
+    my $fileno = $self->fileno;
+    
+    return IO::File->ftruncate($fileno, $legnth);
+  }
+  
+  method ioctl : int ($request : int, $request_arg = undef : object of Byte|Short|Int|Long|Float|Double|object) {
+    my $fileno = $self->fileno;
+    
+    return Sys::Ioctl->ioctl($fileno, $request, $request_arg);
+  }
+
+  method sync : int () {
+    my $fileno = $self->fileno;
+    
+    return IO::File->fsync($fileno);
   }
 }
 
