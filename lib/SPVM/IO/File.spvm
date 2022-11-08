@@ -16,6 +16,18 @@ class IO::File extends IO::Handle : precompile {
   native static method STDOUT : int ();
   native static method open : IO::File ($file_name : string, $open_mode : string);
   
+  static method new : IO::File () {
+    my $self = new IO::File;
+    
+    $self->init;
+    
+    return $self;
+  }
+  
+  method init : void () {
+    $self->SUPER::init;
+  }
+  
   method DESTROY : void () {
     $self->flush;
   }

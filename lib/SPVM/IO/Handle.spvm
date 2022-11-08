@@ -116,6 +116,14 @@ class IO::Handle {
     
     return IO::File->fstat($fileno, $stat);
   }
+  
+  method blocking : int () {
+    
+  }
+  
+  method set_blocking : int ($blocking : int) {
+    
+  }
 }
 
 =pod TODO
