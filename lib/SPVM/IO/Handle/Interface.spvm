@@ -36,4 +36,12 @@ class IO::Handle::Interface : interface_t {
   method set_blocking : void ($blocking : int);
 
   method fcntl : int ($command : int, $command_arg = undef : object of Int|Sys::IO::Flock|object);
+
+  method write : int ($buffer : string, $length : int, $offset = 0 : int);
+  
+  method read : int ($buffer : mutable string, $length : int, $offset = 0 : int);
+  
+  method syswrite : int ($buffer : string, $length : int, $offset = 0 : int);
+  
+  method sysread : int ($buffer : mutable string, $length : int, $offset = 0 : int);
 }

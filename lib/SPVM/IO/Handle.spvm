@@ -150,6 +150,22 @@ class IO::Handle {
       $self->fcntl(IO->F_SETFL, $newmode);
     }
   }
+
+  method write : int ($buffer : string, $length : int, $offset = 0 : int) {
+    return $self->syswrite($buffer, $length, $offset);
+  }
+  
+  method read : int ($buffer : mutable string, $length : int, $offset = 0 : int) {
+    return $self->sysread($buffer, $length, $offset);
+  }
+  
+  method syswrite : int ($buffer : string, $length : int, $offset = 0 : int) {
+    return $self->(IO::Handle::Interface)->syswrite($buffer, $length, $offset);
+  }
+  
+  method sysread : int ($buffer : mutable string, $length : int, $offset = 0 : int) {
+    return $self->(IO::Handle::Interface)->sysread($buffer, $length, $offset);
+  }
 }
 
 =pod TODO
@@ -182,11 +198,11 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *stat
 *fcntl( FUNCTION, SCALAR )
 *blocking ( [ BOOL ] )
+*write ( BUF, LEN [, OFFSET ] )
+*read ( BUF, LEN, [OFFSET] )
+*sysread ( BUF, LEN, [OFFSET] )
+*syswrite ( BUF, [LEN, [OFFSET]] )
 
-write ( BUF, LEN [, OFFSET ] )
-read ( BUF, LEN, [OFFSET] )
-sysread ( BUF, LEN, [OFFSET] )
-syswrite ( BUF, [LEN, [OFFSET]] )
 fdopen ( FD, MODE )
 getline
 getlines

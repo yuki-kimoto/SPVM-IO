@@ -119,4 +119,16 @@ class IO::File extends IO::Handle : precompile {
   native static method fsync : int ($fd : int);
 
   native static method fstat : int ($fd : int, $stat : Sys::Stat);
+
+  method syswrite : int ($buffer : string, $length : int, $offset = 0 : int) {
+    my $stream = $self->{stream};
+    
+    return Sys::IO->fwrite($buffer, 1, $length, $stream);
+  }
+  
+  method sysread : int ($buffer : mutable string, $length : int, $offset = 0 : int) {
+    my $stream = $self->{stream};
+    
+    return Sys::IO->fread($buffer, 1, $length, $stream);
+  }
 }
