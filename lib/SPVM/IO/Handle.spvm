@@ -50,6 +50,14 @@ class IO::Handle {
     return $self->(IO::Handle::Interface)->print($string);
   }
 
+  method say : int ($string : string) {
+    my $status1 = $self->print($string);
+    my $status2 = $self->print("\n");
+    my $status = $status1 || $status2;
+    
+    return $status;
+  }
+
   method printf : int ($format : string, $args : object[]...) {
     my $formated_string = Format->sprintf($format, $args);
     return $self->print($formated_string);
@@ -129,23 +137,16 @@ Creates an IO::Handle like new does. It requires two parameters, which are passe
 *input_line_number( [NUM])                    $.
 *sync
 *printflush ( ARGS )
+*say ( ARGS )
 
 fcntl( FUNCTION, SCALAR )
-format_write( [FORMAT_NAME] )
+write ( BUF, LEN [, OFFSET ] )
 read ( BUF, LEN, [OFFSET] )
-say ( ARGS )
-stat
 sysread ( BUF, LEN, [OFFSET] )
 syswrite ( BUF, [LEN, [OFFSET]] )
-
-input_record_separator( [STR] )       $/
-
-Furthermore, for doing normal I/O you might need these:
-
+stat
 fdopen ( FD, MODE )
-
 getline
-
 getlines
 
 

@@ -12,6 +12,8 @@ class IO::Handle::Interface : interface_t {
   method print : int ($string : string);
 
   method printf : int ($format : string, $args : object[]...);
+
+  method say : int ($string : string);
   
   method clearerr : void ();
 
