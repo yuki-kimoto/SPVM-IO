@@ -30,7 +30,7 @@ class IO::File extends IO::Handle : precompile {
   }
   
   # Instance methods
-  native method readline : string ();
+  native method getline : string ();
   
   method slurp : string ($file : string) {
     

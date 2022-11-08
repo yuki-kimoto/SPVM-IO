@@ -11,7 +11,7 @@
 
 static const char* FILE_NAME = "IO/File.c";
 
-int32_t SPVM__IO__File__readline(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__File__getline(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   int32_t e;
   
