@@ -134,7 +134,7 @@ class IO::Handle {
     return Sys::IO->fcntl($fileno, $command, $command_arg);
   }
   
-  method set_blocking : void ($blocking : int) {
+  method blocking : void ($blocking : int) {
     unless ($blocking >= 0) {
       die "The $blocking must be greater than or equal to 0";
     }
