@@ -1,8 +1,6 @@
 Changes
 cpanm
 lib/SPVM/IO.pm
-lib/SPVM/IO/File.c
-lib/SPVM/IO/File.config
 lib/SPVM/IO/File.pm
 lib/SPVM/IO/File.spvm
 lib/SPVM/IO/Handle.pm

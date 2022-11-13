@@ -1,4 +1,4 @@
-class IO::File extends IO::Handle : precompile {
+class IO::File extends IO::Handle {
   use Sys::IO;
   use Fn;
   use Array;
