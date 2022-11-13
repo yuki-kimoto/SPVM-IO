@@ -1,5 +1,5 @@
 class IO::Handle::Interface : interface_t {
-  use Sys::Stat;
+  use Sys::IO::Stat;
   
   required method has_interfaces : int ();
   
@@ -31,7 +31,7 @@ class IO::Handle::Interface : interface_t {
 
   method sync : int ();
 
-  method stat : int ($stat : Sys::Stat);
+  method stat : int ($stat : Sys::IO::Stat);
 
   method blocking : void ($blocking : int);
 

@@ -9,6 +9,7 @@ class IO::Handle {
   use IO::File;
   use Sys::IO::Constant as IO;
   use Sys::Ioctl::Constant as IOCTL;
+  use Sys::IO::Stat;
   
   has autoflush : wo byte;
   has input_line_number : ro int;
@@ -99,7 +100,7 @@ class IO::Handle {
   method truncate : int ($legnth : long) {
     my $fileno = $self->fileno;
     
-    return IO::File->ftruncate($fileno, $legnth);
+    return Sys::IO->ftruncate($fileno, $legnth);
   }
   
   method ioctl : int ($request : int, $request_arg = undef : object of Byte|Short|Int|Long|Float|Double|object) {
@@ -111,13 +112,13 @@ class IO::Handle {
   method sync : int () {
     my $fileno = $self->fileno;
     
-    return IO::File->fsync($fileno);
+    return Sys::IO->fsync($fileno);
   }
 
-  method stat : int ($stat : Sys::Stat) {
+  method stat : int ($stat : Sys::IO::Stat) {
     my $fileno = $self->fileno;
     
-    return IO::File->fstat($fileno, $stat);
+    return Sys::IO::Stat->fstat($fileno, $stat);
   }
 
   method getline : string () {
