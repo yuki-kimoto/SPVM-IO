@@ -3,7 +3,6 @@ class IO::Handle {
   use Fn;
   use Format;
   use Scope::Guard;
-  use Sys::Stat;
   use Sys;
  
   use IO::File;

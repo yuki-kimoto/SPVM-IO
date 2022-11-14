@@ -4,7 +4,6 @@ class IO::File extends IO::Handle {
   use Array;
   use Sys::IO::FileStream;
   use Sys::Ioctl;
-  use Sys::Stat;
   use StringBuffer;
   
   # Fields
