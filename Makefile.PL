@@ -38,12 +38,6 @@ sub MY::postamble {
 
   my $make_rule = '';
   
-  # Precompile make rule
-  $make_rule .= SPVM::Builder::Util::API::create_make_rule_precompile("IO::Select");
-
-  # Native make rule
-  $make_rule .= SPVM::Builder::Util::API::create_make_rule_native("IO::Select");
-
   return $make_rule;
 }
 
