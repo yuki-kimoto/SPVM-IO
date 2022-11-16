@@ -10,12 +10,10 @@ lib/SPVM/IO/Select.c
 lib/SPVM/IO/Select.config
 lib/SPVM/IO/Select.pm
 lib/SPVM/IO/Select.spvm
+lib/SPVM/IO/Socket.c
+lib/SPVM/IO/Socket.config
 lib/SPVM/IO/Socket.pm
 lib/SPVM/IO/Socket.spvm
-lib/SPVM/IO/Socket/INET.c
-lib/SPVM/IO/Socket/INET.config
-lib/SPVM/IO/Socket/INET.pm
-lib/SPVM/IO/Socket/INET.spvm
 lib/SPVM/IO/Socket/Interface.pm
 lib/SPVM/IO/Socket/Interface.spvm
 Makefile.PL
@@ -23,10 +21,10 @@ MANIFEST			This list of files
 README.md
 t/IO_File.t
 t/IO_Select.t
-t/IO_Socket_INET.t
+t/IO_Socket.t
 t/lib/SPVM/TestCase/IO/File.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
-t/lib/SPVM/TestCase/IO/Socket/INET.spvm
+t/lib/SPVM/TestCase/IO/Socket.spvm
 t/lib/TestFile.pm
 t/test_files/file_eof.txt
 t/test_files/fread.txt

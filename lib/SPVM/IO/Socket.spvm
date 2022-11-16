@@ -5,8 +5,16 @@ class IO::Socket extends IO::Handle {
   
   method has_interfaces : int () { return 1; }
   
-  method read : int ($buffer : byte[]) { return $self->(IO::Socket::Interface)->read($buffer); }
-  method write : int ($buffer : string, $length : int) { return $self->(IO::Socket::Interface)->write($buffer, $length); }
-  method close : void () { $self->(IO::Socket::Interface)->close; }
-  method fileno : int () { return $self->(IO::Socket::Interface)->fileno; }
+  native static method new : IO::Socket ($host : string, $port : int);
+  native method read : int ($buffer : byte[]);
+  native method write : int ($buffer : string, $length : int);
+  native method close : void ();
+  native method fileno : int ();
+  
+  method DESTROY : void () {
+    $self->_cleanup_wsa;
+    $self->close;
+  }
+  
+  private native method _cleanup_wsa : void ();
 }

@@ -21,9 +21,9 @@
 #endif
 
 // Module file name
-static const char* MFILE = "IO/Socket/INET.c";
+static const char* MFILE = "IO/Socket.c";
 
-int32_t SPVM__IO__Socket__INET__new(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__Socket__new(SPVM_ENV* env, SPVM_VALUE* stack) {
 
   int32_t e;
 
@@ -78,8 +78,8 @@ int32_t SPVM__IO__Socket__INET__new(SPVM_ENV* env, SPVM_VALUE* stack) {
     return env->die(env, stack,  "Can't connect to HTTP server : %s:%d", deststr, port, MFILE, __LINE__);
   }
   
-  // Create IO::Socket::INET object
-  void* obj_socket = env->new_object_by_name(env, stack,  "IO::Socket::INET", &e, __FILE__, __LINE__);
+  // Create IO::Socket object
+  void* obj_socket = env->new_object_by_name(env, stack,  "IO::Socket", &e, __FILE__, __LINE__);
   if (e) { return e; }
   
   // Set fd
@@ -91,7 +91,7 @@ int32_t SPVM__IO__Socket__INET__new(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__Socket__INET__read(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__Socket__read(SPVM_ENV* env, SPVM_VALUE* stack) {
   int32_t e;
 
   void* obj_socket = stack[0].oval;
@@ -117,7 +117,7 @@ int32_t SPVM__IO__Socket__INET__read(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__Socket__INET__write(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__Socket__write(SPVM_ENV* env, SPVM_VALUE* stack) {
   int32_t e;
 
   void* obj_socket = stack[0].oval;
@@ -144,7 +144,7 @@ int32_t SPVM__IO__Socket__INET__write(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__Socket__INET__close(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__Socket__close(SPVM_ENV* env, SPVM_VALUE* stack) {
 
   int32_t e;
   
@@ -167,7 +167,7 @@ int32_t SPVM__IO__Socket__INET__close(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__Socket__INET__fileno(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__Socket__fileno(SPVM_ENV* env, SPVM_VALUE* stack) {
   int32_t e;
 
   // Self
@@ -183,7 +183,7 @@ int32_t SPVM__IO__Socket__INET__fileno(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__Socket__INET___cleanup_wsa(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__Socket___cleanup_wsa(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   // Unload WinSock DLL
 #ifdef _WIN32

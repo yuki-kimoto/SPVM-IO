@@ -5,4 +5,30 @@ class IO::Socket::Interface : interface_t {
   method write : int ($buffer : string, $length : int);
   method close : void ();
   method fileno : int ();
+
+=pod TODO
+
+  accept
+  atmark
+  autoflush
+  bind
+  connected
+  getsockopt
+  listen
+  peername
+  protocol
+  recv
+  send
+  setsockopt
+  shutdown
+  sockdomain
+  socket
+  socketpair
+  sockname
+  sockopt
+  socktype
+  timeout
+
+=cut
+
 }

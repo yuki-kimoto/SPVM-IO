@@ -7,17 +7,17 @@ use lib "$FindBin::Bin/lib";
 
 BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build" };
 
-use SPVM 'TestCase::IO::Socket::INET';
+use SPVM 'TestCase::IO::Socket';
 
 # Start objects count
 my $start_memory_blocks_count = SPVM::get_memory_blocks_count();
 
 # Socket
 {
-  ok(SPVM::TestCase::IO::Socket::INET->basic);
-  ok(SPVM::TestCase::IO::Socket::INET->basic_interface);
-  ok(SPVM::TestCase::IO::Socket::INET->basic_auto_close);
-  ok(SPVM::TestCase::IO::Socket::INET->fileno);
+  ok(SPVM::TestCase::IO::Socket->basic);
+  ok(SPVM::TestCase::IO::Socket->basic_interface);
+  ok(SPVM::TestCase::IO::Socket->basic_auto_close);
+  ok(SPVM::TestCase::IO::Socket->fileno);
 }
 
 

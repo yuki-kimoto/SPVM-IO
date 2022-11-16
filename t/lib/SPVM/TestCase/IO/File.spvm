@@ -23,7 +23,7 @@ class TestCase::IO::File {
       return 0;
     }
     
-    my $io_file_default : byte = $io_file->auto_flush;
+    my $io_file_default = $io_file->auto_flush;
     unless ($io_file_default == 0) {
       return 0;
     }
