@@ -11,6 +11,17 @@ class IO::Socket extends IO::Handle {
   native method close : int ();
   method fileno : int () { return $self->{fd}; }
   
+  method opened : int () {
+    my $fd = $self->{fd};
+    
+    my $opened = 0;
+    if ($fd >= 0) {
+      $opened = 1;
+    }
+    
+    return $opened;
+  }
+  
   method DESTROY : void () {
     $self->close;
   }
