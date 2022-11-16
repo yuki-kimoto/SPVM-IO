@@ -1,8 +1,8 @@
 class IO::Socket::Interface : interface_t {
   required method has_interfaces : int ();
   
-  method read : int ($buffer : byte[]);
-  method write : int ($buffer : string, $length : int);
+  method recv : int ($buffer : mutable string);
+  method send : int ($buffer : string, $length : int);
 
 =pod TODO
 

@@ -7,8 +7,8 @@ class IO::Socket extends IO::Handle {
   method has_interfaces : int () { return 1; }
   
   native static method new : IO::Socket ($host : string, $port : int);
-  native method read : int ($buffer : byte[]);
-  native method write : int ($buffer : string, $length : int);
+  native method recv : int ($buffer : mutable string);
+  native method send : int ($buffer : string, $length : int);
   
   method close : int () {
     my $fd = $self->{fd};

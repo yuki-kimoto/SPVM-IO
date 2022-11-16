@@ -8,20 +8,20 @@ class TestCase::IO::Socket {
     my $port = 80;
     my $socket = IO::Socket->new($host, $port);
     
-    my $write_buffer = "GET / HTTP/1.0\r\n\r\n";
-    $socket->write($write_buffer, length $write_buffer);
+    my $send_buffer = "GET / HTTP/1.0\r\n\r\n";
+    $socket->send($send_buffer, length $send_buffer);
     
-    my $read_buffer = new byte[100];
+    my $recv_buffer = (mutable string)new_string_len 100;
     while (1) {
-      my $read_length = $socket->read($read_buffer);
+      my $recv_length = $socket->recv($recv_buffer);
       
-      if ($read_length < 0) {
+      if ($recv_length < 0) {
         die "Read error";
       }
       
-      # print((string)sliceb($read_buffer, 0, $read_length));
+      # print((string)sliceb($recv_buffer, 0, $recv_length));
       
-      if ($read_length < @$read_buffer) {
+      if ($recv_length < length $recv_buffer) {
         last;
       }
     }
@@ -39,20 +39,20 @@ class TestCase::IO::Socket {
     my $port = 80;
     my $socket = (IO::Socket)IO::Socket->new($host, $port);
     
-    my $write_buffer = "GET / HTTP/1.0\r\n\r\n";
-    $socket->write($write_buffer, length $write_buffer);
+    my $send_buffer = "GET / HTTP/1.0\r\n\r\n";
+    $socket->send($send_buffer, length $send_buffer);
     
-    my $read_buffer = new byte[100];
+    my $recv_buffer = (mutable string)new_string_len 100;
     while (1) {
-      my $read_length = $socket->read($read_buffer);
+      my $recv_length = $socket->recv($recv_buffer);
       
-      if ($read_length < 0) {
+      if ($recv_length < 0) {
         die "Read error";
       }
       
-      # print((string)sliceb($read_buffer, 0, $read_length));
+      # print((string)sliceb($recv_buffer, 0, $recv_length));
       
-      if ($read_length < @$read_buffer) {
+      if ($recv_length < length $recv_buffer) {
         last;
       }
     }
@@ -69,20 +69,20 @@ class TestCase::IO::Socket {
     my $port = 80;
     my $socket = IO::Socket->new($host, $port);
     
-    my $write_buffer = "GET / HTTP/1.0\r\n\r\n";
-    $socket->write($write_buffer, length $write_buffer);
+    my $send_buffer = "GET / HTTP/1.0\r\n\r\n";
+    $socket->send($send_buffer, length $send_buffer);
     
-    my $read_buffer = new byte[100];
+    my $recv_buffer = (mutable string)new_string_len 100;
     while (1) {
-      my $read_length = $socket->read($read_buffer);
+      my $recv_length = $socket->recv($recv_buffer);
       
-      if ($read_length < 0) {
+      if ($recv_length < 0) {
         die "Read error";
       }
       
-      # print((string)sliceb($read_buffer, 0, $read_length));
+      # print((string)sliceb($recv_buffer, 0, $recv_length));
       
-      if ($read_length < @$read_buffer) {
+      if ($recv_length < length $recv_buffer) {
         last;
       }
     }

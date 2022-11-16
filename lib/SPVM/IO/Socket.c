@@ -82,7 +82,7 @@ int32_t SPVM__IO__Socket__new(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__Socket__read(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__Socket__recv(SPVM_ENV* env, SPVM_VALUE* stack) {
   int32_t e;
 
   void* obj_socket = stack[0].oval;
@@ -98,17 +98,17 @@ int32_t SPVM__IO__Socket__read(SPVM_ENV* env, SPVM_VALUE* stack) {
   }
   
   /* HTTPリクエスト送信 */
-  int32_t read_length = recv(fd, (char*)buffer, length, 0);
-  if (read_length < 0) {
-    return env->die(env, stack,  "Socket read error", MFILE, __LINE__);
+  int32_t recv_length = recv(fd, (char*)buffer, length, 0);
+  if (recv_length < 0) {
+    return env->die(env, stack,  "Socket recv error", MFILE, __LINE__);
   }
   
-  stack[0].ival = read_length;
+  stack[0].ival = recv_length;
   
   return 0;
 }
 
-int32_t SPVM__IO__Socket__write(SPVM_ENV* env, SPVM_VALUE* stack) {
+int32_t SPVM__IO__Socket__send(SPVM_ENV* env, SPVM_VALUE* stack) {
   int32_t e;
 
   void* obj_socket = stack[0].oval;
@@ -124,13 +124,13 @@ int32_t SPVM__IO__Socket__write(SPVM_ENV* env, SPVM_VALUE* stack) {
   }
   
   /* HTTPリクエスト送信 */
-  int32_t write_length = send(fd, buffer, length, 0);
+  int32_t send_length = send(fd, buffer, length, 0);
   
-  if (write_length < 0) {
-    return env->die(env, stack,  "Socket write error", MFILE, __LINE__);
+  if (send_length < 0) {
+    return env->die(env, stack,  "Socket send error", MFILE, __LINE__);
   }
   
-  stack[0].ival = write_length;
+  stack[0].ival = send_length;
   
   return 0;
 }
