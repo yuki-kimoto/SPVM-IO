@@ -10,9 +10,9 @@ class IO::Socket extends IO::Handle {
   method recv : int ($buffer : mutable string) {
     my $fd = $self->{fd};
     
-    my $send_length = Sys::Socket->send($fd, $buffer, length $buffer, 0);
+    my $recv_length = Sys::Socket->recv($fd, $buffer, length $buffer, 0);
     
-    return $send_length;
+    return $recv_length;
   }
   
   method send : int ($buffer : string, $length : int) {
