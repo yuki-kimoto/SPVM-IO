@@ -39,11 +39,9 @@ sub MY::postamble {
   
   # Precompile make rule
   $make_rule .= SPVM::Builder::Util::API::create_make_rule_precompile("IO::Select");
-  $make_rule .= SPVM::Builder::Util::API::create_make_rule_precompile("IO::Socket");
 
   # Native make rule
   $make_rule .= SPVM::Builder::Util::API::create_make_rule_native("IO::Select");
-  $make_rule .= SPVM::Builder::Util::API::create_make_rule_native("IO::Socket");
 
   return $make_rule;
 }

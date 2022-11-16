@@ -10,8 +10,6 @@ lib/SPVM/IO/Select.c
 lib/SPVM/IO/Select.config
 lib/SPVM/IO/Select.pm
 lib/SPVM/IO/Select.spvm
-lib/SPVM/IO/Socket.c
-lib/SPVM/IO/Socket.config
 lib/SPVM/IO/Socket.pm
 lib/SPVM/IO/Socket.spvm
 lib/SPVM/IO/Socket/Interface.pm
