@@ -3,8 +3,6 @@ class IO::Socket::Interface : interface_t {
   
   method read : int ($buffer : byte[]);
   method write : int ($buffer : string, $length : int);
-  method close : void ();
-  method fileno : int ();
 
 =pod TODO
 

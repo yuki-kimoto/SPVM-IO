@@ -8,7 +8,7 @@ class IO::Socket extends IO::Handle {
   native static method new : IO::Socket ($host : string, $port : int);
   native method read : int ($buffer : byte[]);
   native method write : int ($buffer : string, $length : int);
-  native method close : void ();
+  native method close : int ();
   method fileno : int () { return $self->{fd}; }
   
   method DESTROY : void () {
