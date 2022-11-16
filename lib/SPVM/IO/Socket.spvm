@@ -1,12 +1,48 @@
 class IO::Socket extends IO::Handle {
   interface IO::Socket::Interface;
   use Sys::Socket;
+  use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Sockaddr::In;
+  use Sys::Socket::In_addr;
 
   has fd : int;
   
   method has_interfaces : int () { return 1; }
   
-  native static method new : IO::Socket ($host : string, $port : int);
+  static method new : IO::Socket ($host : string, $port : int) {
+
+    my $self = new IO::Socket;
+
+    # Socket fd
+    my $fd = Sys::Socket->socket(SOCKET->AF_INET, SOCKET->SOCK_STREAM, 0);
+    
+    $self->{fd} = $fd;
+    
+    # Socket information
+    my $server = Sys::Socket::Sockaddr::In->new;
+    $server->set_sin_family((byte)SOCKET->AF_INET);
+    $server->set_sin_port(Sys::Socket->htons((short)$port));
+
+    my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
+    Sys::Socket->getaddrinfo($host, undef, undef, $res_ref);
+    my $res = $res_ref->[0];
+    
+    if ($res) {
+      my $res_array = $res->to_array;
+      $server->set_sin_addr($res_array->[0]->copy_ai_addr->(Sys::Socket::Sockaddr::In)->copy_sin_addr);
+    }
+    else {
+      my $in_addr = Sys::Socket::In_addr->new;
+      Sys::Socket->inet_aton($host, $in_addr);
+      $server->set_sin_addr($in_addr);
+    }
+    
+    # Connect
+    Sys::Socket->connect($fd, $server, $server->sizeof);
+    
+    return $self;
+  }
+  
   method recv : int ($buffer : mutable string) {
     my $fd = $self->{fd};
     
