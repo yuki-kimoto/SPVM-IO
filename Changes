@@ -1,4 +1,7 @@
 0.12 2022-11-16
+  [Prerequirement Changes]
+    * SPVM::IO needs SPVM::Math 0.11.
+0.12 2022-11-16
   [Incompatible Changes]
     * The methods in the IO::Socket::INET is moved to the IO::Socket class.
     * Removed IO::Socket::INET. This module will be added in the nearly future.

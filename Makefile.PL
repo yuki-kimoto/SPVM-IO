@@ -29,6 +29,7 @@ WriteMakefile(
     PREREQ_PM => {
         'SPVM' => '0.9661',
         'SPVM::Sys' => '0.26',
+        'SPVM::Math' => '0.11',
     },
 );
 
