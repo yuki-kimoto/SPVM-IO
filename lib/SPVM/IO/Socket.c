@@ -134,26 +134,3 @@ int32_t SPVM__IO__Socket__write(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   return 0;
 }
-
-int32_t SPVM__IO__Socket__close(SPVM_ENV* env, SPVM_VALUE* stack) {
-
-  int32_t e;
-  
-  void* obj_socket = stack[0].oval;
-  
-  int32_t fd = env->get_field_int_by_name(env, stack,  obj_socket, "fd", &e, MFILE, __LINE__);
-  if (e) { return e; }
-  
-  if (fd >= 0) {
-    int32_t ret = closesocket(fd);
-    if (ret == 0) {
-      env->set_field_int_by_name(env, stack,  obj_socket, "fd", -1, &e, MFILE, __LINE__);
-      if (e) { return e; }
-    }
-    else {
-      return env->die(env, stack,  "Fail close", MFILE, __LINE__);
-    }
-  }
-  
-  return 0;
-}

@@ -12,7 +12,7 @@ class IO::Handle {
   
   has autoflush : wo byte;
   has input_line_number : ro int;
-  has opened : ro int;
+  has opened : ro protected int;
   
   interface IO::Handle::Interface;
   

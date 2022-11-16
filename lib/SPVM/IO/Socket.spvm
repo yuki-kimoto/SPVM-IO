@@ -1,5 +1,6 @@
 class IO::Socket extends IO::Handle {
   interface IO::Socket::Interface;
+  use Sys::Socket;
 
   has fd : int;
   
@@ -8,7 +9,20 @@ class IO::Socket extends IO::Handle {
   native static method new : IO::Socket ($host : string, $port : int);
   native method read : int ($buffer : byte[]);
   native method write : int ($buffer : string, $length : int);
-  native method close : int ();
+  
+  method close : int () {
+    my $fd = $self->{fd};
+    
+    my $status = 0;
+    if ($fd >= 0) {
+      $status = Sys::Socket->close($fd);
+      $self->{fd} = -1;
+      $self->{opened} = 0;
+    }
+    
+    return $status;
+  }
+  
   method fileno : int () { return $self->{fd}; }
   
   method opened : int () {
