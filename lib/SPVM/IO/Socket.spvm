@@ -7,7 +7,14 @@ class IO::Socket extends IO::Handle {
   method has_interfaces : int () { return 1; }
   
   native static method new : IO::Socket ($host : string, $port : int);
-  native method recv : int ($buffer : mutable string);
+  method recv : int ($buffer : mutable string) {
+    my $fd = $self->{fd};
+    
+    my $send_length = Sys::Socket->send($fd, $buffer, length $buffer, 0);
+    
+    return $send_length;
+  }
+  
   method send : int ($buffer : string, $length : int) {
     my $fd = $self->{fd};
     
