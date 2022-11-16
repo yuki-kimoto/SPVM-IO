@@ -9,7 +9,7 @@ class IO::Socket extends IO::Handle {
   native method read : int ($buffer : byte[]);
   native method write : int ($buffer : string, $length : int);
   native method close : void ();
-  native method fileno : int ();
+  method fileno : int () { return $self->{fd}; }
   
   method DESTROY : void () {
     $self->_cleanup_wsa;

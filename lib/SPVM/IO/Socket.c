@@ -167,22 +167,6 @@ int32_t SPVM__IO__Socket__close(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 }
 
-int32_t SPVM__IO__Socket__fileno(SPVM_ENV* env, SPVM_VALUE* stack) {
-  int32_t e;
-
-  // Self
-  void* obj_self = stack[0].oval;
-  if (!obj_self) { return env->die(env, stack,  "Self must be defined", MFILE, __LINE__); }
-  
-  // File fh
-  int32_t fd = env->get_field_int_by_name(env, stack,  obj_self, "fd", &e, MFILE, __LINE__);
-  if (e) { return e; }
-  
-  stack[0].ival = fd;
-
-  return 0;
-}
-
 int32_t SPVM__IO__Socket___cleanup_wsa(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   // Unload WinSock DLL
