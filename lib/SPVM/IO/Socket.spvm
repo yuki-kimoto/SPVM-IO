@@ -8,7 +8,13 @@ class IO::Socket extends IO::Handle {
   
   native static method new : IO::Socket ($host : string, $port : int);
   native method recv : int ($buffer : mutable string);
-  native method send : int ($buffer : string, $length : int);
+  method send : int ($buffer : string, $length : int) {
+    my $fd = $self->{fd};
+    
+    my $send_length = Sys::Socket->send($fd, $buffer, $length, 0);
+    
+    return $send_length;
+  }
   
   method close : int () {
     my $fd = $self->{fd};
