@@ -12,9 +12,6 @@ class IO::Socket extends IO::Handle {
   method fileno : int () { return $self->{fd}; }
   
   method DESTROY : void () {
-    $self->_cleanup_wsa;
     $self->close;
   }
-  
-  private native method _cleanup_wsa : void ();
 }

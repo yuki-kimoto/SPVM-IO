@@ -27,15 +27,6 @@ int32_t SPVM__IO__Socket__new(SPVM_ENV* env, SPVM_VALUE* stack) {
 
   int32_t e;
 
-#ifdef _WIN32
-  // Load WinSock DLL
-  WSADATA wsa;
-  WSAStartup(MAKEWORD(2, 2), &wsa);
-#else
-  // Ignore SIGPIPE in unix like system
-  signal(SIGPIPE, SIG_IGN);
-#endif
-
   // Dest string. Domain or IP address
   void* obj_deststr = stack[0].oval;
   const char* deststr = (const char*)env->get_elems_byte(env, stack,  obj_deststr);
@@ -163,16 +154,6 @@ int32_t SPVM__IO__Socket__close(SPVM_ENV* env, SPVM_VALUE* stack) {
       return env->die(env, stack,  "Fail close", MFILE, __LINE__);
     }
   }
-  
-  return 0;
-}
-
-int32_t SPVM__IO__Socket___cleanup_wsa(SPVM_ENV* env, SPVM_VALUE* stack) {
-  
-  // Unload WinSock DLL
-#ifdef _WIN32
-  WSACleanup();
-#endif
   
   return 0;
 }
