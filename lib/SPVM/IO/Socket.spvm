@@ -8,6 +8,7 @@ class IO::Socket extends IO::Handle {
   use Sys::Socket::In_addr;
   use IO::Select;
   use Hash;
+  use IO::Util;
 
   has fd : ro int;
   has timeout : ro int;
@@ -15,6 +16,7 @@ class IO::Socket extends IO::Handle {
   has socktype : ro int;
   has protocol : ro int;
   has peername : ro Sys::Socket::Sockaddr;
+  has listen_baklog : int;
 
   method has_interfaces : int () { return 1; }
 
@@ -33,21 +35,34 @@ class IO::Socket extends IO::Handle {
     
     my $options_h = Hash->new($options);
     
-    my $timeout = -1;
-    if ($options_h->exists("Timeout")) {
-      $timeout = $options_h->get_int("Timeout");
-      $options_h->delete("Timeout");
-    }
+    # Timeout option
+    my $timeout = IO::Util->delete_int_or_default($options_h, "Timeout", -1);
     $self->{timeout} = $timeout;
     
-    my $registered_domain = [SOCKET->AF_INET, SOCKET->AF_INET6, SOCKET->AF_UNIX];
-
-    my $sockdomain = -1;
-    if ($options_h->exists("Domain")) {
-      $sockdomain = $options_h->get_int("Domain");
-      $options_h->delete("Domain");
-    }
+    # Domain option
+    my $sockdomain = IO::Util->delete_int_or_default($options_h, "Domain", -1);
     $self->{sockdomain} = $sockdomain;
+    unless ($sockdomain >= 0) {
+      die "The \"Domain\" option must be defined";
+    }
+    
+    # Type option
+    my $socktype = IO::Util->delete_int_or_default($options_h, "Type", -1);
+    $self->{socktype} = $socktype;
+    
+    # Blocking option
+    my $blocking = IO::Util->delete_int_or_default($options_h, "Blocking", 1);
+    $self->SUPER::blocking($blocking);
+    
+    # Listen option
+    my $listen_baklog = IO::Util->delete_int_or_default($options_h, "Listen", 5);
+    $self->{listen_baklog} = $listen_baklog;
+    
+    my $registered_domain = [SOCKET->AF_INET, SOCKET->AF_INET6, SOCKET->AF_UNIX];
+    
+    for my $key (@{$options_h->keys}) {
+      die "The \"$key\" option is not available";
+    }
   }
 
   static method connect : IO::Socket ($host : string, $port : int) {
@@ -161,6 +176,13 @@ class IO::Socket extends IO::Handle {
     return $addr;
   }
 
+  method shutdown : int ($sockfd : int, $how : int) {
+    $self->{peername} = undef;
+    my $fd = $self->{fd};
+    my $status = Sys::Socket->shutdown($fd, $how);
+    return $status;
+  }
+
 =pod
 
   method accept ($sock : int) {
@@ -234,13 +256,6 @@ class IO::Socket extends IO::Handle {
 
       # remember who we recv'd from
       ${*$sock}{'peername'} = recv($sock, $_[1]='', $len, $flags);
-  }
-
-  method shutdown {
-      @_ == 2 or croak 'usage: $sock->shutdown(HOW)';
-      my($sock, $how) = @_;
-      ${*$sock}{'peername'} = undef;
-      shutdown($sock, $how);
   }
 
   method setsockopt {
