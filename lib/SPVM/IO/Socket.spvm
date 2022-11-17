@@ -242,6 +242,14 @@ class IO::Socket extends IO::Handle {
     return $status;
   }
 
+  method getsockopt : int ($level : int, $optname : int) {
+    my $fd = $self->{fd};
+    my $optval = 0;
+    Sys::Socket->getsockopt_int($fd, $level, $optname, \$optval);
+    
+    return $optval;
+  }
+
 =pod
 
   method accept ($sock : int) {
