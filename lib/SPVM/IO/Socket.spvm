@@ -234,6 +234,14 @@ class IO::Socket extends IO::Handle {
     return $status;
   }
 
+  method setsockopt : int ($level : int, $optname : int, $optval : int) {
+    my $fd = $self->{fd};
+    
+    my $status = Sys::Socket->setsockopt_int($fd, $level, $optname, $optval);
+    
+    return $status;
+  }
+
 =pod
 
   method accept ($sock : int) {
@@ -309,11 +317,6 @@ class IO::Socket extends IO::Handle {
       ${*$sock}{'peername'} = recv($sock, $_[1]='', $len, $flags);
   }
 
-  method setsockopt {
-      @_ == 4 or croak '$sock->setsockopt(LEVEL, OPTNAME, OPTVAL)';
-      setsockopt($_[0],$_[1],$_[2],$_[3]);
-  }
-
   my $intsize = length(pack("i",0));
 
   method getsockopt : int[]  {
@@ -323,12 +326,6 @@ class IO::Socket extends IO::Handle {
       $r = unpack("i", $r)
     if(defined $r && length($r) == $intsize);
       $r;
-  }
-
-  method sockopt {
-      my $sock = shift;
-      @_ == 1 ? $sock->getsockopt(SOL_SOCKET,@_)
-        : $sock->setsockopt(SOL_SOCKET,@_);
   }
 }
 
