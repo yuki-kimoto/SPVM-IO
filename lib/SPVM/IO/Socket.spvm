@@ -225,6 +225,15 @@ class IO::Socket extends IO::Handle {
     return $status;
   }
 
+
+  method atmark : int () {
+    my $fd = $self->{fd};
+    
+    my $status = IO::Util->sockatmark($fd);
+    
+    return $status;
+  }
+
 =pod
 
   method accept ($sock : int) {
@@ -320,12 +329,6 @@ class IO::Socket extends IO::Handle {
       my $sock = shift;
       @_ == 1 ? $sock->getsockopt(SOL_SOCKET,@_)
         : $sock->setsockopt(SOL_SOCKET,@_);
-  }
-
-  method atmark {
-      @_ == 1 or croak 'usage: $sock->atmark()';
-      my($sock) = @_;
-      sockatmark($sock);
   }
 }
 

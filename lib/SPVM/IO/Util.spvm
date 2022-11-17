@@ -62,4 +62,6 @@ class IO::Util {
     
     return $value;
   }
+
+  native static method sockatmark : int ($sockfd : int);
 }
