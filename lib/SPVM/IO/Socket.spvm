@@ -267,22 +267,23 @@ class IO::Socket extends IO::Handle {
     return $fd;
   }
 
-=pod
-
-  sub socketpair {
-      @_ == 4 || croak 'usage: IO::Socket->socketpair(DOMAIN, TYPE, PROTOCOL)';
-      my($class,$domain,$type,$protocol) = @_;
-      my $sock1 = $class->new();
-      my $sock2 = $class->new();
-   
-      socketpair($sock1,$sock2,$domain,$type,$protocol) or
-          return ();
-   
-      ${*$sock1}{'io_socket_type'}  = ${*$sock2}{'io_socket_type'}  = $type;
-      ${*$sock1}{'io_socket_proto'} = ${*$sock2}{'io_socket_proto'} = $protocol;
-   
-      ($sock1,$sock2);
+  method socketpair : int[] ($domain : int, $type : int, $protocol : int) {
+    my $sock1 = IO::Socket->new;
+    my $sock2 = IO::Socket->new;
+    
+    my $sock1_fd = $sock1->{fd};
+    my $sock2_fd = $sock2->{fd};
+    
+    my $pair = new int[2];
+    Sys::Socket->socketpair($domain, $type, $protocol, $pair);
+    
+    $sock1->{socktype} = $type;
+    $sock1->{protocol} = $protocol;
+     
+    return $pair;
   }
+
+=pod
 
   method accept ($sock : int) {
       my $timeout = $self->{timeout};
