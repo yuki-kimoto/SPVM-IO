@@ -111,3 +111,41 @@ int32_t SPVM__IO__Util__sockatmark(SPVM_ENV* env, SPVM_VALUE* stack) {
   return 0;
 #endif
 }
+
+int32_t SPVM__IO__Util__sendto(SPVM_ENV* env, SPVM_VALUE* stack) {
+  
+  int32_t sockfd = stack[0].ival;
+
+  void* obj_buf = stack[1].oval;
+  
+  if (!obj_buf) {
+    return env->die(env, stack, "The $buf must be defined", FILE_NAME, __LINE__);
+  }
+  
+  const char* buf = env->get_chars(env, stack, obj_buf);
+  
+  int32_t len = stack[2].ival;
+  
+  int32_t flags = stack[3].ival;
+
+  void* obj_addr = stack[4].oval;
+  
+  if (!obj_addr) {
+    return env->die(env, stack, "The $addr must be defined", FILE_NAME, __LINE__);
+  }
+  
+  const struct sockaddr* addr = env->get_pointer(env, stack, obj_addr);
+  
+  int32_t addrlen = stack[5].ival;
+
+  int32_t bytes_length = sendto(sockfd, buf, len, flags, addr, addrlen);
+  
+  if (bytes_length == -1) {
+    env->die(env, stack, "[System Error]sendto failed: %s", socket_strerror(env, stack, socket_errno(), 0), FILE_NAME, __LINE__);
+    return SPVM_NATIVE_C_CLASS_ID_ERROR_SYSTEM;
+  }
+  
+  stack[0].ival = bytes_length;
+  
+  return 0;
+}

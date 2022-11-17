@@ -1,6 +1,7 @@
 class IO::Util {
   use Hash;
   use List;
+  use Sys::Socket::Sockaddr;
   
   static method hash_to_array : object[] ($hash : Hash) {
     my $keys = $hash->keys;
@@ -64,4 +65,6 @@ class IO::Util {
   }
 
   native static method sockatmark : int ($sockfd : int);
+
+  native static method sendto : int ($sockfd : int, $buf : string, $len : int, $flags : int, $sockfd : int, $addr : Sys::Socket::Sockaddr, $addrlen : int);
 }
