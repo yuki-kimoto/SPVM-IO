@@ -37,6 +37,8 @@ WriteMakefile(
 sub MY::postamble {
 
   my $make_rule = '';
+
+  $make_rule .= SPVM::Builder::Util::API::create_make_rule_native('IO::Util');
   
   return $make_rule;
 }

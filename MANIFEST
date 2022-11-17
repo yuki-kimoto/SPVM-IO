@@ -13,6 +13,10 @@ lib/SPVM/IO/Socket.pm
 lib/SPVM/IO/Socket.spvm
 lib/SPVM/IO/Socket/Interface.pm
 lib/SPVM/IO/Socket/Interface.spvm
+lib/SPVM/IO/Util.c
+lib/SPVM/IO/Util.config
+lib/SPVM/IO/Util.pm
+lib/SPVM/IO/Util.spvm
 Makefile.PL
 MANIFEST			This list of files
 README.md
