@@ -7,6 +7,7 @@ class IO::Socket extends IO::Handle {
   use Sys::Socket::Sockaddr::Un;
   use Sys::Socket::In_addr;
   use IO::Select;
+  use Hash;
 
   has fd : ro int;
   has timeout : ro int;
@@ -16,10 +17,41 @@ class IO::Socket extends IO::Handle {
   has peername : ro Sys::Socket::Sockaddr;
 
   method has_interfaces : int () { return 1; }
-  
-  static method connect : IO::Socket ($host : string, $port : int) {
+
+  static method new : IO::Socket ($options = undef : object[]) {
+    
+    my $self = new IO::Socket;
+    
+    $self->init($options);
+    
+    return $self;
+  }
+   
+  method init : void ($options = undef : object[]) {
+
+    $self->set_autoflush(1);
+    
+    my $options_h = Hash->new($options);
+    
+    my $timeout = -1;
+    if ($options_h->exists("Timeout")) {
+      $timeout = $options_h->get_int("Timeout");
+      $options_h->delete("Timeout");
+    }
+    $self->{timeout} = $timeout;
     
     my $registered_domain = [SOCKET->AF_INET, SOCKET->AF_INET6, SOCKET->AF_UNIX];
+
+    my $sockdomain = -1;
+    if ($options_h->exists("Domain")) {
+      $sockdomain = $options_h->get_int("Domain");
+      $options_h->delete("Domain");
+    }
+    $self->{sockdomain} = $sockdomain;
+  }
+
+  static method connect : IO::Socket ($host : string, $port : int) {
+    
     
     my $self = new IO::Socket;
 
