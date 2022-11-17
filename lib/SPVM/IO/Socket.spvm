@@ -97,7 +97,7 @@ class IO::Socket extends IO::Handle {
     }
     
     # Connect
-    Sys::Socket->connect($fd, $socket_address, $socket_address->sizeof);
+    $self->connect_v2($socket_address);
     
     return $self;
   }
