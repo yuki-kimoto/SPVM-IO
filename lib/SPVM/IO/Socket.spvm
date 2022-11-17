@@ -17,8 +17,10 @@ class IO::Socket extends IO::Handle {
 
   method has_interfaces : int () { return 1; }
   
-  static method new : IO::Socket ($host : string, $port : int) {
-
+  static method connect : IO::Socket ($host : string, $port : int) {
+    
+    my $registered_domain = [SOCKET->AF_INET, SOCKET->AF_INET6, SOCKET->AF_UNIX];
+    
     my $self = new IO::Socket;
 
     # Socket fd

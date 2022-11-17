@@ -6,7 +6,7 @@ class TestCase::IO::Socket {
     # Socket
     my $host = "google.com";
     my $port = 80;
-    my $socket = IO::Socket->new($host, $port);
+    my $socket = IO::Socket->connect($host, $port);
     
     my $send_buffer = "GET / HTTP/1.0\r\n\r\n";
     $socket->send($send_buffer, length $send_buffer);
@@ -37,7 +37,7 @@ class TestCase::IO::Socket {
     # Socket
     my $host = "google.com";
     my $port = 80;
-    my $socket = (IO::Socket)IO::Socket->new($host, $port);
+    my $socket = (IO::Socket)IO::Socket->connect($host, $port);
     
     my $send_buffer = "GET / HTTP/1.0\r\n\r\n";
     $socket->send($send_buffer, length $send_buffer);
@@ -67,7 +67,7 @@ class TestCase::IO::Socket {
     # Socket
     my $host = "google.com";
     my $port = 80;
-    my $socket = IO::Socket->new($host, $port);
+    my $socket = IO::Socket->connect($host, $port);
     
     my $send_buffer = "GET / HTTP/1.0\r\n\r\n";
     $socket->send($send_buffer, length $send_buffer);
@@ -95,7 +95,7 @@ class TestCase::IO::Socket {
     # Socket
     my $host = "google.com";
     my $port = 80;
-    my $socket = IO::Socket->new($host, $port);
+    my $socket = IO::Socket->connect($host, $port);
     
     my $fileno = $socket->fileno;
     
