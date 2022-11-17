@@ -33,7 +33,9 @@ class IO::Handle::Interface : interface_t {
 
   method stat : int ($stat : Sys::IO::Stat);
 
-  method blocking : void ($blocking : int);
+  method blocking : int ();
+
+  method set_blocking : void ($blocking : int);
 
   method fcntl : int ($command : int, $command_arg = undef : object of Int|Sys::IO::Flock|object);
 

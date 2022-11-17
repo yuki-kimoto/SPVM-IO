@@ -2,6 +2,7 @@ class IO::Socket extends IO::Handle {
   interface IO::Socket::Interface;
   use Sys::Socket;
   use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Sockaddr;
   use Sys::Socket::Sockaddr::In;
   use Sys::Socket::Sockaddr::In6;
   use Sys::Socket::Sockaddr::Un;
@@ -9,6 +10,8 @@ class IO::Socket extends IO::Handle {
   use IO::Select;
   use Hash;
   use IO::Util;
+  use Errno;
+  use Scope::Guard;
 
   has fd : ro int;
   has timeout : ro int;
@@ -52,7 +55,7 @@ class IO::Socket extends IO::Handle {
     
     # Blocking option
     my $blocking = IO::Util->delete_int_or_default($options_h, "Blocking", 1);
-    $self->SUPER::blocking($blocking);
+    $self->set_blocking($blocking);
     
     # Listen option
     my $listen_baklog = IO::Util->delete_int_or_default($options_h, "Listen", 5);
@@ -67,7 +70,6 @@ class IO::Socket extends IO::Handle {
 
   static method connect : IO::Socket ($host : string, $port : int) {
     
-    
     my $self = new IO::Socket;
 
     # Socket fd
@@ -76,9 +78,9 @@ class IO::Socket extends IO::Handle {
     $self->{fd} = $fd;
     
     # Socket information
-    my $server = Sys::Socket::Sockaddr::In->new;
-    $server->set_sin_family((byte)SOCKET->AF_INET);
-    $server->set_sin_port(Sys::Socket->htons((short)$port));
+    my $socket_address = Sys::Socket::Sockaddr::In->new;
+    $socket_address->set_sin_family((byte)SOCKET->AF_INET);
+    $socket_address->set_sin_port(Sys::Socket->htons((short)$port));
 
     my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
     Sys::Socket->getaddrinfo($host, undef, undef, $res_ref);
@@ -86,18 +88,58 @@ class IO::Socket extends IO::Handle {
     
     if ($res) {
       my $res_array = $res->to_array;
-      $server->set_sin_addr($res_array->[0]->copy_ai_addr->(Sys::Socket::Sockaddr::In)->copy_sin_addr);
+      $socket_address->set_sin_addr($res_array->[0]->copy_ai_addr->(Sys::Socket::Sockaddr::In)->copy_sin_addr);
     }
     else {
       my $in_addr = Sys::Socket::In_addr->new;
       Sys::Socket->inet_aton($host, $in_addr);
-      $server->set_sin_addr($in_addr);
+      $socket_address->set_sin_addr($in_addr);
     }
     
     # Connect
-    Sys::Socket->connect($fd, $server, $server->sizeof);
+    Sys::Socket->connect($fd, $socket_address, $socket_address->sizeof);
     
     return $self;
+  }
+
+  method connect_v2 : int ($address : Sys::Socket::Sockaddr) {
+    my $timeout = $self->{timeout};
+    
+    my $old_blocking = $self->blocking;
+    my $restore_blocking_at_end_of_scope : Scope::Guard = undef;
+    if ($timeout > 0) {
+      $self->set_blocking(0);
+      my $this = $self;
+      $restore_blocking_at_end_of_scope = Scope::Guard->new([$this : IO::Socket,  $old_blocking : int] method : void () {
+        $this->set_blocking($old_blocking);
+      });
+    }
+    
+    my $fd = $self->{fd};
+    
+    my $connect_status = -1;
+    eval { $connect_status = Sys::Socket->connect($fd, $address, $address->sizeof); };
+    
+    my $blocking = $self->blocking;
+    if ($blocking) {
+      if ($@) {
+        die $@;
+      }
+    }
+    else {
+      my $errno = Errno->errno;
+      if ($errno == Errno->EINPROGRESS || $errno == Errno->EWOULDBLOCK) {
+        my $select = IO::Select->new;
+        $select->add($fd);
+        my $can_write = $select->can_write($timeout);
+        
+        unless ($can_write) {
+          die "connect: timeout";
+        }
+      }
+    }
+    
+    return $connect_status;
   }
   
   method recv : int ($buffer : mutable string) {

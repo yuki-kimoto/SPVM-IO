@@ -13,6 +13,7 @@ class IO::Handle {
   has autoflush : wo byte;
   has input_line_number : ro int;
   has opened : ro protected int;
+  has blocking : ro protected int;
   
   interface IO::Handle::Interface;
   
@@ -135,7 +136,7 @@ class IO::Handle {
     return Sys::IO->fcntl($fileno, $command, $command_arg);
   }
   
-  method blocking : void ($blocking : int) {
+  method set_blocking : void ($blocking : int) {
     unless ($blocking >= 0) {
       die "The $blocking must be greater than or equal to 0";
     }
@@ -158,6 +159,8 @@ class IO::Handle {
       
       $self->fcntl(IO->F_SETFL, $newmode);
     }
+    
+    $self->{blocking} = $blocking;
   }
 
   method write : int ($buffer : string, $length : int, $offset = 0 : int) {
@@ -176,37 +179,3 @@ class IO::Handle {
     return $self->(IO::Handle::Interface)->sysread($buffer, $length, $offset);
   }
 }
-
-=pod TODO
-
-*new
-*new_from_fd ( FD, MODE )
-*close
-*eof
-*fileno
-*print ( ARGS )
-*printf ( FMT, [ARGS] )
-*getc
-*clearerr
-*error
-*flush
-*truncate ( LEN )
-*ioctl( FUNCTION, SCALAR )
-*ungetc ( ORD )
-*autoflush ( [BOOL] )                         $|
-*input_line_number( [NUM])                    $.
-*sync
-*printflush ( ARGS )
-*say ( ARGS )
-*stat
-*fcntl( FUNCTION, SCALAR )
-*blocking ( [ BOOL ] )
-*write ( BUF, LEN [, OFFSET ] )
-*read ( BUF, LEN, [OFFSET] )
-*sysread ( BUF, LEN, [OFFSET] )
-*syswrite ( BUF, [LEN, [OFFSET]] )
-*getline
-*getlines
-*fdopen ( FD, MODE )
-
-=cut
