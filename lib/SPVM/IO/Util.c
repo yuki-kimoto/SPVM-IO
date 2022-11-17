@@ -92,6 +92,10 @@ static const char* socket_strerror(SPVM_ENV* env, SPVM_VALUE* stack, int32_t err
 static const char* FILE_NAME = "IO/Util.c";
 
 int32_t SPVM__IO__Util__sockatmark(SPVM_ENV* env, SPVM_VALUE* stack) {
+#ifdef _WIN32
+    env->die(env, stack, "[Not Supported]sockatmark is not supported on this system(_WIN32)", FILE_NAME, __LINE__);
+    return SPVM_NATIVE_C_CLASS_ID_ERROR_NOT_SUPPORTED;
+#else
   
   int32_t sockfd = stack[0].ival;
   
@@ -105,4 +109,5 @@ int32_t SPVM__IO__Util__sockatmark(SPVM_ENV* env, SPVM_VALUE* stack) {
   stack[0].ival = status;
   
   return 0;
+#endif
 }
