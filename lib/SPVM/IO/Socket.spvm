@@ -144,10 +144,14 @@ class IO::Socket extends IO::Handle {
     return $connect_status;
   }
   
-  method recv : int ($buffer : mutable string) {
+  method recv : int ($buffer : mutable string, $length = -1 : int, $flags = 0 : int) {
     my $fd = $self->{fd};
     
-    my $recv_length = Sys::Socket->recv($fd, $buffer, length $buffer, 0);
+    if ($length < 0) {
+      $length = length $buffer;
+    }
+    
+    my $recv_length = Sys::Socket->recv($fd, $buffer, $length, $flags);
     
     return $recv_length;
   }
