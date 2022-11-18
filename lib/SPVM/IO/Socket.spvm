@@ -20,7 +20,7 @@ class IO::Socket extends IO::Handle {
   has socktype : ro int;
   has protocol : ro int;
   has peername : ro Sys::Socket::Sockaddr;
-  has listen_baklog : int;
+  has listen_baklog : protected int;
 
   method has_interfaces : int () { return 1; }
 

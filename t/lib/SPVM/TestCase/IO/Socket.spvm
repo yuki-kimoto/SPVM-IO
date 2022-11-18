@@ -1,5 +1,6 @@
 class TestCase::IO::Socket {
   use IO::Socket;
+  use IO::Socket::INET;
 
   static method basic : int () {
 

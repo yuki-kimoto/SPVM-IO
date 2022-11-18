@@ -149,3 +149,27 @@ int32_t SPVM__IO__Util__sendto(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   return 0;
 }
+
+int32_t SPVM__IO__Util__SO_BROADCAST(SPVM_ENV* env, SPVM_VALUE* stack) {
+
+#ifdef SO_BROADCAST
+  stack[0].ival = SO_BROADCAST;
+  return 0;
+#else
+  env->die(env, stack, "SO_BROADCAST is not defined on this system", FILE_NAME, __LINE__);
+  return SPVM_NATIVE_C_CLASS_ID_ERROR_NOT_SUPPORTED;
+#endif
+  
+}
+
+int32_t SPVM__IO__Util__IPPROTO_ICMP(SPVM_ENV* env, SPVM_VALUE* stack) {
+
+#ifdef IPPROTO_ICMP
+  stack[0].ival = IPPROTO_ICMP;
+  return 0;
+#else
+  env->die(env, stack, "IPPROTO_ICMP is not defined on this system", FILE_NAME, __LINE__);
+  return SPVM_NATIVE_C_CLASS_ID_ERROR_NOT_SUPPORTED;
+#endif
+  
+}
