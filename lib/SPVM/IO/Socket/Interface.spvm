@@ -2,7 +2,7 @@ class IO::Socket::Interface : interface_t {
   required method has_interfaces : int ();
   
   method recv : int ($buffer : mutable string);
-  method send : int ($buffer : string, $length : int);
+  method send : int ($buffer : string, $flags = 0 : int, $to = undef : Sys::Socket::Sockaddr);
 
 =pod TODO
 

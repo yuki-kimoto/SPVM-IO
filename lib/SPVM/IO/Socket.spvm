@@ -139,6 +139,8 @@ class IO::Socket extends IO::Handle {
       }
     }
     
+    $self->{peername} = $address;
+    
     return $connect_status;
   }
   
@@ -150,10 +152,30 @@ class IO::Socket extends IO::Handle {
     return $recv_length;
   }
   
-  method send : int ($buffer : string, $length : int) {
+  method send : int ($buffer : string, $flags = 0 : int, $to = undef : Sys::Socket::Sockaddr) {
     my $fd = $self->{fd};
     
-    my $send_length = Sys::Socket->send($fd, $buffer, $length, 0);
+    my $peername = (Sys::Socket::Sockaddr)undef;
+    if ($to) {
+      $peername = $to;
+    }
+    else {
+      $peername = $self->peername;
+    }
+    
+    unless ($self->peername) {
+      die "send: Cannot determine peer address";
+    }
+    
+    my $send_length = 0;
+    if ($to) {
+      $send_length = IO::Util->sendto($fd, $buffer, length $buffer, $flags, $peername, $peername->sizeof);
+    }
+    else {
+      $send_length = Sys::Socket->send($fd, $buffer, length $buffer, $flags);
+    }
+    
+    $self->{peername} = $peername;
     
     return $send_length;
   }
@@ -312,35 +334,6 @@ class IO::Socket extends IO::Handle {
                      : $new;
   }
 
-  method send {
-      @_ >= 2 && @_ <= 4 or croak 'usage: $sock->send(BUF, [FLAGS, [TO]])';
-      my $sock  = $_[0];
-      my $flags = $_[2] || 0;
-      my $peer;
-
-      if ($_[3]) {
-          # the caller explicitly requested a TO, so use it
-          # this is non-portable for "connected" UDP sockets
-          $peer = $_[3];
-      }
-      elsif (!defined getpeername($sock)) {
-          # we're not connected, so we require a peer from somewhere
-          $peer = $sock->peername;
-
-    croak 'send: Cannot determine peer address'
-        unless(defined $peer);
-      }
-
-      my $r = $peer
-        ? send($sock, $_[1], $flags, $peer)
-        : send($sock, $_[1], $flags);
-
-      # remember who we send to, if it was successful
-      ${*$sock}{'peername'} = $peer
-    if(@_ == 4 && defined $r);
-
-      $r;
-  }
 }
 
 =cut

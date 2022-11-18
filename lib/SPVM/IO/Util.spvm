@@ -66,5 +66,5 @@ class IO::Util {
 
   native static method sockatmark : int ($sockfd : int);
 
-  native static method sendto : int ($sockfd : int, $buf : string, $len : int, $flags : int, $sockfd : int, $addr : Sys::Socket::Sockaddr, $addrlen : int);
+  native static method sendto : int ($sockfd : int, $buf : string, $len : int, $flags : int, $addr : Sys::Socket::Sockaddr, $addrlen : int);
 }
