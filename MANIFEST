@@ -13,6 +13,9 @@ lib/SPVM/IO/Socket.pm
 lib/SPVM/IO/Socket.spvm
 lib/SPVM/IO/Socket/Builder.pm
 lib/SPVM/IO/Socket/Builder.spvm
+lib/SPVM/IO/Socket/INET.config
+lib/SPVM/IO/Socket/INET.pm
+lib/SPVM/IO/Socket/INET.spvm
 lib/SPVM/IO/Socket/Interface.pm
 lib/SPVM/IO/Socket/Interface.spvm
 lib/SPVM/IO/Util.c
