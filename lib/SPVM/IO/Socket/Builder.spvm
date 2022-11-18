@@ -1,0 +1,11 @@
+class IO::Socket::Builder {
+  use IO::Socket;
+  static method new : IO::Socket::Builder () {
+    return new IO::Socket::Builder;
+  }
+  method build : IO::Socket ($options = undef : object[]) {
+    my $io_socket = IO::Socket->new($options);
+    
+    return $io_socket;
+  }
+}
