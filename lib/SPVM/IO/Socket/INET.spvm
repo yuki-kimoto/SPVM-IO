@@ -54,10 +54,7 @@ class IO::Socket::INET extends IO::Socket {
     if ($local_port >= 0) {
       my $local_socket_address = &create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
-    }
-    
-    my $listen = $self->{listen_baklog};
-    if ($listen >= 0) {
+      my $listen = $self->{listen_baklog};
       $self->listen($listen);
     }
     
@@ -66,7 +63,7 @@ class IO::Socket::INET extends IO::Socket {
     
     if ($peer_address) {
       my $peer_socket_address = &create_socket_address($peer_address, $peer_port);
-      $self->connect_v2($peer_socket_address);
+      $self->connect_v3($peer_socket_address);
     }
     
     return $self;
@@ -111,7 +108,7 @@ class IO::Socket::INET extends IO::Socket {
     $self->{local_port} = $local_port;
 
     # LocalPort option
-    my $proto_number = IO::Util->delete_int_or_default($options_h, "Proto", -1);
+    my $proto_number = IO::Util->delete_int_or_default($options_h, "Proto", SOCKET->IPPROTO_TCP);
     $self->{proto_number} = $proto_number;
     
     # Domain option
@@ -132,12 +129,14 @@ class IO::Socket::INET extends IO::Socket {
       $options_h->set_int(Type => $type);
     }
     
+    my $new_options = IO::Util->hash_to_array($options_h);
+    
     # Type option
     # Timeout option
     # Domain option
     # Blocking option
     # Listen option
-    $self->SUPER::init(IO::Util->hash_to_array($options_h));
+    $self->SUPER::init($new_options);
   }
 
   method sockaddr : Sys::Socket::In_addr () {

@@ -144,7 +144,49 @@ class IO::Socket extends IO::Handle {
     
     return $connect_status;
   }
-  
+
+  method connect_v3 : int ($address : Sys::Socket::Sockaddr) {
+    my $timeout = $self->{timeout};
+    
+    my $old_blocking = $self->blocking;
+    my $restore_blocking_at_end_of_scope : Scope::Guard = undef;
+    if ($timeout > 0) {
+      $self->set_blocking(0);
+      my $this = $self;
+      $restore_blocking_at_end_of_scope = Scope::Guard->new([$this : IO::Socket,  $old_blocking : int] method : void () {
+        $this->set_blocking($old_blocking);
+      });
+    }
+    
+    my $fd = $self->{fd};
+    
+    my $connect_status = -1;
+    eval { $connect_status = Sys::Socket->connect($fd, $address, $address->sizeof); };
+    
+    my $blocking = $self->blocking;
+    if ($blocking) {
+      if ($@) {
+        die $@;
+      }
+    }
+    else {
+      my $errno = Errno->errno;
+      if ($errno == Errno->EINPROGRESS || $errno == Errno->EWOULDBLOCK) {
+        my $select = IO::Select->new;
+        $select->add($fd);
+        my $can_write = $select->can_write($timeout);
+        
+        unless ($can_write) {
+          die "connect: timeout";
+        }
+      }
+    }
+    
+    $self->{peername} = $address;
+    
+    return $connect_status;
+  }
+
   method recv : int ($buffer : mutable string, $length = -1 : int, $flags = 0 : int) {
     my $fd = $self->{fd};
     
@@ -212,6 +254,7 @@ class IO::Socket extends IO::Handle {
   }
   
   method DESTROY : void () {
+    $self->{peername} = undef;
     $self->close;
   }
   

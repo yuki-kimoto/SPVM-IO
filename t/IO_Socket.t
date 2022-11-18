@@ -18,6 +18,7 @@ my $start_memory_blocks_count = SPVM::get_memory_blocks_count();
   ok(SPVM::TestCase::IO::Socket->basic_interface);
   ok(SPVM::TestCase::IO::Socket->basic_auto_close);
   ok(SPVM::TestCase::IO::Socket->fileno);
+  ok(SPVM::TestCase::IO::Socket->inet);
 }
 
 
