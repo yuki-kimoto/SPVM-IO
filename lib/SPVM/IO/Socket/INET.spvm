@@ -63,7 +63,7 @@ class IO::Socket::INET extends IO::Socket {
     
     if ($peer_address) {
       my $peer_socket_address = &create_socket_address($peer_address, $peer_port);
-      $self->connect_v3($peer_socket_address);
+      $self->connect($peer_socket_address);
     }
     
     return $self;
