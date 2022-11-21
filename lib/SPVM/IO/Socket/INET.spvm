@@ -11,7 +11,7 @@ class IO::Socket::INET extends IO::Socket {
   has local_port : int;
   has proto_number : int;
   
-  static method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
+  private static method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
     # Socket information
     my $socket_address = Sys::Socket::Sockaddr::In->new;
@@ -69,7 +69,7 @@ class IO::Socket::INET extends IO::Socket {
     return $self;
   }
 
-  method init : void ($options = undef : object[]) {
+  protected method init : void ($options = undef : object[]) {
     
     my $options_h = Hash->new($options);
     

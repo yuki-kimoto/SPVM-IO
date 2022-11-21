@@ -1,32 +1,95 @@
 class IO::Socket::Interface : interface_t {
   required method has_interfaces : int ();
   
+=head2 DESTROY
+
+  method DESTROY : void ();
+
+=head2 init
+
+  method init : void ($options = undef : object[]);
+
+=head2 connect
+
+  method connect : int ($address : Sys::Socket::Sockaddr);
+
+See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
+
+=head2 recv
+
   method recv : int ($buffer : mutable string, $length = -1 : int, $flags = 0 : int);
+
+=head2 send
+
   method send : int ($buffer : string, $flags = 0 : int, $to = undef : Sys::Socket::Sockaddr);
 
-=pod TODO
+See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
-  accept
-  atmark
-  autoflush
-  bind
-  connected
-  getsockopt
-  listen
-  peername
-  protocol
-  recv
-  send
-  setsockopt
-  shutdown
-  sockdomain
-  socket
-  socketpair
-  sockname
-  sockopt
-  socktype
-  timeout
+=head2 close
 
-=cut
+  method close : int ();
+
+=head2 fileno
+
+  method fileno : int (); return $self->{fd}; }
+
+=head2 opened
+
+  method opened : int ();
+
+=head2 listen
+
+  method listen : int ($queue = 5 : int);
+
+=head2 bind
+
+  method bind : int ($address : Sys::Socket::Sockaddr);
+
+See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
+
+=head2 sockname
+
+  method sockname : Sys::Socket::Sockaddr ();
+
+See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
+
+=head2 shutdown
+
+  method shutdown : int ($sockfd : int, $how : int);
+
+=head2 atmark
+
+  method atmark : int ();
+
+=head2 setsockopt
+
+  method setsockopt : int ($level : int, $optname : int, $optval : int);
+
+=head2 getsockopt
+
+  method getsockopt : int ($level : int, $optname : int);
+
+=head2 connected
+
+  method connected : Sys::Socket::Sockaddr ();
+
+See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
+
+=head2 socket
+
+  method socket : int ($domain : int, $type : int, $protocol = 0 : int);
+
+=head2 socketpair
+
+  method socketpair : int[] ($domain : int, $type : int, $protocol : int);
+
+=head2 accept
+
+  method accept : IO::Socket::Interface ($io_socket_builder = undef : IO::Socket::Builder, $peer_ref = undef : Sys::Socket::Sockaddr[]);
+
+See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
+
+See also L<IO::Socket::Builder|SPVM::IO::Socket::Builder>.
+
 
 }

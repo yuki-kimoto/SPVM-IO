@@ -12,13 +12,13 @@ SPVM::IO::Socket - Socket Communications
   use Sys::Socket::Constant as SOCKET;
   
   # Create a new AF_INET socket
-  my $sock = IO::Socket->new({Domain => SOCKET->AF_INET});
+  my $io_socket= IO::Socket->new({Domain => SOCKET->AF_INET});
 
   # Create a new AF_INET6 socket
-  my $sock = IO::Socket->new({Domain => SOCKET->AF_INET6});
+  my $io_socket= IO::Socket->new({Domain => SOCKET->AF_INET6});
   
   # Create a new AF_UNIX socket
-  my $sock = IO::Socket->new({Domain => SOCKET->AF_UNIX});
+  my $io_socket= IO::Socket->new({Domain => SOCKET->AF_UNIX});
 
 =head1 Description
 
@@ -70,17 +70,19 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
   static method new : IO::Socket ($options = undef : object[]);
 
+=head3 new Options
+
 =over 2
 
-=item * Timeout
+=item * Timeout : Int
 
-=item * Domain
+=item * Domain : Int
 
-=item * Type
+=item * Type : Int
 
-=item * Blocking
+=item * Blocking : Int
 
-=item * Listen
+=item * Listen : Int
 
 =back
 
@@ -88,13 +90,13 @@ See also L<SPVM::Sys::Socket::Constant>.
 
 =head1 Instance Methods
 
-=head2 
+=head2 DESTROY
 
   method DESTROY : void ();
 
 =head2 init
 
-  method init : void ($options = undef : object[]);
+  protected method init : void ($options = undef : object[]);
 
 =head2 connect
 
