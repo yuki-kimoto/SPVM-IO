@@ -288,7 +288,7 @@ class IO::Socket extends IO::Handle {
     return $pair;
   }
 
-  method accept : IO::Socket::Interface ($io_socket_builder = undef : IO::Socket::Builder, $peer_ref = undef : Sys::Socket::Sockaddr[]) {
+  method accept : IO::Socket::Interface ($peer_ref = undef : Sys::Socket::Sockaddr[], $io_socket_builder = undef : IO::Socket::Builder) {
     {
       my $self = (IO::Socket::Interface)$self;
       
@@ -309,8 +309,6 @@ class IO::Socket extends IO::Handle {
       
       my $client_fd = Sys::Socket->accept($fd, $client_socket_address, \$client_socket_address_size);
       
-      my $client = (IO::Socket::Interface)undef;
-      
       my $options = {
         Timeout => $timeout,
         fd => $client_fd,
@@ -319,12 +317,14 @@ class IO::Socket extends IO::Handle {
         Proto => $self->protocol,
       };
       
-      if ($io_socket_builder) {
-        $client = $io_socket_builder->build($options);
+      unless ($io_socket_builder) {
+        $io_socket_builder = (IO::Socket::Builder)method : IO::Socket::Interface ($options : object[]) {
+          my $io_socket = IO::Socket->new($options);
+          return $io_socket;
+        };
       }
-      else {
-        $client = IO::Socket->new($options);
-      }
+      
+      my $client = $io_socket_builder->($options);
       
       if ($peer_ref) {
         $peer_ref->[0] = $client_socket_address;

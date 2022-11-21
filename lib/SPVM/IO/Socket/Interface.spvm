@@ -26,5 +26,5 @@ class IO::Socket::Interface : interface_t {
   method connected : Sys::Socket::Sockaddr ();
   method socket : int ($domain : int, $type : int, $protocol = 0 : int);
   method socketpair : int[] ($domain : int, $type : int, $protocol : int);
-  method accept : IO::Socket::Interface ($io_socket_builder = undef : IO::Socket::Builder, $peer_ref = undef : Sys::Socket::Sockaddr[]);
+  method accept : IO::Socket::Interface ($peer_ref = undef : Sys::Socket::Sockaddr[], $io_socket_builder = undef : IO::Socket::Builder);
 }
