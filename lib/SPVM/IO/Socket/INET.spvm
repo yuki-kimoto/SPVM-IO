@@ -54,7 +54,7 @@ class IO::Socket::INET extends IO::Socket {
     if ($local_port >= 0) {
       my $local_socket_address = &create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
-      my $listen = $self->{listen_baklog};
+      my $listen = $self->{listen_backlog};
       $self->listen($listen);
     }
     
