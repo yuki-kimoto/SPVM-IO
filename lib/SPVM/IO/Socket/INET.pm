@@ -131,10 +131,8 @@ L<IO::Socket|SPVM::IO::Socket>
 
   method peerhost : string () {
 
-=head1 Copyright & License
+=head1 See Also
 
-Copyright 2022-2022 Yuki Kimoto, all rights reserved.
+=head2 Perl's IO::Socket::INET
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
+C<IO::Socket::INET> is a Perl's L<IO::Socket::INET|IO::Socket::INET> porting to L<SPVM>.

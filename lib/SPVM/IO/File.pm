@@ -9,6 +9,9 @@ SPVM::IO::File - File Input/Output
 =head1 Usage
   
   use IO::File;
+   
+  my $io_file = IO::File->new("file", "r");
+  $io_file->print("Hello");
 
 =head1 Description
 
@@ -20,9 +23,9 @@ L<IO::Handle|SPVM::IO::Handle>.
 
 =head1 Fields
 
-=head2 auto_flush;
+=head2 autoflush;
 
-  has auto_flush : rw byte;
+  has autoflush : rw byte;
 
 =head2 stream
 
@@ -103,3 +106,9 @@ L<IO::Handle|SPVM::IO::Handle>.
 =head2 sysread
 
   method sysread : int ($buffer : mutable string, $length : int, $offset = 0 : int);
+
+=head1 See Also
+
+=head2 Perl's IO::File
+
+C<IO::File> is a Perl's L<IO::File|IO::File> porting to L<SPVM>.

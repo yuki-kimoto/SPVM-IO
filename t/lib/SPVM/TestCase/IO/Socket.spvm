@@ -127,7 +127,7 @@ class TestCase::IO::Socket {
     # Socket
     my $host = "google.com";
     my $port = 80;
-    my $socket = 
+    my $socket = IO::Socket::INET->new({PeerAddr => $host, PeerPort => $port});
     
     my $fileno = $socket->fileno;
     

@@ -9,6 +9,13 @@ SPVM::IO::Select - Select
 =head1 Usage
   
   use IO::Select;
+  
+  $select = IO::Select->new;
+   
+  $select->add($fd0);
+  $select->add($fd1);
+   
+  my $ready = $select->can_read($timeout);
 
 =head1 Description
 
@@ -53,3 +60,9 @@ L<SPVM::IO::Select> provides select utilities.
 =head2 has_exception
 
   method has_exception : int[] ($timeout : double);
+
+=head1 See Also
+
+=head2 Perl's IO::Select
+
+C<IO::Select> is a Perl's L<IO::Select|IO::Select> porting to L<SPVM>.
