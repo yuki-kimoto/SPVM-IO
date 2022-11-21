@@ -114,7 +114,7 @@ class IO::File extends IO::Handle {
     $self->{stream} = $stream;
   }
 
-  method init : void () {
+  protected method init : void () {
     $self->SUPER::init;
   }
   
