@@ -14,12 +14,13 @@ class IO::Socket extends IO::Handle {
   use Scope::Guard;
   use IO::Socket::Builder;
 
-  has fd : ro int;
-  has timeout : ro int;
-  has sockdomain : ro int;
-  has socktype : ro int;
-  has protocol : ro int;
-  has peername : ro Sys::Socket::Sockaddr;
+  has timeout : protected ro int;
+  has sockdomain : protected ro int;
+  has socktype : protected ro int;
+  has protocol : protected ro int;
+  has peername : protected ro Sys::Socket::Sockaddr;
+
+  has fd : protected int;
   has listen_backlog : protected int;
 
   method has_interfaces : int () { return 1; }
