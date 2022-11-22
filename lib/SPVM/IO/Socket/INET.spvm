@@ -46,8 +46,6 @@ class IO::Socket::INET extends IO::Socket {
     
     $self->socket($domain, $socktype, $proto_number);
     
-    # my $blocking = $self->blocking;
-    
     my $local_port = $self->{local_port};
     my $local_address = $self->{local_address};
     
@@ -145,6 +143,12 @@ class IO::Socket::INET extends IO::Socket {
     # Blocking option
     # Listen option
     $self->SUPER::init($new_options);
+
+    $options_h->delete("Domain");
+    $options_h->delete("Type");
+    for my $key (@{$options_h->keys}) {
+      die "The \"$key\" option is not available";
+    }
   }
 
   method sockaddr : Sys::Socket::In_addr () {

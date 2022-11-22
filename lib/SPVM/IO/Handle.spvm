@@ -4,6 +4,8 @@ class IO::Handle {
   use Format;
   use Scope::Guard;
   use Sys;
+  use Hash;
+  use IO::Util;
  
   use IO::File;
   use Sys::IO::Constant as IO;
@@ -13,23 +15,31 @@ class IO::Handle {
   has autoflush : wo byte;
   has input_line_number : ro int;
   has opened : ro protected int;
-  has blocking : ro protected int;
+  has blocking_flag : rw protected int;
   
   interface IO::Handle::Interface;
   
   # Class methods
-  static method new : IO::Handle () {
+  static method new : IO::Handle ($options : object[]) {
     my $self = new IO::Handle;
     
-    $self->init();
+    $self->init($options);
     
     return $self;
   }
   
   method has_interfaces : int () { return 1; }
   
-  method init : void () {
+  method init : void ($options = undef : object[]) {
+    my $options_h = Hash->new($options);
     
+    # Blocking option
+    my $blocking_flag = IO::Util->delete_int_or_default($options_h, "Blocking", 1);
+    $self->{blocking_flag} = $blocking_flag;
+    
+    for my $key (@{$options_h->keys}) {
+      die "The \"$key\" option is not available";
+    }
   }
   
   method get_autoflush : byte () {
@@ -136,7 +146,7 @@ class IO::Handle {
     return Sys::IO->fcntl($fileno, $command, $command_arg);
   }
   
-  method set_blocking : void ($blocking : int) {
+  method blocking : void ($blocking : int) {
     unless ($blocking >= 0) {
       die "The $blocking must be greater than or equal to 0";
     }
@@ -159,8 +169,6 @@ class IO::Handle {
       
       $self->fcntl(IO->F_SETFL, $newmode);
     }
-    
-    $self->{blocking} = $blocking;
   }
 
   method write : int ($buffer : string, $length : int, $offset = 0 : int) {
