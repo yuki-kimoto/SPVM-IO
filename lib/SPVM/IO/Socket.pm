@@ -90,6 +90,10 @@ See also L<SPVM::Sys::Socket::Constant>.
 
 =head1 Instance Methods
 
+=head2 new_instance
+
+  method new_instance : IO::Socket ($options = undef : object[]);
+
 =head2 DESTROY
 
   method DESTROY : void ();

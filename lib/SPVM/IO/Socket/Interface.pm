@@ -16,6 +16,18 @@ C<IO::Socket::Interface> provides L<IO::Socket|SPVM::IO::Socket> interface.
 
 =head2 Interface Methods
 
+=head2 new_instance
+
+  method new_instance : IO::Socket ($options = undef : object[]);
+
+=head2 fd
+
+  method fd : int ();
+
+=head2 listen_backlog
+
+  method listen_backlog : int ();
+
 =head2 timeout
 
   method timeout : int ();
@@ -112,7 +124,7 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 accept
 
-  method accept : IO::Socket::Interface ($io_socket_builder = undef : IO::Socket::Builder, $peer_ref = undef : Sys::Socket::Sockaddr[]);
+  method accept : IO::Socket::Interface ($peer_ref = undef : Sys::Socket::Sockaddr[]);
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 

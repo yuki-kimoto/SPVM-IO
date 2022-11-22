@@ -69,6 +69,14 @@ class IO::Socket::INET extends IO::Socket {
     return $self;
   }
 
+  method new_instance : IO::Socket::INET ($options = undef : object[]) {
+    {
+      my $self = IO::Socket::INET->new($options);
+      
+      return $self;
+    }
+  }
+  
   protected method init : void ($options = undef : object[]) {
     
     my $options_h = Hash->new($options);

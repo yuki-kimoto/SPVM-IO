@@ -12,7 +12,6 @@ class IO::Socket extends IO::Handle {
   use IO::Util;
   use Errno;
   use Scope::Guard;
-  use IO::Socket::Builder;
 
   has timeout : protected ro int;
   has sockdomain : protected ro int;
@@ -32,7 +31,15 @@ class IO::Socket extends IO::Handle {
     
     return $self;
   }
-   
+  
+  method new_instance : IO::Socket ($options = undef : object[]) {
+    {
+      my $self = IO::Socket->new($options);
+      
+      return $self;
+    }
+  }
+  
   method init : void ($options = undef : object[]) {
 
     $self->set_autoflush(1);
@@ -288,7 +295,7 @@ class IO::Socket extends IO::Handle {
     return $pair;
   }
 
-  method accept : IO::Socket::Interface ($peer_ref = undef : Sys::Socket::Sockaddr[], $io_socket_builder = undef : IO::Socket::Builder) {
+  method accept : IO::Socket::Interface ($peer_ref = undef : Sys::Socket::Sockaddr[]) {
     {
       my $self = (IO::Socket::Interface)$self;
       
@@ -317,14 +324,7 @@ class IO::Socket extends IO::Handle {
         Proto => $self->protocol,
       };
       
-      unless ($io_socket_builder) {
-        $io_socket_builder = (IO::Socket::Builder)method : IO::Socket::Interface ($options : object[]) {
-          my $io_socket = IO::Socket->new($options);
-          return $io_socket;
-        };
-      }
-      
-      my $client = $io_socket_builder->($options);
+      my $client = (IO::Socket::Interface)$self->new_instance($options);
       
       if ($peer_ref) {
         $peer_ref->[0] = $client_socket_address;
