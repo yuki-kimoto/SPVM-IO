@@ -324,7 +324,7 @@ class IO::Socket extends IO::Handle {
         Proto => $self->protocol,
       };
       
-      my $client = (IO::Socket::Interface)$self->new_instance($options);
+      my $client = $self->new_instance($options);
       
       if ($peer_ref) {
         $peer_ref->[0] = $client_socket_address;
