@@ -61,10 +61,6 @@ class IO::Socket extends IO::Handle {
     my $socktype = IO::Util->delete_int_or_default($options_h, "Type", -1);
     $self->{socktype} = $socktype;
     
-    # Blocking option
-    my $blocking = IO::Util->delete_int_or_default($options_h, "Blocking", 1);
-    $self->set_blocking($blocking);
-    
     # Listen option
     my $listen_backlog = IO::Util->delete_int_or_default($options_h, "Listen", 5);
     $self->{listen_backlog} = $listen_backlog;
@@ -74,6 +70,11 @@ class IO::Socket extends IO::Handle {
     $self->{fd} = $fd;
     
     my $registered_domain = [SOCKET->AF_INET, SOCKET->AF_INET6, SOCKET->AF_UNIX];
+
+    my $new_options = IO::Util->hash_to_array($options_h);
+    
+    # Blocking option
+    $self->SUPER::init($new_options);
     
     for my $key (@{$options_h->keys}) {
       die "The \"$key\" option is not available";
@@ -83,14 +84,17 @@ class IO::Socket extends IO::Handle {
   method connect : int ($address : Sys::Socket::Sockaddr) {
     my $timeout = $self->{timeout};
     
-    my $old_blocking = $self->blocking;
+    my $old_blocking_flag = $self->blocking_flag;
     my $restore_blocking_at_end_of_scope : Scope::Guard = undef;
     if ($timeout > 0) {
-      $self->set_blocking(0);
       my $this = $self;
-      $restore_blocking_at_end_of_scope = Scope::Guard->new([$this : IO::Socket,  $old_blocking : int] method : void () {
-        $this->set_blocking($old_blocking);
+      $restore_blocking_at_end_of_scope = Scope::Guard->new([$this : IO::Socket,  $old_blocking_flag : int] method : void () {
+        $this->blocking($old_blocking_flag);
+        $this->set_blocking_flag($old_blocking_flag);
       });
+      
+      $self->blocking(0);
+      $self->{blocking_flag} = 0;
     }
     
     my $fd = $self->{fd};
@@ -98,8 +102,8 @@ class IO::Socket extends IO::Handle {
     my $connect_status = -1;
     eval { $connect_status = Sys::Socket->connect($fd, $address, $address->sizeof); };
     
-    my $blocking = $self->blocking;
-    if ($blocking) {
+    my $blocking_flag = $self->blocking_flag;
+    if ($blocking_flag) {
       if ($@) {
         die $@;
       }
@@ -166,6 +170,7 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{fd};
     
     my $status = 0;
+    
     if ($fd >= 0) {
       $status = Sys::Socket->close($fd);
       $self->{fd} = -1;
