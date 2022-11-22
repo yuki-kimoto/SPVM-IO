@@ -12,6 +12,14 @@ SPVM::IO::Socket::INET - IPv4 Socket
   use Sys::Socket;
   use Sys::Socket::Constant as SOCKET;
 
+  # Socket
+  my $host = "google.com";
+  my $port = 80;
+  my $io_socket = IO::Socket::INET->new({
+    PeerAddr => $host,
+    PeerPort => $port
+  });
+  
   my $io_socket = IO::Socket::INET->new({
     PeerAddr => 'www.perl.org',
     PeerPort => 80,
