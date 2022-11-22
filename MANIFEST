@@ -1,5 +1,4 @@
 Changes
-cpanm
 lib/SPVM/IO.pm
 lib/SPVM/IO/File.pm
 lib/SPVM/IO/File.spvm
