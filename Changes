@@ -1,7 +1,7 @@
 0.14 2022-12-03
   [Prerequrement Changes]
-    * SPVM::IO needs SPVM 0.9664.
-    * SPVM::IO needs SPVM::Sys 0.28.
+    * SPVM::IO needs SPVM 0.9664+.
+    * SPVM::IO needs SPVM::Sys 0.28+.
   [Incompatible Document Changes]
     * Removed the is_io_handlable method in the IO::Handle class in the doc.
       This was removed in the past.
