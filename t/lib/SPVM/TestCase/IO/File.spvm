@@ -16,6 +16,17 @@ class TestCase::IO::File {
     return 1;
   }
 
+  static method close : int ($file : string) {
+    
+    my $io_file = IO::File->new($file, ">");
+    
+    $io_file->print("He");
+    $io_file->print("llo");
+    $io_file->close;
+    
+    return 1;
+  }
+
   static method autoflush : int ($file : string) {
     
     my $io_file = IO::File->new($file, ">");

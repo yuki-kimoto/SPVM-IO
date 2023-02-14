@@ -34,7 +34,6 @@ my $test_dir = "$FindBin::Bin";
 
 # flush
 {
-  # test_flush
   {
     my $file = "$test_dir/test_files_tmp/io_file_test_flush.txt";
     ok(SPVM::TestCase::IO::File->flush($file));
@@ -43,9 +42,18 @@ my $test_dir = "$FindBin::Bin";
   }
 }
 
+# close
+{
+  {
+    my $file = "$test_dir/test_files_tmp/io_file_test_flush.txt";
+    ok(SPVM::TestCase::IO::File->close($file));
+    my $output = slurp_binmode($file);
+    is($output, 'Hello');
+  }
+}
+
 # print
 {
-  # test_print
   {
     my $file = "$test_dir/test_files_tmp/io_file_test_print.txt";
     ok(SPVM::TestCase::IO::File->print($file));
@@ -53,7 +61,6 @@ my $test_dir = "$FindBin::Bin";
     is($output, 'Hello');
   }
 
-  # test_print_newline
   {
     my $file = "$test_dir/test_files_tmp/io_file_test_print_newline.txt";
     ok(SPVM::TestCase::IO::File->print_newline($file));
@@ -61,7 +68,6 @@ my $test_dir = "$FindBin::Bin";
     is($output, "\x0A");
   }
 
-  # test_print_long_lines
   {
     my $file = "$test_dir/test_files_tmp/io_file_test_print_long_lines.txt";
     ok(SPVM::TestCase::IO::File->print_long_lines($file));
