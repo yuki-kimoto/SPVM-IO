@@ -1,3 +1,11 @@
+0.17 2023-02-14
+  [Changes]
+    * The definition of the init method in the IO::File is changed.
+      [Before]
+      protected method init : void ();
+      [After]
+      protected method init : void ($options = undef : object[]);
+      
 0.16 2023-02-14
   [Bug Fix]
     * Fixed the bug that the close method in the IO::File doesn't set the stream undef.
