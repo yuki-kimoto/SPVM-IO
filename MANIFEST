@@ -15,8 +15,6 @@ lib/SPVM/IO/Socket/INET.pm
 lib/SPVM/IO/Socket/INET.spvm
 lib/SPVM/IO/Socket/Interface.pm
 lib/SPVM/IO/Socket/Interface.spvm
-lib/SPVM/IO/Util.native/include/SPVM__IO__Util.h
-lib/SPVM/IO/Util.native/src/SPVM__IO__Util.c
 Makefile.PL
 MANIFEST			This list of files
 README.md
