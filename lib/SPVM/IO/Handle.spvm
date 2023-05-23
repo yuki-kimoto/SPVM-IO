@@ -78,7 +78,10 @@ class IO::Handle {
     
     # Restores the autoflush field at the end of the scope.
     my $handle = $self;
-    my $scope_guard = Scope::Guard->new([$handle : IO::Handle, $old_autoflush : int] method : void () {
+    my $scope_guard = Scope::Guard->new([has handle : IO::Handle = $handle, has old_autoflush : int = $old_autoflush] method : void () {
+      my $handle = $self->{handle};
+      my $old_autoflush = $self->{old_autoflush};
+      
       $handle->set_autoflush($old_autoflush);
     });
     
