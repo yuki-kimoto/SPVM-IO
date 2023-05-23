@@ -1,8 +1,11 @@
+0.201  2023-05-23
+  [License Change]
+    * The license is changed to MIT License.
+  [Prerequirement Changes]
+    * SPVM 0.981+ is required.
 0.20  2023-03-20
   [Internal Compatible Changes]
     * Use SPVM::ExchangeAPI method instead of SPVM functions.
-  [License Change]
-    * The license is changed to MIT License.
 0.19 2023-03-15
   [Prerequirement Changes]
     * SPVM::Sys 0.43+ is needed.

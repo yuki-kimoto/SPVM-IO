@@ -20,7 +20,7 @@ unless ($meta) {
 }
 
 my %configure_and_runtime_requires = (
-  'SPVM' => '0.9695',
+  'SPVM' => '0.981',
 );
 WriteMakefile(
   NAME              => 'SPVM::IO',
