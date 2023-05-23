@@ -60,7 +60,7 @@ class IO::Handle {
     return $status;
   }
 
-  method printf : int ($format : string, $args : object[]...) {
+  method printf : int ($format : string, $args : object[]) {
     my $formated_string = Format->sprintf($format, $args);
     return $self->print($formated_string);
   }
