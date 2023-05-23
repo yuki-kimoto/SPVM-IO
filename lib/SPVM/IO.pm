@@ -27,3 +27,10 @@ C<IO> provide for File IO, Socket, Select/Polling.
 =item * L<IO::Select|SPVM::IO::Select>
 
 =back
+
+=head1 Copyright & License
+
+Copyright (c) 2023 Yuki Kimoto
+
+MIT License
+

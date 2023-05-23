@@ -1,3 +1,6 @@
+# Copyright (c) 2023 Yuki Kimoto
+# MIT License
+
 class IO::Handle {
   use Sys;
   use Sys::IO;
