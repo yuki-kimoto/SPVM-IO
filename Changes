@@ -5,7 +5,16 @@
       method syswrite : int ($buffer : string, $length : int, $offset : int = 0);
       
       method sysread : int ($buffer : mutable string, $length : int, $offset : int = 0);
-    
+  [Changes]
+  
+    The following methods in IO::File and IO::Handle are changed.
+      
+      -  method write : int ($buffer : string, $length : int, $offset : int = 0);
+      +  method write : int ($string : string, $length : int = -1, $offset : int = 0);
+      
+      -  method read : int ($buffer : mutable string, $length : int, $offset : int = 0);
+      +  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
+      
 0.203  2023-08-15
   [New Features]
     The following method is added to IO::Socket.

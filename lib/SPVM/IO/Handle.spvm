@@ -148,7 +148,7 @@ class IO::Handle {
     }
   }
   
-  method write : int ($buffer : string, $length : int, $offset : int = 0) { die "Not implemented"; }
+  method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented"; }
   
-  method read : int ($buffer : mutable string, $length : int, $offset : int = 0) { die "Not implemented"; }
+  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) { die "Not implemented"; }
 }
