@@ -136,14 +136,6 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 
   method read : int ($buffer : mutable string, $length : int, $offset : int = 0);
 
-=head2 syswrite
-
-  method syswrite : int ($buffer : string, $length : int, $offset : int = 0);
-
-=head2 sysread
-
-  method sysread : int ($buffer : mutable string, $length : int, $offset : int = 0);
-
 =head1 Well Known Child Classes
 
 =head2 IO::File

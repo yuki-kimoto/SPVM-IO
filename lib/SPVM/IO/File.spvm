@@ -214,13 +214,13 @@ class IO::File extends IO::Handle {
     return Sys::IO->ungetc($c, $stream);
   }
 
-  method syswrite : int ($buffer : string, $length : int, $offset : int = 0) {
+  method write : int ($buffer : string, $length : int, $offset : int = 0) {
     my $stream = $self->{stream};
     
     return Sys::IO->fwrite($buffer, 1, $length, $stream);
   }
   
-  method sysread : int ($buffer : mutable string, $length : int, $offset : int = 0) {
+  method read : int ($buffer : mutable string, $length : int, $offset : int = 0) {
     my $stream = $self->{stream};
     
     return Sys::IO->fread($buffer, 1, $length, $stream);

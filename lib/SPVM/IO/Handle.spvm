@@ -147,16 +147,8 @@ class IO::Handle {
       $self->fcntl(IO->F_SETFL, $newmode);
     }
   }
-
-  method write : int ($buffer : string, $length : int, $offset : int = 0) {
-    return $self->syswrite($buffer, $length, $offset);
-  }
   
-  method read : int ($buffer : mutable string, $length : int, $offset : int = 0) {
-    return $self->sysread($buffer, $length, $offset);
-  }
+  method write : int ($buffer : string, $length : int, $offset : int = 0) { die "Not implemented"; }
   
-  method syswrite : int ($buffer : string, $length : int, $offset : int = 0) { die "Not implemented"; }
-  
-  method sysread : int ($buffer : mutable string, $length : int, $offset : int = 0) { die "Not implemented"; }
+  method read : int ($buffer : mutable string, $length : int, $offset : int = 0) { die "Not implemented"; }
 }
