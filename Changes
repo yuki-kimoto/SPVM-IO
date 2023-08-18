@@ -1,4 +1,11 @@
 0.204  2023-08-15
+  [New Features]
+  
+    The following methods are added to IO::Socket.
+      +  method write : int ($string : string, $length : int = -1, $offset : int = 0);
+      
+      +  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
+      
   [Incompatibe Changes]
     The following methods are removed from IO::File and IO::Handle.
     

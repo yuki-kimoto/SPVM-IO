@@ -201,6 +201,14 @@ Exceptions:
 
 Not implemented.
 
+=head2 write
+
+  method write : int ($string : string, $length : int = -1, $offset : int = 0);
+
+=head2 read
+
+  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
+
 =head1 See Also
 
 =head2 Sys::Socket
