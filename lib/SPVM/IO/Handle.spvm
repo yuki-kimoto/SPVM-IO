@@ -5,6 +5,7 @@ class IO::Handle {
   use Sys;
   use Sys::IO;
   use Sys::IO::Constant as IO;
+  use Sys::Ioctl::Constant as IOCTL;
   use Sys::IO::Stat;
   use Fn;
   use Format;
@@ -130,7 +131,7 @@ class IO::Handle {
     
     if (Sys::OS->is_windows) {
       my $flags = Int->new(!$blocking);
-      $self->ioctl(IO->FIONBIO, $flags);
+      $self->ioctl(IOCTL->FIONBIO, $flags);
     }
     else {
       my $newmode = 0;
