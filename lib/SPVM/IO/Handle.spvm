@@ -130,7 +130,7 @@ class IO::Handle {
     my $fileno = $self->fileno;
     
     if (Sys::OS->is_windows) {
-      my $flags = Int->new(!$blocking);
+      my $flags = [(int)!$blocking];
       $self->ioctl(IOCTL->FIONBIO, $flags);
     }
     else {
