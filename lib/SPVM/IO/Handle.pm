@@ -102,7 +102,7 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 
 =head2 ioctl
 
-  method ioctl : int ($request : int, $request_arg : object = undef of Byte|Short|Int|Long|Float|Double|object);
+  static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);
 
 =head2 sync
 

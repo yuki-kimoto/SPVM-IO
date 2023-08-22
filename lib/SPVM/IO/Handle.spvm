@@ -94,7 +94,7 @@ class IO::Handle {
     return Sys::IO->ftruncate($fileno, $legnth);
   }
   
-  method ioctl : int ($request : int, $request_arg : object of Byte|Short|Int|Long|Float|Double|object = undef) {
+  method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
     my $fileno = $self->fileno;
     
     return Sys->ioctl($fileno, $request, $request_arg);
