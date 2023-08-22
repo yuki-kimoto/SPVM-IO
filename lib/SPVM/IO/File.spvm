@@ -6,7 +6,6 @@ class IO::File extends IO::Handle {
   use Fn;
   use Array;
   use Sys::IO::FileStream;
-  use Sys::Ioctl;
   use StringBuffer;
   
   # Fields
