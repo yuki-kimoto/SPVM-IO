@@ -44,9 +44,9 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 
 =head1 Instance Methods
 
-=head2 init
+=head2 configure
 
-  method init : void ($options : object[] = undef);
+  method configure : void ($options : object[] = undef);
 
 =head2 close
 

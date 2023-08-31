@@ -94,9 +94,9 @@ See also L<SPVM::Sys::Socket::Constant>.
 
   method DESTROY : void ();
 
-=head2 init
+=head2 configure
 
-  protected method init : void ($options : object[] = undef);
+  protected method configure : void ($options : object[] = undef);
 
 =head2 connect
 

@@ -16,7 +16,7 @@ class IO::File extends IO::Handle {
   static method new : IO::File ($file_name : string = undef, $open_mode : string = undef) {
     my $self = new IO::File;
     
-    $self->init;
+    $self->configure;
     
     if ($file_name) {
       $self->open($file_name, $open_mode);
@@ -28,7 +28,7 @@ class IO::File extends IO::Handle {
   static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef) {
     my $self = new IO::File;
     
-    $self->init;
+    $self->configure;
     
     $self->fdopen($fd, $open_mode);
     
@@ -115,8 +115,8 @@ class IO::File extends IO::Handle {
     $self->{stream} = $stream;
   }
 
-  protected method init : void ($options : object[] = undef) {
-    $self->SUPER::init;
+  protected method configure : void ($options : object[] = undef) {
+    $self->SUPER::configure;
   }
   
   method DESTROY : void () {

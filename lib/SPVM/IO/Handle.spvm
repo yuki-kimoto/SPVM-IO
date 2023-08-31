@@ -23,13 +23,13 @@ class IO::Handle {
   static method new : IO::Handle ($options : object[]) {
     my $self = new IO::Handle;
     
-    $self->init($options);
+    $self->configure($options);
     
     return $self;
   }
   
   # Instance Methods
-  method init : void ($options : object[] = undef) {
+  method configure : void ($options : object[] = undef) {
     my $options_h = Hash->new($options);
     
     # Blocking option

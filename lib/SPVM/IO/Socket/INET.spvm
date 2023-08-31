@@ -42,7 +42,7 @@ class IO::Socket::INET extends IO::Socket {
   static method new : IO::Socket::INET ($options : object[] = undef) {
     my $self = new IO::Socket::INET;
     
-    $self->init($options);
+    $self->configure($options);
     
     my $domain = $self->sockdomain;
     my $socktype = $self->socktype;
@@ -80,7 +80,7 @@ class IO::Socket::INET extends IO::Socket {
     }
   }
   
-  protected method init : void ($options : object[] = undef) {
+  protected method configure : void ($options : object[] = undef) {
     
     my $options_h = Hash->new($options);
     
@@ -147,7 +147,7 @@ class IO::Socket::INET extends IO::Socket {
     # Domain option
     # Blocking option
     # Listen option
-    $self->SUPER::init($new_options);
+    $self->SUPER::configure($new_options);
     
     $options_h->delete("Domain");
     $options_h->delete("Type");
