@@ -1,6 +1,136 @@
 # Copyright (c) 2023 [--user-name]
 # MIT License
 
-class IO::Socket::UNIX {
+class IO::Socket::UNIX extends IO::Socket {
+  use IO::Socket::Constant as SOCKET;
   
+  has Local : string;
+  has Peer : string;
+  
+  static method new_raw ($options : object[] = undef) {
+    
+    my $self = new IO::Socket::UNIX;
+    
+    $self->configure($options);
+    
+    my $domain = $self->sockdomain;
+    my $type = $self->socktype;
+    my $proto = $self->protocol;
+    
+    $self->socket($domain, $type, $proto);
+    
+    my $local = 
+    
+    if(exists $arg->{Local}) {
+        my $addr = sockaddr_un($arg->{Local});
+        $self->bind($addr) or
+            return undef;
+    }
+    
+    if(exists $arg->{Listen} && $type != SOCK_DGRAM) {
+        $self->listen($arg->{Listen} || 5) or
+            return undef;
+    }
+    elsif(exists $arg->{Peer}) {
+        my $addr = sockaddr_un($arg->{Peer});
+        $self->connect($addr) or
+            return undef;
+    }
+    
+    return $self;
+  }
+  
+  static method new ($options : object[] = undef) {
+    
+    my $self = &new_raw($options);
+    
+    $self->prepare;
+    
+    return $self;
+  }
+  
+  protected method configure : void ($options : object[] = undef) {
+    
+    my $options_h = Hash->new($options);
+    
+    my $domain = $options_h->delete_or_default("Domain", SOCKET->AF_UNIX);
+    
+    my $type = $options_h->delete_or_default("Type", SOCKET->SOCK_STREAM);
+    
+    my $protocal = $options_h->delete_or_default("Proto", 0);
+    
+    my $peer = $options_h->delete_or_default("Peer", undef);
+    
+    my $blocking = $options_h->delete_or_default("Blocking", 1);
+    
+    if(exists $arg->{Local}) {
+        my $addr = sockaddr_un($arg->{Local});
+        $self->bind($addr) or
+            return undef;
+    }
+    if(exists $arg->{Listen} && $type != SOCK_DGRAM) {
+        $self->listen($arg->{Listen} || 5) or
+            return undef;
+    }
+    elsif(exists $arg->{Peer}) {
+        my $addr = sockaddr_un($arg->{Peer});
+        $self->connect($addr) or
+            return undef;
+    }
+  }
+  
+  protected method prepare : void () {
+    my $self = new IO::Socket::UNIX;
+    
+    $self->configure($options);
+    
+    my $domain = $self->sockdomain;
+    my $type = $self->socktype;
+    my $proto = $self->protocol;
+    
+    $self->socket($domain, $type, $proto);
+    
+    my $local = 
+    
+    if(exists $arg->{Local}) {
+        my $addr = sockaddr_un($arg->{Local});
+        $self->bind($addr) or
+            return undef;
+    }
+    
+    if(exists $arg->{Listen} && $type != SOCK_DGRAM) {
+        $self->listen($arg->{Listen} || 5) or
+            return undef;
+    }
+    elsif(exists $arg->{Peer}) {
+        my $addr = sockaddr_un($arg->{Peer});
+        $self->connect($addr) or
+            return undef;
+    }
+    
+    if(exists $arg->{Blocking}) {
+        $self->blocking($arg->{Blocking}) or
+            return undef;
+    }
+  }
+  
+  method hostpath : string () {
+    my $sock_sockaddr_un = $self->sockname;
+    
+    my $hostpath = (string)undef;
+    
+    my $hostpath = $sock_sockaddr_un->copy_sun_path;
+    
+    return $hostpath;
+  }
+  
+  method peerpath : string () {
+    my $peer_sockaddr_un = $self->peername;
+    
+    my $hostpath = (string)undef;
+    
+    my $peerpath = $peer_sockaddr_un->copy_sun_path;
+    
+    return $peerpath;
+  }
 }
