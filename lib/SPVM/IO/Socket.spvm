@@ -104,8 +104,8 @@ class IO::Socket extends IO::Handle {
     
     my $fd = $self->{fd};
     
-    my $connect_status = -1;
-    eval { $connect_status = Sys::Socket->connect($fd, $address, $address->sizeof); };
+    my $connect_success = 0;
+    eval { $connect_success = Sys->connect($fd, $address); };
     
     my $blocking_flag = $self->blocking_flag;
     if ($blocking_flag) {
@@ -128,7 +128,7 @@ class IO::Socket extends IO::Handle {
     
     $self->{peername} = $address;
     
-    return $connect_status;
+    return $connect_success;
   }
 
   method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0) {
@@ -189,7 +189,7 @@ class IO::Socket extends IO::Handle {
     
     my $send_length = 0;
     if ($to) {
-      $send_length = Sys::Socket->sendto($fd, $buffer, length $buffer, $flags, $peername, $peername->sizeof);
+      $send_length = Sys::Socket->sendto($fd, $buffer, length $buffer, $flags, $peername, $peername->size);
     }
     else {
       $send_length = Sys::Socket->send($fd, $buffer, length $buffer, $flags);
@@ -269,31 +269,16 @@ class IO::Socket extends IO::Handle {
 
   method bind : int ($address : Sys::Socket::Sockaddr) {
     my $fd = $self->{fd};
-    my $status = Sys::Socket->bind($fd, $address, $address->sizeof);
+    my $success = Sys->bind($fd, $address);
     
-    return $status;
+    return $success;
   }
   
   method sockname : Sys::Socket::Sockaddr () {
     my $fd = $self->{fd};
     my $sockdomain = $self->{sockdomain};
     
-    my $addr : Sys::Socket::Sockaddr;
-    if ($sockdomain == SOCKET->AF_INET) {
-      $addr = Sys::Socket::Sockaddr::In->new;
-    }
-    elsif ($sockdomain == SOCKET->AF_INET6) {
-      $addr = Sys::Socket::Sockaddr::In6->new;
-    }
-    elsif ($sockdomain == SOCKET->AF_UNIX) {
-      $addr = Sys::Socket::Sockaddr::Un->new;
-    }
-    else {
-      die "Unsupported domain";
-    }
-    
-    my $addr_len = $addr->sizeof;
-    Sys::Socket->getsockname($fd, $addr, \$addr_len);
+    my $addr = Sys->getsockname($fd);
     
     return $addr;
   }
@@ -314,18 +299,17 @@ class IO::Socket extends IO::Handle {
     return $status;
   }
 
-  method setsockopt : int ($level : int, $optname : int, $optval : int) {
+  method setsockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
     my $fd = $self->{fd};
     
-    my $status = Sys::Socket->setsockopt_int($fd, $level, $optname, $optval);
+    my $success = Sys->setsockopt($fd, $level, $optname, $optval);
     
-    return $status;
+    return $success;
   }
 
-  method getsockopt : int ($level : int, $optname : int) {
+  method getsockopt : string ($level : int, $optname : int) {
     my $fd = $self->{fd};
-    my $optval = 0;
-    Sys::Socket->getsockopt_int($fd, $level, $optname, \$optval);
+    my $optval = Sys->getsockopt($fd, $level, $optname);
     
     return $optval;
   }
@@ -375,11 +359,9 @@ class IO::Socket extends IO::Handle {
         die "accept: timeout";
       }
     }
-
-    my $client_socket_address = $self->sockname->clone;
-    my $client_socket_address_size = $client_socket_address->sizeof;
     
-    my $client_fd = Sys::Socket->accept($fd, $client_socket_address, \$client_socket_address_size);
+    my $client_fd = -1;
+    my $client_socket_address = Sys->accept(\$client_fd, $fd);
     
     my $options = {
       Timeout => $timeout,
