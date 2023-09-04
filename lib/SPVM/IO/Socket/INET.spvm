@@ -8,6 +8,24 @@ class IO::Socket::INET extends IO::Socket {
   use Sys::Socket::In_addr;
   
   # Fields
+  has PeerAddr : string;
+  has PeerPort : int;
+  has LocalAddr : string;
+  has LocalPort : int;
+  has Proto : int;
+  has ReuseAddr : int;
+  has ReusePort : int;
+  has Broadcast : int;
+  has MultiHomed : int;
+
+=pod TODO
+
+PeerHost    (Synonym for PeerAddr)
+LocalHost   (Synonym for LocalAddr)
+Reuse       (Deprecated prefer ReuseAddr)
+
+=cut
+  
   has peer_address : string;
   has peer_port : int;
   has local_address : string;

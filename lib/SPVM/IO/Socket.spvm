@@ -15,6 +15,14 @@ class IO::Socket extends IO::Handle {
   use Scope::Guard;
   
   # Fields
+  
+  has Domain : int;
+  
+  has Type : int;
+  has Blocking : int;
+  has Listen : int;
+  has Timeout : int;
+  
   has timeout : protected ro int;
   has sockdomain : protected ro int;
   has socktype : protected ro int;
@@ -41,7 +49,7 @@ class IO::Socket extends IO::Handle {
   }
   
   method init : void ($options : object[] = undef) {
-
+    
     $self->set_autoflush(1);
     
     my $options_h = Hash->new($options);
