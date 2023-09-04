@@ -56,9 +56,9 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
   has fd : protected int;
 
-=head2 listen_backlog
+=head2 Listen
 
-  has listen_backlog : protected int;
+  has Listen : protected int;
 
 =head1 Class Methods
 

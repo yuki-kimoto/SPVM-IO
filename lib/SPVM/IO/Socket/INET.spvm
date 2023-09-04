@@ -73,7 +73,7 @@ Reuse       (Deprecated prefer ReuseAddr)
     if ($local_port >= 0) {
       my $local_socket_address = &create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
-      my $listen = $self->{listen_backlog};
+      my $listen = $self->{Listen};
       $self->listen($listen);
     }
     

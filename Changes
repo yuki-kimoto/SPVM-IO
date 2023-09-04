@@ -17,6 +17,9 @@
       -  has protocol : protected ro int;
       +  has Proto : protected ro int;
       +  method protocol : int ();
+
+      -  has listen_backlog : protected int;
+      +  has Listen : protected int;
         
 0.206 2023-09-04
   [Prerequirement Changes]

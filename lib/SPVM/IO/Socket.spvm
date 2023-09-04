@@ -25,7 +25,6 @@ class IO::Socket extends IO::Handle {
   
   has peername : protected ro Sys::Socket::Sockaddr;
   has fd : protected ro int;
-  has listen_backlog : protected ro int;
   
   # Class Methods
   static method new : IO::Socket ($options : object[] = undef) {
@@ -84,7 +83,7 @@ class IO::Socket extends IO::Handle {
     
     # Listen option
     my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
-    $self->{listen_backlog} = $listen_backlog;
+    $self->{Listen} = $listen_backlog;
 
     # Timeout option
     my $fd = $options_h->delete_or_default_int("fd", -1);
