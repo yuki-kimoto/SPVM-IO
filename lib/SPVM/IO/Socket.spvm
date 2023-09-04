@@ -22,9 +22,9 @@ class IO::Socket extends IO::Handle {
   has Blocking : protected int;
   has Listen : protected int;
   has Timeout : protected int;
+  has socket_fd : protected int;
   
   has peername : protected ro Sys::Socket::Sockaddr;
-  has fd : protected ro int;
   
   # Class Methods
   static method new : IO::Socket ($options : object[] = undef) {
@@ -87,7 +87,7 @@ class IO::Socket extends IO::Handle {
 
     # Timeout option
     my $fd = $options_h->delete_or_default_int("fd", -1);
-    $self->{fd} = $fd;
+    $self->{socket_fd} = $fd;
     
     my $registered_domain = [SOCKET->AF_INET, SOCKET->AF_INET6, SOCKET->AF_UNIX];
 
@@ -120,7 +120,7 @@ class IO::Socket extends IO::Handle {
       $self->{blocking_flag} = 0;
     }
     
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     my $connect_success = 0;
     eval { $connect_success = Sys->connect($fd, $address); };
@@ -150,7 +150,7 @@ class IO::Socket extends IO::Handle {
   }
 
   method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0) {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     if ($length < 0) {
       $length = length $buffer;
@@ -181,7 +181,7 @@ class IO::Socket extends IO::Handle {
       die "The \$offset + \$length must be lower than or equal to the length of the \$string.";
     }
     
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     my $flags = 0;
     
@@ -191,7 +191,7 @@ class IO::Socket extends IO::Handle {
   }
   
   method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef) {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     my $peername = (Sys::Socket::Sockaddr)undef;
     if ($to) {
@@ -232,7 +232,7 @@ class IO::Socket extends IO::Handle {
       die "The \$offset + \$length must be lower than or equal to the length of the \$string.";
     }
     
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     my $flags = 0;
     
@@ -242,23 +242,23 @@ class IO::Socket extends IO::Handle {
   }
   
   method close : int () {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     my $status = 0;
     
     if ($fd >= 0) {
       $status = Sys::Socket->close($fd);
-      $self->{fd} = -1;
+      $self->{socket_fd} = -1;
       $self->{opened} = 0;
     }
     
     return $status;
   }
   
-  method fileno : int () { return $self->{fd}; }
+  method fileno : int () { return $self->{socket_fd}; }
   
   method opened : int () {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     my $opened = 0;
     if ($fd >= 0) {
@@ -274,20 +274,20 @@ class IO::Socket extends IO::Handle {
   }
   
   method listen : int ($queue : int = 5) {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     my $success = Sys->listen($fd, $queue);
     return $success;
   }
 
   method bind : int ($address : Sys::Socket::Sockaddr) {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     my $success = Sys->bind($fd, $address);
     
     return $success;
   }
   
   method sockname : Sys::Socket::Sockaddr () {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     my $sockdomain = $self->{Domain};
     
     my $addr = Sys->getsockname($fd);
@@ -297,14 +297,14 @@ class IO::Socket extends IO::Handle {
 
   method shutdown : int ($sockfd : int, $how : int) {
     $self->{peername} = undef;
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     my $success = Sys->shutdown($fd, $how);
     return $success;
   }
 
 
   method atmark : int () {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     my $atmark = Sys::Socket->sockatmark($fd);
     
@@ -312,7 +312,7 @@ class IO::Socket extends IO::Handle {
   }
 
   method setsockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     
     my $success = Sys->setsockopt($fd, $level, $optname, $optval);
     
@@ -320,7 +320,7 @@ class IO::Socket extends IO::Handle {
   }
 
   method getsockopt : string ($level : int, $optname : int) {
-    my $fd = $self->{fd};
+    my $fd = $self->{socket_fd};
     my $optval = Sys->getsockopt($fd, $level, $optname);
     
     return $optval;
@@ -337,7 +337,7 @@ class IO::Socket extends IO::Handle {
     my $fd = -1;
     Sys->socket(\$fd, $domain, $type, $protocol);
     
-    $self->{fd} = $fd;
+    $self->{socket_fd} = $fd;
     $self->{Domain} = $domain;
     $self->{Type} = $type;
     $self->{Proto} = $protocol;
@@ -347,16 +347,16 @@ class IO::Socket extends IO::Handle {
     my $sock1 = IO::Socket->new;
     my $sock2 = IO::Socket->new;
     
-    my $sock1_fd = $sock1->{fd};
-    my $sock2_fd = $sock2->{fd};
+    my $sock1_fd = $sock1->{socket_fd};
+    my $sock2_fd = $sock2->{socket_fd};
     
     Sys->socketpair(\$sock1_fd, \$sock2_fd, $domain, $type, $protocol);
     
-    $sock1->{fd} = $sock1_fd;
+    $sock1->{socket_fd} = $sock1_fd;
     $sock1->{Type} = $type;
     $sock1->{Proto} = $protocol;
     
-    $sock2->{fd} = $sock2_fd;
+    $sock2->{socket_fd} = $sock2_fd;
     
     my $pair = [$sock1, $sock2];
     
@@ -364,7 +364,7 @@ class IO::Socket extends IO::Handle {
   }
   
   method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
-    my $fd = $self->fd;
+    my $fd = $self->{socket_fd};
     my $timeout = $self->timeout;
     
     if ($timeout > 0) {

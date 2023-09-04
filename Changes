@@ -24,6 +24,9 @@
       -  method peerport : int ();
       -  method peerhost : string ();
       
+      -  has fd : protected ro int;
+      +  has socket_fd : protected int;
+      
 0.206 2023-09-04
   [Prerequirement Changes]
     * SPVM::Sys 0.485 is required.
