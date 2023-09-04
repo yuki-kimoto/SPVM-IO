@@ -23,7 +23,6 @@ class IO::Socket extends IO::Handle {
   has Listen : int;
   has Timeout : int;
   
-  has timeout : protected ro int;
   has sockdomain : protected ro int;
   has socktype : protected ro int;
   has protocol : protected ro int;
@@ -42,6 +41,11 @@ class IO::Socket extends IO::Handle {
   }
   
   # Instance Methods
+  
+  method timeout : int () {
+    return $self->{Timeout};
+  }
+  
   method new_from_instance : IO::Socket ($options : object[] = undef) {
     my $io_socket = IO::Socket->new($options);
     
@@ -56,7 +60,7 @@ class IO::Socket extends IO::Handle {
     
     # Timeout option
     my $timeout = $options_h->delete_or_default_int("Timeout", -1);
-    $self->{timeout} = $timeout;
+    $self->{Timeout} = $timeout;
     
     # Domain option
     my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
@@ -90,7 +94,7 @@ class IO::Socket extends IO::Handle {
   }
 
   method connect : int ($address : Sys::Socket::Sockaddr) {
-    my $timeout = $self->{timeout};
+    my $timeout = $self->{Timeout};
     
     my $old_blocking_flag = $self->blocking_flag;
     my $restore_blocking_at_end_of_scope : Scope::Guard = undef;
