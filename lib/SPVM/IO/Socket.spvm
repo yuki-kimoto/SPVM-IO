@@ -22,7 +22,6 @@ class IO::Socket extends IO::Handle {
   has Listen : protected int;
   has Timeout : protected int;
   
-  has socktype : protected ro int;
   has protocol : protected ro int;
   has peername : protected ro Sys::Socket::Sockaddr;
   has fd : protected ro int;
@@ -42,6 +41,10 @@ class IO::Socket extends IO::Handle {
   
   method sockdomain : int () {
     return $self->{Domain};
+  }
+  
+  method socktype : int (){
+    return $self->{Type};
   }
   
   method timeout : int () {
@@ -73,7 +76,7 @@ class IO::Socket extends IO::Handle {
     
     # Type option
     my $socktype = $options_h->delete_or_default_int("Type", -1);
-    $self->{socktype} = $socktype;
+    $self->{Type} = $socktype;
     
     # Listen option
     my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
@@ -333,7 +336,7 @@ class IO::Socket extends IO::Handle {
     
     $self->{fd} = $fd;
     $self->{Domain} = $domain;
-    $self->{socktype} = $type;
+    $self->{Type} = $type;
     $self->{protocol} = $protocol;
   }
   
@@ -347,7 +350,7 @@ class IO::Socket extends IO::Handle {
     Sys->socketpair(\$sock1_fd, \$sock2_fd, $domain, $type, $protocol);
     
     $sock1->{fd} = $sock1_fd;
-    $sock1->{socktype} = $type;
+    $sock1->{Type} = $type;
     $sock1->{protocol} = $protocol;
     
     $sock2->{fd} = $sock2_fd;

@@ -38,9 +38,9 @@ L<IO::Handle|SPVM::IO::Handle>.
 
   has Timeout : protected int;
 
-=head2 socktype
+=head2 Type
 
-  has socktype : protected ro int;
+  has Type : protected int;
 
 =head2 protocol
 
@@ -91,6 +91,12 @@ See also L<SPVM::Sys::Socket::Constant>.
   method sockdomain : int ();
 
 Gets the L</"Domain"> field.
+
+=head2 socktype
+
+  method socktype : int ();
+
+Gets the L</"Type"> field.
 
 =head2 timeout
 

@@ -10,6 +10,10 @@
       +  has Domain : protected int;
       + method sockdomain : int ();
       
+      -  has socktype : protected ro int;
+      +  has Type : protected int;
+      +  method socktype : int ();
+        
 0.206 2023-09-04
   [Prerequirement Changes]
     * SPVM::Sys 0.485 is required.
