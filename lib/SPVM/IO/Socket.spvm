@@ -23,8 +23,7 @@ class IO::Socket extends IO::Handle {
   has Listen : protected int;
   has Timeout : protected int;
   has socket_fd : protected int;
-  
-  has peername : protected ro Sys::Socket::Sockaddr;
+  has peername : protected Sys::Socket::Sockaddr;
   
   # Class Methods
   static method new : IO::Socket ($options : object[] = undef) {
@@ -278,7 +277,7 @@ class IO::Socket extends IO::Handle {
     my $success = Sys->listen($fd, $queue);
     return $success;
   }
-
+  
   method bind : int ($address : Sys::Socket::Sockaddr) {
     my $fd = $self->{socket_fd};
     my $success = Sys->bind($fd, $address);
@@ -288,21 +287,31 @@ class IO::Socket extends IO::Handle {
   
   method sockname : Sys::Socket::Sockaddr () {
     my $fd = $self->{socket_fd};
-    my $sockdomain = $self->{Domain};
     
-    my $addr = Sys->getsockname($fd);
+    my $sockaddr_sock = Sys->getsockname($fd);
     
-    return $addr;
+    return $sockaddr_sock;
   }
-
+  
+  method peername : Sys::Socket::Sockaddr () {
+    my $fd = $self->{socket_fd};
+    
+    unless ($self->{peername}) {
+      $self->{peername} = Sys->getpeername($fd);
+    }
+    
+    my $sockaddr_peer = $self->{peername};
+    
+    return $sockaddr_peer;
+  }
+  
   method shutdown : int ($sockfd : int, $how : int) {
     $self->{peername} = undef;
     my $fd = $self->{socket_fd};
     my $success = Sys->shutdown($fd, $how);
     return $success;
   }
-
-
+  
   method atmark : int () {
     my $fd = $self->{socket_fd};
     
@@ -310,7 +319,7 @@ class IO::Socket extends IO::Handle {
     
     return $atmark;
   }
-
+  
   method setsockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
     my $fd = $self->{socket_fd};
     
@@ -318,20 +327,20 @@ class IO::Socket extends IO::Handle {
     
     return $success;
   }
-
+  
   method getsockopt : string ($level : int, $optname : int) {
     my $fd = $self->{socket_fd};
     my $optval = Sys->getsockopt($fd, $level, $optname);
     
     return $optval;
   }
-
+  
   method connected : Sys::Socket::Sockaddr () {
     my $addr = (Sys::Socket::Sockaddr)undef;
     eval { $addr = $self->peername; };
     return $addr;
   }
-
+  
   method socket : void ($domain : int, $type : int, $protocol : int = 0) {
     
     my $fd = -1;
