@@ -97,13 +97,9 @@ class IO::Select {
     my $fds = Sys::Select::Fd_set->new;
     Sys::Select->FD_ZERO($fds);
     
-    my $max_handle = 0;
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
       Sys::Select->FD_SET($handle, $fds);
-      if ($handle > $max_handle) {
-        $max_handle = $handle;
-      }
     }
     
     # select
@@ -139,13 +135,9 @@ class IO::Select {
     my $fds = Sys::Select::Fd_set->new;
     Sys::Select->FD_ZERO($fds);
     
-    my $max_handle = 0;
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
       Sys::Select->FD_SET($handle, $fds);
-      if ($handle > $max_handle) {
-        $max_handle = $handle;
-      }
     }
     
     # select
@@ -181,13 +173,9 @@ class IO::Select {
     my $fds = Sys::Select::Fd_set->new;
     Sys::Select->FD_ZERO($fds);
     
-    my $max_handle = 0;
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
       Sys::Select->FD_SET($handle, $fds);
-      if ($handle > $max_handle) {
-        $max_handle = $handle;
-      }
     }
     
     # select
