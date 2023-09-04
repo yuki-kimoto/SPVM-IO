@@ -12,7 +12,6 @@ class IO::Socket::INET extends IO::Socket {
   has PeerPort : int;
   has LocalAddr : string;
   has LocalPort : int;
-  has Proto : int;
   has ReuseAddr : int;
   has ReusePort : int;
   has Broadcast : int;

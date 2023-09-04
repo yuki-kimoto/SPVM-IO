@@ -4,15 +4,19 @@
       
       -  has timeout : protected ro int;
       +  has Timeout : protected int;
-      + method timeout : int ();
+      +  method timeout : int ();
       
       -  has sockdomain : protected ro int;
       +  has Domain : protected int;
-      + method sockdomain : int ();
+      +  method sockdomain : int ();
       
       -  has socktype : protected ro int;
       +  has Type : protected int;
       +  method socktype : int ();
+      
+      -  has protocol : protected ro int;
+      +  has Proto : protected ro int;
+      +  method protocol : int ();
         
 0.206 2023-09-04
   [Prerequirement Changes]

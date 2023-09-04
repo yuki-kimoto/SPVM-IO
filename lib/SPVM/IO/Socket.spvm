@@ -18,11 +18,11 @@ class IO::Socket extends IO::Handle {
   
   has Domain : protected int;
   has Type : protected int;
+  has Proto : protected int;
   has Blocking : protected int;
   has Listen : protected int;
   has Timeout : protected int;
   
-  has protocol : protected ro int;
   has peername : protected ro Sys::Socket::Sockaddr;
   has fd : protected ro int;
   has listen_backlog : protected ro int;
@@ -38,6 +38,10 @@ class IO::Socket extends IO::Handle {
   }
   
   # Instance Methods
+  
+  method protocol : int () {
+    return $self->{Proto};
+  }
   
   method sockdomain : int () {
     return $self->{Domain};
@@ -337,7 +341,7 @@ class IO::Socket extends IO::Handle {
     $self->{fd} = $fd;
     $self->{Domain} = $domain;
     $self->{Type} = $type;
-    $self->{protocol} = $protocol;
+    $self->{Proto} = $protocol;
   }
   
   method socketpair : IO::Socket[] ($domain : int, $type : int, $protocol : int) {
@@ -351,7 +355,7 @@ class IO::Socket extends IO::Handle {
     
     $sock1->{fd} = $sock1_fd;
     $sock1->{Type} = $type;
-    $sock1->{protocol} = $protocol;
+    $sock1->{Proto} = $protocol;
     
     $sock2->{fd} = $sock2_fd;
     

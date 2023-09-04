@@ -34,17 +34,17 @@ L<IO::Handle|SPVM::IO::Handle>.
 
   has Domain : protected int;
 
-=head2 Timeout
-
-  has Timeout : protected int;
-
 =head2 Type
 
   has Type : protected int;
 
-=head2 protocol
+=head2 Proto
 
-  has protocol : protected ro int;
+  has Proto : protected ro int;
+
+=head2 Timeout
+
+  has Timeout : protected int;
 
 =head2 peername
 
@@ -70,13 +70,15 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =over 2
 
-=item * Timeout : Int
-
 =item * Domain : Int
 
 =item * Type : Int
 
+=item * Proto : Int
+
 =item * Blocking : Int
+
+=item * Timeout : Int
 
 =item * Listen : Int
 
@@ -97,6 +99,12 @@ Gets the L</"Domain"> field.
   method socktype : int ();
 
 Gets the L</"Type"> field.
+
+=head2 protocol
+
+  method protocol : int ();
+
+Gets the L</"Proto"> field.
 
 =head2 timeout
 
