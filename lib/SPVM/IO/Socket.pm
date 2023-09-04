@@ -86,9 +86,9 @@ See also L<SPVM::Sys::Socket::Constant>.
 
 =head1 Instance Methods
 
-=head2 new_instance
+=head2 new_from_instance
 
-  method new_instance : IO::Socket ($options : object[] = undef);
+  method new_from_instance : IO::Socket ($options : object[] = undef);
 
 =head2 DESTROY
 

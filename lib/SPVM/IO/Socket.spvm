@@ -34,12 +34,10 @@ class IO::Socket extends IO::Handle {
   }
   
   # Instance Methods
-  method new_instance : IO::Socket ($options : object[] = undef) {
-    {
-      my $self = IO::Socket->new($options);
-      
-      return $self;
-    }
+  method new_from_instance : IO::Socket ($options : object[] = undef) {
+    my $io_socket = IO::Socket->new($options);
+    
+    return $io_socket;
   }
   
   method init : void ($options : object[] = undef) {
@@ -369,7 +367,7 @@ class IO::Socket extends IO::Handle {
       Proto => $self->protocol,
     };
     
-    my $client = $self->new_instance($options);
+    my $client = $self->new_from_instance($options);
     
     if ($peer_ref) {
       $peer_ref->[0] = $client_socket_address;

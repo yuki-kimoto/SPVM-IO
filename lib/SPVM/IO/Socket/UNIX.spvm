@@ -49,6 +49,12 @@ class IO::Socket::UNIX extends IO::Socket {
     return $self;
   }
   
+  method new_from_instance : IO::Socket::UNIX ($options : object[] = undef) {
+    my $io_socket = IO::Socket::UNIX->new($options);
+    
+    return $io_socket;
+  }
+  
   protected method configure : void ($options : object[] = undef) {
     
     my $options_h = Hash->new($options);
