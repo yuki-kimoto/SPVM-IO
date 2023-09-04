@@ -395,8 +395,4 @@ class IO::Socket extends IO::Handle {
     
     return $client;
   }
-  
-  method peerport : int () { die "Not implemented."; }
-  
-  method peerhost : string () { die "Not implemented."; }
 }
