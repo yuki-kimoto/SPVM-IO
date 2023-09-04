@@ -43,9 +43,9 @@ L<IO::Handle|SPVM::IO::Handle>.
 
   method fdopen : void ($fd : int, $open_mode : string);
 
-=head2 configure
+=head2 init
 
-  protected method configure : void ();
+  protected method init : void ();
 
 =head2 DESTROY
 

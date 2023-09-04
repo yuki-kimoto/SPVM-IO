@@ -28,7 +28,7 @@ class IO::Socket extends IO::Handle {
     
     my $self = new IO::Socket;
     
-    $self->configure($options);
+    $self->init($options);
     
     return $self;
   }
@@ -42,7 +42,7 @@ class IO::Socket extends IO::Handle {
     }
   }
   
-  method configure : void ($options : object[] = undef) {
+  method init : void ($options : object[] = undef) {
 
     $self->set_autoflush(1);
     
@@ -76,7 +76,7 @@ class IO::Socket extends IO::Handle {
     my $new_options = $options_h->to_array;
     
     # Blocking option
-    $self->SUPER::configure($new_options);
+    $self->SUPER::init($new_options);
     
     for my $key (@{$options_h->keys}) {
       die "The \"$key\" option is not available";

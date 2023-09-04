@@ -111,9 +111,9 @@ L<IO::Socket|SPVM::IO::Socket>
 
 =head1 Instance Methods
 
-=head2 configure
+=head2 init
 
-  protected method configure : void ($options : object[] = undef);
+  protected method init : void ($options : object[] = undef);
 
 =head2 sockaddr
 
