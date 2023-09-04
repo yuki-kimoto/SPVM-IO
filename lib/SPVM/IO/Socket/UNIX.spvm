@@ -115,21 +115,17 @@ class IO::Socket::UNIX extends IO::Socket {
   }
   
   method hostpath : string () {
-    my $sock_sockaddr_un = $self->sockname;
+    my $sock_sockaddr_un = (Sys::Socket::Sockaddr::Un)$self->sockname;
     
-    my $hostpath = (string)undef;
-    
-    my $hostpath = $sock_sockaddr_un->copy_sun_path;
+    my $hostpath = $sock_sockaddr_un->sun_path;
     
     return $hostpath;
   }
   
   method peerpath : string () {
-    my $peer_sockaddr_un = $self->peername;
+    my $peer_sockaddr_un = (Sys::Socket::Sockaddr::Un)$self->peername;
     
-    my $hostpath = (string)undef;
-    
-    my $peerpath = $peer_sockaddr_un->copy_sun_path;
+    my $peerpath = $peer_sockaddr_un->sun_path;
     
     return $peerpath;
   }
