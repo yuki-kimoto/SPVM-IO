@@ -187,13 +187,7 @@ class IO::Socket extends IO::Handle {
       die "send: Cannot determine peer address";
     }
     
-    my $send_length = 0;
-    if ($to) {
-      $send_length = Sys::Socket->sendto($fd, $buffer, length $buffer, $flags, $peername, $peername->size);
-    }
-    else {
-      $send_length = Sys->send($fd, $buffer, length $buffer, $flags);
-    }
+    my $send_length = Sys->send($fd, $buffer, $flags, $to);
     
     $self->{peername} = $peername;
     
@@ -224,7 +218,7 @@ class IO::Socket extends IO::Handle {
     
     my $flags = 0;
     
-    my $send_length = Sys->send($fd, $string, $length, $flags);
+    my $send_length = Sys->send($fd, $string, $flags);
     
     return $send_length;
   }
