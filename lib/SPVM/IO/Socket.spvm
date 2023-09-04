@@ -16,14 +16,12 @@ class IO::Socket extends IO::Handle {
   
   # Fields
   
-  has Domain : int;
+  has Domain : protected int;
+  has Type : protected int;
+  has Blocking : protected int;
+  has Listen : protected int;
+  has Timeout : protected int;
   
-  has Type : int;
-  has Blocking : int;
-  has Listen : int;
-  has Timeout : int;
-  
-  has sockdomain : protected ro int;
   has socktype : protected ro int;
   has protocol : protected ro int;
   has peername : protected ro Sys::Socket::Sockaddr;
@@ -41,6 +39,10 @@ class IO::Socket extends IO::Handle {
   }
   
   # Instance Methods
+  
+  method sockdomain : int () {
+    return $self->{Domain};
+  }
   
   method timeout : int () {
     return $self->{Timeout};
@@ -64,7 +66,7 @@ class IO::Socket extends IO::Handle {
     
     # Domain option
     my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
-    $self->{sockdomain} = $sockdomain;
+    $self->{Domain} = $sockdomain;
     unless ($sockdomain >= 0) {
       die "The \"Domain\" option must be defined";
     }
@@ -280,7 +282,7 @@ class IO::Socket extends IO::Handle {
   
   method sockname : Sys::Socket::Sockaddr () {
     my $fd = $self->{fd};
-    my $sockdomain = $self->{sockdomain};
+    my $sockdomain = $self->{Domain};
     
     my $addr = Sys->getsockname($fd);
     
@@ -330,7 +332,7 @@ class IO::Socket extends IO::Handle {
     Sys->socket(\$fd, $domain, $type, $protocol);
     
     $self->{fd} = $fd;
-    $self->{sockdomain} = $domain;
+    $self->{Domain} = $domain;
     $self->{socktype} = $type;
     $self->{protocol} = $protocol;
   }

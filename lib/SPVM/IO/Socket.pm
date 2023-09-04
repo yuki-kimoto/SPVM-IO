@@ -30,13 +30,13 @@ L<IO::Handle|SPVM::IO::Handle>.
 
 =head1 Fields
 
+=head2 Domain
+
+  has Domain : protected int;
+
 =head2 Timeout
 
   has Timeout : protected int;
-
-=head2 sockdomain
-
-  has sockdomain : protected ro int;
 
 =head2 socktype
 
@@ -85,6 +85,12 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 See also L<SPVM::Sys::Socket::Constant>.
 
 =head1 Instance Methods
+
+=head2 sockdomain
+
+  method sockdomain : int ();
+
+Gets the L</"Domain"> field.
 
 =head2 timeout
 
