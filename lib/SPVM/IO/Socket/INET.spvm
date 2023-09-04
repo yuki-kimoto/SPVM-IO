@@ -28,7 +28,7 @@ class IO::Socket::INET extends IO::Socket {
     
     if ($res) {
       my $res_array = $res->to_array;
-      $socket_address->set_sin_addr($res_array->[0]->copy_ai_addr->(Sys::Socket::Sockaddr::In)->copy_sin_addr);
+      $socket_address->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
     }
     else {
       my $in_addr = Sys::Socket::In_addr->new;
@@ -161,7 +161,7 @@ class IO::Socket::INET extends IO::Socket {
   method sockaddr : Sys::Socket::In_addr () {
     my $name = $self->sockname;
     
-    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->copy_sin_addr;
+    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->sin_addr;
     
     return $in_addr;
   }
@@ -179,7 +179,7 @@ class IO::Socket::INET extends IO::Socket {
   method sockhost : string () {
     my $name = $self->sockname;
     
-    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->copy_sin_addr;
+    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->sin_addr;
     
     my $address = (string)undef;
     if ($in_addr) {
@@ -191,7 +191,7 @@ class IO::Socket::INET extends IO::Socket {
   method peeraddr : Sys::Socket::In_addr () {
     my $name = $self->peername;
     
-    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->copy_sin_addr;
+    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->sin_addr;
     
     return $in_addr;
   }
@@ -209,7 +209,7 @@ class IO::Socket::INET extends IO::Socket {
   method peerhost : string () {
     my $name = $self->peername;
     
-    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->copy_sin_addr;
+    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->sin_addr;
     
     my $address = (string)undef;
     if ($in_addr) {
