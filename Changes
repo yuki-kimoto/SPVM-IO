@@ -1,6 +1,7 @@
+0.206 2023-09-04
+  [Prerequirement Changes]
+    * SPVM::Sys 0.485 is required.
 0.205 2023-09-04
-  [Bug Fix]
-    * A bug fix: the sleep method in the Sys class has been wrong.
   [Prerequirement Changes]
     * SPVM::Sys 0.484 is required.
 0.204003 2023-08-22
