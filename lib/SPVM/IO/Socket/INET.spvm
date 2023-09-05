@@ -230,4 +230,20 @@ Reuse       (Deprecated prefer ReuseAddr)
     }
     return $peerhost;
   }
+  
+  private static method sockaddr_in : Sys::Socket::Sockaddr::Un ($port : int, $in_addr : Sys::Socket::In_addr) {
+    
+    unless ($in_addr) {
+      die "The \$in_addr must be defined.";
+    }
+    
+    my $sockaddr_in = Sys::Socket::Sockaddr::In->new;
+    
+    $sockaddr_in->set_sin_family(SOCKET->AF_INET);
+    
+    $sockaddr_in->set_sin_addr($in_addr);
+    
+    my $port_network_byte_order = Sys::Socket->htons((short)$port);
+    $sockaddr_in->set_sin_port($port_network_byte_order);
+  }
 }
