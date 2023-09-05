@@ -57,42 +57,17 @@ Reuse       (Deprecated prefer ReuseAddr)
   }
   
   static method new : IO::Socket::INET ($options : object[] = undef) {
+    
     my $self = new IO::Socket::INET;
     
     $self->init($options);
-    
-    my $domain = $self->sockdomain;
-    my $socktype = $self->socktype;
-    my $proto_number = $self->{proto_number};
-    
-    $self->socket($domain, $socktype, $proto_number);
-    
-    my $local_port = $self->{local_port};
-    my $local_address = $self->{local_address};
-    
-    if ($local_port >= 0) {
-      my $local_socket_address = &create_socket_address($local_address, $local_port);
-      $self->bind($local_socket_address);
-      my $listen = $self->{Listen};
-      $self->listen($listen);
-    }
-    
-    my $peer_address = $self->{peer_address};
-    my $peer_port = $self->{peer_port};
-    
-    if ($peer_address) {
-      my $peer_socket_address = &create_socket_address($peer_address, $peer_port);
-      $self->connect($peer_socket_address);
-    }
     
     return $self;
   }
   
   # Instance Methods
   method new_from_instance : IO::Socket::INET ($options : object[] = undef) {
-    my $io_socket = IO::Socket::INET->new($options);
-    
-    return $io_socket;
+    return IO::Socket::INET->new($options);
   }
   
   protected method init : void ($options : object[] = undef) {
@@ -171,6 +146,23 @@ Reuse       (Deprecated prefer ReuseAddr)
     for my $key (@{$options_h->keys}) {
       die "The \"$key\" option is not available";
     }
+    my $domain = $self->sockdomain;
+    my $socktype = $self->socktype;
+    
+    $self->socket($domain, $socktype, $proto_number);
+    
+    if ($local_port >= 0) {
+      my $local_socket_address = &create_socket_address($local_address, $local_port);
+      $self->bind($local_socket_address);
+      my $listen = $self->{Listen};
+      $self->listen($listen);
+    }
+    
+    if ($peer_address) {
+      my $peer_socket_address = &create_socket_address($peer_address, $peer_port);
+      $self->connect($peer_socket_address);
+    }
+    
   }
   
   method sockaddr : Sys::Socket::In_addr () {
