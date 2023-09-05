@@ -172,64 +172,62 @@ Reuse       (Deprecated prefer ReuseAddr)
       die "The \"$key\" option is not available";
     }
   }
-
+  
   method sockaddr : Sys::Socket::In_addr () {
-    my $name = $self->sockname;
+    my $sockaddr_in_sock = (Sys::Socket::Sockaddr::In)$self->sockname;
     
-    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->sin_addr;
+    my $sockaddr = $sockaddr_in_sock->sin_addr;
     
-    return $in_addr;
+    return $sockaddr;
   }
-
+  
   method sockport : int () {
-    my $name = $self->sockname;
+    my $sockaddr_in_sock = (Sys::Socket::Sockaddr::In)$self->sockname;
     
-    my $port_nb_order = $name->(Sys::Socket::Sockaddr::In)->sin_port;
+    my $sockport_network_byte_order = $sockaddr_in_sock->sin_port;
     
-    my $port = Sys::Socket->ntohs((short)$port_nb_order);
+    my $sockport = Sys::Socket->ntohs((short)$sockport_network_byte_order);
     
-    return $port;
+    return $sockport;
   }
-
+  
   method sockhost : string () {
-    my $name = $self->sockname;
+    my $in_addr_sock = $self->sockaddr;
     
-    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->sin_addr;
-    
-    my $address = (string)undef;
-    if ($in_addr) {
-      $address = Sys::Socket->inet_ntoa($in_addr);
+    my $sockhost = (string)undef;
+    if ($in_addr_sock) {
+      $sockhost = Sys::Socket->inet_ntoa($in_addr_sock);
     }
-    return $address;
+    return $sockhost;
   }
-
+  
   method peeraddr : Sys::Socket::In_addr () {
-    my $name = $self->peername;
+    my $sockaddr_in = $self->peername;
     
-    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->sin_addr;
+    my $in_addr = $sockaddr_in->(Sys::Socket::Sockaddr::In)->sin_addr;
     
     return $in_addr;
   }
-
+  
   method peerport : int () {
-    my $name = $self->peername;
+    my $sockaddr_in_peer = (Sys::Socket::Sockaddr::In)$self->peername;
     
-    my $port_nb_order = $name->(Sys::Socket::Sockaddr::In)->sin_port;
+    my $peerport_network_byte_order = $sockaddr_in_peer->sin_port;
     
-    my $port = Sys::Socket->ntohs((short)$port_nb_order);
+    my $peerport = Sys::Socket->ntohs((short)$peerport_network_byte_order);
     
-    return $port;
+    return $peerport;
   }
-
+  
   method peerhost : string () {
-    my $name = $self->peername;
+    my $sockaddr_in_peer = (Sys::Socket::Sockaddr::In)$self->peername;
     
-    my $in_addr = $name->(Sys::Socket::Sockaddr::In)->sin_addr;
+    my $in_addr_peer = $self->peeraddr;
     
-    my $address = (string)undef;
-    if ($in_addr) {
-      $address = Sys::Socket->inet_ntoa($in_addr);
+    my $peerhost = (string)undef;
+    if ($in_addr_peer) {
+      $peerhost = Sys::Socket->inet_ntoa($in_addr_peer);
     }
-    return $address;
+    return $peerhost;
   }
 }
