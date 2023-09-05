@@ -1,4 +1,6 @@
 0.207 2023-09-04
+  [New Features]
+    * The IO::Socket::UNIX class is added.
   [Incompatibe Changes]
     * The following fields and methods in the IO::Socket class are added, deleted, or changed.
       

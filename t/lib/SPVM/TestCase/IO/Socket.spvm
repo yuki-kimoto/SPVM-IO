@@ -1,7 +1,7 @@
 class TestCase::IO::Socket {
   use IO::Socket;
   use IO::Socket::INET;
-
+  use IO::Socket::UNIX;
 
   static method inet : int () {
 

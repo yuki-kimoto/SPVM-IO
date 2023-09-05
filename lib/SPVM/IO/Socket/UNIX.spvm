@@ -2,121 +2,63 @@
 # MIT License
 
 class IO::Socket::UNIX extends IO::Socket {
-  use IO::Socket::Constant as SOCKET;
+  use Sys::Socket::Constant as SOCKET;
   
   has Local : string;
   has Peer : string;
   
-  static method new_raw ($options : object[] = undef) {
+  static method new : IO::Socket::UNIX ($options : object[] = undef) {
     
     my $self = new IO::Socket::UNIX;
     
-    $self->configure($options);
-    
-    my $domain = $self->sockdomain;
-    my $type = $self->socktype;
-    my $proto = $self->protocol;
-    
-    $self->socket($domain, $type, $proto);
-    
-    my $local = 
-    
-    if(exists $arg->{Local}) {
-        my $addr = sockaddr_un($arg->{Local});
-        $self->bind($addr) or
-            return undef;
-    }
-    
-    if(exists $arg->{Listen} && $type != SOCK_DGRAM) {
-        $self->listen($arg->{Listen} || 5) or
-            return undef;
-    }
-    elsif(exists $arg->{Peer}) {
-        my $addr = sockaddr_un($arg->{Peer});
-        $self->connect($addr) or
-            return undef;
-    }
-    
-    return $self;
-  }
-  
-  static method new ($options : object[] = undef) {
-    
-    my $self = &new_raw($options);
-    
-    $self->prepare;
+    $self->SUPER::init($options);
     
     return $self;
   }
   
   method new_from_instance : IO::Socket::UNIX ($options : object[] = undef) {
-    my $io_socket = IO::Socket::UNIX->new($options);
-    
-    return $io_socket;
+    return IO::Socket::UNIX->new($options);
   }
   
   protected method configure : void ($options : object[] = undef) {
     
     my $options_h = Hash->new($options);
     
-    my $domain = $options_h->delete_or_default("Domain", SOCKET->AF_UNIX);
+    my $domain = $options_h->delete_or_default_int("Domain", SOCKET->AF_UNIX);
     
-    my $type = $options_h->delete_or_default("Type", SOCKET->SOCK_STREAM);
+    my $type = $options_h->delete_or_default_int("Type", SOCKET->SOCK_STREAM);
     
-    my $protocal = $options_h->delete_or_default("Proto", 0);
-    
-    my $peer = $options_h->delete_or_default("Peer", undef);
-    
-    my $blocking = $options_h->delete_or_default("Blocking", 1);
-    
-    if(exists $arg->{Local}) {
-        my $addr = sockaddr_un($arg->{Local});
-        $self->bind($addr) or
-            return undef;
-    }
-    if(exists $arg->{Listen} && $type != SOCK_DGRAM) {
-        $self->listen($arg->{Listen} || 5) or
-            return undef;
-    }
-    elsif(exists $arg->{Peer}) {
-        my $addr = sockaddr_un($arg->{Peer});
-        $self->connect($addr) or
-            return undef;
-    }
-  }
-  
-  protected method prepare : void () {
-    my $self = new IO::Socket::UNIX;
-    
-    $self->configure($options);
-    
-    my $domain = $self->sockdomain;
-    my $type = $self->socktype;
-    my $proto = $self->protocol;
-    
-    $self->socket($domain, $type, $proto);
-    
-    my $local = 
-    
-    if(exists $arg->{Local}) {
-        my $addr = sockaddr_un($arg->{Local});
-        $self->bind($addr) or
-            return undef;
+    if($options_h->exists("Blocking")) {
+      my $blocking = $options_h->get_int("Blocking");
+      $options_h->delete("Blocking");
+      $self->blocking($blocking);
     }
     
-    if(exists $arg->{Listen} && $type != SOCK_DGRAM) {
-        $self->listen($arg->{Listen} || 5) or
-            return undef;
-    }
-    elsif(exists $arg->{Peer}) {
-        my $addr = sockaddr_un($arg->{Peer});
-        $self->connect($addr) or
-            return undef;
+    my $protocol = 0;
+    $self->socket($domain, $type, $protocol);
+    
+    my $local = $options_h->delete_or_default_string("Local", undef);
+    
+    if ($local) {
+      my $sockaddr_un_local = &sockaddr_un($local);
+      $self->bind($sockaddr_un_local);
     }
     
-    if(exists $arg->{Blocking}) {
-        $self->blocking($arg->{Blocking}) or
-            return undef;
+    my $peer = $options_h->delete_or_default_string("Peer", undef);
+    
+    if ($options_h->exists("Listen") && $type != SOCKET->SOCK_DGRAM) {
+      my $listen = $options_h->delete_or_default_int("Listen", 5);
+      $self->listen($listen);
+    }
+    elsif ($peer) {
+      my $sockaddr_un_peer = &sockaddr_un($peer);
+      $self->connect($sockaddr_un_peer);
+    }
+    
+    $options_h->delete("Listen");
+    
+    for my $name (@{$options_h->keys}) {
+      die "The \"$name\" option is not available.";
     }
   }
   
@@ -134,5 +76,11 @@ class IO::Socket::UNIX extends IO::Socket {
     my $peerpath = $peer_sockaddr_un->sun_path;
     
     return $peerpath;
+  }
+  
+  private static method sockaddr_un : Sys::Socket::Sockaddr::Un ($path : string) {
+    my $sockaddr_un = Sys::Socket::Sockaddr::Un->new;
+    $sockaddr_un->set_sun_family(SOCKET->AF_UNIX);
+    $sockaddr_un->set_sun_path($path);
   }
 }
