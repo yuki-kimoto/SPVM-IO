@@ -32,7 +32,9 @@
       -  has peername : protected ro Sys::Socket::Sockaddr;
       +  has peername : protected Sys::Socket::Sockaddr;
       +  method peername : Sys::Socket::Sockaddr ();
-      
+    
+    * fd field in IO::Socket class is moved to IO::Handle class.
+    
 0.206 2023-09-04
   [Prerequirement Changes]
     * SPVM::Sys 0.485 is required.

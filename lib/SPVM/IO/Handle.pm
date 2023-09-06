@@ -20,6 +20,10 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 
 =head1 Fields
 
+=head2 fd
+
+  has fd : protected int;
+
 =head2 autoflush
 
   has autoflush : rw byte;

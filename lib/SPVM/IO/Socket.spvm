@@ -22,7 +22,6 @@ class IO::Socket extends IO::Handle {
   has Blocking : protected int;
   has Listen : protected int;
   has Timeout : protected int;
-  has fd : protected int;
   has peername : protected Sys::Socket::Sockaddr;
   
   # Class Methods
