@@ -43,15 +43,15 @@ class IO::Handle {
   }
   
   method close : int () { die "Not implemented"; }
-
+  
   method eof : int () { die "Not implemented"; }
-
+  
   method fileno : int () { die "Not implemented"; }
-
+  
   method getc : int () { die "Not implemented"; }
-
+  
   method print : int ($string : string) { die "Not implemented"; }
-
+  
   method say : int ($string : string) {
     my $status1 = $self->print($string);
     my $status2 = $self->print("\n");
@@ -59,20 +59,20 @@ class IO::Handle {
     
     return $status;
   }
-
+  
   method printf : int ($format : string, $args : object[]) {
     my $formated_string = Format->sprintf($format, $args);
     return $self->print($formated_string);
   }
-
+  
   method clearerr : void () { die "Not implemented"; }
   
   method error : int () { die "Not implemented"; }
-
+  
   method flush : int () { die "Not implemented"; }
-
+  
   method ungetc : int ($c : int) { die "Not implemented"; }
-
+  
   method printflush : int ($string : string) {
     my $old_autoflush = $self->autoflush;
     
@@ -88,7 +88,7 @@ class IO::Handle {
     $self->set_autoflush(1);
     $self->print($string);
   }
-
+  
   method truncate : int ($legnth : long) {
     my $fileno = $self->fileno;
     
@@ -100,23 +100,23 @@ class IO::Handle {
     
     return Sys->ioctl($fileno, $request, $request_arg);
   }
-
+  
   method sync : int () {
     my $fileno = $self->fileno;
     
     return Sys::IO->fsync($fileno);
   }
-
+  
   method stat : int ($stat : Sys::IO::Stat) {
     my $fileno = $self->fileno;
     
     return Sys::IO::Stat->fstat($fileno, $stat);
   }
-
+  
   method getline : string () { die "Not implemented"; }
-
+  
   method getlines : string () { die "Not implemented"; }
-
+  
   method fcntl : int ($command : int, $command_arg : object of Int|Sys::IO::Flock|object = undef) {
     my $fileno = $self->fileno;
     
