@@ -137,6 +137,9 @@ class IO::File extends IO::Handle {
   method getline : string () {
     my $stream = $self->{stream};
     my $line = Sys::IO->readline($stream);
+    
+    $self->{input_line_number}++;
+    
     return $line;
   }
   

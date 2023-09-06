@@ -5,6 +5,7 @@
   [New Features]
     * The IO::Socket::UNIX class is added.
   [Incompatibe Changes]
+    * input_output_number is incremented.
     * The following fields and methods in the IO::Socket class are added, deleted, or changed.
       
       -  has timeout : protected ro int;
