@@ -30,7 +30,9 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 
 =head2 input_line_number
 
-  has input_line_number : ro int;
+  has input_line_number : int;
+
+The current line number of an input file.
 
 =head2 opened
 
@@ -51,6 +53,34 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 =head2 init
 
   method init : void ($options : object[] = undef);
+
+=head2 input_line_number
+
+  method input_line_number : long ();
+
+Gets L</"input_line_number> field.
+
+This method is planed to be implemented in a child class.
+
+This method always throws an exception.
+
+Excepsions:
+
+  Not implemented.
+
+=head2 set_input_line_number
+
+  method set_input_line_number : void ($input_line_number : long);
+
+Sets L</"input_line_number> field.
+
+This method is planed to be implemented in a child class.
+
+This method always throws an exception.
+
+Excepsions:
+
+  Not implemented.
 
 =head2 close
 

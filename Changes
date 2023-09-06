@@ -33,6 +33,12 @@
       +  has peername : protected Sys::Socket::Sockaddr;
       +  method peername : Sys::Socket::Sockaddr ();
     
+    * The following fields and methods in the IO::File class are added, deleted, or changed.
+    
+      + method input_line_number : long ();
+      
+      + method set_input_line_number : void ($input_line_number : long);
+      
     * fd field in IO::Socket class is moved to IO::Handle class.
     
 0.206 2023-09-04

@@ -16,7 +16,7 @@ class IO::Handle {
   # Fields
   has fd : protected int;
   has autoflush : rw byte;
-  has input_line_number : ro int;
+  has input_line_number : long;
   has opened : ro protected int;
   has blocking_flag : rw protected int;
   
@@ -30,6 +30,10 @@ class IO::Handle {
   }
   
   # Instance Methods
+  method input_line_number : long () { die "Not implemented"; }
+  
+  method set_input_line_number : void ($input_line_number : long) { die "Not implemented"; }
+  
   method init : void ($options : object[] = undef) {
     my $options_h = Hash->new($options);
     

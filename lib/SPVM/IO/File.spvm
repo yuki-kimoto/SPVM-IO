@@ -12,7 +12,7 @@ class IO::File extends IO::Handle {
   has stream : private Sys::IO::FileStream;
   
   # Class methods
-
+  
   static method new : IO::File ($file_name : string = undef, $open_mode : string = undef) {
     my $self = new IO::File;
     
@@ -24,7 +24,7 @@ class IO::File extends IO::Handle {
     
     return $self;
   }
-
+  
   static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef) {
     my $self = new IO::File;
     
@@ -34,7 +34,15 @@ class IO::File extends IO::Handle {
     
     return $self;
   }
-
+  
+  method input_line_number : long () {
+    return $self->{input_line_number};
+  }
+  
+  method set_input_line_number : void ($input_line_number : long) {
+    $self->{input_line_number} = $input_line_number ;
+  }
+  
   method open : void ($file_name : string, $open_mode : string) {
     
     my $valid_mode = 0;
@@ -74,7 +82,7 @@ class IO::File extends IO::Handle {
     
     $self->{stream} = $stream;
   }
-
+  
   method fdopen : void ($fd : int, $open_mode : string) {
     
     my $valid_mode = 0;
@@ -114,7 +122,7 @@ class IO::File extends IO::Handle {
     
     $self->{stream} = $stream;
   }
-
+  
   protected method init : void ($options : object[] = undef) {
     $self->SUPER::init;
   }

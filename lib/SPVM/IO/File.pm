@@ -27,6 +27,8 @@ L<IO::Handle|SPVM::IO::Handle>.
 
   has stream : Sys::IO::FileStream;
 
+=head1 Class Methods
+
 =head2 new
 
   static method new : IO::File ($file_name : string = undef, $open_mode : string = undef);
@@ -34,6 +36,20 @@ L<IO::Handle|SPVM::IO::Handle>.
 =head2 new_from_fd
 
   static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef);
+
+=head1 Instance Methods
+
+=head2 input_line_number
+
+  method input_line_number : long ();
+
+Gets L</"input_line_number> field.
+
+=head2 set_input_line_number
+
+  method set_input_line_number : void ($input_line_number : long);
+
+Sets L</"input_line_number> field.
 
 =head2 open
 
