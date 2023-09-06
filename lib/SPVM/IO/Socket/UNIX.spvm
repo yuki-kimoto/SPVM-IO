@@ -3,6 +3,7 @@
 
 class IO::Socket::UNIX extends IO::Socket {
   use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Util;
   
   has Local : string;
   has Peer : string;
@@ -40,7 +41,7 @@ class IO::Socket::UNIX extends IO::Socket {
     my $local = $options_h->delete_or_default_string("Local", undef);
     
     if ($local) {
-      my $sockaddr_un_local = &sockaddr_un($local);
+      my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
       $self->bind($sockaddr_un_local);
     }
     
@@ -51,7 +52,7 @@ class IO::Socket::UNIX extends IO::Socket {
       $self->listen($listen);
     }
     elsif ($peer) {
-      my $sockaddr_un_peer = &sockaddr_un($peer);
+      my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
       $self->connect($sockaddr_un_peer);
     }
     
@@ -76,11 +77,5 @@ class IO::Socket::UNIX extends IO::Socket {
     my $peerpath = $peer_sockaddr_un->sun_path;
     
     return $peerpath;
-  }
-  
-  private static method sockaddr_un : Sys::Socket::Sockaddr::Un ($path : string) {
-    my $sockaddr_un = Sys::Socket::Sockaddr::Un->new;
-    $sockaddr_un->set_sun_family(SOCKET->AF_UNIX);
-    $sockaddr_un->set_sun_path($path);
   }
 }
