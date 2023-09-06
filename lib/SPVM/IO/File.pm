@@ -87,6 +87,8 @@ Sets L</"input_line_number> field.
 
   method fileno : int ();
 
+Gets the file descriptor of L</"stream"> field.
+
 =head2 getc
 
   method getc : int ();

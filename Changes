@@ -4,6 +4,9 @@
     * SPVM 0.989040 is required.
   [New Features]
     * The IO::Socket::UNIX class is added.
+  [Changes]
+    * The implementation of fileno method is improved.
+    
   [Incompatibe Changes]
     * input_output_number is incremented.
     * The following fields and methods in the IO::Socket class are added, deleted, or changed.

@@ -50,7 +50,9 @@ class IO::Handle {
   
   method eof : int () { die "Not implemented"; }
   
-  method fileno : int () { die "Not implemented"; }
+  method fileno : int () {
+    return $self->{fd};
+  }
   
   method getc : int () { die "Not implemented"; }
   

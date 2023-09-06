@@ -24,6 +24,8 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 
   has fd : protected int;
 
+A file descriptor.
+
 =head2 autoflush
 
   has autoflush : rw byte;
@@ -93,6 +95,8 @@ Excepsions:
 =head2 fileno
 
   method fileno : int ();
+
+Gets L</"fh"> field.
 
 =head2 getc
 

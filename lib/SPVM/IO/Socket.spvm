@@ -253,8 +253,6 @@ class IO::Socket extends IO::Handle {
     return $status;
   }
   
-  method fileno : int () { return $self->{fd}; }
-  
   method opened : int () {
     my $fd = $self->{fd};
     
