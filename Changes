@@ -29,9 +29,6 @@
       -  method peerport : int ();
       -  method peerhost : string ();
       
-      -  has fd : protected ro int;
-      +  has socket_fd : protected int;
-      
       -  has peername : protected ro Sys::Socket::Sockaddr;
       +  has peername : protected Sys::Socket::Sockaddr;
       +  method peername : Sys::Socket::Sockaddr ();

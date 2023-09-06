@@ -52,9 +52,9 @@ L<IO::Handle|SPVM::IO::Handle>.
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
-=head2 socket_fd
+=head2 fd
 
-  has socket_fd : protected int;
+  has fd : protected int;
 
 =head2 Listen
 
