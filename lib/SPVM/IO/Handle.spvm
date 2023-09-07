@@ -18,7 +18,6 @@ class IO::Handle {
   has autoflush : rw byte;
   has nonblocking : protected int;
   has input_line_number : long;
-  has opened : ro protected int;
   
   # Class Methods
   static method new : IO::Handle ($options : object[]) {
@@ -37,6 +36,8 @@ class IO::Handle {
   method init : void ($options : object[] = undef) {
     my $options_h = Hash->new($options);
     
+    $self->{fd} = -1;
+    
     for my $key (@{$options_h->keys}) {
       die "The \"$key\" option is not available";
     }
@@ -45,6 +46,12 @@ class IO::Handle {
   method close : int () { die "Not implemented"; }
   
   method eof : int () { die "Not implemented"; }
+  
+  method opened : int () {
+    my $opened = $self->fileno > -1;
+    
+    return $opened;
+  }
   
   method fileno : int () {
     return $self->{fd};

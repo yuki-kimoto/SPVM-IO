@@ -92,6 +92,12 @@ Excepsions:
 
   method eof : int ();
 
+=head2 opened
+
+  method opened : int ();
+
+If the return value of L</"fileno"> is greater than -1, returns 1. Otherwise returns 0.
+
 =head2 fileno
 
   method fileno : int ();

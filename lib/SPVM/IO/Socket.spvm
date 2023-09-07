@@ -245,7 +245,6 @@ class IO::Socket extends IO::Handle {
     if ($fd >= 0) {
       $status = Sys::Socket->close($fd);
       $self->{fd} = -1;
-      $self->{opened} = 0;
     }
     
     return $status;

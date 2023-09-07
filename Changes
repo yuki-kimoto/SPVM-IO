@@ -51,7 +51,10 @@
       
       -  has blocking_flag : rw protected int;
       +  has nonblocking : protected int;
-
+      
+      -  has opened : ro protected int;
+      +  method opened : int ();
+      
     * fd field in IO::Socket class is moved to IO::Handle class.
     
 0.206 2023-09-04
