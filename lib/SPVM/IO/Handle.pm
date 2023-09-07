@@ -190,6 +190,14 @@ Excepsions:
 
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
 
+=head2 syswrite
+
+  method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
+
+=head2 sysread
+
+  method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
+
 =head1 Well Known Child Classes
 
 =head2 IO::File

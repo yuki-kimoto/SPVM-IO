@@ -60,6 +60,10 @@
       
     * fd field in IO::Socket class is moved to IO::Handle class.
     
+    * write method in IO::Socket class call syswrite method.
+    * read method in IO::Socket class call sysread method.
+    * print method calls write method.
+    
 0.206 2023-09-04
   [Prerequirement Changes]
     * SPVM::Sys 0.485 is required.
