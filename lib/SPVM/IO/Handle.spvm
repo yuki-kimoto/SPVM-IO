@@ -220,6 +220,10 @@ class IO::Handle {
   method sync : int () {
     my $fileno = $self->fileno;
     
-    return Sys::IO->fsync($fileno);
+    my $status =  Sys::IO->fsync($fileno);
+    
+    my $success = $status == 0;
+    
+    return $success;
   }
 }

@@ -6,6 +6,8 @@
       method stat : Sys::IO::Stat ();
       method truncate : int ($legnth : long);
     
+    * The sync method in the IO::Handle class is changed. If succedd, returns 1.
+    
 0.207 2023-09-04
   [Prerequirement Changes]
     * Require SPVM::Sys 0.486.
