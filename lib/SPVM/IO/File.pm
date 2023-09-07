@@ -121,20 +121,6 @@ Gets the file descriptor of L</"stream"> field.
 
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
 
-=head2 truncate
-
-  method truncate : int ($legnth : long);
-
-Truncates to a size of precisely length bytes.
-
-=head2 stat
-
-  method stat : Sys::IO::Stat ();
-
-=head2 sync
-
-  method sync : int ();
-
 =head1 See Also
 
 =head2 Perl's IO::File

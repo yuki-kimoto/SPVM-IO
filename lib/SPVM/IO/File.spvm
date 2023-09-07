@@ -274,24 +274,4 @@ class IO::File extends IO::Handle {
     return Sys::IO->fread($string, 1, $length, $stream);
   }
   
-  method truncate : int ($legnth : long) {
-    my $fileno = $self->fileno;
-    
-    return Sys::IO->ftruncate($fileno, $legnth);
-  }
-  
-  method stat : Sys::IO::Stat () {
-    my $fileno = $self->fileno;
-    my $stat = Sys::IO::Stat->new;
-    
-    Sys::IO::Stat->fstat($fileno, $stat);
-    
-    return $stat;
-  }
-  
-  method sync : int () {
-    my $fileno = $self->fileno;
-    
-    return Sys::IO->fsync($fileno);
-  }
 }

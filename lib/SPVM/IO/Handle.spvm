@@ -184,8 +184,6 @@ class IO::Handle {
     return Sys::IO->read($fh, $string, $length);
   }
   
-  method sync : int () { die "Not implemented"; }
-  
   method getc : int () { die "Not implemented"; }
   
   method close : int () { die "Not implemented"; }
@@ -200,12 +198,28 @@ class IO::Handle {
   
   method ungetc : int ($c : int) { die "Not implemented"; }
   
-  method stat : Sys::IO::Stat () { die "Not implemented"; }
-  
   method getline : string () { die "Not implemented"; }
   
   method getlines : string () { die "Not implemented"; }
   
-  method truncate : int ($legnth : long) { die "Not implemented"; }
+  method truncate : int ($legnth : long) {
+    my $fileno = $self->fileno;
+    
+    return Sys::IO->ftruncate($fileno, $legnth);
+  }
   
+  method stat : Sys::IO::Stat () {
+    my $fileno = $self->fileno;
+    my $stat = Sys::IO::Stat->new;
+    
+    Sys::IO::Stat->fstat($fileno, $stat);
+    
+    return $stat;
+  }
+  
+  method sync : int () {
+    my $fileno = $self->fileno;
+    
+    return Sys::IO->fsync($fileno);
+  }
 }
