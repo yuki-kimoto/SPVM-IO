@@ -43,11 +43,15 @@
       
       + method set_input_line_number : void ($input_line_number : long);
       
-    * The following fields and methods in the IO::Socket class are added, deleted, or changed.
+    * The following fields and methods in the IO::Handle class are added, deleted, or changed.
       
       -  method blocking : void ($blocking : int);
+      +  method blocking : int ();
       +  method set_blocking : void ($blocking : int);
       
+      -  has blocking_flag : rw protected int;
+      +  has nonblocking : protected int;
+
     * fd field in IO::Socket class is moved to IO::Handle class.
     
 0.206 2023-09-04

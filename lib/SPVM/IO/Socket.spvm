@@ -102,7 +102,7 @@ class IO::Socket extends IO::Handle {
   method connect : int ($address : Sys::Socket::Sockaddr) {
     my $timeout = $self->{Timeout};
     
-    my $old_blocking_flag = $self->blocking_flag;
+    my $old_blocking_flag = !$self->{nonblocking};
     my $restore_blocking_at_end_of_scope : Scope::Guard = undef;
     if ($timeout > 0) {
       my $this = $self;
@@ -111,11 +111,9 @@ class IO::Socket extends IO::Handle {
         my $old_blocking_flag = $self->{old_blocking_flag};
         
         $this->set_blocking($old_blocking_flag);
-        $this->{blocking_flag} = $old_blocking_flag;
       });
       
       $self->set_blocking(0);
-      $self->{blocking_flag} = 0;
     }
     
     my $fd = $self->{fd};
@@ -123,7 +121,7 @@ class IO::Socket extends IO::Handle {
     my $connect_success = 0;
     eval { $connect_success = Sys->connect($fd, $address); };
     
-    my $blocking_flag = $self->blocking_flag;
+    my $blocking_flag = !$self->{nonblocking};
     if ($blocking_flag) {
       if ($@) {
         die $@;

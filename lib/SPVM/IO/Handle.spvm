@@ -16,9 +16,9 @@ class IO::Handle {
   # Fields
   has fd : protected int;
   has autoflush : rw byte;
+  has nonblocking : protected int;
   has input_line_number : long;
   has opened : ro protected int;
-  has blocking_flag : rw protected int;
   
   # Class Methods
   static method new : IO::Handle ($options : object[]) {
@@ -36,10 +36,6 @@ class IO::Handle {
   
   method init : void ($options : object[] = undef) {
     my $options_h = Hash->new($options);
-    
-    # Blocking option
-    my $blocking_flag = $options_h->delete_or_default_int("Blocking", 1);
-    $self->{blocking_flag} = $blocking_flag;
     
     for my $key (@{$options_h->keys}) {
       die "The \"$key\" option is not available";
@@ -129,6 +125,10 @@ class IO::Handle {
     return Sys::IO->fcntl($fileno, $command, $command_arg);
   }
   
+  method blocking : int () {
+    return !$self->{nonblocking};
+  }
+  
   method set_blocking : void ($blocking : int) {
     unless ($blocking >= 0) {
       die "The $blocking must be greater than or equal to 0";
@@ -152,6 +152,8 @@ class IO::Handle {
       
       $self->fcntl(IO->F_SETFL, $newmode);
     }
+    
+    $self->{nonblocking} = !$blocking;
   }
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented"; }
