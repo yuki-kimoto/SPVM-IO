@@ -144,6 +144,16 @@ Gets L</"fh"> field.
 
   method truncate : int ($legnth : long);
 
+Truncates to a size of precisely length bytes.
+
+This method is planed to be implemented in a child class.
+
+This method always throws an exception.
+
+Excepsions:
+
+  Not implemented.
+
 =head2 ioctl
 
   static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);

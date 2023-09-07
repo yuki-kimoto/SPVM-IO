@@ -98,11 +98,7 @@ class IO::Handle {
     $self->print($string);
   }
   
-  method truncate : int ($legnth : long) {
-    my $fileno = $self->fileno;
-    
-    return Sys::IO->ftruncate($fileno, $legnth);
-  }
+  method truncate : int ($legnth : long) { die "Not implemented"; }
   
   method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
     my $fileno = $self->fileno;

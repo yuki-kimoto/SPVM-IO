@@ -273,4 +273,10 @@ class IO::File extends IO::Handle {
     
     return Sys::IO->fread($string, 1, $length, $stream);
   }
+  
+  method truncate : int ($legnth : long) {
+    my $fileno = $self->fileno;
+    
+    return Sys::IO->ftruncate($fileno, $legnth);
+  }
 }
