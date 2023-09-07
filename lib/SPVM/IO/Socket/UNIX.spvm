@@ -32,7 +32,7 @@ class IO::Socket::UNIX extends IO::Socket {
     if($options_h->exists("Blocking")) {
       my $blocking = $options_h->get_int("Blocking");
       $options_h->delete("Blocking");
-      $self->blocking($blocking);
+      $self->set_blocking($blocking);
     }
     
     my $protocol = 0;

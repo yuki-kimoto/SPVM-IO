@@ -40,9 +40,9 @@ The current line number of an input file.
 
   has opened : ro protected int;
 
-=head2 blocking_flag
+=head2 Blocking
 
-  has blocking_flag : rw protected int;
+  has Blocking : rw protected int;
   
 =head1 Class methods
 
@@ -162,9 +162,9 @@ Gets L</"fh"> field.
 
   method fcntl : int ($command : int, $command_arg : object = undef of Int|Sys::IO::Flock|object);
 
-=head2 blocking
+=head2 set_blocking
 
-  method blocking : void ($blocking : int);
+  method set_blocking : void ($blocking : int);
 
 =head2 write
 

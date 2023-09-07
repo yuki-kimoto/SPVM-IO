@@ -110,11 +110,11 @@ class IO::Socket extends IO::Handle {
         my $this = $self->{this};
         my $old_blocking_flag = $self->{old_blocking_flag};
         
-        $this->blocking($old_blocking_flag);
+        $this->set_blocking($old_blocking_flag);
         $this->{blocking_flag} = $old_blocking_flag;
       });
       
-      $self->blocking(0);
+      $self->set_blocking(0);
       $self->{blocking_flag} = 0;
     }
     
