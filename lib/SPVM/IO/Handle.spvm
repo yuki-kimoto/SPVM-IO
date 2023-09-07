@@ -113,11 +113,7 @@ class IO::Handle {
     return Sys::IO->fsync($fileno);
   }
   
-  method stat : int ($stat : Sys::IO::Stat) {
-    my $fileno = $self->fileno;
-    
-    return Sys::IO::Stat->fstat($fileno, $stat);
-  }
+  method stat : Sys::IO::Stat () { die "Not implemented"; }
   
   method getline : string () { die "Not implemented"; }
   

@@ -127,6 +127,10 @@ Gets the file descriptor of L</"stream"> field.
 
 Truncates to a size of precisely length bytes.
 
+=head2 stat
+
+  method stat : Sys::IO::Stat ();
+
 =head1 See Also
 
 =head2 Perl's IO::File

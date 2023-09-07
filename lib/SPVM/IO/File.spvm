@@ -279,4 +279,14 @@ class IO::File extends IO::Handle {
     
     return Sys::IO->ftruncate($fileno, $legnth);
   }
+  
+  method stat : Sys::IO::Stat () {
+    my $fileno = $self->fileno;
+    my $stat = Sys::IO::Stat->new;
+    
+    Sys::IO::Stat->fstat($fileno, $stat);
+    
+    return $stat;
+  }
+  
 }

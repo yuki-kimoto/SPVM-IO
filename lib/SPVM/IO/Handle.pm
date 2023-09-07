@@ -164,7 +164,7 @@ Excepsions:
 
 =head2 stat
 
-  method stat : int ($stat : Sys::IO::Stat);
+  method stat : Sys::IO::Stat ();
 
 =head2 getline
 

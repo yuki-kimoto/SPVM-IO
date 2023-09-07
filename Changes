@@ -43,6 +43,7 @@
       
       + method set_input_line_number : void ($input_line_number : long);
       + method truncate : int ($legnth : long);
+      + method stat : Sys::IO::Stat ();
       
     * The following fields and methods in the IO::Handle class are added, deleted, or changed.
       
@@ -57,6 +58,9 @@
       +  method opened : int ();
       
       method truncate : int ($legnth : long) throws an exception.
+      
+      -  method stat : int ($stat : Sys::IO::Stat);
+      +  method stat : Sys::IO::Stat ();
       
     * fd field in IO::Socket class is moved to IO::Handle class.
     
