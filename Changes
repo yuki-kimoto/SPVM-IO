@@ -1,7 +1,7 @@
 0.207 2023-09-04
   [Prerequirement Changes]
-    * SPVM::Sys 0.486 is required.
-    * SPVM 0.989040 is required.
+    * Require SPVM::Sys 0.486.
+    * Require SPVM 0.989040.
   [New Features]
     * The IO::Socket::UNIX class is added.
   [Changes]
