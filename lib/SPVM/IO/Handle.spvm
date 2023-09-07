@@ -156,7 +156,7 @@ class IO::Handle {
     
     my $fh = $self->fileno;
     
-    return Sys::IO->write($fh, 1, $length);
+    return Sys::IO->write($fh, $string, $length);
   }
   
   method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
@@ -181,7 +181,7 @@ class IO::Handle {
     
     my $fh = $self->fileno;
     
-    return Sys::IO->read($fh, 1, $length);
+    return Sys::IO->read($fh, $string, $length);
   }
   
   method sync : int () { die "Not implemented"; }
