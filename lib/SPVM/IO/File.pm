@@ -131,6 +131,10 @@ Truncates to a size of precisely length bytes.
 
   method stat : Sys::IO::Stat ();
 
+=head2 sync
+
+  method sync : int ();
+
 =head1 See Also
 
 =head2 Perl's IO::File

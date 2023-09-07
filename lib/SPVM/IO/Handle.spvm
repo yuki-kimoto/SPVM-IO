@@ -88,13 +88,9 @@ class IO::Handle {
   method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
     my $fileno = $self->fileno;
     
-    return Sys->ioctl($fileno, $request, $request_arg);
-  }
-  
-  method sync : int () {
-    my $fileno = $self->fileno;
+    my $ioctl_ret =  Sys->ioctl($fileno, $request, $request_arg);
     
-    return Sys::IO->fsync($fileno);
+    return $ioctl_ret;
   }
   
   method fcntl : int ($command : int, $command_arg : object of Int|Sys::IO::Flock|object = undef) {
@@ -187,6 +183,8 @@ class IO::Handle {
     
     return Sys::IO->read($fh, 1, $length);
   }
+  
+  method sync : int () { die "Not implemented"; }
   
   method getc : int () { die "Not implemented"; }
   

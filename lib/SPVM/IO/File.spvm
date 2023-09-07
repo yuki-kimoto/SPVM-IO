@@ -289,4 +289,9 @@ class IO::File extends IO::Handle {
     return $stat;
   }
   
+  method sync : int () {
+    my $fileno = $self->fileno;
+    
+    return Sys::IO->fsync($fileno);
+  }
 }

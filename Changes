@@ -44,6 +44,7 @@
       + method set_input_line_number : void ($input_line_number : long);
       + method truncate : int ($legnth : long);
       + method stat : Sys::IO::Stat ();
+      + method sync : int ()
       
     * The following fields and methods in the IO::Handle class are added, deleted, or changed.
       
@@ -58,6 +59,8 @@
       +  method opened : int ();
       
       method truncate : int ($legnth : long) throws an exception.
+      
+      method sync : int () throws an exception.
       
       -  method stat : int ($stat : Sys::IO::Stat);
       +  method stat : Sys::IO::Stat ();
