@@ -36,6 +36,11 @@ class IO::Socket extends IO::Handle {
   
   # Instance Methods
   
+  method DESTROY : void () {
+    $self->{peername} = undef;
+    $self->close;
+  }
+  
   method protocol : int () {
     return $self->{Proto};
   }
@@ -190,22 +195,6 @@ class IO::Socket extends IO::Handle {
     }
     
     return $status;
-  }
-  
-  method opened : int () {
-    my $fd = $self->{fd};
-    
-    my $opened = 0;
-    if ($fd >= 0) {
-      $opened = 1;
-    }
-    
-    return $opened;
-  }
-  
-  method DESTROY : void () {
-    $self->{peername} = undef;
-    $self->close;
   }
   
   method listen : int ($queue : int = 5) {

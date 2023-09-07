@@ -144,10 +144,6 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
   method fileno : int (); return $self->{fd}; }
 
-=head2 opened
-
-  method opened : int ();
-
 =head2 listen
 
   method listen : int ($queue : int = 5);

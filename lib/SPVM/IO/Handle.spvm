@@ -29,10 +29,6 @@ class IO::Handle {
   }
   
   # Instance Methods
-  method input_line_number : long () { die "Not implemented"; }
-  
-  method set_input_line_number : void ($input_line_number : long) { die "Not implemented"; }
-  
   method init : void ($options : object[] = undef) {
     my $options_h = Hash->new($options);
     
@@ -42,6 +38,10 @@ class IO::Handle {
       die "The \"$key\" option is not available";
     }
   }
+  
+  method input_line_number : long () { die "Not implemented"; }
+  
+  method set_input_line_number : void ($input_line_number : long) { die "Not implemented"; }
   
   method opened : int () {
     my $opened = $self->fileno > -1;
