@@ -130,7 +130,9 @@ class IO::File extends IO::Handle {
     
     $self->{stream} = undef;
     
-    return $status;
+    my $success = $status == 0;
+    
+    return $success;
   }
   
   method eof : int () {
@@ -140,21 +142,23 @@ class IO::File extends IO::Handle {
   
   method fileno : int () {
     my $stream = $self->{stream};
-    return Sys::IO->fileno($stream);
+    my $fd = Sys->fileno($stream);
+    return $fd;
   }
   
   method getc : int () {
     my $stream = $self->{stream};
-    return Sys::IO->getc($stream);
+    my $success = Sys->getc($stream);
+    return $success;
   }
   
   method print : int ($string : string) {
     
     my $stream = $self->{stream};
     
-    my $length = length $string;
+    my $success = Sys->print($stream, $string);
     
-    return Sys::IO->fwrite($string, 1, $length, $stream);
+    return $success;
   }
   
   method clearerr : void () {
@@ -167,19 +171,27 @@ class IO::File extends IO::Handle {
   method error : int () {
     my $stream = $self->{stream};
     
-    return Sys::IO->ferror($stream);
+    my $error = Sys::IO->ferror($stream);
+    
+    return $error;
   }
   
   method flush : int () {
     my $stream = $self->{stream};
     
-    return Sys::IO->fflush($stream);
+    my $status = Sys::IO->fflush($stream);
+    
+    my $success = $status == 0;
+    
+    return $success;
   }
   
   method ungetc : int ($c : int) {
     my $stream = $self->{stream};
     
-    return Sys::IO->ungetc($c, $stream);
+    my $c_pushed = Sys::IO->ungetc($c, $stream);
+    
+    return $c_pushed;
   }
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) {
