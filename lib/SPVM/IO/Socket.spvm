@@ -104,7 +104,7 @@ class IO::Socket extends IO::Handle {
     }
   }
 
-  method connect : int ($address : Sys::Socket::Sockaddr) {
+  method connect : int ($sockaddr : Sys::Socket::Sockaddr) {
     my $timeout = $self->{Timeout};
     
     my $old_blocking_flag = !$self->{nonblocking};
@@ -124,7 +124,7 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{fd};
     
     my $connect_success = 0;
-    eval { $connect_success = Sys->connect($fd, $address); };
+    eval { $connect_success = Sys->connect($fd, $sockaddr); };
     
     my $blocking_flag = !$self->{nonblocking};
     if ($blocking_flag) {
@@ -145,7 +145,7 @@ class IO::Socket extends IO::Handle {
       }
     }
     
-    $self->{peername} = $address;
+    $self->{peername} = $sockaddr;
     
     return $connect_success;
   }
@@ -203,9 +203,9 @@ class IO::Socket extends IO::Handle {
     return $success;
   }
   
-  method bind : int ($address : Sys::Socket::Sockaddr) {
+  method bind : int ($sockaddr : Sys::Socket::Sockaddr) {
     my $fd = $self->{fd};
-    my $success = Sys->bind($fd, $address);
+    my $success = Sys->bind($fd, $sockaddr);
     
     return $success;
   }
