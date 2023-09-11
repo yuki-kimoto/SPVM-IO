@@ -82,30 +82,33 @@ class IO::Handle {
   }
   
   method set_blocking : void ($blocking : int) {
-    unless ($blocking >= 0) {
-      die "The $blocking must be greater than or equal to 0";
-    }
     
-    my $fd = $self->fileno;
+    my $current_blocking = !$self->{nonblocking};
     
-    if (Sys::OS->is_windows) {
-      my $flags = [(int)!$blocking];
-      $self->ioctl(IOCTL->FIONBIO, $flags);
-    }
-    else {
-      my $newmode = 0;
-      if ($blocking == 0) {
-        $newmode &= ~IO->O_NDELAY;
-        $newmode |= IO->O_NONBLOCK;
+    unless (!!$blocking == $current_blocking) {
+      
+      my $fd = $self->fileno;
+      
+      if (Sys::OS->is_windows) {
+        my $flags = [(int)!$blocking];
+        $self->ioctl(IOCTL->FIONBIO, $flags);
       }
       else {
-        $newmode &= ~(IO->O_NDELAY|IO->O_NONBLOCK);
+        my $newmode = $self->fcntl(IO->F_GETFL);
+        
+        if ($blocking == 0) {
+          $newmode &= ~IO->O_NDELAY;
+          $newmode |= IO->O_NONBLOCK;
+        }
+        else {
+          $newmode &= ~(IO->O_NDELAY|IO->O_NONBLOCK);
+        }
+        
+        $self->fcntl(IO->F_SETFL, $newmode);
       }
       
-      $self->fcntl(IO->F_SETFL, $newmode);
+      $self->{nonblocking} = !$blocking;
     }
-    
-    $self->{nonblocking} = !$blocking;
   }
   
   method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
