@@ -1,7 +1,6 @@
-0.209 2023-09-11
+0.208 2023-09-11
   [Prerequirement Changes]
-    * Require SPVM::Sys 0.488.
-0.208 2023-09-04
+    * Require SPVM::Sys 0.489.
   [Incompatibe Changes]
     * The following methods are moved from the IO::File class to the IO::Handle class.
       
