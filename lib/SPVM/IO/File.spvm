@@ -14,7 +14,7 @@ class IO::File extends IO::Handle {
   has input_line_number : long;
   
   # Class methods
-  static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perm : int = 0) {
+  static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perm : int = -1) {
     my $self = new IO::File;
     
     $self->init;
@@ -49,7 +49,7 @@ class IO::File extends IO::Handle {
     $self->{input_line_number} = $input_line_number ;
   }
   
-  method open : int ($file_name : string, $open_mode : object of string|Int, $perm : int = 0) {
+  method open : int ($file_name : string, $open_mode : object of string|Int, $perm : int = -1) {
     
     my $stream_ref = [(Sys::IO::FileStream)undef];
     
@@ -64,6 +64,9 @@ class IO::File extends IO::Handle {
     }
     elsif ($open_mode is_type Int) {
       my $fd = -1;
+      if ($perm < 0) {
+        $perm = 0666;
+      }
       $success = Sys->sysopen(\$fd, $file_name, $open_mode->(Int)->value, $perm);
       $success = Sys->fdopen($stream, $open_mode->(Int)->value, $fd);
     }
