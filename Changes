@@ -20,12 +20,6 @@
     
     * The write method in the IO::Handle return if succedd.
     
-    * The followng methods in the IO::Socket class are removed.
-    
-      -  method write : int ($string : string, $length : int = -1, $offset : int = 0);
-      
-      -  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
-    
 0.207 2023-09-04
   [Prerequirement Changes]
     * Require SPVM::Sys 0.486.

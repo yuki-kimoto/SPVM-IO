@@ -30,12 +30,6 @@ A file descriptor.
 
   has autoflush : rw byte;
 
-=head2 input_line_number
-
-  has input_line_number : int;
-
-The current line number of an input file.
-
 =head2 opened
 
   has opened : ro protected int;
@@ -56,57 +50,17 @@ The current line number of an input file.
 
   method init : void ($options : object[] = undef);
 
-=head2 input_line_number
-
-  method input_line_number : long ();
-
-Gets L</"input_line_number> field.
-
-This method is planed to be implemented in a child class.
-
-This method always throws an exception.
-
-Excepsions:
-
-  Not implemented.
-
-=head2 set_input_line_number
-
-  method set_input_line_number : void ($input_line_number : long);
-
-Sets L</"input_line_number> field.
-
-This method is planed to be implemented in a child class.
-
-This method always throws an exception.
-
-Excepsions:
-
-  Not implemented.
-
-=head2 close
-
-  method close : int ();
-
-=head2 eof
-
-  method eof : int ();
-
 =head2 opened
 
   method opened : int ();
 
-If the return value of L</"fileno"> is greater than -1, returns 1. Otherwise returns 0.
+If the return value of L</"fileno"> is greater than or equal to 0, returns 1. Otherwise returns 0.
 
 =head2 fileno
 
   method fileno : int ();
 
 Gets L</"fh"> field.
-
-=head2 getc
-
-  method getc : int ();
 
 =head2 print
 
@@ -120,26 +74,6 @@ Gets L</"fh"> field.
 
   method printf : int ($format : string, $args : object[]...);
 
-=head2 clearerr
-
-  method clearerr : void ();
-
-=head2 error
-
-  method error : int ();
-
-=head2 flush
-
-  method flush : int ();
-
-=head2 ungetc
-
-  method ungetc : int ($c : int);
-
-=head2 printflush
-
-  method printflush : int ($string : string);
-
 =head2 truncate
 
   method truncate : int ($legnth : long);
@@ -149,10 +83,6 @@ Truncates to a size of precisely length bytes.
 This method is planed to be implemented in a child class.
 
 This method always throws an exception.
-
-Excepsions:
-
-  Not implemented.
 
 =head2 ioctl
 
@@ -166,14 +96,6 @@ Excepsions:
 
   method stat : Sys::IO::Stat ();
 
-=head2 getline
-
-  method getline : string ();
-
-=head2 getlines
-
-  method getlines : string ();
-
 =head2 fcntl
 
   method fcntl : int ($command : int, $command_arg : object = undef of Int|Sys::IO::Flock|object);
@@ -182,14 +104,6 @@ Excepsions:
 
   method set_blocking : void ($blocking : int);
 
-=head2 write
-
-  method write : int ($string : string, $length : int = -1, $offset : int = 0);
-
-=head2 read
-
-  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
-
 =head2 syswrite
 
   method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
@@ -197,6 +111,30 @@ Excepsions:
 =head2 sysread
 
   method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
+
+=head2 write
+
+  method write : int ($string : string, $length : int = -1, $offset : int = 0);
+
+Exceptions:
+
+Not implemented.
+
+=head2 read
+
+  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
+
+Exceptions:
+
+Not implemented.
+
+=head2 close
+
+  method close : int ();
+
+Exceptions:
+
+Not implemented.
 
 =head1 Well Known Child Classes
 

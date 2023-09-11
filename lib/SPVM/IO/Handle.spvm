@@ -17,7 +17,6 @@ class IO::Handle {
   has fd : protected int;
   has autoflush : rw byte;
   has nonblocking : protected int;
-  has input_line_number : long;
   
   # Class Methods
   static method new : IO::Handle ($options : object[]) {
@@ -35,18 +34,18 @@ class IO::Handle {
     
   }
   
-  method input_line_number : long () { die "Not implemented"; }
-  
-  method set_input_line_number : void ($input_line_number : long) { die "Not implemented"; }
-  
   method opened : int () {
-    my $opened = $self->fileno > -1;
+    my $opened = $self->fileno >= 0;
     
     return $opened;
   }
   
   method fileno : int () {
     return $self->{fd};
+  }
+  
+  method blocking : int () {
+    return !$self->{nonblocking};
   }
   
   method print : int ($string : string) {
@@ -66,21 +65,6 @@ class IO::Handle {
     return $self->print($formated_string);
   }
   
-  method printflush : int ($string : string) {
-    my $old_autoflush = $self->autoflush;
-    
-    # Restores the autoflush field at the end of the scope.
-    my $scope_guard = Scope::Guard->new([has handle : IO::Handle = $self, has old_autoflush : int = $old_autoflush] method : void () {
-      my $handle = $self->{handle};
-      my $old_autoflush = $self->{old_autoflush};
-      
-      $handle->set_autoflush($old_autoflush);
-    });
-    
-    $self->set_autoflush(1);
-    $self->print($string);
-  }
-  
   method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
     my $fd = $self->fileno;
     
@@ -95,10 +79,6 @@ class IO::Handle {
     my $fcntl_ret = Sys->fcntl($fd, $command, $command_arg);
     
     return $fcntl_ret;
-  }
-  
-  method blocking : int () {
-    return !$self->{nonblocking};
   }
   
   method set_blocking : void ($blocking : int) {
@@ -128,10 +108,6 @@ class IO::Handle {
     $self->{nonblocking} = !$blocking;
   }
   
-  method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented"; }
-  
-  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) { die "Not implemented"; }
-  
   method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
     my $fd = $self->fileno;
     
@@ -143,24 +119,6 @@ class IO::Handle {
     
     return Sys->sysread($fd, $string, $length, $offset);
   }
-  
-  method getc : int () { die "Not implemented"; }
-  
-  method close : int () { die "Not implemented"; }
-  
-  method eof : int () { die "Not implemented"; }
-  
-  method clearerr : void () { die "Not implemented"; }
-  
-  method error : int () { die "Not implemented"; }
-  
-  method flush : int () { die "Not implemented"; }
-  
-  method ungetc : int ($c : int) { die "Not implemented"; }
-  
-  method getline : string () { die "Not implemented"; }
-  
-  method getlines : string () { die "Not implemented"; }
   
   method truncate : int ($legnth : long) {
     my $fd = $self->fileno;
@@ -185,4 +143,11 @@ class IO::Handle {
     
     return $success;
   }
+  
+  method close : int () { die "Not implemented."; }
+  
+  method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
+  
+  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
+  
 }

@@ -27,6 +27,10 @@ L<IO::Handle|SPVM::IO::Handle>.
 
   has stream : Sys::IO::FileStream;
 
+=head2 input_line_number
+
+  has input_line_number : long;
+
 =head1 Class Methods
 
 =head2 new
@@ -120,6 +124,42 @@ Gets the file descriptor of L</"stream"> field.
 =head2 read
 
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
+
+=head2 printflush
+
+  method printflush : int ($string : string);
+
+=head2 getline
+
+  method getline : string ();
+
+=head2 getlines
+
+  method getlines : string ();
+
+=head2 flush
+
+  method flush : int ();
+
+=head2 ungetc
+
+  method ungetc : int ($c : int);
+
+=head2 clearerr
+
+  method clearerr : void ();
+
+=head2 error
+
+  method error : int ();
+
+=head2 getc
+
+  method getc : int ();
+
+=head2 eof
+
+  method eof : int ();
 
 =head1 See Also
 

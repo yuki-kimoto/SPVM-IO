@@ -9,7 +9,9 @@ class IO::File extends IO::Handle {
   use StringBuffer;
   
   # Fields
-  has stream : private Sys::IO::FileStream;
+  has stream : Sys::IO::FileStream;
+  
+  has input_line_number : long;
   
   # Class methods
   static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perm : int = 0) {
@@ -141,13 +143,19 @@ class IO::File extends IO::Handle {
     return $success;
   }
   
-  method print : int ($string : string) {
+  method printflush : int ($string : string) {
+    my $old_autoflush = $self->autoflush;
     
-    my $stream = $self->{stream};
+    # Restores the autoflush field at the end of the scope.
+    my $scope_guard = Scope::Guard->new([has handle : IO::Handle = $self, has old_autoflush : int = $old_autoflush] method : void () {
+      my $handle = $self->{handle};
+      my $old_autoflush = $self->{old_autoflush};
+      
+      $handle->set_autoflush($old_autoflush);
+    });
     
-    my $success = Sys->print($stream, $string);
-    
-    return $success;
+    $self->set_autoflush(1);
+    $self->print($string);
   }
   
   method clearerr : void () {
