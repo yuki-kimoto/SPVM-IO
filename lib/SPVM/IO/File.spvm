@@ -12,7 +12,6 @@ class IO::File extends IO::Handle {
   has stream : private Sys::IO::FileStream;
   
   # Class methods
-  
   static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perm : int = 0) {
     my $self = new IO::File;
     
@@ -33,6 +32,11 @@ class IO::File extends IO::Handle {
     $self->fdopen($fd, $open_mode);
     
     return $self;
+  }
+  
+  # Instance Methods
+  protected method init : void ($options : object[] = undef) {
+    $self->SUPER::init;
   }
   
   method input_line_number : long () {
@@ -81,20 +85,10 @@ class IO::File extends IO::Handle {
     return $success;
   }
   
-  protected method init : void ($options : object[] = undef) {
-    $self->SUPER::init;
-  }
-  
-  method DESTROY : void () {
-    if ($self->{stream}) {
-      $self->flush;
-    }
-  }
-  
   # Instance methods
   method getline : string () {
     my $stream = $self->{stream};
-    my $line = Sys::IO->readline($stream);
+    my $line = Sys->readline($stream);
     
     $self->{input_line_number}++;
     
@@ -135,11 +129,6 @@ class IO::File extends IO::Handle {
     return $success;
   }
   
-  method eof : int () {
-    my $stream = $self->{stream};
-    return Sys::IO->feof($stream);
-  }
-  
   method fileno : int () {
     my $stream = $self->{stream};
     my $fd = Sys->fileno($stream);
@@ -168,12 +157,19 @@ class IO::File extends IO::Handle {
     Sys::IO->clearerr($stream);
   }
   
+  method eof : int () {
+    my $stream = $self->{stream};
+    my $is_eof = Sys::IO->feof($stream);
+    
+    return $is_eof;
+  }
+  
   method error : int () {
     my $stream = $self->{stream};
     
-    my $error = Sys::IO->ferror($stream);
+    my $is_error = Sys::IO->ferror($stream);
     
-    return $error;
+    return $is_error;
   }
   
   method flush : int () {

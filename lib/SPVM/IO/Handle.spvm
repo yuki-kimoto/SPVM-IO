@@ -30,13 +30,9 @@ class IO::Handle {
   
   # Instance Methods
   method init : void ($options : object[] = undef) {
-    my $options_h = Hash->new($options);
     
     $self->{fd} = -1;
     
-    for my $key (@{$options_h->keys}) {
-      die "The \"$key\" option is not available";
-    }
   }
   
   method input_line_number : long () { die "Not implemented"; }
