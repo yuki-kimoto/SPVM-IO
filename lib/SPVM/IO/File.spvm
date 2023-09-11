@@ -13,13 +13,13 @@ class IO::File extends IO::Handle {
   
   # Class methods
   
-  static method new : IO::File ($file_name : string = undef, $open_mode : string = undef) {
+  static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perm : int = 0) {
     my $self = new IO::File;
     
     $self->init;
     
     if ($file_name) {
-      $self->open($file_name, $open_mode);
+      $self->open($file_name, $open_mode, $perm);
     }
     
     return $self;
@@ -43,44 +43,31 @@ class IO::File extends IO::Handle {
     $self->{input_line_number} = $input_line_number ;
   }
   
-  method open : void ($file_name : string, $open_mode : string) {
+  method open : int ($file_name : string, $open_mode : object of string|Int, $perm : int = 0) {
     
-    my $valid_mode = 0;
-    my $real_mode : string;
-    if ($open_mode eq "<") {
-      $valid_mode = 1;
-      $real_mode = "rb";
+    my $stream_ref = [(Sys::IO::FileStream)undef];
+    
+    unless ($open_mode) {
+      die "\$open_mode must be defined.";
     }
-    elsif ($open_mode eq ">") {
-      $valid_mode = 1;
-      $real_mode = "wb";
+    
+    my $success = -1;
+    my $stream = [(Sys::IO::FileStream)undef];
+    if ($open_mode is_type string) {
+      $success = Sys->open($stream_ref, (string)$open_mode, $file_name);
     }
-    elsif ($open_mode eq ">>") {
-      $valid_mode = 1;
-      $real_mode = "wa";
-    }
-    elsif ($open_mode eq "+<") {
-      $valid_mode = 1;
-      $real_mode = "r+b";
-    }
-    elsif ($open_mode eq "+>") {
-      $valid_mode = 1;
-      $real_mode = "w+b";
-    }
-    elsif ($open_mode eq "+>>") {
-      $valid_mode = 1;
-      $real_mode = "a+b";
+    elsif ($open_mode is_type Int) {
+      my $fd = -1;
+      $success = Sys->sysopen(\$fd, $file_name, $open_mode->(Int)->value, $perm);
+      $success = Sys->fdopen($stream, $open_mode->(Int)->value, $fd);
     }
     else {
-      $valid_mode = 0;
-    }
-    unless ($valid_mode) {
-      die "Invalid open mode $open_mode";
+      die "The type of \$open_mode must be string or Int.";
     }
     
-    my $stream = Sys::IO->fopen($file_name, $real_mode);
+    $self->{stream} = $stream_ref->[0];
     
-    $self->{stream} = $stream;
+    return $success;
   }
   
   method fdopen : void ($fd : int, $open_mode : string) {
