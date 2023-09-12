@@ -35,6 +35,65 @@ class IO::Socket extends IO::Handle {
   }
   
   # Instance Methods
+  method init : void ($options : object[] = undef) {
+    
+    &check_option_names($options, $self->option_names);
+    
+    $self->set_autoflush(1);
+    
+    my $options_h = Hash->new($options);
+    
+    # Timeout option
+    my $timeout = $options_h->delete_or_default_int("Timeout", -1);
+    $self->{Timeout} = $timeout;
+    
+    # Domain option
+    my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
+    $self->{Domain} = $sockdomain;
+    unless ($sockdomain >= 0) {
+      die "The \"Domain\" option must be defined";
+    }
+    
+    # Type option
+    my $socktype = $options_h->delete_or_default_int("Type", -1);
+    $self->{Type} = $socktype;
+    
+    # Listen option
+    my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
+    $self->{Listen} = $listen_backlog;
+    
+    my $new_options = $options_h->to_array;
+    
+    # Blocking option
+    $self->SUPER::init($new_options);
+  }
+  
+  method option_names : string[] () {
+    my $option_names = [
+      "Timeout",
+      "Domain",
+      "Type",
+      "Listen",
+    ];
+    
+    return $option_names;
+  }
+  
+  static method check_option_names : void ($options : object[], $available_option_names : string[]) {
+    
+    my $available_option_names_h = Hash->new;
+    for my $available_option_name (@$available_option_names) {
+     $available_option_names_h->set_int($available_option_name, 1);
+    }
+    
+    for (my $i = 0; $i < @$options; $i += 2) {
+      my $option_name = (string)$options->[$i];
+      
+      unless ($available_option_names_h->get($option_name)) {
+        die "The \"$option_name\" option is not available.";
+      }
+    }
+  }
   
   method DESTROY : void () {
     $self->{peername} = undef;
@@ -63,47 +122,6 @@ class IO::Socket extends IO::Handle {
     return $io_socket;
   }
   
-  method init : void ($options : object[] = undef) {
-    
-    $self->set_autoflush(1);
-    
-    my $options_h = Hash->new($options);
-    
-    # Timeout option
-    my $timeout = $options_h->delete_or_default_int("Timeout", -1);
-    $self->{Timeout} = $timeout;
-    
-    # Domain option
-    my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
-    $self->{Domain} = $sockdomain;
-    unless ($sockdomain >= 0) {
-      die "The \"Domain\" option must be defined";
-    }
-    
-    # Type option
-    my $socktype = $options_h->delete_or_default_int("Type", -1);
-    $self->{Type} = $socktype;
-    
-    # Listen option
-    my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
-    $self->{Listen} = $listen_backlog;
-
-    # Timeout option
-    my $fd = $options_h->delete_or_default_int("fd", -1);
-    $self->{fd} = $fd;
-    
-    my $registered_domain = [SOCKET->AF_INET, SOCKET->AF_INET6, SOCKET->AF_UNIX];
-
-    my $new_options = $options_h->to_array;
-    
-    # Blocking option
-    $self->SUPER::init($new_options);
-    
-    for my $key (@{$options_h->keys}) {
-      die "The \"$key\" option is not available";
-    }
-  }
-
   method connect : int ($sockaddr : Sys::Socket::Sockaddr) {
     my $timeout = $self->{Timeout};
     
