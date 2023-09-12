@@ -37,7 +37,7 @@ class IO::Socket extends IO::Handle {
   # Instance Methods
   method init : void ($options : object[] = undef) {
     
-    &check_option_names($options, $self->option_names);
+    $self->check_option_names($options, $self->option_names);
     
     $self->set_autoflush(1);
     
@@ -81,7 +81,7 @@ class IO::Socket extends IO::Handle {
     return $option_names;
   }
   
-  static method check_option_names : void ($options : object[], $available_option_names : string[]) {
+  method check_option_names : void ($options : object[], $available_option_names : string[]) {
     
     my $available_option_names_h = Hash->new;
     for my $available_option_name (@$available_option_names) {

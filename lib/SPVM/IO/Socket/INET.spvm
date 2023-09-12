@@ -91,6 +91,8 @@ Reuse       (Deprecated prefer ReuseAddr)
   
   protected method init : void ($options : object[] = undef) {
     
+    $self->check_option_names($options, $self->option_names);
+    
     my $options_h = Hash->new($options);
     
     # ReuseAddr option
@@ -151,20 +153,8 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $new_options = $options_h->to_array;
     
-    # Type option
-    # Timeout option
-    # Domain option
-    # Blocking option
-    # Listen option
     $self->SUPER::init($new_options);
     
-    $options_h->delete("Domain");
-    $options_h->delete("Type");
-    $options_h->delete("Blocking");
-    $options_h->delete("Timeout");
-    for my $key (@{$options_h->keys}) {
-      die "The \"$key\" option is not available";
-    }
     my $domain = $self->sockdomain;
     my $socktype = $self->socktype;
     

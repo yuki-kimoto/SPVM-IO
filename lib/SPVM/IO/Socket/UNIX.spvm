@@ -73,9 +73,6 @@ class IO::Socket::UNIX extends IO::Socket {
     
     $options_h->delete("Listen");
     
-    for my $name (@{$options_h->keys}) {
-      die "The \"$name\" option is not available.";
-    }
   }
   
   method hostpath : string () {
