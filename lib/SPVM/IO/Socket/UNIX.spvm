@@ -4,6 +4,7 @@
 class IO::Socket::UNIX extends IO::Socket {
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Util;
+  use Array;
   
   has Local : string;
   has Peer : string;
@@ -17,8 +18,22 @@ class IO::Socket::UNIX extends IO::Socket {
     return $self;
   }
   
+  # Instance Methods
   method new_from_instance : IO::Socket::UNIX ($options : object[] = undef) {
     return IO::Socket::UNIX->new($options);
+  }
+  
+  method option_names : string[] () {
+    
+    my $option_names = Array->merge_string(
+      $self->SUPER::option_names,
+      [
+        "Local",
+        "Peer",
+      ]
+    );
+    
+    return $option_names;
   }
   
   protected method configure : void ($options : object[] = undef) {
