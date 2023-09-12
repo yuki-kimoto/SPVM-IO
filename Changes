@@ -22,10 +22,8 @@
     
     * The following methods in the IO::Socket class are changed.
     
-      -  method getsockopt : int ($level : int, $optname : int);
       +  method sockopt : int ($level : int, $optname : int);
       
-      -  method setsockopt : int ($level : int, $optname : int, $optval : int);
       +  method set_sockopt : int ($level : int, $optname : int, $optval : int);
       
 0.207 2023-09-04
