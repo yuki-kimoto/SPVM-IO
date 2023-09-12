@@ -37,6 +37,8 @@ class IO::Socket extends IO::Handle {
   # Instance Methods
   method init : void ($options : object[] = undef) {
     
+    $self->SUPER::init();
+    
     $self->check_option_names($options, $self->option_names);
     
     $self->set_autoflush(1);
@@ -63,9 +65,6 @@ class IO::Socket extends IO::Handle {
     $self->{Listen} = $listen_backlog;
     
     my $new_options = $options_h->to_array;
-    
-    # Blocking option
-    $self->SUPER::init($new_options);
   }
   
   method option_names : string[] () {
