@@ -87,18 +87,6 @@ class IO::Socket extends IO::Handle {
     $self->close;
   }
   
-  method sockdomain : int () {
-    return $self->{Domain};
-  }
-  
-  method socktype : int (){
-    return $self->{Type};
-  }
-  
-  method timeout : int () {
-    return $self->{Timeout};
-  }
-  
   method new_from_instance : IO::Socket ($options : object[] = undef) {
     my $io_socket = IO::Socket->new($options);
     
@@ -238,29 +226,6 @@ class IO::Socket extends IO::Handle {
     return $success;
   }
   
-  method atmark : int () {
-    my $fd = $self->{fd};
-    
-    my $atmark = Sys::Socket->sockatmark($fd);
-    
-    return $atmark;
-  }
-  
-  method sockopt : string ($level : int, $optname : int) {
-    my $fd = $self->{fd};
-    my $optval = Sys->getsockopt($fd, $level, $optname);
-    
-    return $optval;
-  }
-  
-  method set_sockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
-    my $fd = $self->{fd};
-    
-    my $success = Sys->setsockopt($fd, $level, $optname, $optval);
-    
-    return $success;
-  }
-  
   method connected : Sys::Socket::Sockaddr () {
     my $addr = (Sys::Socket::Sockaddr)undef;
     eval { $addr = $self->peername; };
@@ -330,6 +295,53 @@ class IO::Socket extends IO::Handle {
     }
     
     return $client;
+  }
+  
+  method getsockopt : string ($level : int, $optname : int) {
+    my $fd = $self->{fd};
+    my $optval = Sys->getsockopt($fd, $level, $optname);
+    
+    return $optval;
+  }
+  
+  method setsockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
+    my $fd = $self->{fd};
+    
+    my $success = Sys->setsockopt($fd, $level, $optname, $optval);
+    
+    return $success;
+  }
+  
+  method sockopt : string ($level : int, $optname : int) {
+    return $self->getsockopt($level, $optname);
+  }
+  
+  method set_sockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
+    return $self->setsockopt($level, $optname, $optval);
+  }
+  
+  method atmark : int () {
+    my $fd = $self->{fd};
+    
+    my $atmark = Sys::Socket->sockatmark($fd);
+    
+    return $atmark;
+  }
+  
+  method timeout : int () {
+    return $self->{Timeout};
+  }
+  
+  method set_timeout : void ($timeout : int) {
+    $self->{Timeout} = $timeout;
+  }
+  
+  method sockdomain : int () {
+    return $self->{Domain};
+  }
+  
+  method socktype : int (){
+    return $self->{Type};
   }
   
   method protocol : int () {
