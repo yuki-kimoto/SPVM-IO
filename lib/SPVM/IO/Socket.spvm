@@ -70,10 +70,12 @@ class IO::Socket extends IO::Handle {
   
   method option_names : string[] () {
     my $option_names = [
-      "Timeout",
       "Domain",
       "Type",
+      "Proto",
+      "Blocking",
       "Listen",
+      "Timeout",
     ];
     
     return $option_names;
