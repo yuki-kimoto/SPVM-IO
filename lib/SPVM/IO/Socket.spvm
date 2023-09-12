@@ -37,9 +37,9 @@ class IO::Socket extends IO::Handle {
   # Instance Methods
   method init : void ($options : object[] = undef) {
     
-    $self->SUPER::init();
-    
     $self->check_option_names($options, $self->option_names);
+    
+    $self->SUPER::init();
     
     $self->set_autoflush(1);
     
