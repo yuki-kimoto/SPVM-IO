@@ -45,33 +45,13 @@ class IO::Socket extends IO::Handle {
     
     my $options_h = Hash->new($options);
     
-    # Timeout option
     my $timeout = $options_h->delete_or_default_int("Timeout", -1);
     $self->{Timeout} = $timeout;
     
     $self->configure($options_h->to_array);
   }
   
-  method configure : void ($options : object[] = undef) {
-    
-    my $options_h = Hash->new($options);
-    
-    my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
-    $self->{Domain} = $sockdomain;
-    unless ($sockdomain >= 0) {
-      die "The \"Domain\" option must be defined";
-    }
-    
-    # Type option
-    my $socktype = $options_h->delete_or_default_int("Type", -1);
-    $self->{Type} = $socktype;
-    
-    # Listen option
-    my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
-    $self->{Listen} = $listen_backlog;
-    
-    my $new_options = $options_h->to_array;
-  }
+  protected method configure : void ($options : object[] = undef) { die "Not implemented."; }
   
   method option_names : string[] () {
     my $option_names = [
@@ -294,6 +274,7 @@ class IO::Socket extends IO::Handle {
   method socket : void ($domain : int, $type : int, $protocol : int = 0) {
     
     my $fd = -1;
+    
     Sys->socket(\$fd, $domain, $type, $protocol);
     
     $self->{fd} = $fd;
