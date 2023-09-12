@@ -113,19 +113,19 @@ Reuse       (Deprecated prefer ReuseAddr)
     # ReuseAddr option
     my $reuse_addr = $options_h->delete_or_default_int("ReuseAddr", 0);
     if ($reuse_addr) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
+      $self->set_sockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
     }
     
     # ReusePort option
     my $reuse_port = $options_h->delete_or_default_int("ReusePort", 0);
     if ($reuse_port) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
+      $self->set_sockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
     }
     
     # Broadcast option
     my $broadcast = $options_h->delete_or_default_int("Broadcast", 0);
     if ($broadcast) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
+      $self->set_sockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
     }
     
     # PeerAddr option

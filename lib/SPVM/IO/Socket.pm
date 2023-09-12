@@ -168,13 +168,13 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
   method atmark : int ();
 
-=head2 setsockopt
+=head2 sockopt
 
-  method setsockopt : int ($level : int, $optname : int, $optval : int);
+  method sockopt : int ($level : int, $optname : int);
 
-=head2 getsockopt
+=head2 set_sockopt
 
-  method getsockopt : int ($level : int, $optname : int);
+  method set_sockopt : int ($level : int, $optname : int, $optval : int);
 
 =head2 connected
 

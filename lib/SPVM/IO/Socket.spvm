@@ -87,10 +87,6 @@ class IO::Socket extends IO::Handle {
     $self->close;
   }
   
-  method protocol : int () {
-    return $self->{Proto};
-  }
-  
   method sockdomain : int () {
     return $self->{Domain};
   }
@@ -250,19 +246,19 @@ class IO::Socket extends IO::Handle {
     return $atmark;
   }
   
-  method setsockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
+  method sockopt : string ($level : int, $optname : int) {
+    my $fd = $self->{fd};
+    my $optval = Sys->getsockopt($fd, $level, $optname);
+    
+    return $optval;
+  }
+  
+  method set_sockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
     my $fd = $self->{fd};
     
     my $success = Sys->setsockopt($fd, $level, $optname, $optval);
     
     return $success;
-  }
-  
-  method getsockopt : string ($level : int, $optname : int) {
-    my $fd = $self->{fd};
-    my $optval = Sys->getsockopt($fd, $level, $optname);
-    
-    return $optval;
   }
   
   method connected : Sys::Socket::Sockaddr () {
@@ -334,6 +330,10 @@ class IO::Socket extends IO::Handle {
     }
     
     return $client;
+  }
+  
+  method protocol : int () {
+    return $self->{Proto};
   }
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) {
