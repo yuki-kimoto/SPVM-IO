@@ -51,7 +51,11 @@ class IO::Socket extends IO::Handle {
     $self->configure($options_h->to_array);
   }
   
-  protected method configure : void ($options : object[] = undef) { die "Not implemented."; }
+  method new_from_instance : IO::Socket ($options : object[] = undef) {
+    my $io_socket = IO::Socket->new($options);
+    
+    return $io_socket;
+  }
   
   method option_names : string[] () {
     my $option_names = [
@@ -87,10 +91,38 @@ class IO::Socket extends IO::Handle {
     $self->close;
   }
   
-  method new_from_instance : IO::Socket ($options : object[] = undef) {
-    my $io_socket = IO::Socket->new($options);
+  protected method configure : void ($options : object[] = undef) { die "Not implemented."; }
+  
+  method socket : void ($domain : int, $type : int, $protocol : int = 0) {
     
-    return $io_socket;
+    my $fd = -1;
+    
+    Sys->socket(\$fd, $domain, $type, $protocol);
+    
+    $self->{fd} = $fd;
+    $self->{Domain} = $domain;
+    $self->{Type} = $type;
+    $self->{Proto} = $protocol;
+  }
+  
+  method socketpair : IO::Socket[] ($domain : int, $type : int, $protocol : int) {
+    my $sock1 = IO::Socket->new;
+    my $sock2 = IO::Socket->new;
+    
+    my $sock1_fd = $sock1->{fd};
+    my $sock2_fd = $sock2->{fd};
+    
+    Sys->socketpair(\$sock1_fd, \$sock2_fd, $domain, $type, $protocol);
+    
+    $sock1->{fd} = $sock1_fd;
+    $sock1->{Type} = $type;
+    $sock1->{Proto} = $protocol;
+    
+    $sock2->{fd} = $sock2_fd;
+    
+    my $pair = [$sock1, $sock2];
+    
+    return $pair;
   }
   
   method connect : int ($sockaddr : Sys::Socket::Sockaddr) {
@@ -138,40 +170,8 @@ class IO::Socket extends IO::Handle {
     
     return $connect_success;
   }
-
-  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0) {
-    my $fd = $self->{fd};
-    
-    if ($length < 0) {
-      $length = length $buffer;
-    }
-    
-    my $recv_length = Sys->recv($fd, $buffer, $length, $flags);
-    
-    return $recv_length;
-  }
   
-  method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef) {
-    my $fd = $self->{fd};
-    
-    my $peername = (Sys::Socket::Sockaddr)undef;
-    if ($to) {
-      $peername = $to;
-    }
-    else {
-      $peername = $self->peername;
-    }
-    
-    unless ($self->peername) {
-      die "send: Cannot determine peer address";
-    }
-    
-    my $send_length = Sys->send($fd, $buffer, $flags, $to);
-    
-    $self->{peername} = $peername;
-    
-    return $send_length;
-  }
+  # method blocking - this is implemented in the super class.
   
   method close : int () {
     my $fd = $self->{fd};
@@ -181,15 +181,10 @@ class IO::Socket extends IO::Handle {
     if ($fd >= 0) {
       $status = Sys::Socket->close($fd);
       $self->{fd} = -1;
+      $self->{peername} = undef;
     }
     
     return $status;
-  }
-  
-  method listen : int ($queue : int = 5) {
-    my $fd = $self->{fd};
-    my $success = Sys->listen($fd, $queue);
-    return $success;
   }
   
   method bind : int ($sockaddr : Sys::Socket::Sockaddr) {
@@ -199,69 +194,10 @@ class IO::Socket extends IO::Handle {
     return $success;
   }
   
-  method sockname : Sys::Socket::Sockaddr () {
+  method listen : int ($queue : int = 5) {
     my $fd = $self->{fd};
-    
-    my $sockaddr_sock = Sys->getsockname($fd);
-    
-    return $sockaddr_sock;
-  }
-  
-  method peername : Sys::Socket::Sockaddr () {
-    my $fd = $self->{fd};
-    
-    unless ($self->{peername}) {
-      $self->{peername} = Sys->getpeername($fd);
-    }
-    
-    my $sockaddr_peer = $self->{peername};
-    
-    return $sockaddr_peer;
-  }
-  
-  method shutdown : int ($sockfd : int, $how : int) {
-    $self->{peername} = undef;
-    my $fd = $self->{fd};
-    my $success = Sys->shutdown($fd, $how);
+    my $success = Sys->listen($fd, $queue);
     return $success;
-  }
-  
-  method connected : Sys::Socket::Sockaddr () {
-    my $addr = (Sys::Socket::Sockaddr)undef;
-    eval { $addr = $self->peername; };
-    return $addr;
-  }
-  
-  method socket : void ($domain : int, $type : int, $protocol : int = 0) {
-    
-    my $fd = -1;
-    
-    Sys->socket(\$fd, $domain, $type, $protocol);
-    
-    $self->{fd} = $fd;
-    $self->{Domain} = $domain;
-    $self->{Type} = $type;
-    $self->{Proto} = $protocol;
-  }
-  
-  method socketpair : IO::Socket[] ($domain : int, $type : int, $protocol : int) {
-    my $sock1 = IO::Socket->new;
-    my $sock2 = IO::Socket->new;
-    
-    my $sock1_fd = $sock1->{fd};
-    my $sock2_fd = $sock2->{fd};
-    
-    Sys->socketpair(\$sock1_fd, \$sock2_fd, $domain, $type, $protocol);
-    
-    $sock1->{fd} = $sock1_fd;
-    $sock1->{Type} = $type;
-    $sock1->{Proto} = $protocol;
-    
-    $sock2->{fd} = $sock2_fd;
-    
-    my $pair = [$sock1, $sock2];
-    
-    return $pair;
   }
   
   method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
@@ -295,6 +231,73 @@ class IO::Socket extends IO::Handle {
     }
     
     return $client;
+  }
+  
+  method sockname : Sys::Socket::Sockaddr () {
+    my $fd = $self->{fd};
+    
+    my $sockaddr_sock = Sys->getsockname($fd);
+    
+    return $sockaddr_sock;
+  }
+  
+  method peername : Sys::Socket::Sockaddr () {
+    my $fd = $self->{fd};
+    
+    unless ($self->{peername}) {
+      $self->{peername} = Sys->getpeername($fd);
+    }
+    
+    my $sockaddr_peer = $self->{peername};
+    
+    return $sockaddr_peer;
+  }
+  
+  method connected : Sys::Socket::Sockaddr () {
+    my $sockaddr = (Sys::Socket::Sockaddr)undef;
+    eval { $sockaddr = $self->peername; };
+    return $sockaddr;
+  }
+  
+  method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef) {
+    my $fd = $self->{fd};
+    
+    my $peername = (Sys::Socket::Sockaddr)undef;
+    if ($to) {
+      $peername = $to;
+    }
+    else {
+      $peername = $self->peername;
+    }
+    
+    unless ($self->peername) {
+      die "send: Cannot determine peer address";
+    }
+    
+    my $send_length = Sys->send($fd, $buffer, $flags, $to);
+    
+    $self->{peername} = $peername;
+    
+    return $send_length;
+  }
+  
+  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0) {
+    my $fd = $self->{fd};
+    
+    if ($length < 0) {
+      $length = length $buffer;
+    }
+    
+    my $recv_length = Sys->recv($fd, $buffer, $length, $flags);
+    
+    return $recv_length;
+  }
+  
+  method shutdown : int ($sockfd : int, $how : int) {
+    $self->{peername} = undef;
+    my $fd = $self->{fd};
+    my $success = Sys->shutdown($fd, $how);
+    return $success;
   }
   
   method getsockopt : string ($level : int, $optname : int) {
