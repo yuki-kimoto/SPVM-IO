@@ -70,6 +70,25 @@ Reuse       (Deprecated prefer ReuseAddr)
     return IO::Socket::INET->new($options);
   }
   
+  method option_names : string[] () {
+    
+    my $option_names = Array->merge_string(
+      $self->SUPER::option_names,
+      [
+        "PeerAddr",
+        "PeerPort",
+        "LocalAddr",
+        "LocalPort",
+        "ReuseAddr",
+        "ReusePort",
+        "Broadcast",
+        "MultiHomed",
+      ]
+    );
+    
+    return $option_names;
+  }
+  
   protected method init : void ($options : object[] = undef) {
     
     my $options_h = Hash->new($options);
