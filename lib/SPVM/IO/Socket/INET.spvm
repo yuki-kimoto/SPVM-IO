@@ -182,6 +182,10 @@ Reuse       (Deprecated prefer ReuseAddr)
     
   }
   
+  # method connect - this is the same as its super method.
+  
+  # method bind - this is the same as its super method.
+  
   method sockaddr : Sys::Socket::In_addr () {
     my $sockaddr_in_sock = (Sys::Socket::Sockaddr::In)$self->sockname;
     
