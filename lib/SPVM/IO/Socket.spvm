@@ -13,6 +13,7 @@ class IO::Socket extends IO::Handle {
   use Hash;
   use Errno;
   use Scope::Guard;
+  use Go;
   
   # Fields
   
