@@ -260,7 +260,7 @@ class IO::Socket extends IO::Handle {
     return $sockaddr;
   }
   
-  method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef) {
+  method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $buf_offset : int = 0) {
     my $fd = $self->{fd};
     
     my $peername = (Sys::Socket::Sockaddr)undef;
@@ -275,21 +275,21 @@ class IO::Socket extends IO::Handle {
       die "send: Cannot determine peer address";
     }
     
-    my $send_length = Sys->send($fd, $buffer, $flags, $to);
+    my $send_length = Sys->send($fd, $buffer, $flags, $to, $buf_offset);
     
     $self->{peername} = $peername;
     
     return $send_length;
   }
   
-  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0) {
+  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0) {
     my $fd = $self->{fd};
     
     if ($length < 0) {
       $length = length $buffer;
     }
     
-    my $recv_length = Sys->recv($fd, $buffer, $length, $flags);
+    my $recv_length = Sys->recv($fd, $buffer, $length, $flags, $buf_offset);
     
     return $recv_length;
   }
