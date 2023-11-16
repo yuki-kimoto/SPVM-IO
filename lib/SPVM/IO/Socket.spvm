@@ -357,6 +357,6 @@ class IO::Socket extends IO::Handle {
   }
   
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
-    return $self->sysread($string, $length, $offset);
+    return $self->recv($string, $length, 0, $offset);
   }
 }

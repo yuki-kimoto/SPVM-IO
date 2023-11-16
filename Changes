@@ -10,7 +10,9 @@
     * Add $buf_offset argument to the recv method in the IO::Socket class.
       
       method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0)
-
+  [Internal Changes]
+    * The the read method in the IO::Socket calls revc method.
+    
 0.208 2023-09-11
   [Prerequirement Changes]
     * Require SPVM::Sys 0.490.
