@@ -43,14 +43,14 @@ class IO::Socket extends IO::Handle {
     
     $self->set_autoflush(1);
     
-    $self->set_blocking(0);
-    
     my $options_h = Hash->new($options);
     
     my $timeout = $options_h->delete_or_default_int("Timeout", -1);
     $self->{Timeout} = $timeout;
     
     $self->configure($options_h->to_array);
+    
+    $self->set_blocking(0);
   }
   
   method new_from_instance : IO::Socket ($options : object[] = undef) {
