@@ -1,6 +1,6 @@
 0.209 2023-11-16
   [Prerequirement Changes]
-    * Require SPVM::Sys 0.496.
+    * Require SPVM::Sys 0.497.
     * Require SPVM::Go 0.003.
   [New Features]
     * Add $buf_offset argument to the send method in the IO::Socket class.
