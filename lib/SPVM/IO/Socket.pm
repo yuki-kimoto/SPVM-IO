@@ -62,6 +62,8 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
   static method new : IO::Socket ($options : object[] = undef);
 
+The socket is set to non-blocking mode.
+
 =head3 new Options
 
 =over 2

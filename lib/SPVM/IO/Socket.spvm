@@ -9,11 +9,10 @@ class IO::Socket extends IO::Handle {
   use Sys::Socket::Sockaddr::In6;
   use Sys::Socket::Sockaddr::Un;
   use Sys::Socket::In_addr;
-  use IO::Select;
   use Hash;
   use Errno;
-  use Scope::Guard;
   use Go;
+  use Sys::Socket::Errno;
   
   # Fields
   
@@ -43,6 +42,8 @@ class IO::Socket extends IO::Handle {
     $self->SUPER::init();
     
     $self->set_autoflush(1);
+    
+    $self->set_blocking(0);
     
     my $options_h = Hash->new($options);
     
@@ -127,43 +128,35 @@ class IO::Socket extends IO::Handle {
   }
   
   method connect : int ($sockaddr : Sys::Socket::Sockaddr) {
+    
     my $timeout = $self->{Timeout};
     
-    my $old_blocking_flag = !$self->{nonblocking};
-    my $restore_blocking_at_end_of_scope : Scope::Guard = undef;
+    my $timeout_ref = (double[])undef;
+    
     if ($timeout > 0) {
-      my $this = $self;
-      $restore_blocking_at_end_of_scope = Scope::Guard->new([has this : IO::Socket = $this,  has old_blocking_flag : int = $old_blocking_flag] method : void () {
-        my $this = $self->{this};
-        my $old_blocking_flag = $self->{old_blocking_flag};
-        
-        $this->set_blocking($old_blocking_flag);
-      });
-      
-      $self->set_blocking(0);
+      $timeout_ref = [(double)$timeout];
     }
     
     my $fd = $self->{fd};
     
     my $connect_success = 0;
-    eval { $connect_success = Sys->connect($fd, $sockaddr); };
+    eval { $connect_success = Sys->connect($fd, $sockaddr); }
     
-    my $blocking_flag = !$self->{nonblocking};
-    if ($blocking_flag) {
-      if ($@) {
-        die $@;
-      }
-    }
-    else {
-      my $errno = Errno->errno;
-      if ($errno == Errno->EINPROGRESS || $errno == Errno->EWOULDBLOCK) {
-        my $select = IO::Select->new;
-        $select->add($fd);
-        my $can_write = $select->can_write($timeout);
-        
-        unless ($can_write) {
-          die "connect: timeout";
+    if ($@) {
+      my $again = 
+        Sys::Socket->socket_errno == Sys::Socket::Errno->EWOULDBLOCK
+        || Sys::Socket->socket_errno == Sys::Socket::Errno->EINPROGRESS
+        || Sys::Socket->socket_errno == Errno->EINTR
+      ;
+      
+      if ($again) {
+        Go->gosched_io_write($fd, $timeout_ref);
+        if ($timeout_ref->[0] < 0) {
+          die "The accept method timed out.";
         }
+      }
+      else {
+        die $@;
       }
     }
     
@@ -202,20 +195,43 @@ class IO::Socket extends IO::Handle {
   }
   
   method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
+    
     my $fd = $self->{fd};
-    my $timeout = $self->timeout;
+    
+    my $timeout = $self->{Timeout};
+    
+    my $timeout_ref = (double[])undef;
     
     if ($timeout > 0) {
-      my $select = IO::Select->new;
-      $select->add($fd);
-      
-      unless ($select->can_read($timeout)) {
-        die "accept: timeout";
-      }
+      $timeout_ref = [(double)$timeout];
     }
     
     my $client_fd = -1;
-    my $client_socket_address = Sys->accept(\$client_fd, $fd);
+    my $client_socket_address = (Sys::Socket::Sockaddr)undef;
+    
+    while (1) {
+      eval { $client_socket_address = Sys->accept(\$client_fd, $fd); }
+      
+      if ($@) {
+        my $again = 
+          Sys::Socket->socket_errno == Sys::Socket::Errno->EWOULDBLOCK
+          || Sys::Socket->socket_errno == Errno->EINTR
+        ;
+        
+        if ($again) {
+          Go->gosched_io_read($fd, $timeout_ref);
+          if ($timeout_ref->[0] < 0) {
+            die "The accept method timed out.";
+          }
+        }
+        else {
+          die $@;
+        }
+      }
+      else {
+        last;
+      }
+    }
     
     my $options = {
       Timeout => $timeout,
@@ -261,8 +277,12 @@ class IO::Socket extends IO::Handle {
   }
   
   method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0) {
-    my $fd = $self->{fd};
+    if ($length < 0) {
+      $length = length $buffer;
+    }
     
+    my $timeout_ref = (double[])undef;
+    my $fd = $self->{fd};
     my $peername = (Sys::Socket::Sockaddr)undef;
     if ($to) {
       $peername = $to;
@@ -275,7 +295,27 @@ class IO::Socket extends IO::Handle {
       die "send: Cannot determine peer address";
     }
     
-    my $send_length = Sys->send($fd, $buffer, $flags, $to, $length, $buf_offset);
+    my $send_length = -1;
+    while (1) {
+      
+      eval { $send_length = Sys->send($fd, $buffer, $flags, $to, $length, $buf_offset); }
+      
+      if ($@) {
+        if (Sys::Socket->socket_errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket->socket_errno == Errno->EINTR) {
+          Go->gosched_io_write($fd, $timeout_ref);
+          if ($timeout_ref && $timeout_ref->[0] < 0) {
+            $send_length = -1;
+            last;
+          }
+        }
+        else {
+          die $@;
+        }
+      }
+      else {
+        last;
+      }
+    }
     
     $self->{peername} = $peername;
     
@@ -283,13 +323,33 @@ class IO::Socket extends IO::Handle {
   }
   
   method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0) {
-    my $fd = $self->{fd};
     
     if ($length < 0) {
       $length = length $buffer;
     }
     
-    my $recv_length = Sys->recv($fd, $buffer, $length, $flags, $buf_offset);
+    my $timeout_ref = (double[])undef;
+    my $fd = $self->{fd};
+    my $recv_length = -1;
+    while (1) {
+      eval { $recv_length = Sys->recv($fd, $buffer, $length, $flags, $buf_offset); }
+      
+      if ($@) {
+        if (Sys::Socket->socket_errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket->socket_errno == Errno->EINTR) {
+          Go->gosched_io_read($fd, $timeout_ref);
+          if ($timeout_ref && $timeout_ref->[0] < 0) {
+            $recv_length = -1;
+            last;
+          }
+        }
+        else {
+          die $@;
+        }
+      }
+      else {
+        last;
+      }
+    }
     
     return $recv_length;
   }

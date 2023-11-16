@@ -16,7 +16,9 @@
     * The the write method in the IO::Socket calls send method.
     * The the sysread method in the IO::Socket calls revc method.
     * The the syswrite method in the IO::Socket calls send method.
-    
+  [New Features and Incompatible Changes]
+    * The socket of IO::Socket is set to non-blocking mode.
+    * IO::Socket supports goroutine of Go.
 0.208 2023-09-11
   [Prerequirement Changes]
     * Require SPVM::Sys 0.490.
