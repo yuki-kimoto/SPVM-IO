@@ -359,4 +359,12 @@ class IO::Socket extends IO::Handle {
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
     return $self->recv($string, $length, 0, $offset);
   }
+  
+  method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
+    return $self->send($string, 0, undef, $length, $offset);
+  }
+  
+  method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
+    return $self->recv($string, $length, 0, $offset);
+  }
 }
