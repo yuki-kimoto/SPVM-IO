@@ -3,13 +3,14 @@
     * Require SPVM::Sys 0.497.
     * Require SPVM::Go 0.003.
   [New Features]
-    * Add $buf_offset argument to the send method in the IO::Socket class.
+    * Add $lengtht and $buf_offset argument to the send method in the IO::Socket class.
       
-      method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $buf_offset : int = 0);
-    
+      method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0);
+      
     * Add $buf_offset argument to the recv method in the IO::Socket class.
       
-      method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0)
+      method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0);
+      
   [Internal Changes]
     * The the read method in the IO::Socket calls revc method.
     

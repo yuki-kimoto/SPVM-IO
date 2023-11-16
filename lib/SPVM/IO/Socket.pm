@@ -128,11 +128,11 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 recv
 
-  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0);
+  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0);
 
 =head2 send
 
-  method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef);
+  method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0);
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
