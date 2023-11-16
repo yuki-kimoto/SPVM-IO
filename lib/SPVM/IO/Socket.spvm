@@ -353,7 +353,7 @@ class IO::Socket extends IO::Handle {
   }
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) {
-    return $self->syswrite($string, $length, $offset);
+    return $self->send($string, 0, undef, $length, $offset);
   }
   
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {

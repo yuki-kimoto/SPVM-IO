@@ -13,6 +13,7 @@
       
   [Internal Changes]
     * The the read method in the IO::Socket calls revc method.
+    * The the write method in the IO::Socket calls send method.
     
 0.208 2023-09-11
   [Prerequirement Changes]
