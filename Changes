@@ -1,3 +1,6 @@
+0.210 2023-11-18
+  [Prerequirement Changes]
+    * Require SPVM::Go 0.005.
 0.209 2023-11-16
   [Prerequirement Changes]
     * Require SPVM::Sys 0.497.
