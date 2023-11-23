@@ -1,3 +1,10 @@
+0.211 2023-11-18
+  [Incompatible Changes]
+    * The return types of the following methods becomes void.
+      [IO::Handle]
+        sync
+  [Prerequirement Changes]
+    * Require SPVM::Go 0.005.
 0.210 2023-11-18
   [Prerequirement Changes]
     * Require SPVM::Go 0.005.

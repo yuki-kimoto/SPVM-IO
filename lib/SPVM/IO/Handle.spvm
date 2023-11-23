@@ -137,14 +137,10 @@ class IO::Handle {
     return $stat;
   }
   
-  method sync : int () {
+  method sync : void () {
     my $fd = $self->fileno;
     
-    my $status =  Sys::IO->fsync($fd);
-    
-    my $success = $status == 0;
-    
-    return $success;
+    Sys::IO->fsync($fd);
   }
   
   method close : int () { die "Not implemented."; }

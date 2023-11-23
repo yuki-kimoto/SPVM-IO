@@ -90,7 +90,7 @@ This method always throws an exception.
 
 =head2 sync
 
-  method sync : int ();
+  method sync : void ();
 
 =head2 stat
 
