@@ -333,23 +333,17 @@ class IO::Socket extends IO::Handle {
     return $success;
   }
   
-  method getsockopt : string ($level : int, $optname : int) {
+  method sockopt : string ($level : int, $optname : int) {
     my $fd = $self->{fd};
     my $optval = Sys->getsockopt($fd, $level, $optname);
     
     return $optval;
   }
   
-  method setsockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
+  method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int) {
     my $fd = $self->{fd};
     
-    my $success = Sys->setsockopt($fd, $level, $optname, $optval);
-    
-    return $success;
-  }
-  
-  method sockopt : string ($level : int, $optname : int) {
-    return $self->getsockopt($level, $optname);
+    Sys->setsockopt($fd, $level, $optname, $optval);
   }
   
   method atmark : int () {

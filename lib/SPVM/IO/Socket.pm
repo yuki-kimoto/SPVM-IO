@@ -174,9 +174,9 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
   method sockopt : int ($level : int, $optname : int);
 
-=head2 set_sockopt
+=head2 setsockopt
 
-  method set_sockopt : int ($level : int, $optname : int, $optval : int);
+  method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int)
 
 =head2 connected
 

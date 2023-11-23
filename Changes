@@ -16,7 +16,9 @@
         fdopen
       [IO::Socket]
         close
+        setsockopt
     * Remove the set_sockopt method from the IO::Socket class.
+    * Remove the getsockopt method from the IO::Socket class.
   [Changes]
     * The write method in the IO::File returns written length.
 0.210 2023-11-18
