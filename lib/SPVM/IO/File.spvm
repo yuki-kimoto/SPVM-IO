@@ -174,7 +174,7 @@ class IO::File extends IO::Handle {
     return $is_error;
   }
   
-  method flush : int () {
+  method flush : void () {
     my $stream = $self->{stream};
     
     Sys::IO->fflush($stream);
