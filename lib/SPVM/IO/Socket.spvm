@@ -352,10 +352,6 @@ class IO::Socket extends IO::Handle {
     return $self->getsockopt($level, $optname);
   }
   
-  method set_sockopt : int ($level : int, $optname : int, $optval : object of string|Int) {
-    return $self->setsockopt($level, $optname, $optval);
-  }
-  
   method atmark : int () {
     my $fd = $self->{fd};
     
