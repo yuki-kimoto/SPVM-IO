@@ -48,7 +48,7 @@ L<IO::Handle|SPVM::IO::Handle>.
 
 =head2 peername
 
-  has peername : protected ro Sys::Socket::Sockaddr;
+  has peername : protected Sys::Socket::Sockaddr;
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
@@ -114,6 +114,10 @@ Gets the L</"Timeout"> field.
 
   method new_from_instance : IO::Socket ($options : object[] = undef);
 
+=head2 peername
+
+  method peername : Sys::Socket::Sockaddr ();
+
 =head2 DESTROY
 
   method DESTROY : void ();
@@ -124,7 +128,7 @@ Gets the L</"Timeout"> field.
 
 =head2 connect
 
-  method connect : int ($address : Sys::Socket::Sockaddr);
+  method connect : void ($address : Sys::Socket::Sockaddr);
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
@@ -148,11 +152,11 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 listen
 
-  method listen : int ($queue : int = 5);
+  method listen : void ($queue : int = 5);
 
 =head2 bind
 
-  method bind : int ($address : Sys::Socket::Sockaddr);
+  method bind : void ($address : Sys::Socket::Sockaddr);
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
@@ -164,7 +168,7 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 shutdown
 
-  method shutdown : int ($sockfd : int, $how : int);
+  method shutdown : void ($sockfd : int, $how : int);
 
 =head2 atmark
 
@@ -186,7 +190,7 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 socket
 
-  method socket : int ($domain : int, $type : int, $protocol : int = 0);
+  method socket : void ($domain : int, $type : int, $protocol : int = 0);
 
 =head2 socketpair
 

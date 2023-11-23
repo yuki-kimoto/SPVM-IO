@@ -127,14 +127,13 @@ class IO::Socket extends IO::Handle {
     return $pair;
   }
   
-  method connect : int ($sockaddr : Sys::Socket::Sockaddr) {
+  method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
     
     my $timeout = $self->{Timeout};
     
     my $fd = $self->{fd};
     
-    my $connect_success = 0;
-    eval { $connect_success = Sys->connect($fd, $sockaddr); }
+    eval { Sys->connect($fd, $sockaddr); }
     
     if ($@) {
       my $again = 
@@ -152,8 +151,6 @@ class IO::Socket extends IO::Handle {
     }
     
     $self->{peername} = $sockaddr;
-    
-    return $connect_success;
   }
   
   # method blocking - this is implemented in the super class.
@@ -168,17 +165,14 @@ class IO::Socket extends IO::Handle {
     }
   }
   
-  method bind : int ($sockaddr : Sys::Socket::Sockaddr) {
+  method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
     my $fd = $self->{fd};
-    my $success = Sys->bind($fd, $sockaddr);
-    
-    return $success;
+    Sys->bind($fd, $sockaddr);
   }
   
-  method listen : int ($queue : int = 5) {
+  method listen : void ($queue : int = 5) {
     my $fd = $self->{fd};
-    my $success = Sys->listen($fd, $queue);
-    return $success;
+    Sys->listen($fd, $queue);
   }
   
   method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
@@ -326,11 +320,10 @@ class IO::Socket extends IO::Handle {
     return $recv_length;
   }
   
-  method shutdown : int ($sockfd : int, $how : int) {
+  method shutdown : void ($sockfd : int, $how : int) {
     $self->{peername} = undef;
     my $fd = $self->{fd};
-    my $success = Sys->shutdown($fd, $how);
-    return $success;
+    Sys->shutdown($fd, $how);
   }
   
   method sockopt : string ($level : int, $optname : int) {
