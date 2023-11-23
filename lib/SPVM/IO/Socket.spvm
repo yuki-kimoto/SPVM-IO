@@ -158,18 +158,14 @@ class IO::Socket extends IO::Handle {
   
   # method blocking - this is implemented in the super class.
   
-  method close : int () {
+  method close : void () {
     my $fd = $self->{fd};
     
-    my $status = 0;
-    
     if ($fd >= 0) {
-      $status = Sys::Socket->close($fd);
+      Sys::Socket->close($fd);
       $self->{fd} = -1;
       $self->{peername} = undef;
     }
-    
-    return $status;
   }
   
   method bind : int ($sockaddr : Sys::Socket::Sockaddr) {

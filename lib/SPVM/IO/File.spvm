@@ -122,16 +122,12 @@ class IO::File extends IO::Handle {
     return $string;
   }
   
-  method close : int () {
+  method close : void () {
     my $stream = $self->{stream};
     
     my $status = Sys::IO->fclose($stream);
     
     $self->{stream} = undef;
-    
-    my $success = $status == 0;
-    
-    return $success;
   }
   
   method fileno : int () {

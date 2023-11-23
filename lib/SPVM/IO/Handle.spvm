@@ -140,7 +140,7 @@ class IO::Handle {
     Sys::IO->fsync($fd);
   }
   
-  method close : int () { die "Not implemented."; }
+  method close : void () { die "Not implemented."; }
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
   
