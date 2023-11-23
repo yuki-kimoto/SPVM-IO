@@ -111,7 +111,7 @@ Gets the file descriptor of L</"stream"> field.
 
 =head2 flush
 
-  method flush : int ();
+  method flush : void ();
 
 =head2 ungetc
 
@@ -127,7 +127,7 @@ Gets the file descriptor of L</"stream"> field.
 
 =head2 printflush
 
-  method printflush : int ($string : string);
+  method printflush : void ($string : string);
 
 =head2 getline
 
@@ -136,10 +136,6 @@ Gets the file descriptor of L</"stream"> field.
 =head2 getlines
 
   method getlines : string ();
-
-=head2 flush
-
-  method flush : int ();
 
 =head2 ungetc
 

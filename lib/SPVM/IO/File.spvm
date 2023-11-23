@@ -138,11 +138,11 @@ class IO::File extends IO::Handle {
   
   method getc : int () {
     my $stream = $self->{stream};
-    my $success = Sys->getc($stream);
-    return $success;
+    my $char = Sys->getc($stream);
+    return $char;
   }
   
-  method printflush : int ($string : string) {
+  method printflush : void ($string : string) {
     my $old_autoflush = $self->autoflush;
     
     # Restores the autoflush field at the end of the scope.
@@ -182,11 +182,7 @@ class IO::File extends IO::Handle {
   method flush : int () {
     my $stream = $self->{stream};
     
-    my $status = Sys::IO->fflush($stream);
-    
-    my $success = $status == 0;
-    
-    return $success;
+    Sys::IO->fflush($stream);
   }
   
   method ungetc : int ($c : int) {
