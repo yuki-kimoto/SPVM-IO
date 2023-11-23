@@ -44,7 +44,7 @@ L<IO::Handle|SPVM::IO::Handle>.
 
 =head2 Timeout
 
-  has Timeout : protected int;
+  has Timeout : protected double;
 
 =head2 peername
 
@@ -76,7 +76,7 @@ The socket is set to non-blocking mode.
 
 =item * Blocking : Int
 
-=item * Timeout : Int
+=item * Timeout : Double
 
 =item * Listen : Int
 
@@ -106,7 +106,7 @@ Gets the L</"Proto"> field.
 
 =head2 timeout
 
-  method timeout : int ();
+  method timeout : double ();
 
 Gets the L</"Timeout"> field.
 

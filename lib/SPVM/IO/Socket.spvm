@@ -21,7 +21,7 @@ class IO::Socket extends IO::Handle {
   has Proto : protected int;
   has Blocking : protected int;
   has Listen : protected int;
-  has Timeout : protected int;
+  has Timeout : protected double;
   has peername : protected Sys::Socket::Sockaddr;
   
   # Class Methods
@@ -45,7 +45,7 @@ class IO::Socket extends IO::Handle {
     
     my $options_h = Hash->new($options);
     
-    my $timeout = $options_h->delete_or_default_int("Timeout", 0);
+    my $timeout = $options_h->delete_or_default_double("Timeout", 0.0);
     $self->{Timeout} = $timeout;
     
     $self->configure($options_h->to_array);
@@ -347,11 +347,11 @@ class IO::Socket extends IO::Handle {
     return $atmark;
   }
   
-  method timeout : int () {
+  method timeout : double () {
     return $self->{Timeout};
   }
   
-  method set_timeout : void ($timeout : int) {
+  method set_timeout : void ($timeout : double) {
     $self->{Timeout} = $timeout;
   }
   
