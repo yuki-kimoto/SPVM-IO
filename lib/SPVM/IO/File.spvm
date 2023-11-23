@@ -199,13 +199,15 @@ class IO::File extends IO::Handle {
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) {
     
-    my $write_string = Fn->substr($string, $offset, $length);
-    
     my $stream = $self->{stream};
     
-    my $success = Sys->print($stream, $write_string);
+    if ($length < 0) {
+      $length = length $string;
+    }
     
-    return $success;
+    my $write_length = Sys::IO->fwrite($string, 1, $length, $stream);
+    
+    return $write_length;
   }
   
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {

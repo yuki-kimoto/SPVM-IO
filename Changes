@@ -12,6 +12,8 @@
         close
       [IO::Socket]
         close
+  [Changes]
+    * The write method in the IO::File returns written length.
 0.210 2023-11-18
   [Prerequirement Changes]
     * Require SPVM::Go 0.005.
