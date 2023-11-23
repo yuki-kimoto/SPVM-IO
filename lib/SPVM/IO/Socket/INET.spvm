@@ -91,7 +91,7 @@ Reuse       (Deprecated prefer ReuseAddr)
   
   protected method init : void ($options : object[] = undef) {
     
-    $self->check_option_names($options, $self->option_names);
+    Fn->check_option_names($options, $self->option_names);
     
     $self->SUPER::init($options);
   }

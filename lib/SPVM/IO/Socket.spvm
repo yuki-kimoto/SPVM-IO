@@ -13,6 +13,7 @@ class IO::Socket extends IO::Handle {
   use Errno;
   use Go;
   use Sys::Socket::Errno;
+  use Fn;
   
   # Fields
   
@@ -37,7 +38,7 @@ class IO::Socket extends IO::Handle {
   # Instance Methods
   method init : void ($options : object[] = undef) {
     
-    $self->check_option_names($options, $self->option_names);
+    Fn->check_option_names($options, $self->option_names);
     
     $self->SUPER::init();
     
@@ -70,22 +71,6 @@ class IO::Socket extends IO::Handle {
     ];
     
     return $option_names;
-  }
-  
-  method check_option_names : void ($options : object[], $available_option_names : string[]) {
-    
-    my $available_option_names_h = Hash->new;
-    for my $available_option_name (@$available_option_names) {
-     $available_option_names_h->set_int($available_option_name, 1);
-    }
-    
-    for (my $i = 0; $i < @$options; $i += 2) {
-      my $option_name = (string)$options->[$i];
-      
-      unless ($available_option_names_h->get($option_name)) {
-        die "The \"$option_name\" option is not available.";
-      }
-    }
   }
   
   method DESTROY : void () {
