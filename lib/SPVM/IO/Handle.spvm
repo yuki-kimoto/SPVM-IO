@@ -120,10 +120,10 @@ class IO::Handle {
     return Sys->sysread($fd, $string, $length, $offset);
   }
   
-  method truncate : int ($legnth : long) {
+  method truncate : void ($legnth : long) {
     my $fd = $self->fileno;
     
-    return Sys::IO->ftruncate($fd, $legnth);
+    Sys::IO->ftruncate($fd, $legnth);
   }
   
   method stat : Sys::IO::Stat () {

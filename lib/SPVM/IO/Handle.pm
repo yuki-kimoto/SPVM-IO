@@ -76,7 +76,7 @@ Gets L</"fh"> field.
 
 =head2 truncate
 
-  method truncate : int ($legnth : long);
+  method truncate : void ($legnth : long);
 
 Truncates to a size of precisely length bytes.
 

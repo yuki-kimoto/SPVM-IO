@@ -7,6 +7,7 @@
         printf
         say
         close
+        truncate
       [IO::File]
         close
       [IO::Socket]
