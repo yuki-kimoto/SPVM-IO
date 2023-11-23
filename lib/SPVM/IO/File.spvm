@@ -49,7 +49,7 @@ class IO::File extends IO::Handle {
     $self->{input_line_number} = $input_line_number ;
   }
   
-  method open : int ($file_name : string, $open_mode : object of string|Int, $perm : int = -1) {
+  method open : void ($file_name : string, $open_mode : object of string|Int, $perm : int = -1) {
     
     my $stream_ref = [(Sys::IO::FileStream)undef];
     
@@ -57,37 +57,32 @@ class IO::File extends IO::Handle {
       die "\$open_mode must be defined.";
     }
     
-    my $success = -1;
     my $stream = [(Sys::IO::FileStream)undef];
     if ($open_mode is_type string) {
-      $success = Sys->open($stream_ref, (string)$open_mode, $file_name);
+      Sys->open($stream_ref, (string)$open_mode, $file_name);
     }
     elsif ($open_mode is_type Int) {
       my $fd = -1;
       if ($perm < 0) {
         $perm = 0666;
       }
-      $success = Sys->sysopen(\$fd, $file_name, $open_mode->(Int)->value, $perm);
-      $success = Sys->fdopen($stream, $open_mode->(Int)->value, $fd);
+      Sys->sysopen(\$fd, $file_name, $open_mode->(Int)->value, $perm);
+      Sys->fdopen($stream, $open_mode->(Int)->value, $fd);
     }
     else {
       die "The type of \$open_mode must be string or Int.";
     }
     
     $self->{stream} = $stream_ref->[0];
-    
-    return $success;
   }
   
-  method fdopen : int ($fd : int, $open_mode : string) {
+  method fdopen : void ($fd : int, $open_mode : string) {
     
     my $stream_ref = [(Sys::IO::FileStream)undef];
     
-    my $success = Sys->fdopen($stream_ref, $open_mode, $fd);
+    Sys->fdopen($stream_ref, $open_mode, $fd);
     
     $self->{stream} = $stream_ref->[0];
-    
-    return $success;
   }
   
   # Instance methods
@@ -125,7 +120,7 @@ class IO::File extends IO::Handle {
   method close : void () {
     my $stream = $self->{stream};
     
-    my $status = Sys::IO->fclose($stream);
+    Sys::IO->fclose($stream);
     
     $self->{stream} = undef;
   }
