@@ -64,15 +64,15 @@ Gets L</"fh"> field.
 
 =head2 print
 
-  method print : int ($string : string);
-
-=head2 say
-
-  method say : int ($string : string);
+  method print : void ($string : string);
 
 =head2 printf
 
-  method printf : int ($format : string, $args : object[]...);
+  method printf : void ($format : string, $args : object[]...);
+
+=head2 say
+
+  method say : void ($string : string);
 
 =head2 truncate
 

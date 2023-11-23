@@ -3,6 +3,10 @@
     * The return types of the following methods becomes void.
       [IO::Handle]
         sync
+        print
+        printf
+        say
+
   [Prerequirement Changes]
     * Require SPVM::Go 0.005.
 0.210 2023-11-18

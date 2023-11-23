@@ -48,21 +48,18 @@ class IO::Handle {
     return !$self->{nonblocking};
   }
   
-  method print : int ($string : string) {
-    return $self->write($string);
+  method print : void ($string : string) {
+    $self->write($string);
   }
   
-  method say : int ($string : string) {
-    my $status1 = $self->print($string);
-    my $status2 = $self->print("\n");
-    my $status = $status1 || $status2;
-    
-    return $status;
-  }
-  
-  method printf : int ($format : string, $args : object[]) {
+  method printf : void ($format : string, $args : object[]) {
     my $formated_string = Format->sprintf($format, $args);
-    return $self->print($formated_string);
+    $self->print($formated_string);
+  }
+  
+  method say : void ($string : string) {
+    $self->print($string);
+    $self->print("\n");
   }
   
   method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
