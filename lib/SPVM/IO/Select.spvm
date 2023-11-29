@@ -103,7 +103,7 @@ class IO::Select {
     }
     
     # select
-    my $success_count = Sys->select($fds, undef, undef, $tv);
+    my $success_count = &select($fds, undef, undef, $tv);
     
     # Can handles
     my $can_handles = new int[$success_count];
@@ -141,7 +141,7 @@ class IO::Select {
     }
     
     # select
-    my $success_count = Sys->select(undef, $fds, undef, $tv);
+    my $success_count = &select(undef, $fds, undef, $tv);
     
     # Can handles
     my $can_handles = new int[$success_count];
@@ -179,7 +179,7 @@ class IO::Select {
     }
     
     # select
-    my $success_count = Sys->select(undef, undef, $fds, $tv);
+    my $success_count = &select(undef, undef, $fds, $tv);
     
     # Can handles
     my $can_handles = new int[$success_count];
@@ -194,5 +194,11 @@ class IO::Select {
     }
     
     return $can_handles;
+  }
+  
+  static method select : int ($readfds : Sys::Select::Fd_set, $writefds : Sys::Select::Fd_set, $exceptfds : Sys::Select::Fd_set, $timeout : Sys::Time::Timeval) {
+    my $nfds = 1024;
+    my $fd_number = Sys::Select->select($nfds, $readfds, $writefds, $exceptfds, $timeout);
+    return $fd_number;
   }
 }
