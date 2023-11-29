@@ -1,6 +1,6 @@
 package SPVM::IO;
 
-our $VERSION = "0.211";
+our $VERSION = "0.211001";
 
 1;
 
