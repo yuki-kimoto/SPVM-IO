@@ -122,9 +122,9 @@ class IO::Socket extends IO::Handle {
     
     if ($@) {
       my $again = 
-        Sys::Socket->socket_errno == Sys::Socket::Errno->EWOULDBLOCK
-        || Sys::Socket->socket_errno == Sys::Socket::Errno->EINPROGRESS
-        || Sys::Socket->socket_errno == Errno->EINTR
+        Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
+        || Sys::Socket::Errno->errno == Sys::Socket::Errno->EINPROGRESS
+        || Sys::Socket::Errno->errno == Errno->EINTR
       ;
       
       if ($again) {
@@ -174,8 +174,8 @@ class IO::Socket extends IO::Handle {
       
       if ($@) {
         my $again = 
-          Sys::Socket->socket_errno == Sys::Socket::Errno->EWOULDBLOCK
-          || Sys::Socket->socket_errno == Errno->EINTR
+          Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
+          || Sys::Socket::Errno->errno == Errno->EINTR
         ;
         
         if ($again) {
@@ -259,7 +259,7 @@ class IO::Socket extends IO::Handle {
       eval { $send_length = Sys->send($fd, $buffer, $flags, $to, $length, $buf_offset); }
       
       if ($@) {
-        if (Sys::Socket->socket_errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket->socket_errno == Errno->EINTR) {
+        if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
           Go->gosched_io_write($fd, $timeout);
         }
         else {
@@ -290,7 +290,7 @@ class IO::Socket extends IO::Handle {
       eval { $recv_length = Sys->recv($fd, $buffer, $length, $flags, $buf_offset); }
       
       if ($@) {
-        if (Sys::Socket->socket_errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket->socket_errno == Errno->EINTR) {
+        if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
           Go->gosched_io_read($fd, $timeout);
         }
         else {
