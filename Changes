@@ -1,3 +1,6 @@
+0.211002 2023-12-07
+  [Prerequirement Changes]
+    * Require SPVM::Sys 0.510.
 0.211001 2023-11-18
   [Internal Changes]
     * Do not use Sys->select for the future breaking backword compatible.
