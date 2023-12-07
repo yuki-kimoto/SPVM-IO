@@ -10,7 +10,7 @@ SPVM::IO::Socket::IP - Short Description
 
 =head1 Description
 
-IO::Socket::IP class of L<SPVM> has methods for someting.
+IO::Socket::IP class in L<SPVM> has methods for someting.
 
 =head1 Usage
 

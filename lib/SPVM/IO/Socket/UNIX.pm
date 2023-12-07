@@ -10,7 +10,7 @@ SPVM::IO::Socket::UNIX - Short Description
 
 =head1 Description
 
-The IO::Socket::UNIX class of L<SPVM> has methods for someting.
+The IO::Socket::UNIX class in L<SPVM> has methods for someting.
 
 =head1 Usage
 
