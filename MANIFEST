@@ -28,9 +28,11 @@ t/IO_Socket.t
 t/lib/SPVM/TestCase/IO/File.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
 t/lib/SPVM/TestCase/IO/Socket.spvm
+t/lib/SPVM/TestCase/IO/Socket/Online.spvm
 t/lib/TestFile.pm
 t/test_files/file_eof.txt
 t/test_files/fread.txt
 t/test_files/fread_eof.txt
 t/test_files/long_line.txt
 t/webapp/basic.pl
+xt/IO_Socket.t
