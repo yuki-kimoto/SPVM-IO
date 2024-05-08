@@ -25,9 +25,8 @@ my $server = Test::TCP->new(
     
     warn "[Test Output]Server Running Command:$cmd";
     
-    exec($cmd);
-    
-    die "exec failed.";
+    system($cmd) == 0
+      or die "The command \"$cmd\" failed.";
   },
 );
 
