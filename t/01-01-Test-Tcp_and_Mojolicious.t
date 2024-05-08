@@ -32,7 +32,7 @@ my $http = HTTP::Tiny->new;
 
 my $port = $server->port;
 
-my $res = $http->get("http://localhost:$port/hello");
+my $res = $http->get("http://127.0.0.1:$port/hello");
 
 like($res->{content}, qr|Hello|);
 
