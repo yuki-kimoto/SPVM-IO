@@ -13,23 +13,20 @@ unless ($] >= 5.032000) {
 require Test::TCP;
 require HTTP::Tiny;
 
+require Mojolicious::Command::daemon;
+
 my $server = Test::TCP->new(
   code => sub {
     my $port = shift;
     
-    # Throw way stdout and stderr
-    # If not, "make test" (Test::Harness->runtests) waits forever.
-    my $devnull = File::Spec->devnull();
+    my $app = Mojo::Server->new->load_app('t/webapp/basic.pl');
     
-    my $cmd = "$^X t/webapp/basic.pl daemon --listen http://*:$port >$devnull 2>&1";
+    my $daemon_command = Mojolicious::Command::daemon->new(app => $app);
     
-    warn "[Test Output]Server Running Command:$cmd";
-    
-    system($cmd) == 0
-      or die "The command \"$cmd\" failed.";
+    my @args = ("--listen", "http://*:$port");
+    $daemon_command->run(@args);
   },
 );
-
 
 my $http = HTTP::Tiny->new;
 
