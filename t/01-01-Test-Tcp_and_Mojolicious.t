@@ -18,10 +18,12 @@ my $server = Test::TCP->new(
     my $port = shift;
     
     # Throw way stdout and stderr
-    # If not, "make test" (Test::Harness->runtests) waits forever,
-    my $cmd = "$^X t/webapp/basic.pl daemon --listen http://*:$port >/dev/null 2>&1";
+    # If not, "make test" (Test::Harness->runtests) waits forever.
+    my $devnull = File::Spec::Win32->devnull();
     
-    warn "[Test Output]Server port:$port";
+    my $cmd = "$^X t/webapp/basic.pl daemon --listen http://*:$port >$devnull 2>&1";
+    
+    warn "[Test Output]Server Running Command:$cmd";
     
     exec($cmd);
     
