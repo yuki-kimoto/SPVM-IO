@@ -6,8 +6,12 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 
-use Test::TCP;
-use HTTP::Tiny;
+unless ($] >= 5.032000) {
+  plan skip_all => 'This test is skipped because it needs Perl v.5.32.0+';
+}
+
+require Test::TCP;
+require HTTP::Tiny;
 
 my $server = Test::TCP->new(
   code => sub {
