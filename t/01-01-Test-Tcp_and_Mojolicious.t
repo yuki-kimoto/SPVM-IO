@@ -19,7 +19,7 @@ my $server = Test::TCP->new(
     
     # Throw way stdout and stderr
     # If not, "make test" (Test::Harness->runtests) waits forever.
-    my $devnull = File::Spec::Win32->devnull();
+    my $devnull = File::Spec->devnull();
     
     my $cmd = "$^X t/webapp/basic.pl daemon --listen http://*:$port >$devnull 2>&1";
     
