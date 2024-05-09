@@ -25,6 +25,8 @@ my $server = Test::TCP->new(
     
     my @args = ("--listen", "http://*:$port");
     $daemon_command->run(@args);
+    
+    exit 0;
   },
 );
 

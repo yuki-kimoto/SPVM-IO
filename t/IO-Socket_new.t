@@ -6,7 +6,7 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 
-use SPVM 'IO::Socket';
+use SPVM 'TestCase::IO::Socket';
 
 unless ($] >= 5.032000) {
   plan skip_all => 'This test is skipped because it needs Perl v.5.32.0+';
@@ -32,12 +32,8 @@ my $server = Test::TCP->new(
   },
 );
 
-my $http = HTTP::Tiny->new;
-
 my $port = $server->port;
 
-my $res = $http->get("http://127.0.0.1:$port/hello");
-
-like($res->{content}, qr|Hello|);
+ok(SPVM::TestCase::IO::Socket->basic_new($port));
 
 done_testing;
