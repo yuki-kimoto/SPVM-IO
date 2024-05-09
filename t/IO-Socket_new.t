@@ -34,6 +34,6 @@ my $server = Test::TCP->new(
 
 my $port = $server->port;
 
-ok(SPVM::TestCase::IO::Socket->http($port));
+ok(SPVM::TestCase::IO::Socket->basic($port));
 
 done_testing;
