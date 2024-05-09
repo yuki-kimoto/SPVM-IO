@@ -252,6 +252,7 @@ class TestCase::IO::Socket {
   
   static method http : int ($port : int) {
     
+    # Basic
     {
       my $host = "127.0.0.1";
       my $socket = IO::Socket::INET->new({PeerAddr => $host, PeerPort => $port});
@@ -264,6 +265,7 @@ class TestCase::IO::Socket {
       my $recv_length = $socket->recv($recv_buffer);
       
       unless ($recv_length > 0 && $recv_length < 1000) {
+        
         warn $recv_length;
         return 0;
       }
@@ -272,10 +274,27 @@ class TestCase::IO::Socket {
       
       my $content = $recv_buffer;
       
+      unless (Fn->contains($content, "HTTP")) {
+        
+        warn dump $content;
+        return 0;
+      }
+      
+      unless (Fn->contains($content, "200")) {
+        
+        warn dump $content;
+        return 0;
+      }
+      
+      unless (Fn->contains($content, "OK")) {
+        
+        warn dump $content;
+        return 0;
+      }
+      
       unless (Fn->contains($content, "Hello")) {
         
         warn dump $content;
-        
         return 0;
       }
       
