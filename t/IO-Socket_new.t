@@ -36,4 +36,6 @@ my $port = $server->port;
 
 ok(SPVM::TestCase::IO::Socket->basic($port));
 
+ok(SPVM::TestCase::IO::Socket->goroutine($port));
+
 done_testing;
