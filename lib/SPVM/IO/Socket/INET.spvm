@@ -41,7 +41,12 @@ Reuse       (Deprecated prefer ReuseAddr)
     $socket_address->set_sin_port(Sys::Socket->htons((short)$port));
     
     my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
-    Sys::Socket->getaddrinfo($address, undef, undef, $res_ref);
+    
+    my $hints = Sys::Socket::Addrinfo->new;
+    $hints->set_ai_family(SOCKET->AF_INET);
+    
+    Sys::Socket->getaddrinfo($address, undef, $hints, $res_ref);
+    
     my $res = $res_ref->[0];
     
     if ($res) {
