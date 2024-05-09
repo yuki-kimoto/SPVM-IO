@@ -24,6 +24,7 @@ t/01-02-Test-Tcp_and_Mojolicious_and_SPVM.t
 t/IO-File.t
 t/IO-Select.t
 t/IO-Socket.t
+t/IO-Socket_new.t
 t/IO.t
 t/lib/SPVM/TestCase/IO/File.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
