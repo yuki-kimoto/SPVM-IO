@@ -1,9 +1,7 @@
 # Copyright (c) 2023 Yuki Kimoto
 # MIT License
 
-class IO::Socket::INET extends IO::Socket {
-  
-  use IO::Socket::Common;
+class IO::Socket::INET extends IO::Socket::Common {
   
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;
@@ -150,14 +148,14 @@ Reuse       (Deprecated prefer ReuseAddr)
     $self->socket($domain, $socktype, $proto_number);
     
     if ($local_port >= 0) {
-      my $local_socket_address = $self->IO::Socket::Common::create_socket_address($local_address, $local_port);
+      my $local_socket_address = $self->SUPER::create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
       my $listen = $self->{Listen};
       $self->listen($listen);
     }
     
     if ($peer_address) {
-      my $peer_socket_address = $self->IO::Socket::Common::create_socket_address($peer_address, $peer_port);
+      my $peer_socket_address = $self->SUPER::create_socket_address($peer_address, $peer_port);
       $self->connect($peer_socket_address);
     }
     
