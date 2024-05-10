@@ -12,8 +12,8 @@ lib/SPVM/IO/Socket.pm
 lib/SPVM/IO/Socket.spvm
 lib/SPVM/IO/Socket/INET.pm
 lib/SPVM/IO/Socket/INET.spvm
-lib/SPVM/IO/Socket/INET/Common.pm
-lib/SPVM/IO/Socket/INET/Common.spvm
+lib/SPVM/IO/Socket/INET/Base.pm
+lib/SPVM/IO/Socket/INET/Base.spvm
 lib/SPVM/IO/Socket/INET6.pm
 lib/SPVM/IO/Socket/INET6.spvm
 lib/SPVM/IO/Socket/IP.pm

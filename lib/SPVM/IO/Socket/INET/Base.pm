@@ -1,4 +1,4 @@
-package SPVM::IO::Socket::INET::Common;
+package SPVM::IO::Socket::INET::Base;
 
 
 
@@ -6,15 +6,15 @@ package SPVM::IO::Socket::INET::Common;
 
 =head1 Name
 
-SPVM::IO::Socket::INET::Common - Short Description
+SPVM::IO::Socket::INET::Base - Short Description
 
 =head1 Description
 
-The IO::Socket::INET::Common class in L<SPVM> has methods to do someting.
+The IO::Socket::INET::Base class in L<SPVM> has methods to do someting.
 
 =head1 Usage
 
-  use IO::Socket::INET::Common;
+  use IO::Socket::INET::Base;
 
 =head1 Details
 

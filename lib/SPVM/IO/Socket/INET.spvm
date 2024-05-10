@@ -1,7 +1,7 @@
 # Copyright (c) 2023 Yuki Kimoto
 # MIT License
 
-class IO::Socket::INET extends IO::Socket::INET::Common {
+class IO::Socket::INET extends IO::Socket::INET::Base {
   
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;
