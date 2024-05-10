@@ -54,8 +54,7 @@ Reuse       (Deprecated prefer ReuseAddr)
       $socket_address->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
     }
     else {
-      my $in_addr = Sys::Socket::Util->inet_aton($address);
-      $socket_address->set_sin_addr($in_addr);
+      die "Sys::Socket->getaddrinfo cannot get an address.";
     }
     
     return $socket_address;

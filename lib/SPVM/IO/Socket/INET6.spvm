@@ -52,12 +52,9 @@ Reuse       (Deprecated prefer ReuseAddr)
     if ($res) {
       my $res_array = $res->to_array;
       $socket_address->set_sin6_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In6)->sin6_addr);
-      warn;
     }
     else {
-      my $in6_addr = (Sys::Socket::In6_addr)Sys::Socket::Util->inet_pton(SOCKET->AF_INET6, $address);
-      $socket_address->set_sin6_addr($in6_addr);
-      warn;
+      die "Sys::Socket->getaddrinfo cannot get an address.";
     }
     
     return $socket_address;
