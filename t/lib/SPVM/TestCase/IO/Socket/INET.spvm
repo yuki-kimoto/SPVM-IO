@@ -1,4 +1,4 @@
-class TestCase::IO::Socket {
+class TestCase::IO::Socket::INET {
   use IO::Socket;
   use IO::Socket::INET;
   use IO::Socket::UNIX;
