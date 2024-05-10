@@ -33,7 +33,7 @@ Reuse       (Deprecated prefer ReuseAddr)
   has proto_number : int;
   
   # Class Methods
-  private static method create_socket_address : Sys::Socket::Sockaddr::In ($address : string, $port : int) {
+  private method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
     # Socket information
     my $socket_address = Sys::Socket::Sockaddr::In->new;
@@ -173,14 +173,14 @@ Reuse       (Deprecated prefer ReuseAddr)
     $self->socket($domain, $socktype, $proto_number);
     
     if ($local_port >= 0) {
-      my $local_socket_address = &create_socket_address($local_address, $local_port);
+      my $local_socket_address = $self->create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
       my $listen = $self->{Listen};
       $self->listen($listen);
     }
     
     if ($peer_address) {
-      my $peer_socket_address = &create_socket_address($peer_address, $peer_port);
+      my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
       $self->connect($peer_socket_address);
     }
     

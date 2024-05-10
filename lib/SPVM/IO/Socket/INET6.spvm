@@ -33,7 +33,7 @@ Reuse       (Deprecated prefer ReuseAddr)
   has proto_number : int;
   
   # Class Methods
-  private static method create_socket_address : Sys::Socket::Sockaddr::In6 ($address : string, $port : int) {
+  private method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
     # Socket information
     my $socket_address = Sys::Socket::Sockaddr::In6->new;
