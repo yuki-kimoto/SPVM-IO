@@ -1,0 +1,9 @@
+class TestCase::IO::Socket::IP {
+  use IO::Socket::IP;
+  
+  static method basic : int ($port : int) {
+    
+    return 1;
+  }
+  
+}

@@ -23,11 +23,13 @@ t/01-01-Test-Tcp_and_Mojolicious.t
 t/01-02-Test-Tcp_and_Mojolicious_and_SPVM.t
 t/IO-File.t
 t/IO-Select.t
+t/IO-Socket-IP.t
 t/IO-Socket.t
 t/IO.t
 t/lib/SPVM/TestCase/IO/File.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
 t/lib/SPVM/TestCase/IO/Socket.spvm
+t/lib/SPVM/TestCase/IO/Socket/IP.spvm
 t/lib/SPVM/TestCase/IO/Socket/Online.spvm
 t/lib/TestFile.pm
 t/test_files/file_eof.txt
