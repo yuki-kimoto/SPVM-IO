@@ -1,3 +1,9 @@
+0.212 2023-05-10
+  [Buf Fix]
+    * Fix the bug that IO::Socket::INET uses IPv6 addrinfo.
+  [New Features]
+    * Add the IO::Socket::INET6 class.
+  
 0.211002 2023-12-07
   [Prerequirement Changes]
     * Require SPVM::Sys 0.510.

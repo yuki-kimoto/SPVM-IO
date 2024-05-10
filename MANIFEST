@@ -1,4 +1,5 @@
 Changes
+core
 lib/SPVM/IO.pm
 lib/SPVM/IO.spvm
 lib/SPVM/IO/File.pm
@@ -11,6 +12,8 @@ lib/SPVM/IO/Socket.pm
 lib/SPVM/IO/Socket.spvm
 lib/SPVM/IO/Socket/INET.pm
 lib/SPVM/IO/Socket/INET.spvm
+lib/SPVM/IO/Socket/INET6.pm
+lib/SPVM/IO/Socket/INET6.spvm
 lib/SPVM/IO/Socket/IP.pm
 lib/SPVM/IO/Socket/IP.spvm
 lib/SPVM/IO/Socket/UNIX.pm
@@ -23,12 +26,14 @@ t/01-01-Test-Tcp_and_Mojolicious.t
 t/01-02-Test-Tcp_and_Mojolicious_and_SPVM.t
 t/IO-File.t
 t/IO-Select.t
+t/IO-Socket-INET6.t_
 t/IO-Socket-IP.t
 t/IO-Socket.t
 t/IO.t
 t/lib/SPVM/TestCase/IO/File.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
 t/lib/SPVM/TestCase/IO/Socket.spvm
+t/lib/SPVM/TestCase/IO/Socket/INET6.spvm
 t/lib/SPVM/TestCase/IO/Socket/IP.spvm
 t/lib/SPVM/TestCase/IO/Socket/Online.spvm
 t/lib/TestFile.pm
