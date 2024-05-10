@@ -49,8 +49,6 @@ class IO::Socket extends IO::Handle {
     my $timeout = $options_h->delete_or_default_double("Timeout", 0.0);
     $self->{Timeout} = $timeout;
     
-    warn dump $self;
-    
     $self->configure($options_h->to_array);
     
     $self->set_blocking(0);

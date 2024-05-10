@@ -9,7 +9,6 @@ class IO::Socket::INET extends IO::Socket::INET::Base {
   use Sys::Socket::In_addr;
   use Sys::Socket::Util;
   
-  
   # Class Methods
   static method new : IO::Socket::INET ($options : object[] = undef) {
     
@@ -25,30 +24,31 @@ class IO::Socket::INET extends IO::Socket::INET::Base {
     return IO::Socket::INET->new($options);
   }
   
-  method option_names : string[] () {
+  method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
-    my $option_names = Array->merge_string(
-      $self->SUPER::option_names,
-      [
-        "PeerAddr",
-        "PeerPort",
-        "LocalAddr",
-        "LocalPort",
-        "ReuseAddr",
-        "ReusePort",
-        "Broadcast",
-        "MultiHomed",
-      ]
-    );
+    # Socket information
+    my $socket_address = Sys::Socket::Sockaddr::In->new;
+    $socket_address->set_sin_family(SOCKET->AF_INET);
+    $socket_address->set_sin_port(Sys::Socket->htons((short)$port));
     
-    return $option_names;
-  }
-  
-  protected method init : void ($options : object[] = undef) {
+    my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
     
-    Fn->check_option_names($options, $self->option_names);
+    my $hints = Sys::Socket::Addrinfo->new;
+    $hints->set_ai_family(SOCKET->AF_INET);
     
-    $self->SUPER::init($options);
+    Sys::Socket->getaddrinfo($address, undef, $hints, $res_ref);
+    
+    my $res = $res_ref->[0];
+    
+    if ($res) {
+      my $res_array = $res->to_array;
+      $socket_address->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
+    }
+    else {
+      die "Sys::Socket->getaddrinfo cannot get an address.";
+    }
+    
+    return $socket_address;
   }
   
   method sockaddr : Sys::Socket::In_addr () {
