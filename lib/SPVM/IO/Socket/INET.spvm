@@ -213,7 +213,7 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $sockhost = (string)undef;
     if ($in_addr_sock) {
-      $sockhost = Sys::Socket::Util->inet_ntoa($in_addr_sock);
+      $sockhost = Sys::Socket::Util->inet_ntop($self->{Domain}, $in_addr_sock);
     }
     return $sockhost;
   }
@@ -243,7 +243,7 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $peerhost = (string)undef;
     if ($in_addr_peer) {
-      $peerhost = Sys::Socket::Util->inet_ntoa($in_addr_peer);
+      $peerhost = Sys::Socket::Util->inet_ntop($self->{Domain}, $in_addr_peer);
     }
     return $peerhost;
   }
