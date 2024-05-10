@@ -10,30 +10,6 @@ class IO::Socket::INET extends IO::Socket::INET::Base {
   use Sys::Socket::Util;
   
   
-  # Fields
-  has PeerAddr : string;
-  has PeerPort : int;
-  has LocalAddr : string;
-  has LocalPort : int;
-  has ReuseAddr : int;
-  has ReusePort : int;
-  has Broadcast : int;
-  has MultiHomed : int;
-
-=pod TODO
-
-PeerHost    (Synonym for PeerAddr)
-LocalHost   (Synonym for LocalAddr)
-Reuse       (Deprecated prefer ReuseAddr)
-
-=cut
-  
-  has peer_address : string;
-  has peer_port : int;
-  has local_address : string;
-  has local_port : int;
-  has proto_number : int;
-  
   # Class Methods
   static method new : IO::Socket::INET ($options : object[] = undef) {
     
@@ -73,92 +49,6 @@ Reuse       (Deprecated prefer ReuseAddr)
     Fn->check_option_names($options, $self->option_names);
     
     $self->SUPER::init($options);
-  }
-  
-  protected method configure : void ($options : object[] = undef) {
-    
-    my $options_h = Hash->new($options);
-    
-    my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
-    unless ($sockdomain >= 0) {
-      $sockdomain = SOCKET->AF_INET;
-    }
-    $self->{Domain} = $sockdomain;
-    
-    # Listen option
-    my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
-    $self->{Listen} = $listen_backlog;
-    
-    # ReuseAddr option
-    my $reuse_addr = $options_h->delete_or_default_int("ReuseAddr", 0);
-    if ($reuse_addr) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
-    }
-    
-    # ReusePort option
-    my $reuse_port = $options_h->delete_or_default_int("ReusePort", 0);
-    if ($reuse_port) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
-    }
-    
-    # Broadcast option
-    my $broadcast = $options_h->delete_or_default_int("Broadcast", 0);
-    if ($broadcast) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
-    }
-    
-    # PeerAddr option
-    my $peer_address = $options_h->delete_or_default_string("PeerAddr", undef);
-    $self->{peer_address} = $peer_address;
-    
-    # PeerPort option
-    my $peer_port = $options_h->delete_or_default_int("PeerPort", -1);
-    $self->{peer_port} = $peer_port;
-    
-    # LocalAddr option
-    my $local_address = $options_h->delete_or_default_string("LocalAddr", undef);
-    $self->{local_address} = $local_address;
-    
-    # LocalPort option
-    my $local_port = $options_h->delete_or_default_int("LocalPort", -1);
-    $self->{local_port} = $local_port;
-    
-    # LocalPort option
-    my $proto_number = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
-    $self->{proto_number} = $proto_number;
-    
-    # Type option
-    my $type = $options_h->delete_or_default_int("Type", -1);
-    unless ($type >= 0) {
-      if ($proto_number == SOCKET->IPPROTO_TCP) {
-        $type = SOCKET->SOCK_STREAM;
-      }
-      elsif ($proto_number == SOCKET->IPPROTO_UDP) {
-        $type = SOCKET->SOCK_DGRAM;
-      }
-      elsif ($proto_number == SOCKET->IPPROTO_ICMP) {
-        $type = SOCKET->SOCK_RAW;
-      }
-      $self->{Type} = $type;
-    }
-    
-    my $domain = $self->sockdomain;
-    my $socktype = $self->socktype;
-    
-    $self->socket($domain, $socktype, $proto_number);
-    
-    if ($local_port >= 0) {
-      my $local_socket_address = $self->SUPER::create_socket_address($local_address, $local_port);
-      $self->bind($local_socket_address);
-      my $listen = $self->{Listen};
-      $self->listen($listen);
-    }
-    
-    if ($peer_address) {
-      my $peer_socket_address = $self->SUPER::create_socket_address($peer_address, $peer_port);
-      $self->connect($peer_socket_address);
-    }
-    
   }
   
   method sockaddr : Sys::Socket::In_addr () {
