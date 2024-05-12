@@ -1,12 +1,28 @@
 # Copyright (c) 2023 Yuki Kimoto
 # MIT License
 
-class IO::Socket::INET6 extends IO::Socket {
+class IO::Socket::INET6 extends IO::Socket::INET::Base {
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;
   use Sys::Socket::Sockaddr::In6;
   use Sys::Socket::In6_addr;
   use Sys::Socket::Util;
+  
+  static method new : IO::Socket::INET6 ($options : object[] = undef) {
+    
+    my $self = new IO::Socket::INET6;
+    
+    $options = Fn->merge_options($options, {Domain => SOCKET->AF_INET6});
+    
+    $self->init($options);
+    
+    return $self;
+  }
+  
+  # Instance Methods
+  method new_from_instance : IO::Socket::INET6 ($options : object[] = undef) {
+    return IO::Socket::INET6->new($options);
+  }
   
   # Class Methods
   method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
@@ -34,20 +50,6 @@ class IO::Socket::INET6 extends IO::Socket {
     }
     
     return $socket_address;
-  }
-  
-  static method new : IO::Socket::INET6 ($options : object[] = undef) {
-    
-    my $self = new IO::Socket::INET6;
-    
-    $self->init($options);
-    
-    return $self;
-  }
-  
-  # Instance Methods
-  method new_from_instance : IO::Socket::INET6 ($options : object[] = undef) {
-    return IO::Socket::INET6->new($options);
   }
   
   method sockaddr : Sys::Socket::In6_addr () {
