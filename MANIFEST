@@ -29,7 +29,7 @@ t/01-02-Test-Tcp_and_Mojolicious_and_SPVM.t
 t/IO-File.t
 t/IO-Select.t
 t/IO-Socket-INET.t
-t/IO-Socket-INET6.t_
+t/IO-Socket-INET6.t
 t/IO-Socket-IP.t
 t/IO.t
 t/lib/SPVM/TestCase/IO/File.spvm
