@@ -2,13 +2,10 @@
 # MIT License
 
 class IO::Socket::INET6 extends IO::Socket::INET::Base {
-  use Sys::Socket::Constant as SOCKET;
-  use Sys::Socket::Sockaddr;
-  use Sys::Socket::Sockaddr::In6;
-  use Sys::Socket::In6_addr;
-  use Sys::Socket::Util;
   
-  static method new : IO::Socket::INET6 ($options : object[] = undef) {
+  use Sys::Socket::Constant as SOCKET;
+  
+  static method new : IO::Socket::INET::Base ($options : object[] = undef) {
     
     my $self = new IO::Socket::INET6;
     
@@ -18,10 +15,4 @@ class IO::Socket::INET6 extends IO::Socket::INET::Base {
     
     return $self;
   }
-  
-  # Instance Methods
-  method new_from_instance : IO::Socket::INET6 ($options : object[] = undef) {
-    return IO::Socket::INET6->new($options);
-  }
-  
 }
