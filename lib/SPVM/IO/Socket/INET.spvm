@@ -81,14 +81,4 @@ class IO::Socket::INET extends IO::Socket::INET::Base {
     return $sockhost;
   }
   
-  method peerport : int () {
-    my $sockaddr_in_peer = (Sys::Socket::Sockaddr::In)$self->peername;
-    
-    my $peerport_network_byte_order = $sockaddr_in_peer->sin_port;
-    
-    my $peerport = Sys::Socket->ntohs((short)$peerport_network_byte_order);
-    
-    return $peerport;
-  }
-  
 }

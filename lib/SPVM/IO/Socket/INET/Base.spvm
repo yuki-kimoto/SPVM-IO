@@ -166,8 +166,25 @@ Reuse       (Deprecated prefer ReuseAddr)
     return $in_addr_base;
   }
   
+  method peerport : int () {
+    
+    my $peerport = -1;;
+    
+    my $domain = $self->{Domain};
+    if ($domain == SOCKET->AF_INET) {
+      $peerport = $self->IO::Socket::INET::Import::IPv4::peerport;
+    }
+    elsif ($domain == SOCKET->AF_INET6) {
+      $peerport = $self->IO::Socket::INET::Import::IPv6::peerport;
+    }
+    else {
+      die "[Unexpected Error]\$domain:$domain.";
+    }
+    
+    return $peerport;
+  }
+  
   method peerhost : string () {
-    my $in_addr_peer = $self->peeraddr;
     
     my $peerhost = (string)undef;
     
