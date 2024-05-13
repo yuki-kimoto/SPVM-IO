@@ -33,6 +33,19 @@ Reuse       (Deprecated prefer ReuseAddr)
 
 =cut
   
+  # Class Methods
+  static method new : IO::Socket::IP ($options : object[] = undef) {
+    
+    my $self = new IO::Socket::IP;
+    
+    $options = Fn->merge_options($options, {});
+    
+    $self->init($options);
+    
+    return $self;
+  }
+  
+  # Instance Methods
   protected method configure : void ($options : object[] = undef) {
     
     my $options_h = Hash->new($options);

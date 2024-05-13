@@ -17,7 +17,7 @@ require HTTP::Tiny;
 
 require Mojolicious::Command::daemon;
 
-my $server = Test::TCP->new(
+my $server_ipv4 = Test::TCP->new(
   code => sub {
     my $port = shift;
     
@@ -32,8 +32,17 @@ my $server = Test::TCP->new(
   },
 );
 
-my $port = $server->port;
-
-ok(SPVM::TestCase::IO::Socket::IP->basic($port));
+# IPv4
+{
+  my $port = $server_ipv4->port;
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_basic($port));
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_set_blocking($port));
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_fileno($port));
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_goroutine($port));
+}
 
 done_testing;
