@@ -6,7 +6,7 @@ class IO::Socket::INET::Import::IPv4 : interface_t {
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;
   use Sys::Socket::Sockaddr::In;
-  use Sys::Socket::In_addr;
+  use Sys::Socket::In_addr_base;
   use Sys::Socket::Util;
   use IO::Socket::INET::Base;
   
@@ -38,7 +38,7 @@ class IO::Socket::INET::Import::IPv4 : interface_t {
     return $socket_address;
   }
   
-  method sockaddr : Sys::Socket::In_addr () {
+  method sockaddr : Sys::Socket::In_addr_base () {
     my $sockaddr_in_sock = (Sys::Socket::Sockaddr::In)$self->sockname;
     
     my $sockaddr = $sockaddr_in_sock->sin_addr;
