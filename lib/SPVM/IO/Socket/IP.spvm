@@ -19,10 +19,6 @@ class IO::Socket::IP extends IO::Socket {
   has Broadcast : protected int;
   has MultiHomed : protected int;
   
-  has local_address : string;
-  has local_port : int;
-  has proto_number : int;
-  
 =pod TODO
 
 PeerHost    (Synonym for PeerAddr)
@@ -86,15 +82,15 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     # LocalAddr option
     my $local_address = $options_h->delete_or_default_string("LocalAddr", undef);
-    $self->{local_address} = $local_address;
+    $self->{LocalAddr} = $local_address;
     
     # LocalPort option
     my $local_port = $options_h->delete_or_default_int("LocalPort", -1);
-    $self->{local_port} = $local_port;
+    $self->{LocalPort} = $local_port;
     
     # LocalPort option
     my $proto_number = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
-    $self->{proto_number} = $proto_number;
+    $self->{Proto} = $proto_number;
     
     # Type option
     my $type = $options_h->delete_or_default_int("Type", -1);
