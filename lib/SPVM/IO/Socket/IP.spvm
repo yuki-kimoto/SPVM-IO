@@ -5,27 +5,25 @@ class IO::Socket::IP extends IO::Socket {
   
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;
+  use Sys::Socket::In_addr_base;
   
   use IO::Socket::IP::Import::IPv4;
   use IO::Socket::IP::Import::IPv6;
   
   # Fields
   has PeerAddr : protected string;
-  has PeerPort : protected int;
-  has LocalAddr : protected string;
-  has LocalPort : protected int;
-  has ReuseAddr : protected int;
-  has ReusePort : protected int;
-  has Broadcast : protected int;
-  has MultiHomed : protected int;
   
-=pod TODO
-
-PeerHost    (Synonym for PeerAddr)
-LocalHost   (Synonym for LocalAddr)
-Reuse       (Deprecated prefer ReuseAddr)
-
-=cut
+  has PeerPort : protected int;
+  
+  has LocalAddr : protected string;
+  
+  has LocalPort : protected int;
+  
+  has ReuseAddr : protected int;
+  
+  has ReusePort : protected int;
+  
+  has Broadcast : protected int;
   
   # Class Methods
   static method new : IO::Socket::IP ($options : object[] = undef) {
@@ -138,7 +136,6 @@ Reuse       (Deprecated prefer ReuseAddr)
         "ReuseAddr",
         "ReusePort",
         "Broadcast",
-        "MultiHomed",
       ]
     );
     
