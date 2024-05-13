@@ -91,14 +91,4 @@ class IO::Socket::INET extends IO::Socket::INET::Base {
     return $peerport;
   }
   
-  method peerhost : string () {
-    my $in_addr_peer = $self->peeraddr;
-    
-    my $peerhost = (string)undef;
-    if ($in_addr_peer) {
-      $peerhost = Sys::Socket::Util->inet_ntop($self->{Domain}, $in_addr_peer);
-    }
-    return $peerhost;
-  }
-  
 }
