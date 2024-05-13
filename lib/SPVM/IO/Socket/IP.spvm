@@ -66,16 +66,6 @@ class IO::Socket::IP extends IO::Socket {
     
     my $options_h = Hash->new($options);
     
-    my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
-    unless ($sockdomain >= 0) {
-      $sockdomain = SOCKET->AF_INET;
-    }
-    $self->{Domain} = $sockdomain;
-    
-    # Listen option
-    my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
-    $self->{Listen} = $listen_backlog;
-    
     # ReuseAddr option
     my $reuse_addr = $options_h->delete_or_default_int("ReuseAddr", 0);
     if ($reuse_addr) {
@@ -110,29 +100,39 @@ class IO::Socket::IP extends IO::Socket {
     my $local_port = $options_h->delete_or_default_int("LocalPort", -1);
     $self->{LocalPort} = $local_port;
     
+    my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
+    unless ($sockdomain >= 0) {
+      $sockdomain = SOCKET->AF_INET;
+    }
+    $self->{Domain} = $sockdomain;
+    
     # LocalPort option
-    my $proto_number = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
-    $self->{Proto} = $proto_number;
+    my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
+    $self->{Proto} = $proto;
     
     # Type option
     my $type = $options_h->delete_or_default_int("Type", -1);
     unless ($type >= 0) {
-      if ($proto_number == SOCKET->IPPROTO_TCP) {
+      if ($proto == SOCKET->IPPROTO_TCP) {
         $type = SOCKET->SOCK_STREAM;
       }
-      elsif ($proto_number == SOCKET->IPPROTO_UDP) {
+      elsif ($proto == SOCKET->IPPROTO_UDP) {
         $type = SOCKET->SOCK_DGRAM;
       }
-      elsif ($proto_number == SOCKET->IPPROTO_ICMP) {
+      elsif ($proto == SOCKET->IPPROTO_ICMP) {
         $type = SOCKET->SOCK_RAW;
       }
       $self->{Type} = $type;
     }
     
+    # Listen option
+    my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
+    $self->{Listen} = $listen_backlog;
+    
     my $domain = $self->sockdomain;
     my $socktype = $self->socktype;
     
-    $self->socket($domain, $socktype, $proto_number);
+    $self->socket($domain, $socktype, $proto);
     
     if ($local_port >= 0) {
       my $local_socket_address = $self->create_socket_address($local_address, $local_port);
