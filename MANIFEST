@@ -32,6 +32,7 @@ t/IO-Select.t
 t/IO-Socket-INET.t
 t/IO-Socket-INET6.t
 t/IO-Socket-IP.t
+t/IO-Socket-IP_IPv6.t
 t/IO.t
 t/lib/SPVM/TestCase/IO/File.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
