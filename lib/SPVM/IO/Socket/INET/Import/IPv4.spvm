@@ -8,7 +8,7 @@ class IO::Socket::INET::Import::IPv4 : interface_t {
   use Sys::Socket::Sockaddr::In;
   use Sys::Socket::In_addr_base;
   use Sys::Socket::Util;
-  use IO::Socket::INET::Base;
+  use IO::Socket::IP;
   
   # Instance Methods
   method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {

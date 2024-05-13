@@ -10,11 +10,27 @@ SPVM::IO::Socket::IP - Short Description
 
 =head1 Description
 
-IO::Socket::IP class in L<SPVM> has methods for someting.
+The IO::Socket::IP class in L<SPVM> has methods to do someting.
 
 =head1 Usage
 
   use IO::Socket::IP;
+
+=head1 Details
+
+
+
+=head1 Inheritance
+
+
+
+=head1 Interfaces
+
+
+
+=head1 Enumerations
+
+
 
 =head1 Fields
 
@@ -39,7 +55,7 @@ Yuki Kimoto C<kimoto.yuki@gmail.com>
 
 =head1 Copyright & License
 
-Copyright (c) 2023 Yuki Kimoto
+Copyright (c) 2024 Yuki Kimoto
 
 MIT License
 
