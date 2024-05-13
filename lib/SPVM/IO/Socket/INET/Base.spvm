@@ -33,8 +33,6 @@ Reuse       (Deprecated prefer ReuseAddr)
 
 =cut
   
-  method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) { die "Not Implemented."; }
-  
   protected method configure : void ($options : object[] = undef) {
     
     my $options_h = Hash->new($options);
@@ -145,6 +143,24 @@ Reuse       (Deprecated prefer ReuseAddr)
     Fn->check_option_names($options, $self->option_names);
     
     $self->SUPER::init($options);
+  }
+  
+  method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
+    
+    my $socket_address = (Sys::Socket::Sockaddr)undef;
+    
+    my $domain = $self->{Domain};
+    if ($domain == SOCKET->AF_INET) {
+      $socket_address = $self->IO::Socket::INET::Import::IPv4::create_socket_address($address, $port);
+    }
+    elsif ($domain == SOCKET->AF_INET6) {
+      $socket_address = $self->IO::Socket::INET::Import::IPv6::create_socket_address($address, $port);
+    }
+    else {
+      die "[Unexpected Error]\$domain:$domain.";
+    }
+    
+    return $socket_address;
   }
   
   method sockaddr : Sys::Socket::In_addr_base () {
