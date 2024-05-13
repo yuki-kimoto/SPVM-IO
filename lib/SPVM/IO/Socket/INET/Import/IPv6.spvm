@@ -65,7 +65,7 @@ class IO::Socket::INET::Import::IPv6 : interface_t {
     return $sockhost;
   }
   
-  method peeraddr : Sys::Socket::In6_addr () {
+  method peeraddr : Sys::Socket::In_addr_base () {
     my $sockaddr_in6 = $self->peername;
     
     my $in6_addr = $sockaddr_in6->(Sys::Socket::Sockaddr::In6)->sin6_addr;

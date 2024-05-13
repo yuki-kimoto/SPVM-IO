@@ -147,4 +147,23 @@ Reuse       (Deprecated prefer ReuseAddr)
     $self->SUPER::init($options);
   }
   
+  method peeraddr : Sys::Socket::In_addr_base () {
+    my $sockaddr = $self->peername;
+    
+    my $in_addr_base = (Sys::Socket::In_addr_base)undef;
+    
+    my $domain = $self->{Domain};
+    if ($domain == SOCKET->AF_INET) {
+      $in_addr_base = $self->IO::Socket::INET::Import::IPv4::peeraddr;
+    }
+    elsif ($domain == SOCKET->AF_INET6) {
+      $in_addr_base = $self->IO::Socket::INET::Import::IPv6::peeraddr;
+    }
+    else {
+      die "[Unexpected Error]\$domain:$domain.";
+    }
+    
+    return $in_addr_base;
+  }
+  
 }
