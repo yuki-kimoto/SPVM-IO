@@ -22,10 +22,6 @@ class IO::Socket::INET extends IO::Socket::INET::Base {
   }
   
   # Instance Methods
-  method new_from_instance : IO::Socket::INET ($options : object[] = undef) {
-    return IO::Socket::INET->new($options);
-  }
-  
   method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
     # Socket information
