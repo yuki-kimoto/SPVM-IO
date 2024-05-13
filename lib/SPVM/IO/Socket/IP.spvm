@@ -39,7 +39,7 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
     unless ($sockdomain >= 0) {
-      die "The \"Domain\" option must be specified.";
+      $sockdomain = SOCKET->AF_INET;
     }
     $self->{Domain} = $sockdomain;
     
