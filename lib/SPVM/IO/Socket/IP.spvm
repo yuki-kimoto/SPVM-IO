@@ -30,11 +30,35 @@ class IO::Socket::IP extends IO::Socket {
     
     my $self = new IO::Socket::IP;
     
-    $options = Fn->merge_options($options, {});
-    
     $self->init($options);
     
     return $self;
+  }
+  
+  # Instance Methods
+  protected method option_names : string[] () {
+    
+    my $option_names = Array->merge_string(
+      $self->SUPER::option_names,
+      [
+        "PeerAddr",
+        "PeerPort",
+        "LocalAddr",
+        "LocalPort",
+        "ReuseAddr",
+        "ReusePort",
+        "Broadcast",
+      ]
+    );
+    
+    return $option_names;
+  }
+  
+  protected method init : void ($options : object[] = undef) {
+    
+    Fn->check_option_names($options, $self->option_names);
+    
+    $self->SUPER::init($options);
   }
   
   # Instance Methods
@@ -124,31 +148,6 @@ class IO::Socket::IP extends IO::Socket {
     
   }
   
-  method option_names : string[] () {
-    
-    my $option_names = Array->merge_string(
-      $self->SUPER::option_names,
-      [
-        "PeerAddr",
-        "PeerPort",
-        "LocalAddr",
-        "LocalPort",
-        "ReuseAddr",
-        "ReusePort",
-        "Broadcast",
-      ]
-    );
-    
-    return $option_names;
-  }
-  
-  protected method init : void ($options : object[] = undef) {
-    
-    Fn->check_option_names($options, $self->option_names);
-    
-    $self->SUPER::init($options);
-  }
-  
   method sockaddr : Sys::Socket::In_addr_base () {
     my $sockaddr = $self->sockname;
     
@@ -168,24 +167,6 @@ class IO::Socket::IP extends IO::Socket {
     return $in_addr_base;
   }
   
-  method sockport : int () {
-    
-    my $sockport = -1;;
-    
-    my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
-      $sockport = $self->IO::Socket::IP::Import::IPv4::sockport;
-    }
-    elsif ($domain == SOCKET->AF_INET6) {
-      $sockport = $self->IO::Socket::IP::Import::IPv6::sockport;
-    }
-    else {
-      die "[Unexpected Error]\$domain:$domain.";
-    }
-    
-    return $sockport;
-  }
-  
   method sockhost : string () {
     
     my $sockhost = (string)undef;
@@ -202,6 +183,24 @@ class IO::Socket::IP extends IO::Socket {
     }
     
     return $sockhost;
+  }
+  
+  method sockport : int () {
+    
+    my $sockport = -1;;
+    
+    my $domain = $self->{Domain};
+    if ($domain == SOCKET->AF_INET) {
+      $sockport = $self->IO::Socket::IP::Import::IPv4::sockport;
+    }
+    elsif ($domain == SOCKET->AF_INET6) {
+      $sockport = $self->IO::Socket::IP::Import::IPv6::sockport;
+    }
+    else {
+      die "[Unexpected Error]\$domain:$domain.";
+    }
+    
+    return $sockport;
   }
   
   method peeraddr : Sys::Socket::In_addr_base () {
@@ -223,24 +222,6 @@ class IO::Socket::IP extends IO::Socket {
     return $in_addr_base;
   }
   
-  method peerport : int () {
-    
-    my $peerport = -1;;
-    
-    my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
-      $peerport = $self->IO::Socket::IP::Import::IPv4::peerport;
-    }
-    elsif ($domain == SOCKET->AF_INET6) {
-      $peerport = $self->IO::Socket::IP::Import::IPv6::peerport;
-    }
-    else {
-      die "[Unexpected Error]\$domain:$domain.";
-    }
-    
-    return $peerport;
-  }
-  
   method peerhost : string () {
     
     my $peerhost = (string)undef;
@@ -257,6 +238,24 @@ class IO::Socket::IP extends IO::Socket {
     }
     
     return $peerhost;
+  }
+  
+  method peerport : int () {
+    
+    my $peerport = -1;;
+    
+    my $domain = $self->{Domain};
+    if ($domain == SOCKET->AF_INET) {
+      $peerport = $self->IO::Socket::IP::Import::IPv4::peerport;
+    }
+    elsif ($domain == SOCKET->AF_INET6) {
+      $peerport = $self->IO::Socket::IP::Import::IPv6::peerport;
+    }
+    else {
+      die "[Unexpected Error]\$domain:$domain.";
+    }
+    
+    return $peerport;
   }
   
   private method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {

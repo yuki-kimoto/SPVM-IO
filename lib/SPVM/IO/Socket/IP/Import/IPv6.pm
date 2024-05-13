@@ -32,17 +32,17 @@ An interface method with a default implementation to return the local address.
 
 The local address is a L<Sys::Socket::In6_addr|SPVM::Sys::Socket::In6_addr> object.
 
-=head2 sockport
-
-C<method sockport : int ();>
-
-An interface method with a default implementation to return the local port.
-
 =head2 sockhost
 
 C<method sockhost : string ();>
 
 An interface method with a default implementation to return the local host name.
+
+=head2 sockport
+
+C<method sockport : int ();>
+
+An interface method with a default implementation to return the local port.
 
 =head2 peername
 
@@ -58,17 +58,17 @@ An interface method with a default implementation to return the remote address.
 
 The remote address is a L<Sys::Socket::In6_addr|SPVM::Sys::Socket::In6_addr> object.
 
-=head2 peerport
-
-C<method peerport : int ();>
-
-An interface method with a default implementation to return the port.
-
 =head2 peerhost
 
 C<method peerhost : string ();>
 
 An interface method with a default implementation to return the remote host name.
+
+=head2 peerport
+
+C<method peerport : int ();>
+
+An interface method with a default implementation to return the port.
 
 =head1 Copyright & License
 
