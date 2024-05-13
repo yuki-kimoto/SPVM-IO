@@ -147,6 +147,61 @@ Reuse       (Deprecated prefer ReuseAddr)
     $self->SUPER::init($options);
   }
   
+  method sockaddr : Sys::Socket::In_addr_base () {
+    my $sockaddr = $self->sockname;
+    
+    my $in_addr_base = (Sys::Socket::In_addr_base)undef;
+    
+    my $domain = $self->{Domain};
+    if ($domain == SOCKET->AF_INET) {
+      $in_addr_base = $self->IO::Socket::INET::Import::IPv4::sockaddr;
+    }
+    elsif ($domain == SOCKET->AF_INET6) {
+      $in_addr_base = $self->IO::Socket::INET::Import::IPv6::sockaddr;
+    }
+    else {
+      die "[Unexpected Error]\$domain:$domain.";
+    }
+    
+    return $in_addr_base;
+  }
+  
+  method sockport : int () {
+    
+    my $sockport = -1;;
+    
+    my $domain = $self->{Domain};
+    if ($domain == SOCKET->AF_INET) {
+      $sockport = $self->IO::Socket::INET::Import::IPv4::sockport;
+    }
+    elsif ($domain == SOCKET->AF_INET6) {
+      $sockport = $self->IO::Socket::INET::Import::IPv6::sockport;
+    }
+    else {
+      die "[Unexpected Error]\$domain:$domain.";
+    }
+    
+    return $sockport;
+  }
+  
+  method sockhost : string () {
+    
+    my $sockhost = (string)undef;
+    
+    my $domain = $self->{Domain};
+    if ($domain == SOCKET->AF_INET) {
+      $sockhost = $self->IO::Socket::INET::Import::IPv4::sockhost;
+    }
+    elsif ($domain == SOCKET->AF_INET6) {
+      $sockhost = $self->IO::Socket::INET::Import::IPv6::sockhost;
+    }
+    else {
+      die "[Unexpected Error]\$domain:$domain.";
+    }
+    
+    return $sockhost;
+  }
+  
   method peeraddr : Sys::Socket::In_addr_base () {
     my $sockaddr = $self->peername;
     
