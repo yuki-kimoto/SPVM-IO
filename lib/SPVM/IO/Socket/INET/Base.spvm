@@ -6,6 +6,9 @@ class IO::Socket::INET::Base extends IO::Socket {
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;
   
+  use IO::Socket::INET::Import::IPv4;
+  use IO::Socket::INET::Import::IPv6;
+  
   # Fields
   has PeerAddr : protected string;
   has PeerPort : protected int;

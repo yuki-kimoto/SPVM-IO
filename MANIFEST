@@ -1,5 +1,4 @@
 Changes
-core
 lib/SPVM/IO.pm
 lib/SPVM/IO.spvm
 lib/SPVM/IO/File.pm
@@ -14,6 +13,10 @@ lib/SPVM/IO/Socket/INET.pm
 lib/SPVM/IO/Socket/INET.spvm
 lib/SPVM/IO/Socket/INET/Base.pm
 lib/SPVM/IO/Socket/INET/Base.spvm
+lib/SPVM/IO/Socket/INET/Import/IPv4.pm
+lib/SPVM/IO/Socket/INET/Import/IPv4.spvm
+lib/SPVM/IO/Socket/INET/Import/IPv6.pm
+lib/SPVM/IO/Socket/INET/Import/IPv6.spvm
 lib/SPVM/IO/Socket/INET6.pm
 lib/SPVM/IO/Socket/INET6.spvm
 lib/SPVM/IO/Socket/IP.pm
