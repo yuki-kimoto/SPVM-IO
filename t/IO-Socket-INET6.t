@@ -8,17 +8,17 @@ BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 
 use SPVM 'TestCase::IO::Socket::INET6';
 
-use Net::EmptyPort qw(can_bind);
-
 unless ($] >= 5.032000) {
   plan skip_all => 'This test is skipped because it needs Perl v.5.32.0+';
 }
 
-unless (can_bind('::1')) {
+require Net::EmptyPort;
+require Test::TCP;
+
+unless (Net::EmptyPort::can_bind('::1')) {
   plan skip_all => "IPv6 not available"
 }
 
-require Test::TCP;
 require HTTP::Tiny;
 
 require Mojolicious::Command::daemon;
