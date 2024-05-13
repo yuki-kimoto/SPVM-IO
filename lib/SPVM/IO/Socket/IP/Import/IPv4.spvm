@@ -3,6 +3,8 @@
 
 class IO::Socket::IP::Import::IPv4 : interface_t {
   
+  allow IO::Socket::IP;
+  
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;
   use Sys::Socket::Sockaddr::In;
@@ -10,33 +12,10 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
   use Sys::Socket::Util;
   use IO::Socket::IP;
   
-  # Instance Methods
-  method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
-    
-    # Socket information
-    my $socket_address = Sys::Socket::Sockaddr::In->new;
-    $socket_address->set_sin_family(SOCKET->AF_INET);
-    $socket_address->set_sin_port(Sys::Socket->htons((short)$port));
-    
-    my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
-    
-    my $hints = Sys::Socket::Addrinfo->new;
-    $hints->set_ai_family(SOCKET->AF_INET);
-    
-    Sys::Socket->getaddrinfo($address, undef, $hints, $res_ref);
-    
-    my $res = $res_ref->[0];
-    
-    if ($res) {
-      my $res_array = $res->to_array;
-      $socket_address->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
-    }
-    else {
-      die "Sys::Socket->getaddrinfo cannot get an address.";
-    }
-    
-    return $socket_address;
-  }
+  # Interface Methods
+  method peername : Sys::Socket::Sockaddr ();
+  
+  method sockname : Sys::Socket::Sockaddr ();
   
   method sockaddr : Sys::Socket::In_addr_base () {
     my $sockaddr_in_sock = (Sys::Socket::Sockaddr::In)$self->sockname;
@@ -94,8 +73,31 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     return $peerhost;
   }
   
-  method peername : Sys::Socket::Sockaddr ();
-  
-  method sockname : Sys::Socket::Sockaddr ();
+  private method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
+    
+    # Socket information
+    my $socket_address = Sys::Socket::Sockaddr::In->new;
+    $socket_address->set_sin_family(SOCKET->AF_INET);
+    $socket_address->set_sin_port(Sys::Socket->htons((short)$port));
+    
+    my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
+    
+    my $hints = Sys::Socket::Addrinfo->new;
+    $hints->set_ai_family(SOCKET->AF_INET);
+    
+    Sys::Socket->getaddrinfo($address, undef, $hints, $res_ref);
+    
+    my $res = $res_ref->[0];
+    
+    if ($res) {
+      my $res_array = $res->to_array;
+      $socket_address->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
+    }
+    else {
+      die "Sys::Socket->getaddrinfo cannot get an address.";
+    }
+    
+    return $socket_address;
+  }
   
 }
