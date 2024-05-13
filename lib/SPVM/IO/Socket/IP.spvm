@@ -19,7 +19,6 @@ class IO::Socket::IP extends IO::Socket {
   has Broadcast : protected int;
   has MultiHomed : protected int;
   
-  has peer_port : int;
   has local_address : string;
   has local_port : int;
   has proto_number : int;
@@ -83,7 +82,7 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     # PeerPort option
     my $peer_port = $options_h->delete_or_default_int("PeerPort", -1);
-    $self->{peer_port} = $peer_port;
+    $self->{PeerPort} = $peer_port;
     
     # LocalAddr option
     my $local_address = $options_h->delete_or_default_string("LocalAddr", undef);
