@@ -16,42 +16,59 @@ The IO::Socket::IP::Import::IPv4 class in L<SPVM> has methods to do someting.
 
   use IO::Socket::IP::Import::IPv4;
 
-=head1 Details
+=head1 Interface Methods
 
+=head2 peername
 
+C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
-=head1 Inheritance
+An interface method to return the information containing the remote address and port.
 
+=head2 sockname
 
+C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
-=head1 Interfaces
+An interface method to return the information containing the local address and port.
 
+=head2 sockaddr
 
+C<method sockaddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
 
-=head1 Enumerations
+An interface method with a default implementation to return the local address.
 
+The local address is a L<Sys::Socket::In_addr|SPVM::Sys::Socket::In_addr> object.
 
+=head2 sockport
 
-=head1 Fields
+C<method sockport : int ();>
 
+An interface method with a default implementation to return the local port.
 
+=head2 sockhost
 
-=head1 Class Methods
+C<method sockhost : string ();>
 
+An interface method with a default implementation to return the local host name.
 
+=head2 peeraddr
 
-=head1 Instance Methods
+C<method peeraddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
 
+An interface method with a default implementation to return the remote address.
 
+The remote address is a L<Sys::Socket::In_addr|SPVM::Sys::Socket::In_addr> object.
 
+=head2 peerport
 
-=head1 Repository
+C<method peerport : int ();>
 
+An interface method with a default implementation to return the port.
 
+=head2 peerhost
 
-=head1 Author
+C<method peerhost : string ();>
 
-Yuki Kimoto C<kimoto.yuki@gmail.com>
+An interface method with a default implementation to return the remote host name.
 
 =head1 Copyright & License
 
