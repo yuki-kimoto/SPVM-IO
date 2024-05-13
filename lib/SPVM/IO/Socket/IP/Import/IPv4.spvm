@@ -13,8 +13,6 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
   use IO::Socket::IP;
   
   # Interface Methods
-  method peername : Sys::Socket::Sockaddr ();
-  
   method sockname : Sys::Socket::Sockaddr ();
   
   method sockaddr : Sys::Socket::In_addr_base () {
@@ -44,6 +42,8 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     }
     return $sockhost;
   }
+  
+  method peername : Sys::Socket::Sockaddr ();
   
   method peeraddr : Sys::Socket::In_addr_base () {
     my $sockaddr_in = $self->peername;

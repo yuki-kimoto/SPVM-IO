@@ -18,12 +18,6 @@ The IO::Socket::IP::Import::IPv4 class in L<SPVM> has methods to do someting.
 
 =head1 Interface Methods
 
-=head2 peername
-
-C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
-
-An interface method to return the information containing the remote address and port.
-
 =head2 sockname
 
 C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
@@ -49,6 +43,12 @@ An interface method with a default implementation to return the local port.
 C<method sockhost : string ();>
 
 An interface method with a default implementation to return the local host name.
+
+=head2 peername
+
+C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
+
+An interface method to return the information containing the remote address and port.
 
 =head2 peeraddr
 
