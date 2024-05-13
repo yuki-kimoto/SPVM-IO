@@ -6,8 +6,8 @@ class IO::Socket::IP extends IO::Socket {
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;
   
-  use IO::Socket::INET::Import::IPv4;
-  use IO::Socket::INET::Import::IPv6;
+  use IO::Socket::IP::Import::IPv4;
+  use IO::Socket::IP::Import::IPv6;
   
   # Fields
   has PeerAddr : protected string;
@@ -151,10 +151,10 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $domain = $self->{Domain};
     if ($domain == SOCKET->AF_INET) {
-      $socket_address = $self->IO::Socket::INET::Import::IPv4::create_socket_address($address, $port);
+      $socket_address = $self->IO::Socket::IP::Import::IPv4::create_socket_address($address, $port);
     }
     elsif ($domain == SOCKET->AF_INET6) {
-      $socket_address = $self->IO::Socket::INET::Import::IPv6::create_socket_address($address, $port);
+      $socket_address = $self->IO::Socket::IP::Import::IPv6::create_socket_address($address, $port);
     }
     else {
       die "[Unexpected Error]\$domain:$domain.";
@@ -170,10 +170,10 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $domain = $self->{Domain};
     if ($domain == SOCKET->AF_INET) {
-      $in_addr_base = $self->IO::Socket::INET::Import::IPv4::sockaddr;
+      $in_addr_base = $self->IO::Socket::IP::Import::IPv4::sockaddr;
     }
     elsif ($domain == SOCKET->AF_INET6) {
-      $in_addr_base = $self->IO::Socket::INET::Import::IPv6::sockaddr;
+      $in_addr_base = $self->IO::Socket::IP::Import::IPv6::sockaddr;
     }
     else {
       die "[Unexpected Error]\$domain:$domain.";
@@ -188,10 +188,10 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $domain = $self->{Domain};
     if ($domain == SOCKET->AF_INET) {
-      $sockport = $self->IO::Socket::INET::Import::IPv4::sockport;
+      $sockport = $self->IO::Socket::IP::Import::IPv4::sockport;
     }
     elsif ($domain == SOCKET->AF_INET6) {
-      $sockport = $self->IO::Socket::INET::Import::IPv6::sockport;
+      $sockport = $self->IO::Socket::IP::Import::IPv6::sockport;
     }
     else {
       die "[Unexpected Error]\$domain:$domain.";
@@ -206,10 +206,10 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $domain = $self->{Domain};
     if ($domain == SOCKET->AF_INET) {
-      $sockhost = $self->IO::Socket::INET::Import::IPv4::sockhost;
+      $sockhost = $self->IO::Socket::IP::Import::IPv4::sockhost;
     }
     elsif ($domain == SOCKET->AF_INET6) {
-      $sockhost = $self->IO::Socket::INET::Import::IPv6::sockhost;
+      $sockhost = $self->IO::Socket::IP::Import::IPv6::sockhost;
     }
     else {
       die "[Unexpected Error]\$domain:$domain.";
@@ -225,10 +225,10 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $domain = $self->{Domain};
     if ($domain == SOCKET->AF_INET) {
-      $in_addr_base = $self->IO::Socket::INET::Import::IPv4::peeraddr;
+      $in_addr_base = $self->IO::Socket::IP::Import::IPv4::peeraddr;
     }
     elsif ($domain == SOCKET->AF_INET6) {
-      $in_addr_base = $self->IO::Socket::INET::Import::IPv6::peeraddr;
+      $in_addr_base = $self->IO::Socket::IP::Import::IPv6::peeraddr;
     }
     else {
       die "[Unexpected Error]\$domain:$domain.";
@@ -243,10 +243,10 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $domain = $self->{Domain};
     if ($domain == SOCKET->AF_INET) {
-      $peerport = $self->IO::Socket::INET::Import::IPv4::peerport;
+      $peerport = $self->IO::Socket::IP::Import::IPv4::peerport;
     }
     elsif ($domain == SOCKET->AF_INET6) {
-      $peerport = $self->IO::Socket::INET::Import::IPv6::peerport;
+      $peerport = $self->IO::Socket::IP::Import::IPv6::peerport;
     }
     else {
       die "[Unexpected Error]\$domain:$domain.";
@@ -261,10 +261,10 @@ Reuse       (Deprecated prefer ReuseAddr)
     
     my $domain = $self->{Domain};
     if ($domain == SOCKET->AF_INET) {
-      $peerhost = $self->IO::Socket::INET::Import::IPv4::peerhost;
+      $peerhost = $self->IO::Socket::IP::Import::IPv4::peerhost;
     }
     elsif ($domain == SOCKET->AF_INET6) {
-      $peerhost = $self->IO::Socket::INET::Import::IPv6::peerhost;
+      $peerhost = $self->IO::Socket::IP::Import::IPv6::peerhost;
     }
     else {
       die "[Unexpected Error]\$domain:$domain.";

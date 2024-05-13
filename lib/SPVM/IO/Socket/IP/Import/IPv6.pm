@@ -1,4 +1,4 @@
-package SPVM::IO::Socket::INET::Import::IPv6;
+package SPVM::IO::Socket::IP::Import::IPv6;
 
 
 
@@ -6,15 +6,15 @@ package SPVM::IO::Socket::INET::Import::IPv6;
 
 =head1 Name
 
-SPVM::IO::Socket::INET::Import::IPv6 - Short Description
+SPVM::IO::Socket::IP::Import::IPv6 - Short Description
 
 =head1 Description
 
-The IO::Socket::INET::Import::IPv6 class in L<SPVM> has methods to do someting.
+The IO::Socket::IP::Import::IPv6 class in L<SPVM> has methods to do someting.
 
 =head1 Usage
 
-  use IO::Socket::INET::Import::IPv6;
+  use IO::Socket::IP::Import::IPv6;
 
 =head1 Details
 
