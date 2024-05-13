@@ -100,11 +100,11 @@ class IO::Socket::IP extends IO::Socket {
     my $local_port = $options_h->delete_or_default_int("LocalPort", -1);
     $self->{LocalPort} = $local_port;
     
-    my $sockdomain = $options_h->delete_or_default_int("Domain", -1);
-    unless ($sockdomain >= 0) {
-      $sockdomain = SOCKET->AF_INET;
+    my $domain = $options_h->delete_or_default_int("Domain", -1);
+    unless ($domain >= 0) {
+      $domain = SOCKET->AF_INET;
     }
-    $self->{Domain} = $sockdomain;
+    $self->{Domain} = $domain;
     
     # LocalPort option
     my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
@@ -129,10 +129,7 @@ class IO::Socket::IP extends IO::Socket {
     my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
     $self->{Listen} = $listen_backlog;
     
-    my $domain = $self->sockdomain;
-    my $socktype = $self->socktype;
-    
-    $self->socket($domain, $socktype, $proto);
+    $self->socket($domain, $type, $proto);
     
     if ($local_port >= 0) {
       my $local_socket_address = $self->create_socket_address($local_address, $local_port);
