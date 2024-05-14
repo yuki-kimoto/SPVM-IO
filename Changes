@@ -7,6 +7,13 @@
     * The default value of Listen option is changed from 5 to -1.
   [Changes]
     * If Listen option is specified and LocalAddress option is not specified, LocalAddress field is set to "127.0.0.1" (IPv4) or ::1" (IPv6).
+  [Test Requirement Changes]
+    * If Perl is v5.32.0+, tests requires the following modules.
+      Mojolicious
+      Test::TCP
+      IO
+      Test::UNIXSock
+    
 0.211002 2023-12-07
   [Prerequirement Changes]
     * Require SPVM::Sys 0.510.

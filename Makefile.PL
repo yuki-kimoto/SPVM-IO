@@ -29,6 +29,7 @@ if ($] >= 5.032000) {
   $test_requires{'Mojolicious'} = '9.36';
   $test_requires{'Test::TCP'} = '2.22';
   $test_requires{'IO'} = '1.55';
+  $test_requires{'Test::UNIXSock'} = '0.4';
 }
 
 WriteMakefile(
