@@ -68,7 +68,7 @@ An interface method with a default implementation to return the remote host name
 
 C<method peerport : int ();>
 
-An interface method with a default implementation to return the port.
+An interface method with a default implementation to return the remote port.
 
 =head1 Copyright & License
 

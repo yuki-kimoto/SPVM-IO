@@ -51,25 +51,47 @@ L<IO::Socket|SPVM::IO::Socket>
 
 =head1 Fields
 
-=head2 peer_address
+=head2 LocalAddr
 
-  has peer_address : string;
+C<has LocalAddr : protected string;>
 
-=head2 peer_port
+A local address.
 
-  has peer_port : int;
+=head2 LocalPort
 
-=head2 local_address
+C<has LocalPort : protected int;>
 
-  has local_address : string;
+A local port.
 
-=head2 local_port
+=head2 PeerAddr
 
-  has local_port : int;
+C<has PeerAddr : protected string;>
 
-=head2 proto_number
+A remote address.
 
-  has proto_number : int;
+=head2 PeerPort
+
+C<has PeerPort : protected int;>
+
+A remote port
+
+=head2 ReuseAddr
+
+C<has ReuseAddr : protected int;>
+
+If this field is a true value, The L<SO_REUSEADDR|https://linux.die.net/man/3/setsockopt> socket option is set.
+
+=head2 ReusePort
+
+C<has ReusePort : protected int;>
+
+If this field is a true value, The C<SO_REUSEPORT> socket option is set.
+
+=head2 Broadcast
+
+C<has Broadcast : protected int;>
+
+If this field is a true value, The L<SO_BROADCAST|https://linux.die.net/man/3/setsockopt> socket option is set.
 
 =head1 Class Methods
 
@@ -77,7 +99,9 @@ L<IO::Socket|SPVM::IO::Socket>
 
   static method new : IO::Socket::IP ($options : object[] = undef);
 
-=head3 new Options
+Options:
+
+Adding the following options, options in L<IO::Socket#new|SPVM::IO::Socket/new> method can be used.
 
 =over 2
 
@@ -113,31 +137,43 @@ L<IO::Socket|SPVM::IO::Socket>
 
 =head2 init
 
-  protected method init : void ($options : object[] = undef);
+C<protected method init : void ($options : object[] = undef);>
 
 =head2 sockaddr
 
-  method sockaddr : Sys::Socket::In_addr ();
+C<method sockaddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
 
-=head2 sockport
-
-  method sockport : int ();
+Returns the local address.
 
 =head2 sockhost
 
-  method sockhost : string ();
+C<method sockhost : string ();>
+
+Returns the local host name.
+
+=head2 sockport
+
+C<method sockport : int ();>
+
+Returns the local port.
 
 =head2 peeraddr
 
-  method peeraddr : Sys::Socket::In_addr ();
+C<method peeraddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
 
-=head2 peerport
-
-  method peerport : int ();
+Return the remote address.
 
 =head2 peerhost
 
-  method peerhost : string ();
+C<method peerhost : string ();>
+
+Returns the remote host name.
+
+=head2 peerport
+
+C<method peerport : int ();>
+
+Returns the remote port.
 
 =head1 Well Known Child Classes
 
