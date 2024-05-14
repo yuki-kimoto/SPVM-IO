@@ -89,8 +89,8 @@ class IO::Socket::IP extends IO::Socket {
       elsif ($proto == SOCKET->IPPROTO_ICMP) {
         $type = SOCKET->SOCK_RAW;
       }
-      $self->{Type} = $type;
     }
+    $self->{Type} = $type;
     
     $self->socket($domain, $type, $proto);
     
