@@ -54,45 +54,14 @@ class IO::Socket::IP extends IO::Socket {
     return $option_names;
   }
   
+  # Instance Methods
   protected method init : void ($options : object[] = undef) {
+    
+    my $options_h = Hash->new($options);
     
     Fn->check_option_names($options, $self->option_names);
     
     $self->SUPER::init($options);
-  }
-  
-  # Instance Methods
-  protected method configure : void ($options : object[] = undef) {
-    
-    my $options_h = Hash->new($options);
-    
-    # Domain option
-    my $domain = $options_h->delete_or_default_int("Domain", -1);
-    unless ($domain >= 0) {
-      $domain = SOCKET->AF_INET;
-    }
-    $self->{Domain} = $domain;
-    
-    # Proto option
-    my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
-    $self->{Proto} = $proto;
-    
-    # Type option
-    my $type = $options_h->delete_or_default_int("Type", -1);
-    unless ($type >= 0) {
-      if ($proto == SOCKET->IPPROTO_TCP) {
-        $type = SOCKET->SOCK_STREAM;
-      }
-      elsif ($proto == SOCKET->IPPROTO_UDP) {
-        $type = SOCKET->SOCK_DGRAM;
-      }
-      elsif ($proto == SOCKET->IPPROTO_ICMP) {
-        $type = SOCKET->SOCK_RAW;
-      }
-    }
-    $self->{Type} = $type;
-    
-    $self->socket($domain, $type, $proto);
     
     # LocalAddr option
     my $local_address = $options_h->delete_or_default_string("LocalAddr", undef);
@@ -144,6 +113,39 @@ class IO::Socket::IP extends IO::Socket {
       $self->connect($peer_socket_address);
     }
     
+  }
+  
+  protected method configure : void ($options : object[] = undef) {
+    
+    my $options_h = Hash->new($options);
+    
+    # Domain option
+    my $domain = $options_h->delete_or_default_int("Domain", -1);
+    unless ($domain >= 0) {
+      $domain = SOCKET->AF_INET;
+    }
+    $self->{Domain} = $domain;
+    
+    # Proto option
+    my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
+    $self->{Proto} = $proto;
+    
+    # Type option
+    my $type = $options_h->delete_or_default_int("Type", -1);
+    unless ($type >= 0) {
+      if ($proto == SOCKET->IPPROTO_TCP) {
+        $type = SOCKET->SOCK_STREAM;
+      }
+      elsif ($proto == SOCKET->IPPROTO_UDP) {
+        $type = SOCKET->SOCK_DGRAM;
+      }
+      elsif ($proto == SOCKET->IPPROTO_ICMP) {
+        $type = SOCKET->SOCK_RAW;
+      }
+    }
+    $self->{Type} = $type;
+    
+    $self->socket($domain, $type, $proto);
   }
   
   method sockaddr : Sys::Socket::In_addr_base () {
