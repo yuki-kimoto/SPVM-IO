@@ -109,7 +109,7 @@ class IO::Socket::IP extends IO::Socket {
     
     # PeerPort option
     my $peer_port = $options_h->delete_or_default_int("PeerPort", -1);
-    $self->{PeerPort} = $peer_port;
+    $self->{PeerPort} = $peer_port;F
     
     # ReuseAddr option
     my $reuse_addr = $options_h->delete_or_default_int("ReuseAddr", 0);

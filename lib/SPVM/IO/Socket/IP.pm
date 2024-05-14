@@ -11,39 +11,34 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
   use IO::Socket::IP;
   use Sys::Socket;
   use Sys::Socket::Constant as SOCKET;
-
-  # Socket
-  my $host = "google.com";
+  
+  # Client Socket
+  my $host = "www.perl.org";
   my $port = 80;
   my $io_socket = IO::Socket::IP->new({
     PeerAddr => $host,
     PeerPort => $port
   });
   
+  # Server Socket
   my $io_socket = IO::Socket::IP->new({
-    PeerAddr => 'www.perl.org',
-    PeerPort => 80,
-    Proto    => SOCKET->IPPROTO_TCP
-  });
- 
-  my $io_socket = IO::Socket::IP->new({
-    Listen    => 5,
     LocalAddr => 'localhost',
     LocalPort => 9000,
-    Proto     => SOCKET->IPPROTO_TCP
+    Listen    => 5,
   });
    
+  # IPv6 Client Socket
+  my $host = "google.com";
+  my $port = 80;
   my $io_socket = IO::Socket::IP->new({
-    PeerPort  => 9999,
-    PeerAddr  => Sys::Socket->inet_ntoa(SOCKET->INADDR_BROADCAST),
-    Proto     => SOCKET->IPPROTO_UDP,
-    LocalAddr => 'localhost',
-    Broadcast => 1
-  })
+    PeerAddr => $host,
+    PeerPort => $port,
+    Domain => SOCKET->AF_INET6,
+  });
 
 =head1 Description
 
-The IO::Socket::INET class in L<SPVM> has methods to create IPv4/IPv6 Sockets.
+IO::Socket::INET class in L<SPVM> has methods to create IPv4/IPv6 Sockets.
 
 =head1 Super Class
 
@@ -97,41 +92,55 @@ If this field is a true value, The L<SO_BROADCAST|https://linux.die.net/man/3/se
 
 =head2 new
 
-  static method new : IO::Socket::IP ($options : object[] = undef);
+C<static method new : L<IO::Socket::IP|SPVM::IO::Socket::IP> ($options : object[] = undef);>
+
+Creates a new L<IO::Socket::IP|SPVM::IO::Socket::IP> object.
+
+And creates a socket.
+
+And if L</"ReuseAddr"> field is defined, L<connect|https://linux.die.net/man/2/connect> is executed.
+
+And if L</"LocalPort"> field is defined, L<bind|https://linux.die.net/man/2/bind> and L<listen|https://linux.die.net/man/2/listen> are executed.
+
+And returns the new object.
 
 Options:
 
-Adding the following options, options in L<IO::Socket#new|SPVM::IO::Socket/new> method can be used.
-
 =over 2
 
-=item * ReuseAddr : string
-  
-=item * ReusePort : Int
-  
-=item * Broadcast : Int
+=item * C<ReuseAddr> : string
 
-=item * PeerAddr : string
+L</"ReuseAddr"> field is set to this value.
 
-=item * PeerPort : Int
+=item * C<ReusePort> : Int
 
-=item * LocalAddr : string
+L</"ReusePort"> field is set to this value.
 
-=item * LocalPort : Int
+=item * C<Broadcast> : Int
 
-=item * Proto : Int
+L</"Broadcast"> field is set to this value.
 
-=item * Timeout : Int
+=item * C<PeerAddr> : string
 
-=item * Domain : Int
+A remote address.
 
-=item * Type : Int
+L</"PeerAddr"> field is set to this value.
 
-=item * Blocking : Int
+=item * C<PeerPort> : Int
 
-=item * Listen : Int
+L</"PeerPort"> field is set to this value.
+
+=item * C<LocalAddr> : string
+
+L</"LocalAddr"> field is set to this value.
+
+=item * C<LocalPort> : Int
+
+L</"LocalPort"> field is set to this value.
 
 =back
+
+Adding the above options, options in L<IO::Socket#new|SPVM::IO::Socket/"new"> method are available.
 
 =head1 Instance Methods
 
@@ -139,11 +148,17 @@ Adding the following options, options in L<IO::Socket#new|SPVM::IO::Socket/new> 
 
 C<protected method init : void ($options : object[] = undef);>
 
+Initializes this instance.
+
 =head2 sockaddr
 
 C<method sockaddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
 
 Returns the local address.
+
+If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockaddr|IO::Socket::IP::Import::IPv4/"sockaddr"> method.
+
+If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockaddr|IO::Socket::IP::Import::IPv6/"sockaddr"> method.
 
 =head2 sockhost
 
@@ -151,11 +166,19 @@ C<method sockhost : string ();>
 
 Returns the local host name.
 
+If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockhost|IO::Socket::IP::Import::IPv4/"sockhost"> method.
+
+If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockhost|IO::Socket::IP::Import::IPv6/"sockhost"> method.
+
 =head2 sockport
 
 C<method sockport : int ();>
 
 Returns the local port.
+
+If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockport|IO::Socket::IP::Import::IPv4/"sockport"> method.
+
+If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockport|IO::Socket::IP::Import::IPv6/"sockport"> method.
 
 =head2 peeraddr
 
@@ -163,17 +186,29 @@ C<method peeraddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base>
 
 Return the remote address.
 
+If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peeraddr|IO::Socket::IP::Import::IPv4/"peeraddr"> method.
+
+If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peeraddr|IO::Socket::IP::Import::IPv6/"peeraddr"> method.
+
 =head2 peerhost
 
 C<method peerhost : string ();>
 
 Returns the remote host name.
 
+If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerhost|IO::Socket::IP::Import::IPv4/"peerhost"> method.
+
+If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerhost|IO::Socket::IP::Import::IPv6/"peerhost"> method.
+
 =head2 peerport
 
 C<method peerport : int ();>
 
 Returns the remote port.
+
+If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerport|IO::Socket::IP::Import::IPv4/"peerport"> method.
+
+If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerport|IO::Socket::IP::Import::IPv6/"peerport"> method.
 
 =head1 Well Known Child Classes
 
