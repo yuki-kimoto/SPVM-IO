@@ -56,25 +56,16 @@ class IO::Socket::IP extends IO::Socket {
   
   protected method init : void ($options : object[] = undef) {
     
-    Fn->check_option_names($options, $self->option_names);
-    
-    $self->SUPER::init($options);
-  }
-  
-  # Instance Methods
-  protected method configure : void ($options : object[] = undef) {
-    
     my $options_h = Hash->new($options);
     
+    # Domain option
     my $domain = $options_h->delete_or_default_int("Domain", -1);
     unless ($domain >= 0) {
       $domain = SOCKET->AF_INET;
     }
-    $self->{Domain} = $domain;
     
-    # LocalPort option
+    # Proto option
     my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
-    $self->{Proto} = $proto;
     
     # Type option
     my $type = $options_h->delete_or_default_int("Type", -1);
@@ -88,8 +79,11 @@ class IO::Socket::IP extends IO::Socket {
       elsif ($proto == SOCKET->IPPROTO_ICMP) {
         $type = SOCKET->SOCK_RAW;
       }
-      $self->{Type} = $type;
     }
+    
+    my $super_options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type});
+    
+    $self->SUPER::init($super_options);
     
     # LocalAddr option
     my $local_address = $options_h->delete_or_default_string("LocalAddr", undef);
@@ -125,8 +119,6 @@ class IO::Socket::IP extends IO::Socket {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
     }
     
-    $self->socket($domain, $type, $proto);
-    
     if ($local_port >= 0) {
       my $local_socket_address = $self->create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
@@ -145,6 +137,7 @@ class IO::Socket::IP extends IO::Socket {
     
   }
   
+  # Instance Methods
   method sockaddr : Sys::Socket::In_addr_base () {
     my $sockaddr = $self->sockname;
     

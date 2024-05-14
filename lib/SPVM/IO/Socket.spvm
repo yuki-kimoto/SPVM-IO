@@ -16,7 +16,6 @@ class IO::Socket extends IO::Handle {
   use Fn;
   
   # Fields
-  
   has Domain : protected int;
   has Type : protected int;
   has Proto : protected int;
@@ -46,13 +45,25 @@ class IO::Socket extends IO::Handle {
     
     my $options_h = Hash->new($options);
     
+    # Domain option
+    my $domain = $options_h->delete_or_default_int("Domain", -1);
+    $self->{Domain} = $domain;
+    
+    # Proto option
+    my $proto = $options_h->delete_or_default_int("Proto", -1);
+    $self->{Proto} = $domain;
+    
+    # Type option
+    my $type = $options_h->delete_or_default_int("Type", -1);
+    $self->{Type} = $type;
+    
     my $listen_backlog = $options_h->delete_or_default_int("Listen", -1);
     $self->{Listen} = $listen_backlog;
     
     my $timeout = $options_h->delete_or_default_double("Timeout", 0.0);
     $self->{Timeout} = $timeout;
     
-    $self->configure($options_h->to_array);
+    $self->socket($domain, $type, $proto);
     
     $self->set_blocking(0);
   }
