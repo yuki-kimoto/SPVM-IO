@@ -91,10 +91,6 @@ class IO::Socket::IP extends IO::Socket {
       $self->{Type} = $type;
     }
     
-    # Listen option
-    my $listen_backlog = $options_h->delete_or_default_int("Listen", 5);
-    $self->{Listen} = $listen_backlog;
-    
     # LocalAddr option
     my $local_address = $options_h->delete_or_default_string("LocalAddr", undef);
     $self->{LocalAddr} = $local_address;
@@ -109,7 +105,7 @@ class IO::Socket::IP extends IO::Socket {
     
     # PeerPort option
     my $peer_port = $options_h->delete_or_default_int("PeerPort", -1);
-    $self->{PeerPort} = $peer_port;F
+    $self->{PeerPort} = $peer_port;
     
     # ReuseAddr option
     my $reuse_addr = $options_h->delete_or_default_int("ReuseAddr", 0);
@@ -134,7 +130,11 @@ class IO::Socket::IP extends IO::Socket {
     if ($local_port >= 0) {
       my $local_socket_address = $self->create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
+      
       my $listen = $self->{Listen};
+      unless ($listen > 0) {
+        die "\"Listen\" field must be greater than 0.";
+      }
       $self->listen($listen);
     }
     

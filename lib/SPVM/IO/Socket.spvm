@@ -46,6 +46,9 @@ class IO::Socket extends IO::Handle {
     
     my $options_h = Hash->new($options);
     
+    my $listen_backlog = $options_h->delete_or_default_int("Listen", -1);
+    $self->{Listen} = $listen_backlog;
+    
     my $timeout = $options_h->delete_or_default_double("Timeout", 0.0);
     $self->{Timeout} = $timeout;
     

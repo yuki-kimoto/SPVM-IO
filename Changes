@@ -3,7 +3,9 @@
     * Fix the bug that IO::Socket::INET uses IPv6 addrinfo.
   [New Features]
     * Add the IO::Socket::INET6 class.
-  
+  [Imcompatible Changes]
+    * The default value of Listen option is changed from 5 to -1.
+    
 0.211002 2023-12-07
   [Prerequirement Changes]
     * Require SPVM::Sys 0.510.
