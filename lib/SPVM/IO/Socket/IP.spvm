@@ -119,22 +119,34 @@ class IO::Socket::IP extends IO::Socket {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
     }
     
-    if ($local_port >= 0) {
+    my $listen = $self->{Listen};
+    if ($listen >= 0) {
+      unless ($local_address) {
+        if ($domain == SOCKET->AF_INET) {
+          $self->{LocalAddr} = "127.0.0.1";
+        }
+        elsif ($domain == SOCKET->AF_INET6) {
+          $self->{LocalAddr} = "::1";
+        }
+        else {
+          die "[Unexpected Error]\$domain:$domain.";
+        }
+      }
+      
+      my $local_address = $self->{LocalAddr};
+      
       my $local_socket_address = $self->create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
       
-      my $listen = $self->{Listen};
-      unless ($listen > 0) {
-        die "\"Listen\" field must be greater than 0.";
-      }
       $self->listen($listen);
     }
-    
-    if ($peer_address) {
+    elsif ($peer_address) {
       my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
       $self->connect($peer_socket_address);
     }
-    
+    else {
+      die "\"Listen\" option or \"PerrAddr\" option must be specified.";
+    }
   }
   
   # Instance Methods
