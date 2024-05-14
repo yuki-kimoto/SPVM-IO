@@ -66,13 +66,14 @@ class IO::Socket::IP extends IO::Socket {
     
     my $options_h = Hash->new($options);
     
+    # Domain option
     my $domain = $options_h->delete_or_default_int("Domain", -1);
     unless ($domain >= 0) {
       $domain = SOCKET->AF_INET;
     }
     $self->{Domain} = $domain;
     
-    # LocalPort option
+    # Proto option
     my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
     $self->{Proto} = $proto;
     
@@ -90,6 +91,8 @@ class IO::Socket::IP extends IO::Socket {
       }
       $self->{Type} = $type;
     }
+    
+    $self->socket($domain, $type, $proto);
     
     # LocalAddr option
     my $local_address = $options_h->delete_or_default_string("LocalAddr", undef);
@@ -124,8 +127,6 @@ class IO::Socket::IP extends IO::Socket {
     if ($broadcast) {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
     }
-    
-    $self->socket($domain, $type, $proto);
     
     if ($local_port >= 0) {
       my $local_socket_address = $self->create_socket_address($local_address, $local_port);
