@@ -59,8 +59,6 @@ class IO::Socket::IP extends IO::Socket {
     
     my $options_h = Hash->new($options);
     
-    Fn->check_option_names($options, $self->option_names);
-    
     $self->SUPER::init($options);
     
     # LocalAddr option
