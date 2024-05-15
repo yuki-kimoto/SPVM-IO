@@ -64,6 +64,7 @@ class IO::Socket::UNIX extends IO::Socket {
     
     $options_h->delete("Listen");
     
+    $self->set_blocking(0);
   }
   
   method hostpath : string () {
