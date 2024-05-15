@@ -56,8 +56,6 @@ class IO::Socket::IP extends IO::Socket {
   
   protected method init : void ($options : object[] = undef) {
     
-    Fn->check_option_names($options, $self->option_names);
-    
     $self->SUPER::init($options);
   }
   
