@@ -65,9 +65,9 @@ class IO::Socket extends IO::Handle {
     
     $self->socket;
     
-    $self->set_blocking(0);
-    
     $self->configure($options_h->to_array);
+    
+    $self->set_blocking(0);
   }
   
   protected method configure : void ($options : object[] = undef) { die "Not implemented."; }
