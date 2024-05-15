@@ -51,7 +51,7 @@ class IO::Socket::UNIX extends IO::Socket {
     }
     
     my $protocol = 0;
-    $self->socket($domain, $type, $protocol);
+    $self->socket;
     
     my $local = $options_h->delete_or_default_string("Local", undef);
     

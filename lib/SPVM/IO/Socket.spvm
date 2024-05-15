@@ -95,16 +95,18 @@ class IO::Socket extends IO::Handle {
     $self->close;
   }
   
-  method socket : void ($domain : int, $type : int, $protocol : int = 0) {
+  protected method socket : void () {
+    
+    my $domain = $self->{Domain};
+    
+    my $type = $self->{Type};
+    
+    my $protocol = $self->{Proto};
     
     my $fd = -1;
-    
     Sys->socket(\$fd, $domain, $type, $protocol);
     
     $self->{fd} = $fd;
-    $self->{Domain} = $domain;
-    $self->{Type} = $type;
-    $self->{Proto} = $protocol;
   }
   
   method socketpair : IO::Socket[] ($domain : int, $type : int, $protocol : int) {

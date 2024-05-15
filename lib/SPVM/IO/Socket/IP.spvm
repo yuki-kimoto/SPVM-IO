@@ -91,13 +91,7 @@ class IO::Socket::IP extends IO::Socket {
     
     my $options_h = Hash->new($options);
     
-    my $domain = $self->{Domain};
-    
-    my $type = $self->{Type};
-    
-    my $proto = $self->{Proto};
-    
-    $self->socket($domain, $type, $proto);
+    $self->socket;
     
     # LocalAddr option
     my $local_address = $options_h->get_or_default_string("LocalAddr", undef);
