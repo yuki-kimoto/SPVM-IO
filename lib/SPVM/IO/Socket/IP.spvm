@@ -85,20 +85,6 @@ class IO::Socket::IP extends IO::Socket {
     
     $self->SUPER::init($options);
     
-  }
-  
-  protected method configure : void ($options : object[] = undef) {
-    
-    my $options_h = Hash->new($options);
-    
-    my $domain = $self->{Domain};
-    
-    my $type = $self->{Type};
-    
-    my $proto = $self->{Proto};
-    
-    $self->socket($domain, $type, $proto);
-    
     # LocalAddr option
     my $local_address = $options_h->get_or_default_string("LocalAddr", undef);
     $self->{LocalAddr} = $local_address;
@@ -149,6 +135,19 @@ class IO::Socket::IP extends IO::Socket {
       $self->connect($peer_socket_address);
     }
     
+  }
+  
+  protected method configure : void ($options : object[] = undef) {
+    
+    my $options_h = Hash->new($options);
+    
+    my $domain = $self->{Domain};
+    
+    my $type = $self->{Type};
+    
+    my $proto = $self->{Proto};
+    
+    $self->socket($domain, $type, $proto);
   }
   
   method sockaddr : Sys::Socket::In_addr_base () {
