@@ -19,10 +19,6 @@ class IO::Socket::UNIX extends IO::Socket {
   }
   
   # Instance Methods
-  method new_from_instance : IO::Socket::UNIX ($options : object[] = undef) {
-    return IO::Socket::UNIX->new($options);
-  }
-  
   method option_names : string[] () {
     
     my $option_names = Array->merge_string(

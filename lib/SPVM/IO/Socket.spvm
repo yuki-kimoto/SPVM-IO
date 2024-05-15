@@ -14,6 +14,7 @@ class IO::Socket extends IO::Handle {
   use Go;
   use Sys::Socket::Errno;
   use Fn;
+  use Native::MethodCall;
   
   # Fields
   
@@ -65,12 +66,6 @@ class IO::Socket extends IO::Handle {
     $self->{Timeout} = $timeout;
     
     $self->socket;
-  }
-  
-  method new_from_instance : IO::Socket ($options : object[] = undef) {
-    my $io_socket = IO::Socket->new($options);
-    
-    return $io_socket;
   }
   
   method option_names : string[] () {
@@ -361,7 +356,8 @@ class IO::Socket extends IO::Handle {
       Proto => $self->protocol,
     };
     
-    my $client = $self->new_from_instance($options);
+    my $class = type_name $self;
+    my $client = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$self, $options]);
     
     if ($peer_ref) {
       $peer_ref->[0] = $client_socket_address;

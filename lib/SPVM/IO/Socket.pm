@@ -110,10 +110,6 @@ Gets the L</"Proto"> field.
 
 Gets the L</"Timeout"> field.
 
-=head2 new_from_instance
-
-  method new_from_instance : IO::Socket ($options : object[] = undef);
-
 =head2 peername
 
   method peername : Sys::Socket::Sockaddr ();
