@@ -5,7 +5,7 @@
     * Add the IO::Socket::INET6 class.
   [Imcompatible Changes]
     * The default value of Listen option is changed from 5 to -1.
-    * "Blocking" option is removed from IO::Socket because socket is always non-blocking to work with goroutine.
+    
 0.211002 2023-12-07
   [Prerequirement Changes]
     * Require SPVM::Sys 0.510.

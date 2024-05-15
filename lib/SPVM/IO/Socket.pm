@@ -74,6 +74,8 @@ The socket is set to non-blocking mode.
 
 =item * Proto : Int
 
+=item * Blocking : Int
+
 =item * Timeout : Double
 
 =item * Listen : Int
