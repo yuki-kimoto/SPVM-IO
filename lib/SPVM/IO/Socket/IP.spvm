@@ -83,6 +83,8 @@ class IO::Socket::IP extends IO::Socket {
     
     $options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type});
     
+    $self->SUPER::init($options);
+    
     # LocalAddr option
     my $local_address = $options_h->get_or_default_string("LocalAddr", undef);
     $self->{LocalAddr} = $local_address;
@@ -111,32 +113,6 @@ class IO::Socket::IP extends IO::Socket {
     my $broadcast = $options_h->get_or_default_int("Broadcast", 0);
     $self->{Broadcast} = $broadcast;
     
-    $self->SUPER::init($options);
-  }
-  
-  protected method configure : void ($options : object[] = undef) {
-    
-    # LocalAddr option
-    my $local_address = $self->{LocalAddr};
-    
-    # LocalPort option
-    my $local_port = $self->{LocalPort};
-    
-    # PeerAddr option
-    my $peer_address = $self->{PeerAddr};
-    
-    # PeerPort option
-    my $peer_port = $self->{PeerPort};
-    
-    # ReuseAddr option
-    my $reuse_addr = $self->{ReuseAddr};
-    
-    # ReusePort option
-    my $reuse_port = $self->{ReusePort};
-    
-    # Broadcast option
-    my $broadcast = $self->{Broadcast};
-    
     if ($reuse_addr) {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
     }
@@ -164,6 +140,10 @@ class IO::Socket::IP extends IO::Socket {
     }
     
     $self->set_blocking(0);
+  }
+  
+  protected method configure : void ($options : object[] = undef) {
+    
   }
   
   method sockaddr : Sys::Socket::In_addr_base () {
