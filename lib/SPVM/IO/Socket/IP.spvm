@@ -85,6 +85,53 @@ class IO::Socket::IP extends IO::Socket {
     
     $self->SUPER::init($options);
     
+    # LocalAddr option
+    my $local_address = $self->{LocalAddr};
+    
+    # LocalPort option
+    my $local_port = $self->{LocalPort};
+    
+    # PeerAddr option
+    my $peer_address = $self->{PeerAddr};
+    
+    # PeerPort option
+    my $peer_port = $self->{PeerPort};
+    
+    # ReuseAddr option
+    my $reuse_addr = $self->{ReuseAddr};
+    
+    # ReusePort option
+    my $reuse_port = $self->{ReusePort};
+    
+    # Broadcast option
+    my $broadcast = $self->{Broadcast};
+    
+    if ($reuse_addr) {
+      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
+    }
+    if ($reuse_port) {
+      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
+    }
+    if ($broadcast) {
+      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
+    }
+    
+    if ($local_port >= 0) {
+      my $local_socket_address = $self->create_socket_address($local_address, $local_port);
+      $self->bind($local_socket_address);
+      
+      my $listen = $self->{Listen};
+      unless ($listen > 0) {
+        die "\"Listen\" field must be greater than 0.";
+      }
+      $self->listen($listen);
+    }
+    
+    if ($peer_address) {
+      my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
+      $self->connect($peer_socket_address);
+    }
+    
   }
   
   protected method configure : void ($options : object[] = undef) {
@@ -126,32 +173,6 @@ class IO::Socket::IP extends IO::Socket {
     # Broadcast option
     my $broadcast = $options_h->get_or_default_int("Broadcast", 0);
     $self->{Broadcast} = $broadcast ;
-    
-    if ($reuse_addr) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
-    }
-    if ($reuse_port) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
-    }
-    if ($broadcast) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
-    }
-    
-    if ($local_port >= 0) {
-      my $local_socket_address = $self->create_socket_address($local_address, $local_port);
-      $self->bind($local_socket_address);
-      
-      my $listen = $self->{Listen};
-      unless ($listen > 0) {
-        die "\"Listen\" field must be greater than 0.";
-      }
-      $self->listen($listen);
-    }
-    
-    if ($peer_address) {
-      my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
-      $self->connect($peer_socket_address);
-    }
     
   }
   
