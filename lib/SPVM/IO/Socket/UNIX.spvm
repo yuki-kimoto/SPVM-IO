@@ -54,8 +54,7 @@ class IO::Socket::UNIX extends IO::Socket {
     my $type = $self->{Type};
     
     if ($options_h->exists("Listen") && $type != SOCKET->SOCK_DGRAM) {
-      my $listen = $options_h->delete_or_default_int("Listen", 5);
-      $self->listen($listen);
+      $self->listen;
     }
     elsif ($peer) {
       my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);

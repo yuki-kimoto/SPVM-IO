@@ -127,11 +127,7 @@ class IO::Socket::IP extends IO::Socket {
       my $local_socket_address = $self->create_socket_address($local_address, $local_port);
       $self->bind($local_socket_address);
       
-      my $listen = $self->{Listen};
-      unless ($listen > 0) {
-        die "\"Listen\" field must be greater than 0.";
-      }
-      $self->listen($listen);
+      $self->listen;
     }
     
     if ($peer_address) {

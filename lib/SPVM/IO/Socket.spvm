@@ -303,13 +303,24 @@ class IO::Socket extends IO::Handle {
   }
   
   protected method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
+    
     my $fd = $self->{fd};
+    
     Sys->bind($fd, $sockaddr);
+    
   }
   
-  protected method listen : void ($queue : int = 5) {
+  protected method listen : void () {
     my $fd = $self->{fd};
-    Sys->listen($fd, $queue);
+    
+    my $listen = $self->{Listen};
+    
+    unless ($listen > 0) {
+      die "\"Listen\" field must be greater than 0.";
+    }
+    
+    Sys->listen($fd, $listen);
+    
   }
   
   protected method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
