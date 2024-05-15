@@ -40,11 +40,23 @@ class IO::Socket extends IO::Handle {
     
     Fn->check_option_names($options, $self->option_names);
     
+    my $options_h = Hash->new($options);
+    
     $self->SUPER::init();
     
-    $self->set_autoflush(1);
+    # Domain option
+    my $domain = $options_h->delete_or_default_int("Domain", -1);
+    $self->{Domain} = $domain;
     
-    my $options_h = Hash->new($options);
+    # Proto option
+    my $proto = $options_h->delete_or_default_int("Proto", -1);
+    $self->{Proto} = $proto;
+    
+    # Type option
+    my $type = $options_h->delete_or_default_int("Type", -1);
+    $self->{Type} = $type;
+    
+    $self->set_autoflush(1);
     
     my $listen_backlog = $options_h->delete_or_default_int("Listen", -1);
     $self->{Listen} = $listen_backlog;

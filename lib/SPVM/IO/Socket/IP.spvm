@@ -56,11 +56,6 @@ class IO::Socket::IP extends IO::Socket {
   
   protected method init : void ($options : object[] = undef) {
     
-    $self->SUPER::init($options);
-  }
-  
-  protected method configure : void ($options : object[] = undef) {
-    
     my $options_h = Hash->new($options);
     
     # Domain option
@@ -68,11 +63,9 @@ class IO::Socket::IP extends IO::Socket {
     unless ($domain >= 0) {
       $domain = SOCKET->AF_INET;
     }
-    $self->{Domain} = $domain;
     
     # Proto option
     my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
-    $self->{Proto} = $proto;
     
     # Type option
     my $type = $options_h->delete_or_default_int("Type", -1);
@@ -87,7 +80,22 @@ class IO::Socket::IP extends IO::Socket {
         $type = SOCKET->SOCK_RAW;
       }
     }
-    $self->{Type} = $type;
+    
+    $options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type});
+    
+    $self->SUPER::init($options);
+    
+  }
+  
+  protected method configure : void ($options : object[] = undef) {
+    
+    my $options_h = Hash->new($options);
+    
+    my $domain = $self->{Domain};
+    
+    my $type = $self->{Type};
+    
+    my $proto = $self->{Proto};
     
     $self->socket($domain, $type, $proto);
     
