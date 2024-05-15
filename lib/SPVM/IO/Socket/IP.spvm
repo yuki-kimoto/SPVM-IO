@@ -142,10 +142,6 @@ class IO::Socket::IP extends IO::Socket {
     $self->set_blocking(0);
   }
   
-  protected method configure : void ($options : object[] = undef) {
-    
-  }
-  
   method sockaddr : Sys::Socket::In_addr_base () {
     my $sockaddr = $self->sockname;
     

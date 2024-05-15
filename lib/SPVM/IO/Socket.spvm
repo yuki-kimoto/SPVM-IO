@@ -65,11 +65,7 @@ class IO::Socket extends IO::Handle {
     $self->{Timeout} = $timeout;
     
     $self->socket;
-    
-    $self->configure($options_h->to_array);
   }
-  
-  protected method configure : void ($options : object[] = undef) { die "Not implemented."; }
   
   method new_from_instance : IO::Socket ($options : object[] = undef) {
     my $io_socket = IO::Socket->new($options);
