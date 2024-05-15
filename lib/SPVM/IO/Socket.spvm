@@ -64,6 +64,8 @@ class IO::Socket extends IO::Handle {
     my $timeout = $options_h->get_or_default_double("Timeout", 0.0);
     $self->{Timeout} = $timeout;
     
+    $self->socket;
+    
     $self->configure($options_h->to_array);
     
     $self->set_blocking(0);
@@ -95,7 +97,7 @@ class IO::Socket extends IO::Handle {
     $self->close;
   }
   
-  protected method socket : void () {
+  private method socket : void () {
     
     my $domain = $self->{Domain};
     

@@ -40,18 +40,7 @@ class IO::Socket::UNIX extends IO::Socket {
     
     my $options_h = Hash->new($options);
     
-    my $domain = $options_h->delete_or_default_int("Domain", SOCKET->AF_UNIX);
-    
-    my $type = $options_h->delete_or_default_int("Type", SOCKET->SOCK_STREAM);
-    
-    if($options_h->exists("Blocking")) {
-      my $blocking = $options_h->get_int("Blocking");
-      $options_h->delete("Blocking");
-      $self->set_blocking($blocking);
-    }
-    
     my $protocol = 0;
-    $self->socket;
     
     my $local = $options_h->delete_or_default_string("Local", undef);
     
@@ -61,6 +50,8 @@ class IO::Socket::UNIX extends IO::Socket {
     }
     
     my $peer = $options_h->delete_or_default_string("Peer", undef);
+    
+    my $type = $self->{Type};
     
     if ($options_h->exists("Listen") && $type != SOCKET->SOCK_DGRAM) {
       my $listen = $options_h->delete_or_default_int("Listen", 5);
