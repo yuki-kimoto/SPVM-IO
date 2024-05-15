@@ -20,7 +20,6 @@ class IO::Socket extends IO::Handle {
   has Domain : protected int;
   has Type : protected int;
   has Proto : protected int;
-  has Blocking : protected int;
   has Listen : protected int;
   has Timeout : protected double;
   has peername : protected Sys::Socket::Sockaddr;
@@ -84,7 +83,6 @@ class IO::Socket extends IO::Handle {
       "Domain",
       "Type",
       "Proto",
-      "Blocking",
       "Listen",
       "Timeout",
     ];
