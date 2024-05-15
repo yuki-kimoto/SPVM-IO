@@ -8,7 +8,7 @@ SPVM::IO::Handle - I/O Handling
 
 =head1 Description
 
-C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
+IO::Handle class in L<SPVM> has methods to handle file handles.
 
 =head1 Usage
   
@@ -26,9 +26,9 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 
 A file descriptor.
 
-=head2 autoflush
+=head2 AutoFlush
 
-  has autoflush : rw byte;
+  has AutoFlush : protected byte;
 
 =head2 opened
 
@@ -50,6 +50,14 @@ A file descriptor.
 
   method init : void ($options : object[] = undef);
 
+=head2 autoflush
+
+  method autoflush : int ();
+
+=head2 set_autoflush
+
+  method set_autoflush : void ($autoflush : int);
+  
 =head2 opened
 
   method opened : int ();

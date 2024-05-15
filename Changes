@@ -11,6 +11,7 @@
     * connect, listen, bind, accept methods in IO::Socket become protected, and the docs are removed.
     * Remove new_from_instance from IO::Socket, IO::Socket::IP, IO::Socket::Unix.
     * fd field in IO::Handle is renamed to FD.
+    * autoflush field in IO::Handle is renamed to AutoFlush.
 0.211002 2023-12-07
   [Prerequirement Changes]
     * Require SPVM::Sys 0.510.

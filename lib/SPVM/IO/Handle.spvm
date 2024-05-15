@@ -15,7 +15,9 @@ class IO::Handle {
   
   # Fields
   has FD : protected int;
-  has autoflush : rw byte;
+  
+  has AutoFlush : protected byte;
+  
   has nonblocking : protected int;
   
   # Class Methods
@@ -32,6 +34,14 @@ class IO::Handle {
     
     $self->{FD} = -1;
     
+  }
+  
+  method autoflush : int () {
+    return $self->{AutoFlush};
+  }
+  
+  method set_autoflush : void ($autoflush : int) {
+    $self->{AutoFlush} = (byte)$autoflush;
   }
   
   method opened : int () {
