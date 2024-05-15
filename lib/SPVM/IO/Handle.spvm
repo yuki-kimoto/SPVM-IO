@@ -18,10 +18,10 @@ class IO::Handle {
   
   has AutoFlush : protected byte;
   
-  has nonblocking : protected int;
+  has Blocking : protected byte;
   
   # Class Methods
-  static method new : IO::Handle ($options : object[]) {
+  static method new : IO::Handle ($options : object[] = undef) {
     my $self = new IO::Handle;
     
     $self->init($options);
@@ -32,8 +32,28 @@ class IO::Handle {
   # Instance Methods
   method init : void ($options : object[] = undef) {
     
-    $self->{FD} = -1;
+    Fn->check_option_names($options, $self->option_names);
     
+    my $options_h = Hash->new($options);
+    
+    my $fd = $options_h->get_or_default_int("FD", -1);
+    $self->{FD} = $fd;
+    
+    my $autoflush = $options_h->get_or_default_int("AutoFlush", 0);
+    $self->{AutoFlush} = (byte)$autoflush;
+    
+    my $blocking = $options_h->get_or_default_int("Blocking", 1);
+    $self->{Blocking} = (byte)$blocking;
+  }
+  
+  method option_names : string[] () {
+    my $option_names = [
+      "FD",
+      "AutoFlush",
+      "Blocking",
+    ];
+    
+    return $option_names;
   }
   
   method autoflush : int () {
@@ -55,7 +75,7 @@ class IO::Handle {
   }
   
   method blocking : int () {
-    return !$self->{nonblocking};
+    return $self->{Blocking};
   }
   
   method print : void ($string : string) {
@@ -90,7 +110,7 @@ class IO::Handle {
   
   method set_blocking : void ($blocking : int) {
     
-    my $current_blocking = !$self->{nonblocking};
+    my $current_blocking = $self->{Blocking};
     
     unless (!!$blocking == $current_blocking) {
       
@@ -114,7 +134,7 @@ class IO::Handle {
         $self->fcntl(IO->F_SETFL, $newmode);
       }
       
-      $self->{nonblocking} = !$blocking;
+      $self->{Blocking} = (byte)!$blocking;
     }
   }
   

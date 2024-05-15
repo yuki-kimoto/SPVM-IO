@@ -30,13 +30,9 @@ A file descriptor.
 
   has AutoFlush : protected byte;
 
-=head2 opened
-
-  has opened : ro protected int;
-
 =head2 Blocking
 
-  has Blocking : rw protected int;
+  has Blocking : protected byte;
   
 =head1 Class methods
 
@@ -68,7 +64,7 @@ If the return value of L</"fileno"> is greater than or equal to 0, returns 1. Ot
 
   method fileno : int ();
 
-Gets L</"fh"> field.
+Gets L</"FD"> field.
 
 =head2 print
 

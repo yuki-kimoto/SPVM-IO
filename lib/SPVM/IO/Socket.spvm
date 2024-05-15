@@ -21,7 +21,6 @@ class IO::Socket extends IO::Handle {
   has Domain : protected int;
   has Type : protected int;
   has Proto : protected int;
-  has Blocking : protected int;
   has Listen : protected int;
   has Timeout : protected double;
   has peername : protected Sys::Socket::Sockaddr;
@@ -39,11 +38,9 @@ class IO::Socket extends IO::Handle {
   # Instance Methods
   method init : void ($options : object[] = undef) {
     
-    Fn->check_option_names($options, $self->option_names);
-    
     my $options_h = Hash->new($options);
     
-    $self->SUPER::init();
+    $self->SUPER::init($options);
     
     # Domain option
     my $domain = $options_h->get_or_default_int("Domain", -1);
@@ -73,7 +70,6 @@ class IO::Socket extends IO::Handle {
       "Domain",
       "Type",
       "Proto",
-      "Blocking",
       "Listen",
       "Timeout",
     ];
