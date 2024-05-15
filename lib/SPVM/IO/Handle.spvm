@@ -14,7 +14,7 @@ class IO::Handle {
   use Sys::OS;
   
   # Fields
-  has fd : protected int;
+  has FD : protected int;
   has autoflush : rw byte;
   has nonblocking : protected int;
   
@@ -30,7 +30,7 @@ class IO::Handle {
   # Instance Methods
   method init : void ($options : object[] = undef) {
     
-    $self->{fd} = -1;
+    $self->{FD} = -1;
     
   }
   
@@ -41,7 +41,7 @@ class IO::Handle {
   }
   
   method fileno : int () {
-    return $self->{fd};
+    return $self->{FD};
   }
   
   method blocking : int () {

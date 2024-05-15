@@ -87,17 +87,17 @@ class IO::Socket extends IO::Handle {
   }
   
   method close : void () {
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     if ($fd >= 0) {
       Sys::Socket->close($fd);
-      $self->{fd} = -1;
+      $self->{FD} = -1;
       $self->{peername} = undef;
     }
   }
   
   method sockname : Sys::Socket::Sockaddr () {
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     my $sockaddr_sock = Sys->getsockname($fd);
     
@@ -105,7 +105,7 @@ class IO::Socket extends IO::Handle {
   }
   
   method peername : Sys::Socket::Sockaddr () {
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     unless ($self->{peername}) {
       $self->{peername} = Sys->getpeername($fd);
@@ -129,7 +129,7 @@ class IO::Socket extends IO::Handle {
     
     my $timeout = $self->{Timeout};
     
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     my $peername = (Sys::Socket::Sockaddr)undef;
     if ($to) {
       $peername = $to;
@@ -173,7 +173,7 @@ class IO::Socket extends IO::Handle {
     
     my $timeout = $self->{Timeout};
     
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     my $recv_length = -1;
     while (1) {
       eval { $recv_length = Sys->recv($fd, $buffer, $length, $flags, $buf_offset); }
@@ -196,25 +196,25 @@ class IO::Socket extends IO::Handle {
   
   method shutdown : void ($sockfd : int, $how : int) {
     $self->{peername} = undef;
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     Sys->shutdown($fd, $how);
   }
   
   method sockopt : string ($level : int, $optname : int) {
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     my $optval = Sys->getsockopt($fd, $level, $optname);
     
     return $optval;
   }
   
   method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int) {
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     Sys->setsockopt($fd, $level, $optname, $optval);
   }
   
   method atmark : int () {
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     my $atmark = Sys::Socket->sockatmark($fd);
     
@@ -268,14 +268,14 @@ class IO::Socket extends IO::Handle {
     my $fd = -1;
     Sys->socket(\$fd, $domain, $type, $protocol);
     
-    $self->{fd} = $fd;
+    $self->{FD} = $fd;
   }
   
   protected method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
     
     my $timeout = $self->{Timeout};
     
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     eval { Sys->connect($fd, $sockaddr); }
     
@@ -299,14 +299,14 @@ class IO::Socket extends IO::Handle {
   
   protected method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
     
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     Sys->bind($fd, $sockaddr);
     
   }
   
   protected method listen : void () {
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     my $listen = $self->{Listen};
     
@@ -320,7 +320,7 @@ class IO::Socket extends IO::Handle {
   
   protected method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
     
-    my $fd = $self->{fd};
+    my $fd = $self->{FD};
     
     my $timeout = $self->{Timeout};
     

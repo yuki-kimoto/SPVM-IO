@@ -10,6 +10,7 @@
     * socket method in IO::Socket become protected, and the doc is removed.
     * connect, listen, bind, accept methods in IO::Socket become protected, and the docs are removed.
     * Remove new_from_instance from IO::Socket, IO::Socket::IP, IO::Socket::Unix.
+    * fd field in IO::Handle is renamed to FD.
 0.211002 2023-12-07
   [Prerequirement Changes]
     * Require SPVM::Sys 0.510.

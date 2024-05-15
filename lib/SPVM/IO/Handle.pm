@@ -20,9 +20,9 @@ C<SPVM::IO::Handle> is the L<SPVM>'s C<IO::Handle> class for I/O handling.
 
 =head1 Fields
 
-=head2 fd
+=head2 FD
 
-  has fd : protected int;
+  has FD : protected int;
 
 A file descriptor.
 
