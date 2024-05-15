@@ -93,35 +93,35 @@ class IO::Socket::IP extends IO::Socket {
     $self->socket($domain, $type, $proto);
     
     # LocalAddr option
-    my $local_address = $options_h->delete_or_default_string("LocalAddr", undef);
+    my $local_address = $options_h->get_or_default_string("LocalAddr", undef);
     $self->{LocalAddr} = $local_address;
     
     # LocalPort option
-    my $local_port = $options_h->delete_or_default_int("LocalPort", -1);
+    my $local_port = $options_h->get_or_default_int("LocalPort", -1);
     $self->{LocalPort} = $local_port;
     
     # PeerAddr option
-    my $peer_address = $options_h->delete_or_default_string("PeerAddr", undef);
+    my $peer_address = $options_h->get_or_default_string("PeerAddr", undef);
     $self->{PeerAddr} = $peer_address;
     
     # PeerPort option
-    my $peer_port = $options_h->delete_or_default_int("PeerPort", -1);
+    my $peer_port = $options_h->get_or_default_int("PeerPort", -1);
     $self->{PeerPort} = $peer_port;
     
     # ReuseAddr option
-    my $reuse_addr = $options_h->delete_or_default_int("ReuseAddr", 0);
+    my $reuse_addr = $options_h->get_or_default_int("ReuseAddr", 0);
     if ($reuse_addr) {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
     }
     
     # ReusePort option
-    my $reuse_port = $options_h->delete_or_default_int("ReusePort", 0);
+    my $reuse_port = $options_h->get_or_default_int("ReusePort", 0);
     if ($reuse_port) {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
     }
     
     # Broadcast option
-    my $broadcast = $options_h->delete_or_default_int("Broadcast", 0);
+    my $broadcast = $options_h->get_or_default_int("Broadcast", 0);
     if ($broadcast) {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
     }
