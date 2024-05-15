@@ -122,16 +122,6 @@ Gets the L</"Timeout"> field.
 
   method DESTROY : void ();
 
-=head2 init
-
-  protected method init : void ($options : object[] = undef);
-
-=head2 connect
-
-  method connect : void ($address : Sys::Socket::Sockaddr);
-
-See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
-
 =head2 recv
 
   method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0);
@@ -149,16 +139,6 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 =head2 fileno
 
   method fileno : int (); return $self->{fd}; }
-
-=head2 listen
-
-  method listen : void ($queue : int = 5);
-
-=head2 bind
-
-  method bind : void ($address : Sys::Socket::Sockaddr);
-
-See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 sockname
 
@@ -187,19 +167,6 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
   method connected : Sys::Socket::Sockaddr ();
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
-
-=head2 socket
-
-  method socket : void ($domain : int, $type : int, $protocol : int = 0);
-
-=head2 accept
-
-  method accept : IO::Socket ($io_socket_builder : IO::Socket::Builder = undef, $peer_ref : Sys::Socket::Sockaddr[] = undef);
-
-See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
-
-See also L<IO::Socket::Builder|SPVM::IO::Socket::Builder>.
-
 
 =head2 peerport
 

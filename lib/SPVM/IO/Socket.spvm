@@ -91,48 +91,6 @@ class IO::Socket extends IO::Handle {
     $self->close;
   }
   
-  private method socket : void () {
-    
-    my $domain = $self->{Domain};
-    
-    my $type = $self->{Type};
-    
-    my $protocol = $self->{Proto};
-    
-    my $fd = -1;
-    Sys->socket(\$fd, $domain, $type, $protocol);
-    
-    $self->{fd} = $fd;
-  }
-  
-  method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
-    
-    my $timeout = $self->{Timeout};
-    
-    my $fd = $self->{fd};
-    
-    eval { Sys->connect($fd, $sockaddr); }
-    
-    if ($@) {
-      my $again = 
-        Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
-        || Sys::Socket::Errno->errno == Sys::Socket::Errno->EINPROGRESS
-        || Sys::Socket::Errno->errno == Errno->EINTR
-      ;
-      
-      if ($again) {
-        Go->gosched_io_write($fd, $timeout);
-      }
-      else {
-        die $@;
-      }
-    }
-    
-    $self->{peername} = $sockaddr;
-  }
-  
-  # method blocking - this is implemented in the super class.
-  
   method close : void () {
     my $fd = $self->{fd};
     
@@ -141,63 +99,6 @@ class IO::Socket extends IO::Handle {
       $self->{fd} = -1;
       $self->{peername} = undef;
     }
-  }
-  
-  method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
-    my $fd = $self->{fd};
-    Sys->bind($fd, $sockaddr);
-  }
-  
-  method listen : void ($queue : int = 5) {
-    my $fd = $self->{fd};
-    Sys->listen($fd, $queue);
-  }
-  
-  method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
-    
-    my $fd = $self->{fd};
-    
-    my $timeout = $self->{Timeout};
-    
-    my $client_fd = -1;
-    my $client_socket_address = (Sys::Socket::Sockaddr)undef;
-    
-    while (1) {
-      eval { $client_socket_address = Sys->accept(\$client_fd, $fd); }
-      
-      if ($@) {
-        my $again = 
-          Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
-          || Sys::Socket::Errno->errno == Errno->EINTR
-        ;
-        
-        if ($again) {
-          Go->gosched_io_read($fd, $timeout);
-        }
-        else {
-          die $@;
-        }
-      }
-      else {
-        last;
-      }
-    }
-    
-    my $options = {
-      Timeout => $timeout,
-      fd => $client_fd,
-      Domain => $self->sockdomain,
-      Type => $self->socktype,
-      Proto => $self->protocol,
-    };
-    
-    my $client = $self->new_from_instance($options);
-    
-    if ($peer_ref) {
-      $peer_ref->[0] = $client_socket_address;
-    }
-    
-    return $client;
   }
   
   method sockname : Sys::Socket::Sockaddr () {
@@ -360,4 +261,102 @@ class IO::Socket extends IO::Handle {
   method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
     return $self->recv($string, $length, 0, $offset);
   }
+  
+  private method socket : void () {
+    
+    my $domain = $self->{Domain};
+    
+    my $type = $self->{Type};
+    
+    my $protocol = $self->{Proto};
+    
+    my $fd = -1;
+    Sys->socket(\$fd, $domain, $type, $protocol);
+    
+    $self->{fd} = $fd;
+  }
+  
+  protected method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
+    
+    my $timeout = $self->{Timeout};
+    
+    my $fd = $self->{fd};
+    
+    eval { Sys->connect($fd, $sockaddr); }
+    
+    if ($@) {
+      my $again = 
+        Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
+        || Sys::Socket::Errno->errno == Sys::Socket::Errno->EINPROGRESS
+        || Sys::Socket::Errno->errno == Errno->EINTR
+      ;
+      
+      if ($again) {
+        Go->gosched_io_write($fd, $timeout);
+      }
+      else {
+        die $@;
+      }
+    }
+    
+    $self->{peername} = $sockaddr;
+  }
+  
+  protected method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
+    my $fd = $self->{fd};
+    Sys->bind($fd, $sockaddr);
+  }
+  
+  protected method listen : void ($queue : int = 5) {
+    my $fd = $self->{fd};
+    Sys->listen($fd, $queue);
+  }
+  
+  protected method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
+    
+    my $fd = $self->{fd};
+    
+    my $timeout = $self->{Timeout};
+    
+    my $client_fd = -1;
+    my $client_socket_address = (Sys::Socket::Sockaddr)undef;
+    
+    while (1) {
+      eval { $client_socket_address = Sys->accept(\$client_fd, $fd); }
+      
+      if ($@) {
+        my $again = 
+          Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
+          || Sys::Socket::Errno->errno == Errno->EINTR
+        ;
+        
+        if ($again) {
+          Go->gosched_io_read($fd, $timeout);
+        }
+        else {
+          die $@;
+        }
+      }
+      else {
+        last;
+      }
+    }
+    
+    my $options = {
+      Timeout => $timeout,
+      fd => $client_fd,
+      Domain => $self->sockdomain,
+      Type => $self->socktype,
+      Proto => $self->protocol,
+    };
+    
+    my $client = $self->new_from_instance($options);
+    
+    if ($peer_ref) {
+      $peer_ref->[0] = $client_socket_address;
+    }
+    
+    return $client;
+  }
+  
 }
