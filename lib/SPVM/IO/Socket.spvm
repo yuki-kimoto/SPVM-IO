@@ -105,26 +105,6 @@ class IO::Socket extends IO::Handle {
     $self->{fd} = $fd;
   }
   
-  method socketpair : IO::Socket[] ($domain : int, $type : int, $protocol : int) {
-    my $sock1 = IO::Socket->new;
-    my $sock2 = IO::Socket->new;
-    
-    my $sock1_fd = $sock1->{fd};
-    my $sock2_fd = $sock2->{fd};
-    
-    Sys->socketpair(\$sock1_fd, \$sock2_fd, $domain, $type, $protocol);
-    
-    $sock1->{fd} = $sock1_fd;
-    $sock1->{Type} = $type;
-    $sock1->{Proto} = $protocol;
-    
-    $sock2->{fd} = $sock2_fd;
-    
-    my $pair = [$sock1, $sock2];
-    
-    return $pair;
-  }
-  
   method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
     
     my $timeout = $self->{Timeout};

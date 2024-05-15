@@ -192,10 +192,6 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
   method socket : void ($domain : int, $type : int, $protocol : int = 0);
 
-=head2 socketpair
-
-  method socketpair : int[] ($domain : int, $type : int, $protocol : int);
-
 =head2 accept
 
   method accept : IO::Socket ($io_socket_builder : IO::Socket::Builder = undef, $peer_ref : Sys::Socket::Sockaddr[] = undef);
