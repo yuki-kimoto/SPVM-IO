@@ -64,7 +64,7 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 The socket is set to non-blocking mode.
 
-=head3 new Options
+Options:
 
 =over 2
 

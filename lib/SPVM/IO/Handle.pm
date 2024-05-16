@@ -40,6 +40,18 @@ A file descriptor.
 
   static method new : IO::Handle ($options : object[]);
 
+Options:
+
+=over 2
+
+=item * FD : Int
+
+=item * AutoFlush : Int
+
+=item * Blocking : Int
+
+=back
+
 =head1 Instance Methods
 
 =head2 init
