@@ -40,7 +40,12 @@ class IO::Socket extends IO::Handle {
     
     my $options_h = Hash->new($options);
     
-    $self->SUPER::init($options);
+    my $autoflush = $options_h->get_or_default_int("AutoFlush", 1);
+    
+    # Reason for Blocking => 1.
+    # On Mac, non-blocking can only be set for sockets connected with connect or accept,
+    # so when you create a socket, set it to blocking.
+    $self->SUPER::init(Fn->merge_options($options, {Blocking => 1, AutoFlush => $autoflush}));
     
     # Domain option
     my $domain = $options_h->get_or_default_int("Domain", -1);
@@ -54,25 +59,36 @@ class IO::Socket extends IO::Handle {
     my $type = $options_h->get_or_default_int("Type", -1);
     $self->{Type} = $type;
     
-    $self->set_autoflush(1);
-    
+    # Listen option
     my $listen_backlog = $options_h->get_or_default_int("Listen", -1);
     $self->{Listen} = $listen_backlog;
     
+    # Timeout option
     my $timeout = $options_h->get_or_default_double("Timeout", 0.0);
     $self->{Timeout} = $timeout;
     
     $self->socket;
+    
+    my $blocking = $options_h->get_or_default_int("Blocking", 0);
+    $self->{Blocking} = (byte)$blocking;
+    
+    unless ($blocking) {
+      $self->set_blocking(0);
+    }
   }
   
   method option_names : string[] () {
-    my $option_names = [
-      "Domain",
-      "Type",
-      "Proto",
-      "Listen",
-      "Timeout",
-    ];
+    
+    my $option_names = Array->merge_string(
+      $self->SUPER::option_names,
+      [
+        "Domain",
+        "Type",
+        "Proto",
+        "Listen",
+        "Timeout",
+      ]
+    );
     
     return $option_names;
   }

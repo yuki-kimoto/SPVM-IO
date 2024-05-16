@@ -44,6 +44,10 @@ class IO::Handle {
     
     my $blocking = $options_h->get_or_default_int("Blocking", 1);
     $self->{Blocking} = (byte)$blocking;
+    
+    unless ($blocking) {
+      $self->set_blocking(0);
+    }
   }
   
   method option_names : string[] () {

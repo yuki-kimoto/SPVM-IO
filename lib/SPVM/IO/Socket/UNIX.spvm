@@ -34,6 +34,13 @@ class IO::Socket::UNIX extends IO::Socket {
   
   protected method init : void ($options : object[] = undef) {
     
+    # Reason for Blocking => 1.
+    # On Mac, non-blocking can only be set for sockets connected with connect or accept,
+    # so when you create a socket, set it to blocking.
+    $options = Fn->merge_options($options, {Blocking => 1});
+    
+    $self->SUPER::init($options);
+    
     my $options_h = Hash->new($options);
     
     my $protocol = 0;
@@ -59,7 +66,12 @@ class IO::Socket::UNIX extends IO::Socket {
     
     $options_h->delete("Listen");
     
-    $self->set_blocking(0);
+    my $blocking = $options_h->get_or_default_int("Blocking", 0);
+    $self->{Blocking} = (byte)$blocking;
+    
+    unless ($blocking) {
+      $self->set_blocking(0);
+    }
   }
   
   method hostpath : string () {

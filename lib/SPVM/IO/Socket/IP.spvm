@@ -81,7 +81,10 @@ class IO::Socket::IP extends IO::Socket {
       }
     }
     
-    $options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type});
+    # Reason for Blocking => 1.
+    # On Mac, non-blocking can only be set for sockets connected with connect or accept,
+    # so when you create a socket, set it to blocking.
+    $options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type, Blocking => 1});
     
     $self->SUPER::init($options);
     
@@ -135,7 +138,12 @@ class IO::Socket::IP extends IO::Socket {
       $self->connect($peer_socket_address);
     }
     
-    $self->set_blocking(0);
+    my $blocking = $options_h->get_or_default_int("Blocking", 0);
+    $self->{Blocking} = (byte)$blocking;
+    
+    unless ($blocking) {
+      $self->set_blocking(0);
+    }
   }
   
   method sockaddr : Sys::Socket::In_addr_base () {
