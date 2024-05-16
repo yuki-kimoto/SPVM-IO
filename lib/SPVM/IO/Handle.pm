@@ -49,33 +49,61 @@ Options:
 
 =item * FD : Int
 
+L</"FD"> field is set to this value.
+
 =item * AutoFlush : Int
 
+L</"AutoFlush"> field is set to this value.
+
 =item * Blocking : Int
+
+L</"Blocking"> field is set to this value.
+
+If this value is 0, L</"set_blocking"> method is called with 0.
 
 =back
 
 =head1 Instance Methods
 
-=head2 autoflush
-
-C<method autoflush : int ();>
-
-=head2 set_autoflush
-
-C<method set_autoflush : void ($autoflush : int);>
-  
-=head2 opened
-
-C<method opened : int ();>
-
-If the return value of L</"fileno"> is greater than or equal to 0, returns 1. Otherwise returns 0.
-
 =head2 fileno
 
 C<method fileno : int ();>
 
-Gets L</"FD"> field.
+Returns the value of L</"FD"> field.
+
+=head2 opened
+
+C<method opened : int ();>
+
+If L</"FD"> is greater than or equal to 0, returns 1. Otherwise returns 0.
+
+=head2 autoflush
+
+C<method autoflush : int ();>
+
+Returns the value of L</"AutoFlush"> field.
+
+=head2 set_autoflush
+
+C<method set_autoflush : void ($autoflush : int);>
+
+Sets L</"AutoFlush"> field to $autoflush.
+
+=head1 blocking
+
+C<method blocking : int ();>
+
+Retruns the value of L</"Blocking"> field.
+
+=head2 set_blocking
+
+C<method set_blocking : void ($blocking : int);>
+
+Sets L</"Blocking"> field to $blocking.
+
+If $blocking is a false value, enables the non-blocking mode of the file descriptor L</"FD">.
+
+If $blocking is a true value, disables the non-blocking mode of the file descriptor L</"FD">.
 
 =head2 print
 
@@ -114,10 +142,6 @@ C<method stat : Sys::IO::Stat ();>
 =head2 fcntl
 
 C<method fcntl : int ($command : int, $command_arg : object = undef of Int|Sys::IO::Flock|object);>
-
-=head2 set_blocking
-
-C<method set_blocking : void ($blocking : int);>
 
 =head2 syswrite
 
