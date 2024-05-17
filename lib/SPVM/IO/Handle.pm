@@ -143,29 +143,13 @@ C<method stat : Sys::IO::Stat ();>
 
 C<method fcntl : int ($command : int, $command_arg : object = undef of Int|Sys::IO::Flock|object);>
 
-=head2 syswrite
-
-C<method syswrite : int ($string : string, $length : int = -1, $offset : int = 0);>
-
-=head2 sysread
-
-C<method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
-
 =head2 write
 
 C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
 
-Exceptions:
-
-Not implemented.
-
 =head2 read
 
 C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
-
-Exceptions:
-
-Not implemented.
 
 =head2 close
 

@@ -86,16 +86,6 @@ my $test_dir = "$FindBin::Bin";
   }
 }
 
-# syswrite
-{
-  {
-    my $file = "$test_dir/test_files_tmp/io_file_test_syswrite.txt";
-    ok(SPVM::TestCase::IO::File->syswrite($file));
-    my $output = slurp_binmode($file);
-    is($output, 'Hello');
-  }
-}
-
 # open
 {
   my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
@@ -106,12 +96,6 @@ my $test_dir = "$FindBin::Bin";
 {
   my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
   ok(SPVM::TestCase::IO::File->read($sp_file));
-}
-
-# sysread
-{
-  my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
-  ok(SPVM::TestCase::IO::File->sysread($sp_file));
 }
 
 # getline

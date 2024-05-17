@@ -142,18 +142,6 @@ class IO::Handle {
     }
   }
   
-  method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
-    my $fd = $self->fileno;
-    
-    my $write_length = Sys->syswrite($fd, $string, $length, $offset);
-  }
-  
-  method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
-    my $fd = $self->fileno;
-    
-    return Sys->sysread($fd, $string, $length, $offset);
-  }
-  
   method truncate : void ($legnth : long) {
     my $fd = $self->fileno;
     

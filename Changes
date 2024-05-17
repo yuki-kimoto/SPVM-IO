@@ -13,6 +13,7 @@
     * fd field in IO::Handle is renamed to FD.
     * autoflush field in IO::Handle is renamed to AutoFlush.
     * Blocking field is moved from IO::Socket to IO::Handle.
+    * Remove sysread and sysread method from IO::Handle and IO::Socket.
 0.211002 2023-12-07
   [Prerequirement Changes]
     * Require SPVM::Sys 0.510.
