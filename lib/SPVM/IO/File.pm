@@ -157,13 +157,21 @@ Gets the file descriptor of L</"stream"> field.
 
   method eof : int ();
 
+=head2 sync
+
+C<method sync : void ();>
+
+Syncs the stream associated with the file descriptoer L</"FD">.
+
+This method calls L<Sys#fsync|SPVM::Sys/"fsync"> with the file descriptor L</"FD">.
+
 =head2 truncate
 
 C<method truncate : void ($legnth : long);>
 
 Trancates the stream associated with the file descriptoer L<FD|SPVM::IO::Handle/"FD">.
 
-This method calls L<Sys#ftruncate|SPVM::Sys/"ftruncate"> with the file descriptor L</"FD"> and returns the return value.
+This method calls L<Sys#ftruncate|SPVM::Sys/"ftruncate"> with the file descriptor L</"FD">.
 
 =head1 See Also
 

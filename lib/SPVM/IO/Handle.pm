@@ -99,11 +99,11 @@ Retruns the value of L</"Blocking"> field.
 
 C<method set_blocking : void ($blocking : int);>
 
-Sets L</"Blocking"> field to $blocking.
+If $blocking is a false value and L</"Blocking> field is a true value, enables the non-blocking mode of the file descriptor L</"FD">.
 
-If $blocking is a false value, enables the non-blocking mode of the file descriptor L</"FD">.
+If $blocking is a true value and L</"Blocking> field is a false value, disables the non-blocking mode of the file descriptor L</"FD">.
 
-If $blocking is a true value, disables the non-blocking mode of the file descriptor L</"FD">.
+And sets L</"Blocking"> field to $blocking.
 
 =head2 print
 
@@ -142,12 +142,6 @@ Same as the following method call.
 C<static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);>
 Calls L<Sys#ioctl|SPVM::Sys/"ioctl"> with the file descriptor L</"FD">, and returns the return value.
 
-=head2 sync
-
-C<method sync : void ();>
-
-Calls L<Sys#sync|SPVM::Sys/"sync"> with the file descriptor L</"FD">, and returns the return value.
-
 =head2 stat
 
 C<method stat : Sys::IO::Stat ();>
@@ -185,6 +179,14 @@ This method is implemented in a child class.
 C<method close : int ();>
 
 Closes the stream associated with the file descriptoer L</"FD">.
+
+This method is implemented in a child class.
+
+=head2 sync
+
+C<method sync : void ();>
+
+Syncs the stream associated with the file descriptoer L</"FD">.
 
 This method is implemented in a child class.
 

@@ -210,6 +210,12 @@ class IO::File extends IO::Handle {
     return $read_length;
   }
   
+  method sync : void () {
+    my $fd = $self->{FD};
+    
+    Sys::IO->fsync($fd);
+  }
+  
   method truncate : void ($legnth : long) {
     my $fd = $self->{FD};
     

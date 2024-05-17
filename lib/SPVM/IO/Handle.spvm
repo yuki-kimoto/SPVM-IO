@@ -107,9 +107,9 @@ class IO::Handle {
         
         $self->fcntl(IO->F_SETFL, $newmode);
       }
-      
-      $self->{Blocking} = (byte)!$blocking;
     }
+    
+    $self->{Blocking} = (byte)!$blocking;
   }
   
   method print : void ($string : string) {
@@ -150,11 +150,7 @@ class IO::Handle {
     return $stat;
   }
   
-  method sync : void () {
-    my $fd = $self->{FD};
-    
-    Sys::IO->fsync($fd);
-  }
+  method sync : void () { die "Not implemented."; }
   
   method close : void () { die "Not implemented."; }
   
