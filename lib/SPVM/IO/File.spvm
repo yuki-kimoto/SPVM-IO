@@ -74,6 +74,10 @@ class IO::File extends IO::Handle {
   
   method fdopen : void ($fd : int, $open_mode : string) {
     
+    unless ($open_mode) {
+      die "The open mode \$open_mode must be defined.";
+    }
+    
     if ($self->opened) {
       die "Already opened.";
     }
