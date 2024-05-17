@@ -141,16 +141,11 @@ Same as the following method call.
 
 C<method truncate : void ($legnth : long);>
 
-Truncates to a size of precisely length bytes.
-
-This method is planed to be implemented in a child class.
-
-This method always throws an exception.
+Calls L<Sys#truncate|SPVM::Sys/"truncate"> with the file descriptor L</"FD">.
 
 =head2 ioctl
 
 C<static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);>
-
 Calls L<Sys#ioctl|SPVM::Sys/"ioctl"> with the file descriptor L</"FD">, and returns the return value.
 
 =head2 sync
@@ -175,17 +170,29 @@ Calls L<Sys#fcntl|SPVM::Sys/"fcntl"> with the file descriptor L</"FD">, and retu
 
 C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
 
+Writes the string $string from the offset $offset with the length $length to the stream associated with the file descriptoer L</"FD">.
+
+And returns the write length.
+
+This method is implemented in a child class.
+
 =head2 read
 
 C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
+
+Reads the string $string from the offset $offset with the length $length from the stream associated with the file descriptoer L</"FD">.
+
+And returns the read length.
+
+This method is implemented in a child class.
 
 =head2 close
 
 C<method close : int ();>
 
-Exceptions:
+Closes the stream associated with the file descriptoer L</"FD">.
 
-Not implemented.
+This method is implemented in a child class.
 
 =head1 Well Known Child Classes
 
