@@ -210,4 +210,10 @@ class IO::File extends IO::Handle {
     return $read_length;
   }
   
+  method truncate : void ($legnth : long) {
+    my $fd = $self->{FD};
+    
+    Sys::IO->ftruncate($fd, $legnth);
+  }
+  
 }

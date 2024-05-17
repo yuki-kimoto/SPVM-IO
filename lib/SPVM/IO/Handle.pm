@@ -137,12 +137,6 @@ Same as the following method call.
   $handle->print($string);
   $handle->print("\n");
 
-=head2 truncate
-
-C<method truncate : void ($legnth : long);>
-
-Calls L<Sys#truncate|SPVM::Sys/"truncate"> with the file descriptor L</"FD">.
-
 =head2 ioctl
 
 C<static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);>
@@ -191,6 +185,14 @@ This method is implemented in a child class.
 C<method close : int ();>
 
 Closes the stream associated with the file descriptoer L</"FD">.
+
+This method is implemented in a child class.
+
+=head2 truncate
+
+C<method truncate : void ($legnth : long);>
+
+Trancates the stream associated with the file descriptoer L</"FD">.
 
 This method is implemented in a child class.
 

@@ -157,6 +157,14 @@ Gets the file descriptor of L</"stream"> field.
 
   method eof : int ();
 
+=head2 truncate
+
+C<method truncate : void ($legnth : long);>
+
+Trancates the stream associated with the file descriptoer L<FD|SPVM::IO::Handle/"FD">.
+
+This method calls L<Sys#ftruncate|SPVM::Sys/"ftruncate"> with the file descriptor L</"FD"> and returns the return value.
+
 =head1 See Also
 
 =head2 Perl's IO::File

@@ -142,12 +142,6 @@ class IO::Handle {
     return $fcntl_ret;
   }
   
-  method truncate : void ($legnth : long) {
-    my $fd = $self->{FD};
-    
-    Sys::IO->ftruncate($fd, $legnth);
-  }
-  
   method stat : Sys::IO::Stat () {
     my $fd = $self->{FD};
     
@@ -167,5 +161,7 @@ class IO::Handle {
   method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
   
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
+  
+  method truncate : void ($legnth : long) { die "Not implemented."; }
   
 }
