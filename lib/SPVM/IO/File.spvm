@@ -47,10 +47,6 @@ class IO::File extends IO::Handle {
     return $self->{InputLineNumber};
   }
   
-  method set_input_line_number : void ($input_line_number : long) {
-    $self->{InputLineNumber} = $input_line_number ;
-  }
-  
   method open : void ($file_name : string, $open_mode : string) {
     
     unless ($file_name) {
@@ -121,6 +117,11 @@ class IO::File extends IO::Handle {
     }
     
     my $write_length = Sys::IO->fwrite($string, 1, $length, $file_stream);
+    
+    my $auto_flush = $self->{AutoFlush};
+    if ($auto_flush) {
+      $self->flush;
+    }
     
     return $write_length;
   }

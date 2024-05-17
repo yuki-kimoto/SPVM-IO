@@ -61,12 +61,6 @@ C<method input_line_number : long ();>
 
 Returns the value of L</"InputLineNumber> field.
 
-=head2 set_input_line_number
-
-C<method set_input_line_number : void ($input_line_number : long);>
-
-Sets L</"InputLineNumber> field to $input_line_number.
-
 =head2 close
 
 C<method close : void;>
