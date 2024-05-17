@@ -124,15 +124,41 @@ Returns the value of L</"InputLineNumber"> field.
 
 C<method close : void;>
 
-Closes the file stream L</"FileStream">, and sets L<FD|SPVM::IO::Handle/"FD"> to -1.
+Closes the file stream L</"FileStream">.
+
+This method calls L<Sys::IO#fclose|SPVM::Sys::IO/"fclose"> method.
+
+L</"InputLineNumber"> field is set to 0.
+
+L<FD|SPVM::IO::Handle/"FD"> field is set to -1.
+
+Exceptions:
+
+Exceptions thrown by L<Sys::IO#fclose|SPVM::Sys::IO/"fclose"> method could be thrown.
 
 =head2 read
 
 C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
 
+Reads the length $length of data from the file stream L</"FileStream"> and store it to the offset $offset position of the string $string.
+
+This method calls L<Sys#read|SPVM::Sys/"read"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#read|SPVM::Sys/"read"> method could be thrown.
+
 =head2 write
 
 C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
+
+Writes the length $length from the offset $offset of the string $string to the file stream L</"FileStream">.
+
+This method calls L<Sys::IO#fwrite|SPVM::Sys::IO/"fwrite"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys::IO#fwrite|SPVM::Sys::IO/"fwrite"> method could be thrown.
 
 =head2 getline
 
