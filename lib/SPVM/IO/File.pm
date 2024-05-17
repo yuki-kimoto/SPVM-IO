@@ -45,6 +45,14 @@ C<static method new : IO::File ($file_name : string = undef, $open_mode : string
 
 C<static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef);>
 
+=head2 open
+
+C<method open : void ($file_name : string, $open_mode : object of string|Int, $perm : int = -1);>
+
+=head2 fdopen
+
+C<method fdopen : void ($fd : int, $open_mode : string);>
+
 =head1 Instance Methods
 
 =head2 input_line_number

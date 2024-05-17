@@ -51,10 +51,50 @@ class IO::File extends IO::Handle {
     $self->{InputLineNumber} = $input_line_number ;
   }
   
-  method fileno : int () {
-    my $file_stream = $self->{FileStream};
-    my $fd = Sys->fileno($file_stream);
-    return $fd;
+  method open : void ($file_name : string, $open_mode : object of string|Int, $perm : int = -1) {
+    
+    my $file_stream_ref = [(Sys::IO::FileStream)undef];
+    
+    unless ($open_mode) {
+      die "\$open_mode must be defined.";
+    }
+    
+    my $file_stream = [(Sys::IO::FileStream)undef];
+    if ($open_mode is_type string) {
+      Sys->open($file_stream_ref, (string)$open_mode, $file_name);
+    }
+    elsif ($open_mode is_type Int) {
+      my $fd = -1;
+      if ($perm < 0) {
+        $perm = 0666;
+      }
+      Sys->sysopen(\$fd, $file_name, $open_mode->(Int)->value, $perm);
+      Sys->fdopen($file_stream, $open_mode->(Int)->value, $fd);
+    }
+    else {
+      die "The type of \$open_mode must be string or Int.";
+    }
+    
+    my $file_stream_tmp = $file_stream_ref->[0];
+    
+    $self->{FileStream} = $file_stream_tmp;
+    
+    my $fd = Sys->fileno($file_stream_tmp);
+    
+    $self->{FD} = $fd;
+  }
+  
+  method fdopen : void ($fd : int, $open_mode : string) {
+    
+    my $file_stream_ref = [(Sys::IO::FileStream)undef];
+    
+    Sys->fdopen($file_stream_ref, $open_mode, $fd);
+    
+    my $file_stream = $file_stream_ref->[0];
+    
+    $self->{FileStream} = $file_stream;
+    
+    $self->{FD} = $fd;
   }
   
   method close : void () {
@@ -196,42 +236,6 @@ class IO::File extends IO::Handle {
     my $fd = $self->{FD};
     
     Sys::IO->ftruncate($fd, $legnth);
-  }
-  
-  private method open : void ($file_name : string, $open_mode : object of string|Int, $perm : int = -1) {
-    
-    my $file_stream_ref = [(Sys::IO::FileStream)undef];
-    
-    unless ($open_mode) {
-      die "\$open_mode must be defined.";
-    }
-    
-    my $file_stream = [(Sys::IO::FileStream)undef];
-    if ($open_mode is_type string) {
-      Sys->open($file_stream_ref, (string)$open_mode, $file_name);
-    }
-    elsif ($open_mode is_type Int) {
-      my $fd = -1;
-      if ($perm < 0) {
-        $perm = 0666;
-      }
-      Sys->sysopen(\$fd, $file_name, $open_mode->(Int)->value, $perm);
-      Sys->fdopen($file_stream, $open_mode->(Int)->value, $fd);
-    }
-    else {
-      die "The type of \$open_mode must be string or Int.";
-    }
-    
-    $self->{FileStream} = $file_stream_ref->[0];
-  }
-  
-  private method fdopen : void ($fd : int, $open_mode : string) {
-    
-    my $file_stream_ref = [(Sys::IO::FileStream)undef];
-    
-    Sys->fdopen($file_stream_ref, $open_mode, $fd);
-    
-    $self->{FileStream} = $file_stream_ref->[0];
   }
   
 }
