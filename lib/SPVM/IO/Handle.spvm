@@ -69,7 +69,7 @@ class IO::Handle {
   }
   
   method opened : int () {
-    my $opened = $self->fileno >= 0;
+    my $opened = $self->{FD} >= 0;
     
     return $opened;
   }
@@ -82,43 +82,13 @@ class IO::Handle {
     return $self->{Blocking};
   }
   
-  method print : void ($string : string) {
-    $self->write($string);
-  }
-  
-  method printf : void ($format : string, $args : object[]) {
-    my $formated_string = Format->sprintf($format, $args);
-    $self->print($formated_string);
-  }
-  
-  method say : void ($string : string) {
-    $self->print($string);
-    $self->print("\n");
-  }
-  
-  method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
-    my $fd = $self->fileno;
-    
-    my $ioctl_ret =  Sys->ioctl($fd, $request, $request_arg);
-    
-    return $ioctl_ret;
-  }
-  
-  method fcntl : int ($command : int, $command_arg : object of Int|Sys::IO::Flock|object = undef) {
-    my $fd = $self->fileno;
-    
-    my $fcntl_ret = Sys->fcntl($fd, $command, $command_arg);
-    
-    return $fcntl_ret;
-  }
-  
   method set_blocking : void ($blocking : int) {
     
     my $current_blocking = $self->{Blocking};
     
     unless (!!$blocking == $current_blocking) {
       
-      my $fd = $self->fileno;
+      my $fd = $self->{FD};
       
       if (Sys::OS->is_windows) {
         my $flags = [(int)!$blocking];
@@ -142,14 +112,44 @@ class IO::Handle {
     }
   }
   
+  method print : void ($string : string) {
+    $self->write($string);
+  }
+  
+  method printf : void ($format : string, $args : object[]) {
+    my $formated_string = Format->sprintf($format, $args);
+    $self->print($formated_string);
+  }
+  
+  method say : void ($string : string) {
+    $self->print($string);
+    $self->print("\n");
+  }
+  
+  method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
+    my $fd = $self->{FD};
+    
+    my $ioctl_ret =  Sys->ioctl($fd, $request, $request_arg);
+    
+    return $ioctl_ret;
+  }
+  
+  method fcntl : int ($command : int, $command_arg : object of Int|Sys::IO::Flock|object = undef) {
+    my $fd = $self->{FD};
+    
+    my $fcntl_ret = Sys->fcntl($fd, $command, $command_arg);
+    
+    return $fcntl_ret;
+  }
+  
   method truncate : void ($legnth : long) {
-    my $fd = $self->fileno;
+    my $fd = $self->{FD};
     
     Sys::IO->ftruncate($fd, $legnth);
   }
   
   method stat : Sys::IO::Stat () {
-    my $fd = $self->fileno;
+    my $fd = $self->{FD};
     
     my $stat = Sys->fstat($fd);
     
@@ -157,7 +157,7 @@ class IO::Handle {
   }
   
   method sync : void () {
-    my $fd = $self->fileno;
+    my $fd = $self->{FD};
     
     Sys::IO->fsync($fd);
   }
