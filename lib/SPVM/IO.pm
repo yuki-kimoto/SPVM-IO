@@ -6,11 +6,11 @@ our $VERSION = "0.211002";
 
 =head1 Name
 
-SPVM::IO - File IO, Socket, Select/Polling.
+SPVM::IO - File IO, Sockets, Select/Polling.
 
 =head1 Description
 
-IO class has methods to manipulate File IO, Socket, Select/Polling.
+Classes in IO distribution in L<SPVM> has methods to manipulate File IO, Sockets, Select/Polling.
 
 =head1 Modules
 
@@ -22,7 +22,11 @@ IO class has methods to manipulate File IO, Socket, Select/Polling.
 
 =item * L<IO::Socket|SPVM::IO::Socket>
 
+=item * L<IO::Socket::INET|SPVM::IO::Socket::IP>
+
 =item * L<IO::Socket::INET|SPVM::IO::Socket::INET>
+
+=item * L<IO::Socket::INET|SPVM::IO::Socket::INET6>
 
 =item * L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX>
 
