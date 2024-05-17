@@ -3,6 +3,17 @@
     * stream field in IO::File is renamed to FileStream.
     * input_file_nubmer field in IO::File is renamed to InputLineNumber.
     * close method in IO::File set FD field to -1, instead of setting FileStream to undef.
+    * Change the following methods in the IO::File.
+
+      -  static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perm : int = -1);
+      +  static method new : IO::File ($file_name : string = undef, $open_mode : string = undef);
+
+      -  static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef);
+      +  static method new_from_fd : IO::Handle ($fd : int, $open_mode : string);
+
+      -  method open : void ($file_name : string, $open_mode : object of string|Int, $perm : int = -1);
+      +  method open : void ($file_name : string, $open_mode : string);
+
 0.212 2023-05-17
   [Buf Fix]
     * Fix the bug that IO::Socket::INET uses IPv6 addrinfo.

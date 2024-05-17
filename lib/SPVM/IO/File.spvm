@@ -14,20 +14,20 @@ class IO::File extends IO::Handle {
   has InputLineNumber : long;
   
   # Class methods
-  static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perm : int = -1) {
+  static method new : IO::File ($file_name : string = undef, $open_mode : string = undef) {
     
     my $self = new IO::File;
     
     $self->init;
     
     if ($file_name) {
-      $self->open($file_name, $open_mode, $perm);
+      $self->open($file_name, $open_mode);
     }
     
     return $self;
   }
   
-  static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef) {
+  static method new_from_fd : IO::Handle ($fd : int, $open_mode : string) {
     
     my $self = new IO::File;
     
@@ -51,35 +51,24 @@ class IO::File extends IO::Handle {
     $self->{InputLineNumber} = $input_line_number ;
   }
   
-  method open : void ($file_name : string, $open_mode : object of string|Int, $perm : int = -1) {
+  method open : void ($file_name : string, $open_mode : string) {
     
-    my $file_stream_ref = [(Sys::IO::FileStream)undef];
+    unless ($file_name) {
+      die "The file name \$file_name must be defined.";
+    }
     
     unless ($open_mode) {
-      die "\$open_mode must be defined.";
+      die "The open mode \$open_mode must be defined.";
     }
     
-    my $file_stream = [(Sys::IO::FileStream)undef];
-    if ($open_mode is_type string) {
-      Sys->open($file_stream_ref, (string)$open_mode, $file_name);
-    }
-    elsif ($open_mode is_type Int) {
-      my $fd = -1;
-      if ($perm < 0) {
-        $perm = 0666;
-      }
-      Sys->sysopen(\$fd, $file_name, $open_mode->(Int)->value, $perm);
-      Sys->fdopen($file_stream, $open_mode->(Int)->value, $fd);
-    }
-    else {
-      die "The type of \$open_mode must be string or Int.";
-    }
+    my $file_stream_ref = [(Sys::IO::FileStream)undef];
+    Sys->open($file_stream_ref, (string)$open_mode, $file_name);
     
-    my $file_stream_tmp = $file_stream_ref->[0];
+    my $file_stream = $file_stream_ref->[0];
     
-    $self->{FileStream} = $file_stream_tmp;
+    $self->{FileStream} = $file_stream;
     
-    my $fd = Sys->fileno($file_stream_tmp);
+    my $fd = Sys->fileno($file_stream);
     
     $self->{FD} = $fd;
   }

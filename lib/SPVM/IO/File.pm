@@ -43,11 +43,11 @@ C<static method new : IO::File ($file_name : string = undef, $open_mode : string
 
 =head2 new_from_fd
 
-C<static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef);>
+C<static method new_from_fd : IO::Handle ($fd : int, $open_mode : string);>
 
 =head2 open
 
-C<method open : void ($file_name : string, $open_mode : object of string|Int, $perm : int = -1);>
+C<method open : void ($file_name : string, $open_mode : string);>
 
 =head2 fdopen
 
