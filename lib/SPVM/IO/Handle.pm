@@ -173,19 +173,19 @@ Same as the following method call.
 
 C<method stat : Sys::IO::Stat ();>
 
-Calls L<Sys#stat|SPVM::Sys/"stat"> with the file descriptor L</"FD">, and returns the return value.
+Calls L<Sys#stat|SPVM::Sys/"stat"> method with the file descriptor L</"FD">, and returns the return value.
 
 =head2 fcntl
 
 C<method fcntl : int ($command : int, $command_arg : object = undef of Int|Sys::IO::Flock|object);>
 
-Calls L<Sys#fcntl|SPVM::Sys/"fcntl"> with the file descriptor L</"FD">, and returns the return value.
+Calls L<Sys#fcntl|SPVM::Sys/"fcntl"> method with the file descriptor L</"FD">, and returns the return value.
 
 =head2 ioctl
 
 C<static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);>
 
-Calls L<Sys#ioctl|SPVM::Sys/"ioctl"> with the file descriptor L</"FD">, and returns the return value.
+Calls L<Sys#ioctl|SPVM::Sys/"ioctl"> method with the file descriptor L</"FD">, and returns the return value.
 
 =head2 sync
 

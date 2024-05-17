@@ -2,6 +2,9 @@
   [Imcompatible Changes]
     * stream field in IO::File is renamed to FileStream.
     * input_file_nubmer field in IO::File is renamed to InputLineNumber.
+    * open method in IO::File becomes a private method.
+    * fdopen method in IO::File becomes a private method.
+    * close method in IO::File set FD field to -1, instead of setting FileStream to undef.
 0.212 2023-05-17
   [Buf Fix]
     * Fix the bug that IO::Socket::INET uses IPv6 addrinfo.
