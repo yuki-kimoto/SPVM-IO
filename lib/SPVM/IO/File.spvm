@@ -61,6 +61,10 @@ class IO::File extends IO::Handle {
       die "The open mode \$open_mode must be defined.";
     }
     
+    if ($self->opened) {
+      die "Already opened.";
+    }
+    
     my $file_stream_ref = [(Sys::IO::FileStream)undef];
     Sys->open($file_stream_ref, (string)$open_mode, $file_name);
     
@@ -74,6 +78,10 @@ class IO::File extends IO::Handle {
   }
   
   method fdopen : void ($fd : int, $open_mode : string) {
+    
+    if ($self->opened) {
+      die "Already opened.";
+    }
     
     my $file_stream_ref = [(Sys::IO::FileStream)undef];
     
