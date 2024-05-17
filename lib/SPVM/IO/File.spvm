@@ -103,19 +103,6 @@ class IO::File extends IO::Handle {
     $self->{FD} = -1;
   }
   
-  method getline : string () {
-    
-    my $file_stream = $self->{FileStream};
-    
-    my $line = Sys->readline($file_stream);
-    
-    if ($line) {
-      $self->{InputLineNumber}++;
-    }
-    
-    return $line;
-  }
-  
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
     
     my $file_stream = $self->{FileStream};
@@ -136,6 +123,19 @@ class IO::File extends IO::Handle {
     my $write_length = Sys::IO->fwrite($string, 1, $length, $file_stream);
     
     return $write_length;
+  }
+  
+  method getline : string () {
+    
+    my $file_stream = $self->{FileStream};
+    
+    my $line = Sys->readline($file_stream);
+    
+    if ($line) {
+      $self->{InputLineNumber}++;
+    }
+    
+    return $line;
   }
   
   method getlines : string () {
@@ -165,21 +165,6 @@ class IO::File extends IO::Handle {
     my $char = Sys->getc($file_stream);
     
     return $char;
-  }
-  
-  method printflush : void ($string : string) {
-    my $old_autoflush = $self->autoflush;
-    
-    # Restores the autoflush field at the end of the scope.
-    my $scope_guard = Scope::Guard->new([has handle : IO::Handle = $self, has old_autoflush : int = $old_autoflush] method : void () {
-      my $handle = $self->{handle};
-      my $old_autoflush = $self->{old_autoflush};
-      
-      $handle->set_autoflush($old_autoflush);
-    });
-    
-    $self->set_autoflush(1);
-    $self->print($string);
   }
   
   method eof : int () {

@@ -13,7 +13,7 @@
 
       -  method open : void ($file_name : string, $open_mode : object of string|Int, $perm : int = -1);
       +  method open : void ($file_name : string, $open_mode : string);
-
+    * Remove printflush method in IO::File.
 0.212 2023-05-17
   [Buf Fix]
     * Fix the bug that IO::Socket::INET uses IPv6 addrinfo.

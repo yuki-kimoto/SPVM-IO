@@ -103,10 +103,6 @@ C<method getc : int ();>
 
 C<method print : int ($string : string);>
 
-=head2 printflush
-
-C<method printflush : void ($string : string);>
-
 =head2 clearerr
 
 C<method clearerr : void ();>
