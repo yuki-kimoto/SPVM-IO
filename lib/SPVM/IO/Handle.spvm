@@ -112,6 +112,12 @@ class IO::Handle {
     $self->{Blocking} = (byte)!$blocking;
   }
   
+  method close : void () { die "Not implemented."; }
+  
+  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
+  
+  method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
+  
   method print : void ($string : string) {
     $self->write($string);
   }
@@ -126,12 +132,12 @@ class IO::Handle {
     $self->print("\n");
   }
   
-  method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
+  method stat : Sys::IO::Stat () {
     my $fd = $self->{FD};
     
-    my $ioctl_ret =  Sys->ioctl($fd, $request, $request_arg);
+    my $stat = Sys->fstat($fd);
     
-    return $ioctl_ret;
+    return $stat;
   }
   
   method fcntl : int ($command : int, $command_arg : object of Int|Sys::IO::Flock|object = undef) {
@@ -142,21 +148,15 @@ class IO::Handle {
     return $fcntl_ret;
   }
   
-  method stat : Sys::IO::Stat () {
+  method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
     my $fd = $self->{FD};
     
-    my $stat = Sys->fstat($fd);
+    my $ioctl_ret =  Sys->ioctl($fd, $request, $request_arg);
     
-    return $stat;
+    return $ioctl_ret;
   }
   
   method sync : void () { die "Not implemented."; }
-  
-  method close : void () { die "Not implemented."; }
-  
-  method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
-  
-  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
   
   method truncate : void ($legnth : long) { die "Not implemented."; }
   
