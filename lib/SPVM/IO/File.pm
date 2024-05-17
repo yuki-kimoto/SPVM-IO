@@ -9,161 +9,165 @@ SPVM::IO::File - File Input/Output
 =head1 Usage
   
   use IO::File;
-   
-  my $io_file = IO::File->new("file", "r");
-  $io_file->print("Hello");
+  
+  my $io_file = IO::File->new("foo.txt", ">");
+  $io_file->print("Hello");>
 
 =head1 Description
 
-L<SPVM::IO::File> provides File Input/Output.
+IO::File class has methods for File IO.
 
-=head1 Parent Class
+=head1 Super Class
 
 L<IO::Handle|SPVM::IO::Handle>.
 
 =head1 Fields
 
-=head2 stream
+=head2 FileStream
 
-  has stream : Sys::IO::FileStream;
+C<has FileStream : Sys::IO::FileStream;>
 
-=head2 input_line_number
+A file stream associated with the file descriptoer L<FD|SPVM::IO::Handle/"FD">.
 
-  has input_line_number : long;
+=head2 InputLineNumber
+
+C<has InputLineNumber : long;>
+
+The current line number. This value is incremented by L</"getline"> method.
 
 =head1 Class Methods
 
 =head2 new
 
-  static method new : IO::File ($file_name : string = undef, $open_mode : string = undef);
+C<static method new : IO::File ($file_name : string = undef, $open_mode : string = undef);>
 
 =head2 new_from_fd
 
-  static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef);
+C<static method new_from_fd : IO::Handle ($fd : int, $open_mode : string = undef);>
 
 =head1 Instance Methods
 
 =head2 input_line_number
 
-  method input_line_number : long ();
+C<method input_line_number : long ();>
 
 Gets L</"input_line_number> field.
 
 =head2 set_input_line_number
 
-  method set_input_line_number : void ($input_line_number : long);
+C<method set_input_line_number : void ($input_line_number : long);>
 
 Sets L</"input_line_number> field.
 
 =head2 open
 
-  method open : void ($file_name : string, $open_mode : string);
+C<method open : void ($file_name : string, $open_mode : string);>
 
 =head2 fdopen
 
-  method fdopen : void ($fd : int, $open_mode : string);
+C<method fdopen : void ($fd : int, $open_mode : string);>
 
 =head2 init
 
-  protected method init : void ();
+  protected method init : void ();>
 
 =head2 DESTROY
 
-  method DESTROY : void ();
+C<method DESTROY : void ();>
 
 =head2 getline
 
-  method getline : string ();
+C<method getline : string ();>
 
 =head2 getlines
 
-  method getlines : string ();
+C<method getlines : string ();>
 
 =head2 close
 
-  method close : int ();
+C<method close : int ();>
 
 =head2 eof
 
-  method eof : int ();
+C<method eof : int ();>
 
 =head2 fileno
 
-  method fileno : int ();
+C<method fileno : int ();>
 
 Gets the file descriptor of L</"stream"> field.
 
 =head2 getc
 
-  method getc : int ();
+C<method getc : int ();>
 
 =head2 print
 
-  method print : int ($string : string);
+C<method print : int ($string : string);>
 
 =head2 clearerr
 
-  method clearerr : void ();
+C<method clearerr : void ();>
 
 =head2 error
 
-  method error : int ();
+C<method error : int ();>
 
 =head2 flush
 
-  method flush : void ();
+C<method flush : void ();>
 
 =head2 ungetc
 
-  method ungetc : int ($c : int);
+C<method ungetc : int ($c : int);>
 
 =head2 write
 
-  method write : int ($string : string, $length : int = -1, $offset : int = 0);
+C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
 
 =head2 read
 
-  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
+C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
 
 =head2 printflush
 
-  method printflush : void ($string : string);
+C<method printflush : void ($string : string);>
 
 =head2 getline
 
-  method getline : string ();
+C<method getline : string ();>
 
 =head2 getlines
 
-  method getlines : string ();
+C<method getlines : string ();>
 
 =head2 ungetc
 
-  method ungetc : int ($c : int);
+C<method ungetc : int ($c : int);>
 
 =head2 clearerr
 
-  method clearerr : void ();
+C<method clearerr : void ();>
 
 =head2 error
 
-  method error : int ();
+C<method error : int ();>
 
 =head2 getc
 
-  method getc : int ();
+C<method getc : int ();>
 
 =head2 eof
 
-  method eof : int ();
+C<method eof : int ();>
 
 =head2 sync
 
 C<method sync : void ();>
 
-Syncs the stream associated with the file descriptoer L</"FD">.
+Syncs the stream associated with the file descriptoer L<FD|SPVM::IO::Handle/"FD">.
 
-This method calls L<Sys#fsync|SPVM::Sys/"fsync"> with the file descriptor L</"FD">.
+This method calls L<Sys#fsync|SPVM::Sys/"fsync"> with the file descriptor L<FD|SPVM::IO::Handle/"FD">.
 
 =head2 truncate
 
@@ -171,7 +175,7 @@ C<method truncate : void ($legnth : long);>
 
 Trancates the stream associated with the file descriptoer L<FD|SPVM::IO::Handle/"FD">.
 
-This method calls L<Sys#ftruncate|SPVM::Sys/"ftruncate"> with the file descriptor L</"FD">.
+This method calls L<Sys#ftruncate|SPVM::Sys/"ftruncate"> with the file descriptor L<FD|SPVM::IO::Handle/"FD">.
 
 =head1 See Also
 
