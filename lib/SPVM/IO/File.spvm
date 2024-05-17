@@ -97,6 +97,8 @@ class IO::File extends IO::Handle {
     Sys::IO->fclose($file_stream);
     
     $self->{FD} = -1;
+    
+    $self->{InputLineNumber} = 0;
   }
   
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
