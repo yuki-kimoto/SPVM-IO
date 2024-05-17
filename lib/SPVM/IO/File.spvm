@@ -2,9 +2,8 @@
 # MIT License
 
 class IO::File extends IO::Handle {
+  use Sys;
   use Sys::IO;
-  use Fn;
-  use Array;
   use Sys::IO::FileStream;
   use StringBuffer;
   
