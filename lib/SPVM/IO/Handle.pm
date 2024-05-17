@@ -109,13 +109,33 @@ If $blocking is a true value, disables the non-blocking mode of the file descrip
 
 C<method print : void ($string : string);>
 
+Outputs the string $string to the stream associated with the file descriptoer L</"FD">.
+
+Same as the following method call.
+
+  $handle->write($string);
+
 =head2 printf
 
 C<method printf : void ($format : string, $args : object[]...);>
 
+Outputs a string fomatted with the format $format and its parameters $args to the stream associated with the file descriptoer L</"FD">.
+
+Same as the following method call.
+
+  my $formated_string = Format->sprintf($format, $args);
+  $handle->print($formated_string);
+
 =head2 say
 
 C<method say : void ($string : string);>
+
+Outputs the string $string and C<\n> to the stream associated with the file descriptoer L</"FD">.
+
+Same as the following method call.
+
+  $handle->print($string);
+  $handle->print("\n");
 
 =head2 truncate
 
@@ -129,19 +149,27 @@ This method always throws an exception.
 
 =head2 ioctl
 
-  static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);>
+C<static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);>
+
+Calls L<Sys#ioctl|SPVM::Sys/"ioctl"> with the file descriptor L</"FD">, and returns the return value.
 
 =head2 sync
 
 C<method sync : void ();>
 
+Calls L<Sys#sync|SPVM::Sys/"sync"> with the file descriptor L</"FD">, and returns the return value.
+
 =head2 stat
 
 C<method stat : Sys::IO::Stat ();>
 
+Calls L<Sys#stat|SPVM::Sys/"stat"> with the file descriptor L</"FD">, and returns the return value.
+
 =head2 fcntl
 
 C<method fcntl : int ($command : int, $command_arg : object = undef of Int|Sys::IO::Flock|object);>
+
+Calls L<Sys#fcntl|SPVM::Sys/"fcntl"> with the file descriptor L</"FD">, and returns the return value.
 
 =head2 write
 
