@@ -88,16 +88,16 @@ class IO::Select {
     $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     
     # Set handles to fd_set
-    my $fds = Sys::Select::Fd_set->new;
-    Sys::Select->FD_ZERO($fds);
+    my $fd_set = Sys::Select::Fd_set->new;
+    Sys::Select->FD_ZERO($fd_set);
     
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
-      Sys::Select->FD_SET($handle, $fds);
+      Sys::Select->FD_SET($handle, $fd_set);
     }
     
     # select
-    my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, $fds, undef, undef, $tv);
+    my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, $fd_set, undef, undef, $tv);
     
     # Can handles
     my $can_handles = new int[$success_count];
@@ -106,7 +106,7 @@ class IO::Select {
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
       
-      if (Sys::Select->FD_ISSET($handle, $fds)) {
+      if (Sys::Select->FD_ISSET($handle, $fd_set)) {
         $can_handles->[$can_handles_index++] = $handle;
       }
     }
@@ -126,16 +126,16 @@ class IO::Select {
     $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     
     # Set handles to fd_set
-    my $fds = Sys::Select::Fd_set->new;
-    Sys::Select->FD_ZERO($fds);
+    my $fd_set = Sys::Select::Fd_set->new;
+    Sys::Select->FD_ZERO($fd_set);
     
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
-      Sys::Select->FD_SET($handle, $fds);
+      Sys::Select->FD_SET($handle, $fd_set);
     }
     
     # select
-    my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, undef, $fds, undef, $tv);
+    my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, undef, $fd_set, undef, $tv);
     
     # Can handles
     my $can_handles = new int[$success_count];
@@ -144,7 +144,7 @@ class IO::Select {
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
       
-      if (Sys::Select->FD_ISSET($handle, $fds)) {
+      if (Sys::Select->FD_ISSET($handle, $fd_set)) {
         $can_handles->[$can_handles_index++] = $handle;
       }
     }
@@ -164,16 +164,16 @@ class IO::Select {
     $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     
     # Set handles to fd_set
-    my $fds = Sys::Select::Fd_set->new;
-    Sys::Select->FD_ZERO($fds);
+    my $fd_set = Sys::Select::Fd_set->new;
+    Sys::Select->FD_ZERO($fd_set);
     
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
-      Sys::Select->FD_SET($handle, $fds);
+      Sys::Select->FD_SET($handle, $fd_set);
     }
     
     # select
-    my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, undef, undef, $fds, $tv);
+    my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, undef, undef, $fd_set, $tv);
     
     # Can handles
     my $can_handles = new int[$success_count];
@@ -182,7 +182,7 @@ class IO::Select {
     for (my $i = 0; $i < @$handles; $i++) {
       my $handle = $handles->[$i];
       
-      if (Sys::Select->FD_ISSET($handle, $fds)) {
+      if (Sys::Select->FD_ISSET($handle, $fd_set)) {
         $can_handles->[$can_handles_index++] = $handle;
       }
     }
