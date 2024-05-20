@@ -55,7 +55,7 @@ C<method remove : void ($handle : int);>
 
 =head2 exists
 
-C<method exists : int ($check_handle : int);>
+C<method exists : int ($handle : int);>
 
 =head2 handles
 
