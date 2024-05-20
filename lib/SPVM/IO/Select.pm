@@ -29,7 +29,7 @@ This class a Perl's L<IO::Select|IO::Select> porting to L<SPVM>.
 
 =head1 Fields
 
-C<has handles_list : L<IntList|SPVM::IntList>;>
+C<has fds_list : L<IntList|SPVM::IntList>;>
 
 A list of file descriptors.
 
@@ -45,21 +45,21 @@ Creates a new L<IO::Select|SPVM::IO::Select> object and returns it.
 
 =head2 add
 
-C<method add : void ($handle : int);>
+C<method add : void ($fd : int);>
 
-Adds the new file descriptor $handle.
+Adds the new file descriptor $fd.
 
 =head2 remove
 
-C<method remove : void ($handle : int);>
+C<method remove : void ($fd : int);>
 
 =head2 exists
 
-C<method exists : int ($handle : int);>
+C<method exists : int ($fd : int);>
 
-=head2 handles
+=head2 fds
 
-C<method handles : int[] ();>
+C<method fds : int[] ();>
 
 =head2 can_read
 

@@ -10,60 +10,60 @@ class IO::Select {
   use Sys::Select::Constant as SELECT;
   
   # Fields
-  has handles_list : IntList;
+  has fds_list : IntList;
   
   # Class Methods
   static method new : IO::Select () {
     
     my $self = new IO::Select;
     
-    $self->{handles_list} = IntList->new;
+    $self->{fds_list} = IntList->new;
     
     return $self;
   }
   
-  method add : void ($handle : int) {
+  method add : void ($fd : int) {
     
     my $found = 0;
-    my $handles_list = $self->{handles_list};
+    my $fds_list = $self->{fds_list};
     
-    for (my $i = 0; $i < $handles_list->length; $i++) {
-      my $self_handle = $handles_list->get($i);
+    for (my $i = 0; $i < $fds_list->length; $i++) {
+      my $self_fd = $fds_list->get($i);
       
-      if ((int)$self_handle == $handle) {
+      if ((int)$self_fd == $fd) {
         $found = 1;
         last;
       }
     }
     
     unless ($found) {
-      $handles_list->push($handle);
+      $fds_list->push($fd);
     }
   }
   
-  method remove : void ($handle : int) {
+  method remove : void ($fd : int) {
     
-    my $handles_list = $self->{handles_list};
+    my $fds_list = $self->{fds_list};
     
     my $removed = 0;
-    for (my $i = 0; $i < $handles_list->length; $i++) {
-      my $self_handle = $handles_list->get($i);
+    for (my $i = 0; $i < $fds_list->length; $i++) {
+      my $self_fd = $fds_list->get($i);
       
-      if ((int)$self_handle == $handle) {
-        $handles_list->remove($i);
+      if ((int)$self_fd == $fd) {
+        $fds_list->remove($i);
         last;
       }
     }
   }
   
-  method exists : int ($handle : int) {
+  method exists : int ($fd : int) {
     
-    my $handles_list = $self->{handles_list};
+    my $fds_list = $self->{fds_list};
     
-    for (my $i = 0; $i < $handles_list->length; $i++) {
-      my $self_handle = $handles_list->get($i);
+    for (my $i = 0; $i < $fds_list->length; $i++) {
+      my $self_fd = $fds_list->get($i);
       
-      if ((int)$self_handle == $handle) {
+      if ((int)$self_fd == $fd) {
         return 1;
       }
     }
@@ -71,14 +71,14 @@ class IO::Select {
     return 0;
   }
   
-  method handles : int[] () {
+  method fds : int[] () {
     
-    return $self->{handles_list}->to_array;
+    return $self->{fds_list}->to_array;
   }
   
   method can_read : int[] ($timeout : double) {
-    my $handles_list = $self->{handles_list};
-    my $handles = $handles_list->to_array;
+    my $fds_list = $self->{fds_list};
+    my $fds = $fds_list->to_array;
     
     my $timeout_int = 0.0;
     my $timeout_fraction = Math->modf($timeout, \$timeout_int);
@@ -87,36 +87,36 @@ class IO::Select {
     $tv->set_tv_sec((int)$timeout_int);
     $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     
-    # Set handles to fd_set
+    # Set fds to fd_set
     my $fd_set = Sys::Select::Fd_set->new;
     Sys::Select->FD_ZERO($fd_set);
     
-    for (my $i = 0; $i < @$handles; $i++) {
-      my $handle = $handles->[$i];
-      Sys::Select->FD_SET($handle, $fd_set);
+    for (my $i = 0; $i < @$fds; $i++) {
+      my $fd = $fds->[$i];
+      Sys::Select->FD_SET($fd, $fd_set);
     }
     
     # select
     my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, $fd_set, undef, undef, $tv);
     
-    # Can handles
-    my $can_handles = new int[$success_count];
+    # Can fds
+    my $can_fds = new int[$success_count];
     
-    my $can_handles_index = 0;
-    for (my $i = 0; $i < @$handles; $i++) {
-      my $handle = $handles->[$i];
+    my $can_fds_index = 0;
+    for (my $i = 0; $i < @$fds; $i++) {
+      my $fd = $fds->[$i];
       
-      if (Sys::Select->FD_ISSET($handle, $fd_set)) {
-        $can_handles->[$can_handles_index++] = $handle;
+      if (Sys::Select->FD_ISSET($fd, $fd_set)) {
+        $can_fds->[$can_fds_index++] = $fd;
       }
     }
     
-    return $can_handles;
+    return $can_fds;
   }
   
   method can_write : int[] ($timeout : double) {
-    my $handles_list = $self->{handles_list};
-    my $handles = $handles_list->to_array;
+    my $fds_list = $self->{fds_list};
+    my $fds = $fds_list->to_array;
     
     my $timeout_int = 0.0;
     my $timeout_fraction = Math->modf($timeout, \$timeout_int);
@@ -125,36 +125,36 @@ class IO::Select {
     $tv->set_tv_sec((int)$timeout_int);
     $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     
-    # Set handles to fd_set
+    # Set fds to fd_set
     my $fd_set = Sys::Select::Fd_set->new;
     Sys::Select->FD_ZERO($fd_set);
     
-    for (my $i = 0; $i < @$handles; $i++) {
-      my $handle = $handles->[$i];
-      Sys::Select->FD_SET($handle, $fd_set);
+    for (my $i = 0; $i < @$fds; $i++) {
+      my $fd = $fds->[$i];
+      Sys::Select->FD_SET($fd, $fd_set);
     }
     
     # select
     my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, undef, $fd_set, undef, $tv);
     
-    # Can handles
-    my $can_handles = new int[$success_count];
+    # Can fds
+    my $can_fds = new int[$success_count];
     
-    my $can_handles_index = 0;
-    for (my $i = 0; $i < @$handles; $i++) {
-      my $handle = $handles->[$i];
+    my $can_fds_index = 0;
+    for (my $i = 0; $i < @$fds; $i++) {
+      my $fd = $fds->[$i];
       
-      if (Sys::Select->FD_ISSET($handle, $fd_set)) {
-        $can_handles->[$can_handles_index++] = $handle;
+      if (Sys::Select->FD_ISSET($fd, $fd_set)) {
+        $can_fds->[$can_fds_index++] = $fd;
       }
     }
     
-    return $can_handles;
+    return $can_fds;
   }
   
   method has_exception : int[] ($timeout : double) {
-    my $handles_list = $self->{handles_list};
-    my $handles = $handles_list->to_array;
+    my $fds_list = $self->{fds_list};
+    my $fds = $fds_list->to_array;
     
     my $timeout_int = 0.0;
     my $timeout_fraction = Math->modf($timeout, \$timeout_int);
@@ -163,31 +163,31 @@ class IO::Select {
     $tv->set_tv_sec((int)$timeout_int);
     $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     
-    # Set handles to fd_set
+    # Set fds to fd_set
     my $fd_set = Sys::Select::Fd_set->new;
     Sys::Select->FD_ZERO($fd_set);
     
-    for (my $i = 0; $i < @$handles; $i++) {
-      my $handle = $handles->[$i];
-      Sys::Select->FD_SET($handle, $fd_set);
+    for (my $i = 0; $i < @$fds; $i++) {
+      my $fd = $fds->[$i];
+      Sys::Select->FD_SET($fd, $fd_set);
     }
     
     # select
     my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, undef, undef, $fd_set, $tv);
     
-    # Can handles
-    my $can_handles = new int[$success_count];
+    # Can fds
+    my $can_fds = new int[$success_count];
     
-    my $can_handles_index = 0;
-    for (my $i = 0; $i < @$handles; $i++) {
-      my $handle = $handles->[$i];
+    my $can_fds_index = 0;
+    for (my $i = 0; $i < @$fds; $i++) {
+      my $fd = $fds->[$i];
       
-      if (Sys::Select->FD_ISSET($handle, $fd_set)) {
-        $can_handles->[$can_handles_index++] = $handle;
+      if (Sys::Select->FD_ISSET($fd, $fd_set)) {
+        $can_fds->[$can_fds_index++] = $fd;
       }
     }
     
-    return $can_handles;
+    return $can_fds;
   }
   
 }
