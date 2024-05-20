@@ -31,19 +31,8 @@ class TestCase::IO::Select {
     $select->add(4);
     $select->add(5);
     
-    {
-      my $ret = $select->remove(4);
-      unless ($ret == 1) {
-        return 0;
-      }
-    }
-
-    {
-      my $ret = $select->remove(6);
-      unless ($ret == 0) {
-        return 0;
-      }
-    }
+    $select->remove(4);
+    $select->remove(6);
     
     {
       my $handles = $select->handles;
@@ -54,8 +43,9 @@ class TestCase::IO::Select {
     
     return 1;
   }
-
+  
   static method exists : int () {
+    
     my $select = IO::Select->new;
     
     $select->add(0);

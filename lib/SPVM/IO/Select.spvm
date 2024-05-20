@@ -41,7 +41,7 @@ class IO::Select {
     }
   }
   
-  method remove : int ($remove_handle : int) {
+  method remove : void ($remove_handle : int) {
     
     my $new_handles = IntList->new((int[])undef);
     my $handles = $self->{handles_list};
@@ -59,8 +59,6 @@ class IO::Select {
     }
     
     $self->{handles_list} = $new_handles;
-    
-    return $removed;
   }
   
   method exists : int ($check_handle : int) {

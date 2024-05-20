@@ -1,7 +1,8 @@
 0.214 2023-05-20
   [Imcompatible Changes]
     * handles field in IO::Slect is renamed to handles_list.
-    * The type of add method in IO::Slect is changed from int to void.
+    * The type of add method in IO::Select is changed from int to void.
+    * The type of remove method in IO::Select is changed from int to void.
 0.213 2023-05-20
   [Imcompatible Changes]
     * stream field in IO::File is renamed to FileStream.
