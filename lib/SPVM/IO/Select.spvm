@@ -7,6 +7,7 @@ class IO::Select {
   use Sys::Time::Timeval;
   use Sys::Select;
   use Sys;
+  use Sys::Select::Constant as SELECT;
   
   # Fields
   has handles_list : IntList;
@@ -201,8 +202,11 @@ class IO::Select {
   }
   
   static method select : int ($readfds : Sys::Select::Fd_set, $writefds : Sys::Select::Fd_set, $exceptfds : Sys::Select::Fd_set, $timeout : Sys::Time::Timeval) {
-    my $nfds = 1024;
+    
+    my $nfds = SELECT->FD_SETSIZE;
+    
     my $fd_number = Sys::Select->select($nfds, $readfds, $writefds, $exceptfds, $timeout);
+    
     return $fd_number;
   }
 }
