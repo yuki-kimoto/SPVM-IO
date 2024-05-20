@@ -5,6 +5,8 @@
     * The type of remove method in IO::Select is changed from int to void.
     * handles_list field in IO::Select is renamed to fds_list.
     * handles method in IO::Select is renamed to fds.
+  [New Features]
+    * Add count method to IO::Select class.
 0.213 2023-05-20
   [Imcompatible Changes]
     * stream field in IO::File is renamed to FileStream.

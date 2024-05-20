@@ -18,6 +18,11 @@ class TestCase::IO::Select {
       unless (Array->equals_int($fds, [0, 1, 4, 5])) {
         return 0;
       }
+      
+      my $fds_count = $select->count;
+      unless ($fds_count == 4) {
+        return 0;
+      }
     }
     
     return 1;
