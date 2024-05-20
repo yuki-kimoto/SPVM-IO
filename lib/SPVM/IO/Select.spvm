@@ -17,12 +17,12 @@ class IO::Select {
     
     my $self = new IO::Select;
     
-    $self->{handles_list} = IntList->new((int[])undef);
+    $self->{handles_list} = IntList->new;
     
     return $self;
   }
   
-  method add : int ($new_handle : int) {
+  method add : void ($new_handle : int) {
     
     my $found = 0;
     my $handles = $self->{handles_list};
@@ -36,12 +36,8 @@ class IO::Select {
       }
     }
     
-    if ($found) {
-      return 0;
-    }
-    else {
+    unless ($found) {
       $handles->push($new_handle);
-      return 1;
     }
   }
   
@@ -124,7 +120,7 @@ class IO::Select {
     
     return $can_handles;
   }
- 
+  
   method can_write : int[] ($timeout : double) {
     my $handles_list = $self->{handles_list};
     my $handles = $handles_list->to_array;
@@ -162,7 +158,7 @@ class IO::Select {
     
     return $can_handles;
   }
-
+  
   method has_exception : int[] ($timeout : double) {
     my $handles_list = $self->{handles_list};
     my $handles = $handles_list->to_array;
