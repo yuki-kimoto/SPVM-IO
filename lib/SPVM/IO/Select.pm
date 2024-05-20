@@ -51,7 +51,7 @@ Adds the new file descriptor $handle.
 
 =head2 remove
 
-C<method remove : void ($remove_handle : int);>
+C<method remove : void ($handle : int);>
 
 =head2 exists
 

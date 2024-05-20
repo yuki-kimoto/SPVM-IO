@@ -41,15 +41,15 @@ class IO::Select {
     }
   }
   
-  method remove : void ($remove_handle : int) {
+  method remove : void ($handle : int) {
     
     my $handles_list = $self->{handles_list};
     
     my $removed = 0;
     for (my $i = 0; $i < $handles_list->length; $i++) {
-      my $handle = $handles_list->get($i);
+      my $self_handle = $handles_list->get($i);
       
-      if ((int)$handle == $remove_handle) {
+      if ((int)$self_handle == $handle) {
         $handles_list->remove($i);
         last;
       }
