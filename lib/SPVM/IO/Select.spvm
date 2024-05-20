@@ -25,10 +25,10 @@ class IO::Select {
   method add : void ($new_handle : int) {
     
     my $found = 0;
-    my $handles = $self->{handles_list};
+    my $handles_list = $self->{handles_list};
     
-    for (my $i = 0; $i < $handles->length; $i++) {
-      my $handle = $handles->get($i);
+    for (my $i = 0; $i < $handles_list->length; $i++) {
+      my $handle = $handles_list->get($i);
       
       if ((int)$handle == $new_handle) {
         $found = 1;
@@ -37,36 +37,31 @@ class IO::Select {
     }
     
     unless ($found) {
-      $handles->push($new_handle);
+      $handles_list->push($new_handle);
     }
   }
   
   method remove : void ($remove_handle : int) {
     
-    my $new_handles = IntList->new((int[])undef);
-    my $handles = $self->{handles_list};
+    my $handles_list = $self->{handles_list};
     
     my $removed = 0;
-    for (my $i = 0; $i < $handles->length; $i++) {
-      my $handle = $handles->get($i);
+    for (my $i = 0; $i < $handles_list->length; $i++) {
+      my $handle = $handles_list->get($i);
       
       if ((int)$handle == $remove_handle) {
-        $removed = 1;
-      }
-      else {
-        $new_handles->push($handle);
+        $handles_list->remove($i);
+        last;
       }
     }
-    
-    $self->{handles_list} = $new_handles;
   }
   
   method exists : int ($check_handle : int) {
     
-    my $handles = $self->{handles_list};
+    my $handles_list = $self->{handles_list};
     
-    for (my $i = 0; $i < $handles->length; $i++) {
-      my $handle = $handles->get($i);
+    for (my $i = 0; $i < $handles_list->length; $i++) {
+      my $handle = $handles_list->get($i);
       
       if ((int)$handle == $check_handle) {
         return 1;
