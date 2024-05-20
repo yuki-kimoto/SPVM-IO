@@ -14,8 +14,8 @@ class TestCase::IO::Select {
     $select->add(5);
     
     {
-      my $handles = $select->handles;
-      unless (Array->equals_int($handles, [0, 1, 4, 5])) {
+      my $fds = $select->fds;
+      unless (Array->equals_int($fds, [0, 1, 4, 5])) {
         return 0;
       }
     }
@@ -35,8 +35,8 @@ class TestCase::IO::Select {
     $select->remove(6);
     
     {
-      my $handles = $select->handles;
-      unless (Array->equals_int($handles, [0, 1, 5])) {
+      my $fds = $select->fds;
+      unless (Array->equals_int($fds, [0, 1, 5])) {
         return 0;
       }
     }
