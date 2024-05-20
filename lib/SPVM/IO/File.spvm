@@ -113,22 +113,13 @@ class IO::File extends IO::Handle {
     return $read_length;
   }
   
-  method write : int ($string : string, $length : int = -1, $offset : int = 0) {
+  method getc : int () {
     
     my $file_stream = $self->{FileStream};
     
-    if ($length < 0) {
-      $length = length $string;
-    }
+    my $char = Sys->getc($file_stream);
     
-    my $write_length = Sys::IO->fwrite($string, 1, $length, $file_stream);
-    
-    my $auto_flush = $self->{AutoFlush};
-    if ($auto_flush) {
-      $self->flush;
-    }
-    
-    return $write_length;
+    return $char;
   }
   
   method getline : string () {
@@ -164,13 +155,29 @@ class IO::File extends IO::Handle {
     return $lines_string;
   }
   
-  method getc : int () {
+  method write : int ($string : string, $length : int = -1, $offset : int = 0) {
     
     my $file_stream = $self->{FileStream};
     
-    my $char = Sys->getc($file_stream);
+    if ($length < 0) {
+      $length = length $string;
+    }
     
-    return $char;
+    my $write_length = Sys::IO->fwrite($string, 1, $length, $file_stream);
+    
+    my $auto_flush = $self->{AutoFlush};
+    if ($auto_flush) {
+      $self->flush;
+    }
+    
+    return $write_length;
+  }
+  
+  method flush : void () {
+    
+    my $file_stream = $self->{FileStream};
+    
+    Sys::IO->fflush($file_stream);
   }
   
   method eof : int () {
@@ -196,13 +203,6 @@ class IO::File extends IO::Handle {
     my $file_stream = $self->{FileStream};
     
     Sys::IO->clearerr($file_stream);
-  }
-  
-  method flush : void () {
-    
-    my $file_stream = $self->{FileStream};
-    
-    Sys::IO->fflush($file_stream);
   }
   
   method ungetc : int ($c : int) {
