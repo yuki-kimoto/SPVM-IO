@@ -4,68 +4,76 @@ package SPVM::IO::Select;
 
 =head1 Name
 
-SPVM::IO::Select - Select
-
-=head1 Usage
-  
-  use IO::Select;
-  
-  $select = IO::Select->new;
-   
-  $select->add($fd0);
-  $select->add($fd1);
-   
-  my $ready = $select->can_read($timeout);
+SPVM::IO::Select - select System Call
 
 =head1 Description
 
-L<SPVM::IO::Select> provides select utilities.
+IO::Select class in L<SPVM> has methods for C<select> system call.
+
+=head1 Usage
+
+  use IO::Select;
+  
+  $select = IO::Select->new;
+  
+  $select->add($fd0);>
+  $select->add($fd1);>
+  
+  my $read_ready_fds = $select->can_read($timeout);
+  
+  my $write_ready_fds = $select->can_write($timeout);
+
+=head2 Details
+
+This class a Perl's L<IO::Select|IO::Select> porting to L<SPVM>.
 
 =head1 Fields
 
-  has handles : IntList;
+C<has handles_list : L<IntList|SPVM::IntList>;>
+
+A list of file descriptors.
 
 =head1 Class Methods
 
 =head2 new
 
-  static method new : IO::Select ();
+C<static method new : L<IO::Select|SPVM::IO::Select> ();>
+
+Creates a new L<IO::Select|SPVM::IO::Select> object and returns it.
 
 =head1 Instance Methods
 
 =head2 add
 
-  method add : int ($new_handle : int);
+C<method add : int ($new_handle : int);>
+
+Adds the new file descriptor
 
 =head2 remove
 
-  method remove : int ($remove_handle : int);
+C<method remove : int ($remove_handle : int);>
 
 =head2 exists
 
-  method exists : int ($check_handle : int);
+C<method exists : int ($check_handle : int);>
 
 =head2 handles
 
-  method handles : int[] ();
+C<method handles : int[] ();>
 
 =head2 can_read
 
-  method can_read : int[] ($timeout : double);
+C<method can_read : int[] ($timeout : double);>
 
 =head2 can_write
 
-  method can_write : int[] ($timeout : double);
+C<method can_write : int[] ($timeout : double);>
 
 =head2 has_exception
 
-  method has_exception : int[] ($timeout : double);
+C<method has_exception : int[] ($timeout : double);>
 
 =head1 See Also
-
-=head2 Perl's IO::Select
-
-C<IO::Select> is a Perl's L<IO::Select|IO::Select> porting to L<SPVM>.
 
 =head1 Copyright & License
 

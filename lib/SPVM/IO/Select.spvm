@@ -8,20 +8,23 @@ class IO::Select {
   use Sys::Select;
   use Sys;
   
-  has handles : IntList;
+  # Fields
+  has handles_list : IntList;
   
+  # Class Methods
   static method new : IO::Select () {
+    
     my $self = new IO::Select;
     
-    $self->{handles} = IntList->new((int[])undef);
+    $self->{handles_list} = IntList->new((int[])undef);
     
     return $self;
   }
-
+  
   method add : int ($new_handle : int) {
     
     my $found = 0;
-    my $handles = $self->{handles};
+    my $handles = $self->{handles_list};
     
     for (my $i = 0; $i < $handles->length; $i++) {
       my $handle = $handles->get($i);
@@ -40,11 +43,11 @@ class IO::Select {
       return 1;
     }
   }
-
+  
   method remove : int ($remove_handle : int) {
     
     my $new_handles = IntList->new((int[])undef);
-    my $handles = $self->{handles};
+    my $handles = $self->{handles_list};
     
     my $removed = 0;
     for (my $i = 0; $i < $handles->length; $i++) {
@@ -58,14 +61,14 @@ class IO::Select {
       }
     }
     
-    $self->{handles} = $new_handles;
+    $self->{handles_list} = $new_handles;
     
     return $removed;
   }
   
   method exists : int ($check_handle : int) {
     
-    my $handles = $self->{handles};
+    my $handles = $self->{handles_list};
     
     for (my $i = 0; $i < $handles->length; $i++) {
       my $handle = $handles->get($i);
@@ -77,13 +80,14 @@ class IO::Select {
     
     return 0;
   }
-
+  
   method handles : int[] () {
-    return $self->{handles}->to_array;
+    
+    return $self->{handles_list}->to_array;
   }
-
+  
   method can_read : int[] ($timeout : double) {
-    my $handles_list = $self->{handles};
+    my $handles_list = $self->{handles_list};
     my $handles = $handles_list->to_array;
     
     my $timeout_int = 0.0;
@@ -121,7 +125,7 @@ class IO::Select {
   }
  
   method can_write : int[] ($timeout : double) {
-    my $handles_list = $self->{handles};
+    my $handles_list = $self->{handles_list};
     my $handles = $handles_list->to_array;
     
     my $timeout_int = 0.0;
@@ -159,7 +163,7 @@ class IO::Select {
   }
 
   method has_exception : int[] ($timeout : double) {
-    my $handles_list = $self->{handles};
+    my $handles_list = $self->{handles_list};
     my $handles = $handles_list->to_array;
     
     my $timeout_int = 0.0;
