@@ -22,22 +22,22 @@ class IO::Select {
     return $self;
   }
   
-  method add : void ($new_handle : int) {
+  method add : void ($handle : int) {
     
     my $found = 0;
     my $handles_list = $self->{handles_list};
     
     for (my $i = 0; $i < $handles_list->length; $i++) {
-      my $handle = $handles_list->get($i);
+      my $self_handle = $handles_list->get($i);
       
-      if ((int)$handle == $new_handle) {
+      if ((int)$self_handle == $handle) {
         $found = 1;
         last;
       }
     }
     
     unless ($found) {
-      $handles_list->push($new_handle);
+      $handles_list->push($handle);
     }
   }
   

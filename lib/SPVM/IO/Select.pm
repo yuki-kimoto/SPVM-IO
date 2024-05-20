@@ -45,9 +45,9 @@ Creates a new L<IO::Select|SPVM::IO::Select> object and returns it.
 
 =head2 add
 
-C<method add : void ($new_handle : int);>
+C<method add : void ($handle : int);>
 
-Adds the new file descriptor
+Adds the new file descriptor $handle.
 
 =head2 remove
 
