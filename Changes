@@ -20,6 +20,13 @@
       [After]
       method can_write : int[] ($timeout : double = -1);
       
+    * An argument in IO::Select#can_has_exception method becomes an optional argument. Negative value means block indefinitely.
+      [Before]
+      method can_has_exception : int[] ($timeout : double);
+      
+      [After]
+      method can_has_exception : int[] ($timeout : double = -1);
+      
 0.213 2023-05-20
   [Imcompatible Changes]
     * stream field in IO::File is renamed to FileStream.

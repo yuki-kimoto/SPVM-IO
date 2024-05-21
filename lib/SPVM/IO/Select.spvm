@@ -91,7 +91,7 @@ class IO::Select {
     my $tv = (Sys::Time::Timeval)undef;
     
     if ($timeout >= 0) {
-      my $tv = Sys::Time::Timeval->new;
+      $tv = Sys::Time::Timeval->new;
       $tv->set_tv_sec((int)$timeout_int);
       $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     }
@@ -133,7 +133,7 @@ class IO::Select {
     my $tv = (Sys::Time::Timeval)undef;
     
     if ($timeout >= 0) {
-      my $tv = Sys::Time::Timeval->new;
+      $tv = Sys::Time::Timeval->new;
       $tv->set_tv_sec((int)$timeout_int);
       $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     }
@@ -172,9 +172,13 @@ class IO::Select {
     my $timeout_int = 0.0;
     my $timeout_fraction = Math->modf($timeout, \$timeout_int);
     
-    my $tv = Sys::Time::Timeval->new;
-    $tv->set_tv_sec((int)$timeout_int);
-    $tv->set_tv_usec((int)($timeout_fraction * 1000000));
+    my $tv = (Sys::Time::Timeval)undef;
+    
+    if ($timeout >= 0) {
+      $tv = Sys::Time::Timeval->new;
+      $tv->set_tv_sec((int)$timeout_int);
+      $tv->set_tv_usec((int)($timeout_fraction * 1000000));
+    }
     
     # Set fds to fd_set
     my $fd_set = Sys::Select::Fd_set->new;

@@ -91,7 +91,7 @@ C<method can_write : int[] ($timeout : double = -1);>
 
 =head2 has_exception
 
-C<method has_exception : int[] ($timeout : double);>
+C<method has_exception : int[] ($timeout : double = -1);>
 
 =head1 See Also
 

@@ -138,10 +138,12 @@ class TestCase::IO::Select {
     $select->add(0);
     $select->add(1);
     
-    my $has_exception = $select->has_exception(1.1);
-    
-    unless (@$has_exception == 0) {
-      return 0;
+    {
+      my $has_exception = $select->has_exception(1.1);
+      
+      unless (@$has_exception == 0) {
+        return 0;
+      }
     }
     
     return 1;
