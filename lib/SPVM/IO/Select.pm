@@ -29,6 +29,8 @@ This class a Perl's L<IO::Select|IO::Select> porting to L<SPVM>.
 
 =head1 Fields
 
+=head2 fds_list
+
 C<has fds_list : L<IntList|SPVM::IntList>;>
 
 A list of file descriptors.
@@ -41,25 +43,43 @@ C<static method new : L<IO::Select|SPVM::IO::Select> ();>
 
 Creates a new L<IO::Select|SPVM::IO::Select> object and returns it.
 
+Internally, a L<IntList|SPVM::IntList> object with zero-length is created, and L</"fds_list"> is set to it.
+
 =head1 Instance Methods
 
 =head2 add
 
 C<method add : void ($fd : int);>
 
-Adds the new file descriptor $fd.
+Adds the file descriptor $fd to L</"fds_list"> field.
+
+If $fd is already contained in L</"fds_list"> field, nothing is performed.
 
 =head2 remove
 
 C<method remove : void ($fd : int);>
 
+Removes the file descriptor $fd from L</"fds_list"> field.
+
+If $fd is not found, nothing is performed.
+
 =head2 exists
 
 C<method exists : int ($fd : int);>
 
+If the file descriptor $fd is contained in L</"fds_list"> field, returns 1, otherwise returns 0.
+
 =head2 fds
 
 C<method fds : int[] ();>
+
+Converts L</"fds_list"> field to an array and returns it.
+
+=head2 count
+
+C<method count : int ();>
+
+Returns the length of L</"fds_list"> field.
 
 =head2 can_read
 
