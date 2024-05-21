@@ -14,7 +14,7 @@ IO::Select class in L<SPVM> has methods for C<select> system call.
 
   use IO::Select;
   
-  $select = IO::Select->new;
+  my $select = IO::Select->new;
   
   $select->add($fd0);
   $select->add($fd1);
@@ -85,15 +85,35 @@ Returns the length of L</"fds_list"> field.
 
 C<method can_read : int[] ($timeout : double = -1);>
 
+Returns readable file descriptors in L</"fds_list"> field.
+
+This method calls L<Sys::Select#select|SPVM::Sys::Select/"select"> method.
+
+The timeout $timeout specifies the minimum interval that select() system call should block waiting for a file descriptor to become ready. If $timeout is 0, then select() returns immediately. If $timeout is a negative value, select() can block indefinitely.
+
 =head2 can_write
 
 C<method can_write : int[] ($timeout : double = -1);>
+
+Returns writable file descriptors in L</"fds_list"> field.
+
+The timeout $timeout specifies the minimum interval that select() system call should block waiting for a file descriptor to become ready. If $timeout is 0, then select() returns immediately. If $timeout is a negative value, select() can block indefinitely.
 
 =head2 has_exception
 
 C<method has_exception : int[] ($timeout : double = -1);>
 
+Returns file descriptors that causes exceptions in L</"fds_list"> field.
+
+The timeout $timeout specifies the minimum interval that select() system call should block waiting for a file descriptor to become ready. If $timeout is 0, then select() returns immediately. If $timeout is a negative value, select() can block indefinitely.
+
 =head1 See Also
+
+=over 2
+
+=item * L<Sys::Select|SPVM::Sys::Select>
+
+=back
 
 =head1 Copyright & License
 
