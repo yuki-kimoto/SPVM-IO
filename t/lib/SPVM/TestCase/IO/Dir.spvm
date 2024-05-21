@@ -1,0 +1,4 @@
+class TestCase::IO::Dir {
+  use IO::Dir;
+
+}

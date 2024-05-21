@@ -29,6 +29,7 @@ MANIFEST			This list of files
 README.md
 t/01-01-Test-Tcp_and_Mojolicious.t
 t/01-02-Test-Tcp_and_Mojolicious_and_SPVM.t
+t/IO-Dir.t
 t/IO-File.t
 t/IO-Select.t
 t/IO-Socket-INET.t
@@ -36,6 +37,7 @@ t/IO-Socket-INET6.t
 t/IO-Socket-IP.t
 t/IO-Socket-IP_IPv6.t
 t/IO.t
+t/lib/SPVM/TestCase/IO/Dir.spvm
 t/lib/SPVM/TestCase/IO/File.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
 t/lib/SPVM/TestCase/IO/Socket/INET.spvm
