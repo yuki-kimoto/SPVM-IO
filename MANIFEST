@@ -1,6 +1,8 @@
 Changes
 lib/SPVM/IO.pm
 lib/SPVM/IO.spvm
+lib/SPVM/IO/Dir.pm
+lib/SPVM/IO/Dir.spvm
 lib/SPVM/IO/File.pm
 lib/SPVM/IO/File.spvm
 lib/SPVM/IO/Handle.pm
