@@ -105,14 +105,28 @@ class TestCase::IO::Select {
     $select->add(1);
     $select->add(2);
     
-    my $can_write = $select->can_write(1.1);
-    
-    unless (@$can_write == 2) {
-      return 0;
-    }
+    {
+      my $can_write = $select->can_write(1.1);
+      
+      unless (@$can_write == 2) {
+        return 0;
+      }
 
-    unless ($can_write->[0] == 1 && $can_write->[1] == 2) {
-      return 0;
+      unless ($can_write->[0] == 1 && $can_write->[1] == 2) {
+        return 0;
+      }
+    }
+    
+    {
+      my $can_write = $select->can_write;
+      
+      unless (@$can_write == 2) {
+        return 0;
+      }
+
+      unless ($can_write->[0] == 1 && $can_write->[1] == 2) {
+        return 0;
+      }
     }
     
     return 1;

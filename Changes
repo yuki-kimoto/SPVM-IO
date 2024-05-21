@@ -13,6 +13,13 @@
       [After]
       method can_read : int[] ($timeout : double = -1);
       
+    * An argument in IO::Select#can_write method becomes an optional argument. Negative value means block indefinitely.
+      [Before]
+      method can_write : int[] ($timeout : double);
+      
+      [After]
+      method can_write : int[] ($timeout : double = -1);
+      
 0.213 2023-05-20
   [Imcompatible Changes]
     * stream field in IO::File is renamed to FileStream.
