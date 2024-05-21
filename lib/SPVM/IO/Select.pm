@@ -25,7 +25,7 @@ IO::Select class in L<SPVM> has methods for C<select> system call.
 
 =head2 Details
 
-This class a Perl's L<IO::Select|IO::Select> porting to L<SPVM>.
+This class is a Perl's L<IO::Select|IO::Select> porting to L<SPVM>.
 
 =head1 Fields
 
