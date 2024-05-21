@@ -81,16 +81,20 @@ class IO::Select {
     return $self->{fds_list}->length;
   }
   
-  method can_read : int[] ($timeout : double) {
+  method can_read : int[] ($timeout : double = -1) {
     my $fds_list = $self->{fds_list};
     my $fds = $fds_list->to_array;
     
     my $timeout_int = 0.0;
     my $timeout_fraction = Math->modf($timeout, \$timeout_int);
     
-    my $tv = Sys::Time::Timeval->new;
-    $tv->set_tv_sec((int)$timeout_int);
-    $tv->set_tv_usec((int)($timeout_fraction * 1000000));
+    my $tv = (Sys::Time::Timeval)undef;
+    
+    if ($timeout >= 0) {
+      my $tv = Sys::Time::Timeval->new;
+      $tv->set_tv_sec((int)$timeout_int);
+      $tv->set_tv_usec((int)($timeout_fraction * 1000000));
+    }
     
     # Set fds to fd_set
     my $fd_set = Sys::Select::Fd_set->new;
@@ -119,7 +123,7 @@ class IO::Select {
     return $can_fds;
   }
   
-  method can_write : int[] ($timeout : double) {
+  method can_write : int[] ($timeout : double = -1) {
     my $fds_list = $self->{fds_list};
     my $fds = $fds_list->to_array;
     

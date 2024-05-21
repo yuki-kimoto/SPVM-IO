@@ -83,7 +83,7 @@ Returns the length of L</"fds_list"> field.
 
 =head2 can_read
 
-C<method can_read : int[] ($timeout : double);>
+C<method can_read : int[] ($timeout : double = -1);>
 
 =head2 can_write
 

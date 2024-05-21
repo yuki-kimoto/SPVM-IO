@@ -80,10 +80,20 @@ class TestCase::IO::Select {
     $select->add(0);
     $select->add(1);
     
-    my $can_read = $select->can_read(1.1);
+    {
+      my $can_read = $select->can_read(1.1);
+      
+      unless (@$can_read == 0) {
+        return 0;
+      }
+    }
     
-    unless (@$can_read == 0) {
-      return 0;
+    {
+      my $can_read = $select->can_read;
+      
+      unless (@$can_read == 0) {
+        return 0;
+      }
     }
     
     return 1;
