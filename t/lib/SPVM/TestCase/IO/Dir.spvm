@@ -1,4 +1,55 @@
 class TestCase::IO::Dir {
   use IO::Dir;
-
+  
+  static method TEST_FILES_DIR : string () { return "t/test_files"; }
+  
+  # Class Methods
+  static method new : int () {
+    
+    my $dir_path = &TEST_FILES_DIR;
+    
+    return 1;
+  }
+  
+  # Instance Methods
+  static method open : int () {
+    
+    my $dir_path = &TEST_FILES_DIR;
+    
+    return 1;
+  }
+  
+  static method read : int () {
+    
+    my $dir_path = &TEST_FILES_DIR;
+    
+    return 1;
+  }
+  
+  static method seek : int () {
+    
+    my $dir_path = &TEST_FILES_DIR;
+    
+    return 1;
+  }
+  
+  static method tell : int () {
+    
+    my $dir_path = &TEST_FILES_DIR;
+    
+    return 1;
+  }
+  
+  static method rewind : int () {
+    
+    my $dir_path = &TEST_FILES_DIR;
+    
+    return 1;
+  }
+  
+  static method close : int () {
+    my $dir_path = &TEST_FILES_DIR;
+    
+    return 1;
+  }
 }
