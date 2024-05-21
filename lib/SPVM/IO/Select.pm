@@ -16,8 +16,8 @@ IO::Select class in L<SPVM> has methods for C<select> system call.
   
   $select = IO::Select->new;
   
-  $select->add($fd0);>
-  $select->add($fd1);>
+  $select->add($fd0);
+  $select->add($fd1);
   
   my $read_ready_fds = $select->can_read($timeout);
   
