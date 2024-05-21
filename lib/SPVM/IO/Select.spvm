@@ -165,7 +165,7 @@ class IO::Select {
     return $can_fds;
   }
   
-  method has_exception : int[] ($timeout : double) {
+  method has_exception : int[] ($timeout : double = -1) {
     my $fds_list = $self->{fds_list};
     my $fds = $fds_list->to_array;
     

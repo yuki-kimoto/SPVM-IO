@@ -145,7 +145,21 @@ class TestCase::IO::Select {
         return 0;
       }
     }
+
+=pod TODO: This is needed, but I cannot know the way to test it.
+
+
     
+    {
+      my $has_exception = $select->has_exception;
+      
+      unless (@$has_exception == 0) {
+        return 0;
+      }
+    }
+
+=cut
+
     return 1;
   }
 }
