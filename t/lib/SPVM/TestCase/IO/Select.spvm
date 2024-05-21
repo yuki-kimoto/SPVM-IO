@@ -18,11 +18,6 @@ class TestCase::IO::Select {
       unless (Array->equals_int($fds, [0, 1, 4, 5])) {
         return 0;
       }
-      
-      my $fds_count = $select->count;
-      unless ($fds_count == 4) {
-        return 0;
-      }
     }
     
     return 1;
@@ -67,6 +62,44 @@ class TestCase::IO::Select {
     {
       my $ret = $select->exists(6);
       unless ($ret == 0) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+
+  static method fds : int () {
+    my $select = IO::Select->new;
+    
+    $select->add(0);
+    $select->add(1);
+    $select->add(4);
+    $select->add(5);
+    $select->add(5);
+    
+    {
+      my $fds = $select->fds;
+      unless (Array->equals_int($fds, [0, 1, 4, 5])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+
+  static method count : int () {
+    my $select = IO::Select->new;
+    
+    $select->add(0);
+    $select->add(1);
+    $select->add(4);
+    $select->add(5);
+    $select->add(5);
+    
+    {
+      my $fds_count = $select->count;
+      unless ($fds_count == 4) {
         return 0;
       }
     }
