@@ -113,7 +113,41 @@ class TestCase::IO::Dir {
   static method seek : int () {
     
     my $dir_path = &TEST_FILES_DIR;
-    
+
+=pod TODO
+
+    {
+      my $dh = IO::Dir->new($dir_path);
+      
+      unless ($dh is_type IO::Dir) {
+        return 0;
+      }
+      
+      my $dirent = $dh->read;
+      
+      $dh->seek(4);
+      
+      my $dirent2 = $dh->read;
+      
+      unless ($dirent->d_name) {
+        return 0;
+      }
+      
+      unless ($dirent2->d_name) {
+        return 0;
+      }
+      
+      warn $dirent->d_name;
+      
+      warn $dirent2->d_name;
+      
+      if ($dirent->d_name eq $dirent2->d_name) {
+        return 0;
+      }
+    }
+
+=cut
+
     return 1;
   }
   
@@ -132,6 +166,7 @@ class TestCase::IO::Dir {
   }
   
   static method close : int () {
+    
     my $dir_path = &TEST_FILES_DIR;
     
     return 1;
