@@ -47,7 +47,7 @@ class IO::Dir {
     
     my $dir_stream = $self->{dir_stream};
     
-    Sys::IO->seekdir($dir_stream, $offset);
+    Sys->seekdir($dir_stream, $offset);
   }
   
   method tell : long () {

@@ -21,6 +21,10 @@ The IO::Dir class in L<SPVM> has methods for directory streams.
   while (my $dirent = $dh->read) {
     say $dirent->name;
   }
+  
+  my $offset = $dh->tell;
+  
+  $dh->seek($offset);
 
 =head1 Details
 
@@ -83,6 +87,8 @@ Exceptions thrown by L<Sys#readdir|SPVM::Sys/"readdir"> method could be thrown.
 C<method seek : void ($offset : long);>
 
 Sets the location in the directory stream stored in L</"dir_stream"> field to the offset $offset.
+
+$offset should be the return value of L</"tell"> method.
 
 This method calls L<Sys#seekdir|SPVM::Sys/"seekdir"> method.
 
