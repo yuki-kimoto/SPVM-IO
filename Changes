@@ -1,6 +1,8 @@
 0.215 2023-05-21
   [New Features]
     * Add IO::Dir class.
+  [Requirement Changes]
+    * Require SPVM::Sys 0.515.
     
 0.214 2023-05-21
   [Imcompatible Changes]
