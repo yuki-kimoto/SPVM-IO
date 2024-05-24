@@ -173,9 +173,12 @@ class TestCase::IO::Dir {
       my $dh = IO::Dir->new($dir_path);
       
       $dh->close;
+      
+      if ($dh->opened) {
+        warn $dh->opened;
+        return 0;
+      }
     }
-    
-    $@ = undef;
     
     return 1;
   }
