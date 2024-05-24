@@ -184,6 +184,32 @@ class TestCase::IO::Dir {
     
     my $dir_path = &TEST_FILES_DIR;
     
+    {
+      my $dh = IO::Dir->new($dir_path);
+      
+      my $dirent = $dh->read;
+      
+      my $dirent_d_name = $dirent->d_name;
+      
+      $dh->rewind;
+      
+      my $dirent2 = $dh->read;
+      
+      my $dirent2_d_name = $dirent->d_name;
+      
+      unless ($dirent_d_name) {
+        return 0;
+      }
+      
+      unless ($dirent2_d_name) {
+        return 0;
+      }
+      
+      unless ($dirent_d_name eq $dirent2_d_name) {
+        return 0;
+      }
+    }
+    
     return 1;
   }
   
