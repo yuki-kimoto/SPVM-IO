@@ -19,7 +19,7 @@ The IO::Dir class in L<SPVM> has methods for directory streams.
   my $dh = IO::Dir->new(".");
   
   while (my $dirent = $dh->read) {
-    say $dirent->name;
+    say $dirent->d_name;
   }
   
   my $offset = $dh->tell;
