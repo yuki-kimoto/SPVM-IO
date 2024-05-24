@@ -132,6 +132,12 @@ Exceptions:
 
 Exceptions thrown by L<Sys#closedir|SPVM::Sys/"closedir"> method could be thrown.
 
+=head2 opened
+
+C<method opened : int ();>
+
+If the directory stream stored in L</"dir_stream"> is opened, returns 1, otherwise returns 0.
+
 =head1 Copyright & License
 
 Copyright (c) 2024 Yuki Kimoto
