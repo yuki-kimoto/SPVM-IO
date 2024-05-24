@@ -32,6 +32,8 @@ Classes in IO distribution in L<SPVM> has methods to manipulate File IO, Sockets
 
 =item * L<IO::Select|SPVM::IO::Select>
 
+=item * L<IO::Poll|SPVM::IO::Poll>
+
 =item * L<IO::Dir|SPVM::IO::Dir>
 
 =back
