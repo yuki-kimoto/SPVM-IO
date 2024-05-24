@@ -173,15 +173,33 @@ class TestCase::IO::Dir {
       my $dh = IO::Dir->new($dir_path);
       
       $dh->close;
-      
-      eval { $dh->read; }
-      
-      unless ($@) {
-        return 0;
-      }
     }
     
     $@ = undef;
+    
+    return 1;
+  }
+  
+  static method opened : int () {
+    
+    my $dir_path = &TEST_FILES_DIR;
+    
+    {
+      my $dh = IO::Dir->new($dir_path);
+      
+      unless ($dh->opened) {
+        warn $dh->opened;
+        return 0;
+      }
+      
+      $dh->close;
+      
+      if ($dh->opened) {
+        warn $dh->opened;
+        return 0;
+      }
+      
+    }
     
     return 1;
   }

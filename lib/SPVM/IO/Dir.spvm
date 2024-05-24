@@ -71,4 +71,10 @@ class IO::Dir {
     Sys->closedir($dir_stream);
   }
   
+  method opened : int () {
+    
+    my $opened = !$self->{dir_stream}->closed;
+    
+    return $opened;
+  }
 }
