@@ -22,15 +22,17 @@ Classes in IO distribution in L<SPVM> has methods to manipulate File IO, Sockets
 
 =item * L<IO::Socket|SPVM::IO::Socket>
 
-=item * L<IO::Socket::INET|SPVM::IO::Socket::IP>
+=item * L<IO::Socket::IP|SPVM::IO::Socket::IP>
 
 =item * L<IO::Socket::INET|SPVM::IO::Socket::INET>
 
-=item * L<IO::Socket::INET|SPVM::IO::Socket::INET6>
+=item * L<IO::Socket::INET6|SPVM::IO::Socket::INET6>
 
 =item * L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX>
 
 =item * L<IO::Select|SPVM::IO::Select>
+
+=item * L<IO::Dir|SPVM::IO::Dir>
 
 =back
 
