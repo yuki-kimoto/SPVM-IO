@@ -5,14 +5,13 @@ class IO::Poll {
   use Sys::Poll;
   use Sys::Poll::PollfdArray;
   use Sys::Poll::Constant as POLL;
-  use IO::Poll::Info;
   
   # Fields
   has fd_indexes_h : Hash of Int;
   
   has pollfd_array : PollfdArray;
   
-  has disabled_fds_h : Hash of Int;
+  has disabled_fds : IntList;
   
   # Class Methods
   static method new : IO::Poll () {
@@ -27,22 +26,13 @@ class IO::Poll {
     my $fd_indexes_h = Hash->new;
     $self->{fd_indexes_h} = $fd_indexes_h;
     
-    my $disabled_fds_h = Hash->new;
-    $self->{disabled_fds_h} = $disabled_fds_h;
+    my $disabled_fds = IntList->new;
+    $self->{disabled_fds} = $disabled_fds;
     
     return $self;
   }
   
   # Instance Methods
-  method fds : int[] () {
-    
-    my $fd_indexes_h = $self->{fd_indexes_h};
-    
-    my $fds = $fd_indexs_h->keys;
-    
-    return $fds;
-  }
-  
   method mask : int ($fd : int) {
     
     unless ($fd >= 0) {
@@ -99,29 +89,6 @@ class IO::Poll {
     $pollfd_array->set_events($fd_index, $event_mask);
   }
   
-  method remove : void ($fd : int) {
-    
-    unless ($fd >= 0) {
-      die "The file descriptor \$fd must be greater than or equal to 0.";
-    }
-    
-    my $fd_indexes_h = $self->{fd_indexes_h};
-    
-    my $fd_index_object = $fd_indexes_h->delete($fd);
-    
-    if ($fd_index_object) {
-      my $fd_index = $fd_index_object->value;
-      
-      my $pollfd_array = $self->{pollfd_array};
-      
-      $pollfd_array->set_fd($fd_index, -1);
-      
-      my $disabled_fds_h = $self->{disabled_fds_h};
-      
-      $disabled_fds->set($fd => 1);
-    }
-  }
-  
   method poll : int ($timeout : double = -1) {
     
     my $pollfd_array = $self->{pollfd_array};
@@ -148,14 +115,54 @@ class IO::Poll {
       
       my $pollfd_array = $self->{pollfd_array};
       
-      my $fd = $pollfd_array->fd($fd_index);
-      
-      if ($fd >= 0) {
-        $revents = $pollfd_array->revents($fd_index);
-      }
+      $revents = $pollfd_array->revents($fd_index);
     }
     
     return $revents;
   }
   
+  method remove : void ($fd : int) {
+    
+    my $fd_indexes_h = $self->{fd_indexes_h};
+    
+    my $fd_index_object = $fd_indexes_h->delete($fd);
+    
+    if ($fd_index_object) {
+      my $fd_index = $fd_index_object->value;
+      
+      my $pollfd_array = $self->{pollfd_array};
+      
+      $pollfd_array->set_fd($fd_index, -1);
+      
+      my $disabled_fds = $self->{disabled_fds};
+      
+      $disabled_fds->push($fd);
+    }
+  }
+  
+  method fds : int[] ($event_mask : int = 0) {
+    
+    my $pollfd_array = $self->{pollfd_array};
+    
+    my $pollfd_array_length = $pollfd_array->length;
+    
+    my $fds = IntList->new;
+    
+    for (my $i = 0; $i < $pollfd_array_length; $i++) {
+      my $fd = $pollfd_array->fd($i);
+      
+      my $revents = $pollfd_array->revents($i);
+      
+      if ($revents) {
+        if ($event_mask) {
+          if ($revents & ($event_mask|POLL->POLLHUP|POLL->POLLERR|POLL->POLLNVAL)) {
+            $fds->push($fd);
+          }
+        }
+        else {
+          $fds->push($fd);
+        }
+      }
+    }
+  }
 }
