@@ -7,11 +7,11 @@ class IO::Poll {
   use Sys::Poll::Constant as POLL;
   
   # Fields
-  has fd_indexes_h : Hash of Int;
-  
   has pollfd_array : PollfdArray;
   
-  has disabled_fds : IntList;
+  has fd_indexes_h : Hash of Int;
+  
+  has disabled_fd_indexes : IntList;
   
   # Class Methods
   static method new : IO::Poll () {
@@ -26,13 +26,40 @@ class IO::Poll {
     my $fd_indexes_h = Hash->new;
     $self->{fd_indexes_h} = $fd_indexes_h;
     
-    my $disabled_fds = IntList->new;
-    $self->{disabled_fds} = $disabled_fds;
+    my $disabled_fd_indexes = IntList->new;
+    $self->{disabled_fd_indexes} = $disabled_fd_indexes;
     
     return $self;
   }
   
   # Instance Methods
+  method fds : int[] ($event_mask : int = 0) {
+    
+    my $pollfd_array = $self->{pollfd_array};
+    
+    my $pollfd_array_length = $pollfd_array->length;
+    
+    my $disabled_fd_indexes = $self->{disabled_fd_indexes};j
+    
+    my $disabled_fd_indexes_length = $disabled_fd_indexes->length;
+    
+    my $fds_length = $pollfd_array_length - $disabled_fd_indexes_length;
+    
+    my $fds = new int[$fds_length];
+    
+    my $fd_index = 0;
+    for (my $pollfd_array_index = 0; $pollfd_array_index < $pollfd_array_length; $pollfd_array_index++) {
+      my $fd = $pollfd_array->fd($pollfd_array_index);
+      
+      if ($fd >= 0) {
+        $fds->[$fd_index] = $fd;
+        $fd_index++;
+      }
+    }
+    
+    return $fds;
+  }
+  
   method mask : int ($fd : int) {
     
     unless ($fd >= 0) {
@@ -68,25 +95,44 @@ class IO::Poll {
     
     my $pollfd_array = $self->{pollfd_array};
     
-    my $fd_index = -1;
-    if ($fd_index_object) {
-      $fd_index = (int)$fd_index_object;
-    }
-    else {
-      my $disabled_fds = $self->{disabled_fds};
-      
-      if ($disabled_fds->length > 0) {
-        $fd_index = (int)$disabled_fds->pop;
+    if ($event_mask) {
+      my $fd_index = -1;
+      if ($fd_index_object) {
+        $fd_index = (int)$fd_index_object;
       }
       else {
-        $pollfd_array->push($fd);
-        $fd_index = $pollfd_array->length - 1;
+        my $disabled_fd_indexes = $self->{disabled_fd_indexes};
+        
+        if ($disabled_fd_indexes->length > 0) {
+          $fd_index = (int)$disabled_fd_indexes->pop;
+        }
+        else {
+          $pollfd_array->push($fd);
+          $fd_index = $pollfd_array->length - 1;
+        }
+        
+        $fd_indexes_h->set($fd, $fd_index);
       }
       
-      $fd_indexes_h->set($fd, $fd_index);
+      $pollfd_array->set_events($fd_index, $event_mask);
     }
+    else {
+      if ($fd_index_object) {
+        $fd_index = (int)$fd_index_object;
+        
+        $pollfd_array->set_fd($fd_index, -1);
+        
+        my $disabled_fd_indexes = $self->{disabled_fd_indexes};
+        
+        $disabled_fd_indexes->push($fd_index);
+        
+      }
+    }
+  }
+  
+  method remove : void ($fd : int) {
     
-    $pollfd_array->set_events($fd_index, $event_mask);
+    $self->set_mask($fd, 0);
   }
   
   method poll : int ($timeout : double = -1) {
@@ -121,48 +167,4 @@ class IO::Poll {
     return $revents;
   }
   
-  method remove : void ($fd : int) {
-    
-    my $fd_indexes_h = $self->{fd_indexes_h};
-    
-    my $fd_index_object = $fd_indexes_h->delete($fd);
-    
-    if ($fd_index_object) {
-      my $fd_index = $fd_index_object->value;
-      
-      my $pollfd_array = $self->{pollfd_array};
-      
-      $pollfd_array->set_fd($fd_index, -1);
-      
-      my $disabled_fds = $self->{disabled_fds};
-      
-      $disabled_fds->push($fd);
-    }
-  }
-  
-  method fds : int[] ($event_mask : int = 0) {
-    
-    my $pollfd_array = $self->{pollfd_array};
-    
-    my $pollfd_array_length = $pollfd_array->length;
-    
-    my $fds = IntList->new;
-    
-    for (my $i = 0; $i < $pollfd_array_length; $i++) {
-      my $fd = $pollfd_array->fd($i);
-      
-      my $revents = $pollfd_array->revents($i);
-      
-      if ($revents) {
-        if ($event_mask) {
-          if ($revents & ($event_mask|POLL->POLLHUP|POLL->POLLERR|POLL->POLLNVAL)) {
-            $fds->push($fd);
-          }
-        }
-        else {
-          $fds->push($fd);
-        }
-      }
-    }
-  }
 }
