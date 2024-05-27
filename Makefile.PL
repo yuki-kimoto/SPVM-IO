@@ -57,7 +57,7 @@ WriteMakefile(
   },
   PREREQ_PM         => {
     %configure_and_runtime_requires,
-    'SPVM::Sys' => '0.515',
+    'SPVM::Sys' => '0.516',
     'SPVM::Math' => '0.11',
     'SPVM::Go' => '0.005',
   },
