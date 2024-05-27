@@ -1,0 +1,11 @@
+# Copyright (c) 2024 Yuki Kimoto
+# MIT License
+
+class IO::Poll::Info {
+  allow IO::Poll;
+  
+  # Fields
+  has fd : int;
+  has index :int;
+  has disabled : byte;
+}
