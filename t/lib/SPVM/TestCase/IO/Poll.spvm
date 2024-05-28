@@ -1,0 +1,15 @@
+class TestCase::IO::Poll {
+  use IO::Poll;
+
+  static method new : int () {
+    
+    my $poll = IO::Poll->new;
+    
+    unless ($poll is_type IO::Poll) {
+      
+    }
+    
+    return 1;
+  }
+
+}

@@ -5,9 +5,10 @@ class IO::Poll {
   use Sys::Poll;
   use Sys::Poll::PollfdArray;
   use Sys::Poll::Constant as POLL;
+  use Hash;
   
   # Fields
-  has pollfd_array : PollfdArray;
+  has pollfd_array : Sys::Poll::PollfdArray;
   
   has fd_indexes_h : Hash of Int;
   
@@ -16,7 +17,7 @@ class IO::Poll {
   # Class Methods
   static method new : IO::Poll () {
     
-    my $self = IO::Poll->new;
+    my $self = new IO::Poll;
     
     # pollfd_array field
     my $pollfd_array = Sys::Poll::PollfdArray->new;
@@ -39,7 +40,7 @@ class IO::Poll {
     
     my $pollfd_array_length = $pollfd_array->length;
     
-    my $disabled_fd_indexes = $self->{disabled_fd_indexes};j
+    my $disabled_fd_indexes = $self->{disabled_fd_indexes};
     
     my $disabled_fd_indexes_length = $disabled_fd_indexes->length;
     
@@ -118,7 +119,7 @@ class IO::Poll {
     }
     else {
       if ($fd_index_object) {
-        $fd_index = (int)$fd_index_object;
+        my $fd_index = (int)$fd_index_object;
         
         $pollfd_array->set_fd($fd_index, -1);
         
