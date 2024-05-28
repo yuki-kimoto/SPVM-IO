@@ -3,6 +3,7 @@ class TestCase::IO::Poll {
   use Sys::Poll::Constant as POLL;
   use Sort;
   use Array;
+  use Sys::IO::Constant as IO;
 
   static method new : int () {
     
@@ -245,4 +246,23 @@ class TestCase::IO::Poll {
     return 1;
   }
   
+  static method poll : int () {
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(IO->STDOUT_FILENO, POLL->POLLOUT);
+      
+      $poll->poll;
+      
+      my $revents = $poll->events(IO->STDOUT_FILENO);
+      
+      unless ($revents & POLL->POLLOUT) {
+        return 0;
+      }
+      
+    }
+    
+    return 1;
+  }
 }
