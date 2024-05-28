@@ -15,6 +15,8 @@ my $start_memory_blocks_count = SPVM::api->get_memory_blocks_count();
 # Poll
 {
   ok(SPVM::TestCase::IO::Poll->new);
+  ok(SPVM::TestCase::IO::Poll->set_mask);
+  ok(SPVM::TestCase::IO::Poll->mask);
   
   if ($^O ne 'MSWin32') {
     

@@ -127,6 +127,7 @@ class IO::Poll {
         
         $disabled_fd_indexes->push($fd_index);
         
+        $fd_indexes_h->delete($fd);
       }
     }
   }

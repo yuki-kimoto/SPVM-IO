@@ -1,5 +1,6 @@
 class TestCase::IO::Poll {
   use IO::Poll;
+  use Sys::Poll::Constant as POLL;
 
   static method new : int () {
     
@@ -7,6 +8,107 @@ class TestCase::IO::Poll {
     
     unless ($poll is_type IO::Poll) {
       
+    }
+    
+    return 1;
+  }
+
+  static method set_mask : int () {
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(0 => POLL->POLLIN);
+      
+      my $mask = $poll->mask(0);
+      
+      unless ($mask == POLL->POLLIN) {
+        return 0;
+      }
+    }
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(0 => POLL->POLLIN);
+      
+      $poll->set_mask(1 => POLL->POLLOUT);
+      
+      my $mask0 = $poll->mask(0);
+      
+      unless ($mask0 == POLL->POLLIN) {
+        return 0;
+      }
+      
+      my $mask1 = $poll->mask(1);
+      
+      unless ($mask1 == POLL->POLLOUT) {
+        return 0;
+      }
+    }
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(0 => POLL->POLLIN);
+      
+      $poll->set_mask(0 => 0);
+      
+      $poll->set_mask(1 => POLL->POLLOUT);
+      
+      my $mask0 = $poll->mask(0);
+      
+      unless ($mask0 == 0) {
+        return 0;
+      }
+      
+      my $mask1 = $poll->mask(1);
+      
+      unless ($mask1 == POLL->POLLOUT) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+
+  static method mask : int () {
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(0 => POLL->POLLIN);
+      
+      my $mask = $poll->mask(0);
+      
+      unless ($mask == POLL->POLLIN) {
+        return 0;
+      }
+    }
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      my $mask = $poll->mask(0);
+      
+      unless ($mask == 0) {
+        return 0;
+      }
+    }
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(0 => POLL->POLLIN);
+      
+      $poll->remove(0);
+      
+      my $mask = $poll->mask(0);
+      
+      unless ($mask == 0) {
+        warn $mask;
+        return 0;
+      }
     }
     
     return 1;
