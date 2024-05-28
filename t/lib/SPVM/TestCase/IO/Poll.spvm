@@ -265,4 +265,24 @@ class TestCase::IO::Poll {
     
     return 1;
   }
+  
+  static method events : int () {
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(IO->STDOUT_FILENO, POLL->POLLOUT);
+      
+      $poll->poll;
+      
+      my $revents = $poll->events(IO->STDOUT_FILENO);
+      
+      unless ($revents & POLL->POLLOUT) {
+        return 0;
+      }
+      
+    }
+    
+    return 1;
+  }
 }
