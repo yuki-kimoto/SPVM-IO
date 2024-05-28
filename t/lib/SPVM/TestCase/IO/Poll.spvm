@@ -213,4 +213,36 @@ class TestCase::IO::Poll {
     
     return 1;
   }
+  
+  static method remove : int () {
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(1 => POLL->POLLIN);
+      
+      $poll->set_mask(0 => POLL->POLLIN);
+      
+      $poll->remove(0);
+      
+      my $mask = $poll->mask(0);
+      
+      unless ($mask == 0) {
+        warn $mask;
+        return 0;
+      }
+      
+      my $fds = $poll->fds;
+      
+      Sort->sort_int_asc($fds);
+      
+      unless (Array->equals_int($fds, [1])) {
+        warn dump $fds;
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
 }
