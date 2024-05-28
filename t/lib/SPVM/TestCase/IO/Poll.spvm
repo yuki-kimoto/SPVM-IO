@@ -1,6 +1,8 @@
 class TestCase::IO::Poll {
   use IO::Poll;
   use Sys::Poll::Constant as POLL;
+  use Sort;
+  use Array;
 
   static method new : int () {
     
@@ -113,5 +115,102 @@ class TestCase::IO::Poll {
     
     return 1;
   }
+  
+  static method fds : int () {
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(1 => POLL->POLLIN);
+      
+      my $fds = $poll->fds;
+      
+      Sort->sort_int_asc($fds);
+      
+      unless (Array->equals_int($fds, [1])) {
+        return 0;
+      }
+    }
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(5 => POLL->POLLIN);
+      
+      $poll->set_mask(3 => POLL->POLLOUT);
+      
+      my $fds = $poll->fds;
+      
+      Sort->sort_int_asc($fds);
+      
+      unless (Array->equals_int($fds, [3, 5])) {
+        return 0;
+      }
+    }
 
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(5 => POLL->POLLIN);
+      
+      $poll->set_mask(5 => 0);
+      
+      my $fds = $poll->fds;
+      
+      Sort->sort_int_asc($fds);
+      
+      unless (Array->equals_int($fds, new int[0])) {
+        warn dump $fds;
+        return 0;
+      }
+    }
+
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(5 => POLL->POLLIN);
+      
+      $poll->set_mask(5 => 0);
+      
+      $poll->set_mask(5 => POLL->POLLIN);
+      
+      my $fds = $poll->fds;
+      
+      Sort->sort_int_asc($fds);
+      
+      unless (Array->equals_int($fds, [5])) {
+        warn dump $fds;
+        return 0;
+      }
+    }
+
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(5 => POLL->POLLIN);
+      
+      $poll->set_mask(5 => 0);
+      
+      $poll->set_mask(1 => POLL->POLLOUT);
+      
+      $poll->set_mask(19 => POLL->POLLOUT);
+      
+      $poll->set_mask(10 => POLL->POLLOUT);
+      
+      $poll->set_mask(1 => 0);
+      
+      $poll->set_mask(6 => POLL->POLLOUT);
+      
+      my $fds = $poll->fds;
+      
+      Sort->sort_int_asc($fds);
+      
+      unless (Array->equals_int($fds, [6, 10, 19])) {
+        warn dump $fds;
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
 }

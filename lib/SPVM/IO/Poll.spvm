@@ -106,6 +106,7 @@ class IO::Poll {
         
         if ($disabled_fd_indexes->length > 0) {
           $fd_index = (int)$disabled_fd_indexes->pop;
+          $pollfd_array->set_fd($fd_index, $fd);
         }
         else {
           $pollfd_array->push($fd);
