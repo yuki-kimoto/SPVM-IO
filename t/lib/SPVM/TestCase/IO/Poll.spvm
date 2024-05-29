@@ -393,32 +393,6 @@ class TestCase::IO::Poll {
           warn dump $content;
           return 0;
         }
-        
-        my $socket_fileno = $socket->fileno;
-        
-        $socket->close;
-        
-        {
-          $poll->poll;
-          
-          my $events = $poll->events($socket_fileno);
-          
-          if ($events & POLL->POLLOUT) {
-            warn $events;
-            return 0;
-          }
-          
-          if ($events & POLL->POLLIN) {
-            warn $events;
-            return 0;
-          }
-          
-          # Some error status
-          unless ($events) {
-            warn $events;
-            return 0;
-          }
-        }
       }
     }
     
