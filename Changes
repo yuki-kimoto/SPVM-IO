@@ -1,7 +1,8 @@
-0.216 2023-05-27
+0.216 2023-05-29
   [Requirement Changes]
     * Require SPVM::Sys 0.516.
-    
+  [New Features]
+    * Add IO::Poll class.
 0.215 2023-05-24
   [New Features]
     * Add IO::Dir class.
