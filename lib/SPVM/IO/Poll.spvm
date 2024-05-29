@@ -34,7 +34,7 @@ class IO::Poll {
   }
   
   # Instance Methods
-  method fds : int[] ($event_mask : int = 0) {
+  method fds : int[] () {
     
     my $pollfd_array = $self->{pollfd_array};
     
