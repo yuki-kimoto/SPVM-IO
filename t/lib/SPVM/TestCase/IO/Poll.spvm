@@ -265,6 +265,36 @@ class TestCase::IO::Poll {
       
     }
     
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(IO->STDOUT_FILENO, POLL->POLLOUT);
+      
+      $poll->poll(0);
+      
+      my $events = $poll->events(IO->STDOUT_FILENO);
+      
+      unless ($events & POLL->POLLOUT) {
+        return 0;
+      }
+      
+    }
+    
+    {
+      my $poll = IO::Poll->new;
+      
+      $poll->set_mask(IO->STDOUT_FILENO, POLL->POLLOUT);
+      
+      $poll->poll(1.5);
+      
+      my $events = $poll->events(IO->STDOUT_FILENO);
+      
+      unless ($events & POLL->POLLOUT) {
+        return 0;
+      }
+      
+    }
+    
     return 1;
   }
   
