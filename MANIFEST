@@ -34,6 +34,7 @@ t/01-02-Test-Tcp_and_Mojolicious_and_SPVM.t
 t/IO-Dir.t
 t/IO-File.t
 t/IO-Poll.t
+t/IO-Poll_with_server.t
 t/IO-Select.t
 t/IO-Socket-INET.t
 t/IO-Socket-INET6.t
