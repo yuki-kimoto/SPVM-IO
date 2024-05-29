@@ -182,6 +182,14 @@ class TestCase::IO::Select {
       }
     }
 
+    {
+      my $has_exception = $select->has_exception(0);
+      
+      unless (@$has_exception == 0) {
+        return 0;
+      }
+    }
+
 =pod TODO: This is needed, but I cannot know the way to test it.
 
 
