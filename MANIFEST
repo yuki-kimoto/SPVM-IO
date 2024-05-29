@@ -36,6 +36,7 @@ t/IO-File.t
 t/IO-Poll.t
 t/IO-Poll_with_server.t
 t/IO-Select.t
+t/IO-Select_with_server.t
 t/IO-Socket-INET.t
 t/IO-Socket-INET6.t
 t/IO-Socket-IP.t
