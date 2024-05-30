@@ -168,6 +168,14 @@ Exceptions thrown by L<Sys#shutdown|SPVM::Sys/"shutdown"> method counld be throw
 
   method atmark : int ();
 
+If the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is currently positioned at the urgent data mark, returns 1, otherwise returns 0.
+
+This method calls L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method counld be thrown.
+
 =head2 sockopt
 
   method sockopt : int ($level : int, $optname : int);

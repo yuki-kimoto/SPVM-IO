@@ -229,6 +229,7 @@ class IO::Socket extends IO::Handle {
   }
   
   method atmark : int () {
+    
     my $fd = $self->{FD};
     
     my $atmark = Sys::Socket->sockatmark($fd);
