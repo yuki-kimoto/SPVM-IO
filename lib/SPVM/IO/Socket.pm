@@ -4,7 +4,11 @@ package SPVM::IO::Socket;
 
 =head1 Name
 
-SPVM::IO::Socket - Socket Communications
+SPVM::IO::Socket - Sockets
+
+=head1 Description
+
+L<SPVM::IO::Socket> class has methods for sockets.
 
 =head1 Usage
   
@@ -12,43 +16,53 @@ SPVM::IO::Socket - Socket Communications
   use Sys::Socket::Constant as SOCKET;
   
   # Create a new AF_INET socket
-  my $io_socket= IO::Socket->new({Domain => SOCKET->AF_INET});
-
+  my $socket = IO::Socket->new({Domain => SOCKET->AF_INET});
+  
   # Create a new AF_INET6 socket
-  my $io_socket= IO::Socket->new({Domain => SOCKET->AF_INET6});
+  my $socket = IO::Socket->new({Domain => SOCKET->AF_INET6});
   
   # Create a new AF_UNIX socket
-  my $io_socket= IO::Socket->new({Domain => SOCKET->AF_UNIX});
+  my $socket = IO::Socket->new({Domain => SOCKET->AF_UNIX});
 
-=head1 Description
+=head1 Details
 
-L<SPVM::IO::Socket> provides socket communications.
+=head2 Socket Constant Values
 
-=head1 Parent Class
+See L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant> about constant values for sockets.
 
-L<IO::Handle|SPVM::IO::Handle>.
+=head1 Super Class
+
+L<IO::Handle|SPVM::IO::Handle>
 
 =head1 Fields
 
 =head2 Domain
 
-  has Domain : protected int;
+C<has Domain : protected int;>
+
+A protocol family, like C<AF_INET>, C<AF_INET6>, C<AF_UNIX>.
 
 =head2 Type
 
-  has Type : protected int;
+C<has Type : protected int;>
+
+A socket type, like C<SOCK_STREAM>, C<SOCK_DGRAM>.
 
 =head2 Proto
 
-  has Proto : protected ro int;
+C<has Proto : protected ro int;>
+
+A particular protocol, normally this is set to 0.
 
 =head2 Timeout
 
-  has Timeout : protected double;
+C<has Timeout : protected double;>
+
+A timeout seconds for system calls that would set C<errno> to C<EWOULDBLOCK>, like C<read()>, C<write()>, C<connect()>, C<accept()>.
 
 =head2 peername
 
-  has peername : protected Sys::Socket::Sockaddr;
+C<has peername : protected Sys::Socket::Sockaddr;>
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
@@ -60,7 +74,7 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 new
 
-  static method new : IO::Socket ($options : object[] = undef);
+C<static method new : IO::Socket ($options : object[] = undef);>
 
 The socket is set to non-blocking mode.
 
@@ -86,63 +100,63 @@ See also L<SPVM::Sys::Socket::Constant>.
 
 =head2 sockdomain
 
-  method sockdomain : int ();
+C<method sockdomain : int ();>
 
 Gets the L</"Domain"> field.
 
 =head2 socktype
 
-  method socktype : int ();
+C<method socktype : int ();>
 
 Gets the L</"Type"> field.
 
 =head2 protocol
 
-  method protocol : int ();
+C<method protocol : int ();>
 
 Gets the L</"Proto"> field.
 
 =head2 timeout
 
-  method timeout : double ();
+C<method timeout : double ();>
 
 Gets the L</"Timeout"> field.
 
 =head2 peername
 
-  method peername : Sys::Socket::Sockaddr ();
+C<method peername : Sys::Socket::Sockaddr ();>
 
 =head2 DESTROY
 
-  method DESTROY : void ();
+C<method DESTROY : void ();>
 
 =head2 recv
 
-  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0);
+C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0);>
 
 =head2 send
 
-  method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0);
+C<method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0);>
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 close
 
-  method close : int ();
+C<method close : int ();>
 
 =head2 fileno
 
-  method fileno : int (); return $self->{fd}; }
+C<method fileno : int ();> return $self->{fd}; }
 
 =head2 sockname
 
-  method sockname : Sys::Socket::Sockaddr ();
+C<method sockname : Sys::Socket::Sockaddr ();>
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 shutdown
 
-  method shutdown : void ($how : int);
+C<method shutdown : void ($how : int);>
 
 Shuts down the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field given the way $how.
 
@@ -166,7 +180,7 @@ Exceptions thrown by L<Sys#shutdown|SPVM::Sys/"shutdown"> method counld be throw
 
 =head2 atmark
 
-  method atmark : int ();
+C<method atmark : int ();>
 
 If the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is currently positioned at the urgent data mark, returns 1, otherwise returns 0.
 
@@ -178,21 +192,21 @@ Exceptions thrown by L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> me
 
 =head2 sockopt
 
-  method sockopt : int ($level : int, $optname : int);
+C<method sockopt : int ($level : int, $optname : int);>
 
 =head2 setsockopt
 
-  method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int)
+C<method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int)
 
 =head2 connected
 
-  method connected : Sys::Socket::Sockaddr ();
+C<method connected : Sys::Socket::Sockaddr ();>
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 peerport
 
-  method peerport : int ();
+C<method peerport : int ();>
 
 This method is implemented in a child class.
 
@@ -202,7 +216,7 @@ Not implemented.
 
 =head2 peerhost
 
-  method peerhost : string ();
+C<method peerhost : string ();>
 
 This method is implemented in a child class.
 
@@ -212,11 +226,11 @@ Not implemented.
 
 =head2 write
 
-  method write : int ($string : string, $length : int = -1, $offset : int = 0);
+C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
 
 =head2 read
 
-  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);
+C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
 
 =head1 See Also
 

@@ -216,13 +216,16 @@ class IO::Socket extends IO::Handle {
   }
   
   method sockopt : string ($level : int, $optname : int) {
+    
     my $fd = $self->{FD};
+    
     my $optval = Sys->getsockopt($fd, $level, $optname);
     
     return $optval;
   }
   
   method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int) {
+    
     my $fd = $self->{FD};
     
     Sys->setsockopt($fd, $level, $optname, $optval);
