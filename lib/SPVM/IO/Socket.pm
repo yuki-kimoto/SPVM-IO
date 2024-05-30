@@ -136,6 +136,20 @@ C<method DESTROY : void ();>
 
 A destructor. This method closes the socket by calling L</"close"> method if the socket is opened.
 
+=head2 socket
+
+C<method socket : void ();>
+
+Opens a socket using L</"Domain"> field, L</"Type"> field, and L</"Protocal"> field.
+
+L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is set to the file descriptor of the opened socket.
+
+This method calls L<Sys#socket|Sys/"socket"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
+
 =head2 recv
 
 C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0);>
@@ -180,7 +194,7 @@ See L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant> about constant values g
 
 Exceptions:
 
-Exceptions thrown by L<Sys#shutdown|SPVM::Sys/"shutdown"> method counld be thrown.
+Exceptions thrown by L<Sys#shutdown|SPVM::Sys/"shutdown"> method could be thrown.
 
 =head2 atmark
 
@@ -192,7 +206,7 @@ This method calls L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> metho
 
 Exceptions:
 
-Exceptions thrown by L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method counld be thrown.
+Exceptions thrown by L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method could be thrown.
 
 =head2 sockopt
 
