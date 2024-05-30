@@ -62,9 +62,7 @@ A timeout seconds for system calls that would set C<errno> to C<EWOULDBLOCK>, li
 
 =head2 peername
 
-C<has peername : protected Sys::Socket::Sockaddr;>
-
-See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
+C<has peername : protected L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>;>
 
 =head2 Listen
 
@@ -124,7 +122,7 @@ Gets the L</"Timeout"> field.
 
 =head2 peername
 
-C<method peername : Sys::Socket::Sockaddr ();>
+C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
 =head2 DESTROY
 
@@ -136,23 +134,15 @@ C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int 
 
 =head2 send
 
-C<method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0);>
-
-See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
+C<method send : int ($buffer : string, $flags : int = 0, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> = undef, $length : int = -1, $buf_offset : int = 0);>
 
 =head2 close
 
 C<method close : int ();>
 
-=head2 fileno
-
-C<method fileno : int ();> return $self->{fd}; }
-
 =head2 sockname
 
-C<method sockname : Sys::Socket::Sockaddr ();>
-
-See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
+C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
 =head2 shutdown
 
