@@ -94,18 +94,43 @@ class IO::Socket extends IO::Handle {
   }
   
   method DESTROY : void () {
-    $self->{peername} = undef;
-    $self->close;
+    
+    if ($self->opened) {
+      $self->close;
+    }
+  }
+  
+  method timeout : double () {
+    return $self->{Timeout};
+  }
+  
+  method set_timeout : void ($timeout : double) {
+    $self->{Timeout} = $timeout;
+  }
+  
+  method sockdomain : int () {
+    return $self->{Domain};
+  }
+  
+  method socktype : int (){
+    return $self->{Type};
+  }
+  
+  method protocol : int () {
+    return $self->{Proto};
   }
   
   method close : void () {
+    
+    unless ($self->opened) {
+      die "This socket is not opened or already closed.";
+    }
+    
     my $fd = $self->{FD};
     
-    if ($fd >= 0) {
-      Sys::Socket->close($fd);
-      $self->{FD} = -1;
-      $self->{peername} = undef;
-    }
+    Sys::Socket->close($fd);
+    $self->{FD} = -1;
+    $self->{peername} = undef;
   }
   
   method sockname : Sys::Socket::Sockaddr () {
@@ -238,26 +263,6 @@ class IO::Socket extends IO::Handle {
     my $atmark = Sys::Socket->sockatmark($fd);
     
     return $atmark;
-  }
-  
-  method timeout : double () {
-    return $self->{Timeout};
-  }
-  
-  method set_timeout : void ($timeout : double) {
-    $self->{Timeout} = $timeout;
-  }
-  
-  method sockdomain : int () {
-    return $self->{Domain};
-  }
-  
-  method socktype : int (){
-    return $self->{Type};
-  }
-  
-  method protocol : int () {
-    return $self->{Proto};
   }
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) {

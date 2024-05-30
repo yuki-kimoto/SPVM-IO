@@ -100,25 +100,31 @@ See also L<SPVM::Sys::Socket::Constant>.
 
 C<method sockdomain : int ();>
 
-Gets the L</"Domain"> field.
+Returns the value of L</"Domain"> field.
 
 =head2 socktype
 
 C<method socktype : int ();>
 
-Gets the L</"Type"> field.
+Returns the value of L</"Type"> field.
 
 =head2 protocol
 
 C<method protocol : int ();>
 
-Gets the L</"Proto"> field.
+Returns the value of L</"Proto"> field.
 
 =head2 timeout
 
 C<method timeout : double ();>
 
-Gets the L</"Timeout"> field.
+Returns the value of L</"Timeout"> field.
+
+=head2 set_timeout
+
+C<method set_timeout : void ($timeout : double);>
+
+Sets L</"Timeout"> field to $timeout.
 
 =head2 peername
 
@@ -127,6 +133,8 @@ C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 =head2 DESTROY
 
 C<method DESTROY : void ();>
+
+A destructor. This method closes the socket by calling L</"close"> method if the socket is opened.
 
 =head2 recv
 
@@ -139,6 +147,12 @@ C<method send : int ($buffer : string, $flags : int = 0, $to : L<Sys::Socket::So
 =head2 close
 
 C<method close : int ();>
+
+Closes the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+Exceptions:
+
+If this socket is not opened or already closed, an excetpion is thrown.
 
 =head2 sockname
 
