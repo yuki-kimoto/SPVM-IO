@@ -1,7 +1,14 @@
 0.217 2023-05-30
   [Test Improvement]
     * Add tests for IO::Select using a test HTTP server.
-    
+  [Incompatible Changes]
+    * Remove an argument of IO::Socket#shutdown method.
+      [Before]
+      method shutdown : void ($sockfd : int, $how : int);
+      
+      [After]
+      method shutdown : void ($how : int);
+      
 0.216 2023-05-29
   [Requirement Changes]
     * Require SPVM::Sys 0.516.

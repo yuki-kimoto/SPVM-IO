@@ -142,7 +142,27 @@ See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 shutdown
 
-  method shutdown : void ($sockfd : int, $how : int);
+  method shutdown : void ($how : int);
+
+Shuts down the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field given the way $how.
+
+This method calls L<Sys#shutdown|SPVM::Sys/"shutdown"> method.
+
+See L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant> about constant values given to $how.
+
+=over 2
+
+=item * C<SHUT_RD>
+
+=item * C<SHUT_WR>
+
+=item * C<SHUT_RDWR>
+
+=back
+
+Exceptions:
+
+Exceptions thrown by L<Sys#shutdown|SPVM::Sys/"shutdown"> method counld be thrown.
 
 =head2 atmark
 

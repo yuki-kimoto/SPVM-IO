@@ -206,9 +206,12 @@ class IO::Socket extends IO::Handle {
     return $recv_length;
   }
   
-  method shutdown : void ($sockfd : int, $how : int) {
+  method shutdown : void ($how : int) {
+    
     $self->{peername} = undef;
+    
     my $fd = $self->{FD};
+    
     Sys->shutdown($fd, $how);
   }
   
