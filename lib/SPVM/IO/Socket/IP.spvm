@@ -202,7 +202,6 @@ class IO::Socket::IP extends IO::Socket {
   }
   
   method peeraddr : Sys::Socket::In_addr_base () {
-    my $sockaddr = $self->peername;
     
     my $in_addr_base = (Sys::Socket::In_addr_base)undef;
     
