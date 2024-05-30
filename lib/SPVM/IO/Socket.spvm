@@ -273,7 +273,7 @@ class IO::Socket extends IO::Handle {
     return $self->recv($string, $length, 0, $offset);
   }
   
-  private method socket : void () {
+  method socket : void () {
     
     my $domain = $self->{Domain};
     
@@ -287,7 +287,7 @@ class IO::Socket extends IO::Handle {
     $self->{FD} = $fd;
   }
   
-  protected method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
+  method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
     
     my $timeout = $self->{Timeout};
     
@@ -313,15 +313,15 @@ class IO::Socket extends IO::Handle {
     $self->{peername} = $sockaddr;
   }
   
-  protected method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
+  method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
     
     my $fd = $self->{FD};
     
     Sys->bind($fd, $sockaddr);
-    
   }
   
-  protected method listen : void () {
+  method listen : void () {
+    
     my $fd = $self->{FD};
     
     my $listen = $self->{Listen};
@@ -331,10 +331,9 @@ class IO::Socket extends IO::Handle {
     }
     
     Sys->listen($fd, $listen);
-    
   }
   
-  protected method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
+  method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
     
     my $fd = $self->{FD};
     

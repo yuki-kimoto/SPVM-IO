@@ -9,6 +9,14 @@
       [After]
       method shutdown : void ($how : int);
     * IO::Socket#close method throw an excetpion if the socket is not opened.
+  [Changes]
+    * The following method in IO::Socket class becomes public.
+      
+      socket
+      connect
+      listen
+      bind
+      accept
       
 0.216 2023-05-29
   [Requirement Changes]
