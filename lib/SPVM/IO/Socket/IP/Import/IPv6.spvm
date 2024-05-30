@@ -54,8 +54,6 @@ class IO::Socket::IP::Import::IPv6 : interface_t {
   }
   
   method peerhost : string () {
-    my $sockaddr_in6_peer = (Sys::Socket::Sockaddr::In6)$self->peername;
-    
     my $in6_addr_peer = $self->peeraddr;
     
     my $peerhost = (string)undef;
