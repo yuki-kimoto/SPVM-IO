@@ -216,17 +216,33 @@ Exceptions:
 
 Exceptions thrown by L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method could be thrown.
 
-=head2 sockopt
+=head2 bind
 
-C<method sockopt : int ($level : int, $optname : int);>
+C<method bind : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
 
-=head2 setsockopt
+Does the same thing that L<bind|https://linux.die.net/man/2/bind> system call does given a socket address $sockaddr and the file descriptor stored in L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
 
-C<method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int)
+This method calls L<Sys#bind|SPVM::Sys|/"bind">.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#bind|SPVM::Sys|/"bind"> method could be thrown.
+
+=head2 listen
+
+C<method listen : void ();>
+
+Does the same thing that L<listen|https://linux.die.net/man/2/listen> system call does given the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#listen|SPVM::Sys|/"listen">.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
 
 =head2 connected
 
-C<method connected : Sys::Socket::Sockaddr ();>
+C<method connected : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
 See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
@@ -257,6 +273,14 @@ C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
 =head2 read
 
 C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
+
+=head2 sockopt
+
+C<method sockopt : int ($level : int, $optname : int);>
+
+=head2 setsockopt
+
+C<method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int)
 
 =head1 See Also
 
