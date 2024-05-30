@@ -172,6 +172,14 @@ If this socket is not opened or already closed, an excetpion is thrown.
 
 C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
+Returns the socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#getsockname|SPVM::Sys/"getsockname"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#getsockname|SPVM::Sys/"getsockname"> method could be thrown.
+
 =head2 shutdown
 
 C<method shutdown : void ($how : int);>
