@@ -130,10 +130,10 @@ class IO::Socket extends IO::Handle {
     
     Sys::Socket->close($fd);
     $self->{FD} = -1;
-    $self->{peername} = undef;
   }
   
   method sockname : Sys::Socket::Sockaddr () {
+    
     my $fd = $self->{FD};
     
     my $sockaddr_sock = Sys->getsockname($fd);
@@ -142,20 +142,20 @@ class IO::Socket extends IO::Handle {
   }
   
   method peername : Sys::Socket::Sockaddr () {
+    
     my $fd = $self->{FD};
     
-    unless ($self->{peername}) {
-      $self->{peername} = Sys->getpeername($fd);
-    }
-    
-    my $sockaddr_peer = $self->{peername};
+    my $sockaddr_peer = Sys->getpeername($fd);
     
     return $sockaddr_peer;
   }
   
   method connected : Sys::Socket::Sockaddr () {
+    
     my $sockaddr = (Sys::Socket::Sockaddr)undef;
+    
     eval { $sockaddr = $self->peername; };
+    
     return $sockaddr;
   }
   
@@ -197,8 +197,6 @@ class IO::Socket extends IO::Handle {
       }
     }
     
-    $self->{peername} = $peername;
-    
     return $send_length;
   }
   
@@ -232,8 +230,6 @@ class IO::Socket extends IO::Handle {
   }
   
   method shutdown : void ($how : int) {
-    
-    $self->{peername} = undef;
     
     my $fd = $self->{FD};
     
@@ -309,8 +305,6 @@ class IO::Socket extends IO::Handle {
         die $@;
       }
     }
-    
-    $self->{peername} = $sockaddr;
   }
   
   method bind : void ($sockaddr : Sys::Socket::Sockaddr) {

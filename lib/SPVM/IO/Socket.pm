@@ -60,10 +60,6 @@ C<has Timeout : protected double;>
 
 A timeout seconds for system calls that would set C<errno> to C<EWOULDBLOCK>, like C<read()>, C<write()>, C<connect()>, C<accept()>.
 
-=head2 peername
-
-C<has peername : protected L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>;>
-
 =head2 Listen
 
   has Listen : protected int;
@@ -126,10 +122,6 @@ C<method set_timeout : void ($timeout : double);>
 
 Sets L</"Timeout"> field to $timeout.
 
-=head2 peername
-
-C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
-
 =head2 DESTROY
 
 C<method DESTROY : void ();>
@@ -172,13 +164,25 @@ If this socket is not opened or already closed, an excetpion is thrown.
 
 C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
-Returns the socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+Returns the local socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
 
 This method calls L<Sys#getsockname|SPVM::Sys/"getsockname"> method.
 
 Exceptions:
 
 Exceptions thrown by L<Sys#getsockname|SPVM::Sys/"getsockname"> method could be thrown.
+
+=head2 peername
+
+C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
+
+Returns the remote socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#getpeername|SPVM::Sys/"getpeername"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#getpeername|SPVM::Sys/"getpeername"> method could be thrown.
 
 =head2 shutdown
 

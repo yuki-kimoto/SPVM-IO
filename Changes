@@ -9,6 +9,7 @@
       [After]
       method shutdown : void ($how : int);
     * IO::Socket#close method throw an excetpion if the socket is not opened.
+    * Remove IO::Socket#peername field. The return value of peername method is not cached.
   [Changes]
     * The following method in IO::Socket class becomes public.
       
@@ -19,6 +20,7 @@
       accept
   [Requirement Changes]
     * Require SPVM::Sys 0.517.
+
 0.216 2023-05-29
   [Requirement Changes]
     * Require SPVM::Sys 0.516.
