@@ -1,6 +1,7 @@
 0.217 2023-05-30
   [New Features]
     * Add IO::Socket#sendto method.
+    * Add IO::Socket#recvfrom method.
   [Test Improvement]
     * Add tests for IO::Select using a test HTTP server.
   [Incompatible Changes]

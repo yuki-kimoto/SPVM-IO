@@ -156,6 +156,16 @@ Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
 
 C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0);>
 
+Calls L</"recvfrom"> method with $from set to C<undef> and returns its return value.
+
+Exceptions:
+
+Exceptions thrown by L</"recvfrom"> method could be thrown.
+
+=head2 recvfrom
+
+C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $buf_offset : int = 0);>
+
 =head2 send
 
 C<method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buf_offset : int = 0);>
