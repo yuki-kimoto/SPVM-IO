@@ -1,4 +1,6 @@
 0.217 2023-05-30
+  [New Features]
+    * Add IO::Socket#sendto method.
   [Test Improvement]
     * Add tests for IO::Select using a test HTTP server.
   [Incompatible Changes]
@@ -10,6 +12,11 @@
       method shutdown : void ($how : int);
     * IO::Socket#close method throw an excetpion if the socket is not opened.
     * Remove IO::Socket#peername field. The return value of peername method is not cached.
+    * Remove the argument $to of IO::Socket#send method.
+      [Before]
+      method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0);
+      [After]
+      method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buf_offset : int = 0);
   [Changes]
     * The following method in IO::Socket class becomes public.
       

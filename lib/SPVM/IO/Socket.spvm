@@ -159,7 +159,12 @@ class IO::Socket extends IO::Handle {
     return $sockaddr;
   }
   
-  method send : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0) {
+  method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buf_offset : int = 0) {
+    
+    return $self->sendto($buffer, $flags, undef, $length, $buf_offset);
+  }
+  
+  method sendto : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0) {
     if ($length < 0) {
       $length = length $buffer;
     }
@@ -167,22 +172,11 @@ class IO::Socket extends IO::Handle {
     my $timeout = $self->{Timeout};
     
     my $fd = $self->{FD};
-    my $peername = (Sys::Socket::Sockaddr)undef;
-    if ($to) {
-      $peername = $to;
-    }
-    else {
-      $peername = $self->peername;
-    }
-    
-    unless ($self->peername) {
-      die "send: Cannot determine peer address";
-    }
     
     my $send_length = -1;
     while (1) {
       
-      eval { $send_length = Sys->send($fd, $buffer, $flags, $to, $length, $buf_offset); }
+      eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $buf_offset); }
       
       if ($@) {
         if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
@@ -262,7 +256,7 @@ class IO::Socket extends IO::Handle {
   }
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) {
-    return $self->send($string, 0, undef, $length, $offset);
+    return $self->send($string, 0, $length, $offset);
   }
   
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
