@@ -184,6 +184,12 @@ Exceptions:
 
 Exceptions thrown by L<Sys#getpeername|SPVM::Sys/"getpeername"> method could be thrown.
 
+=head2 connected
+
+C<method connected : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
+
+If L</"peername"> method does not throw an exception, returns the return value, otherwise returns undef.
+
 =head2 shutdown
 
 C<method shutdown : void ($how : int);>
@@ -243,12 +249,6 @@ This method calls L<Sys#listen|SPVM::Sys|/"listen">.
 Exceptions:
 
 Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
-
-=head2 connected
-
-C<method connected : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
-
-See also L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>.
 
 =head2 peerport
 
