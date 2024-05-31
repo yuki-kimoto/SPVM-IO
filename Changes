@@ -17,7 +17,8 @@
       listen
       bind
       accept
-      
+  [Requirement Changes]
+    * Require SPVM::Sys 0.517.
 0.216 2023-05-29
   [Requirement Changes]
     * Require SPVM::Sys 0.516.
