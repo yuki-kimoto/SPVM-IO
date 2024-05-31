@@ -164,7 +164,7 @@ class IO::Socket extends IO::Handle {
     return $self->sendto($buffer, $flags, undef, $length, $buf_offset);
   }
   
-  method sendto : int ($buffer : string, $flags : int = 0, $to : Sys::Socket::Sockaddr = undef, $length : int = -1, $buf_offset : int = 0) {
+  method sendto : int ($buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $buf_offset : int = 0) {
     if ($length < 0) {
       $length = length $buffer;
     }

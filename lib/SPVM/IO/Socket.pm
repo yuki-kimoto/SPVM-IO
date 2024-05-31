@@ -168,7 +168,7 @@ Exceptions thrown by L</"sendto"> method could be thrown.
 
 =head2 sendto
 
-C<method sendto : int ($buffer : string, $flags : int = 0, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> = undef, $length : int = -1, $buf_offset : int = 0);>
+C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $buf_offset : int = 0);>
 
 =head2 close
 
