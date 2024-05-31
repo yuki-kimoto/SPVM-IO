@@ -30,6 +30,16 @@ L<SPVM::IO::Socket> class has methods for sockets.
 
 See L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant> about constant values for sockets.
 
+=head2 Goroutine
+
+IO::Socket class works with L<Go|SPVM::Go> class.
+
+Sockets created with IO::Socket class are non-blocking sockets by default.
+
+If a socket connect, accept, read, or write operation needs to wait for IO, the program passes control to a Goroutine.
+
+The control will return when IO waiting is finished or a timeout occurs.
+
 =head1 Super Class
 
 L<IO::Handle|SPVM::IO::Handle>
