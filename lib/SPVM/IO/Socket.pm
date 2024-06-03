@@ -154,7 +154,7 @@ Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
 
 =head2 recv
 
-C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0);>
+C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buffer_offset : int = 0);>
 
 Calls L</"recvfrom"> method with $from set to C<undef> and returns its return value.
 
@@ -164,11 +164,11 @@ Exceptions thrown by L</"recvfrom"> method could be thrown.
 
 =head2 recvfrom
 
-C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $buf_offset : int = 0)>
+C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $buffer_offset : int = 0)>
 
 =head2 send
 
-C<method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buf_offset : int = 0);>
+C<method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buffer_offset : int = 0);>
 
 Calls L</"sendto"> method with $to set to C<undef> and returns its return value.
 
@@ -178,7 +178,7 @@ Exceptions thrown by L</"sendto"> method could be thrown.
 
 =head2 sendto
 
-C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $buf_offset : int = 0);>
+C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $buffer_offset : int = 0);>
 
 =head2 close
 
@@ -302,11 +302,11 @@ Not implemented.
 
 =head2 write
 
-C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
+C<method write : int ($buffer : string, $length : int = -1, $offset : int = 0);>
 
-Writes the length $length from the offset $offset of the string $string to the stream associated with the file descriptoer L</"FD">.
+Writes the length $length from the offset $offset of the string $buffer to the stream associated with the file descriptoer L</"FD">.
 
-This method calls L</"send"> method with $buffer set to $string, $flags set to 0, $length set to $length, and $buf_offset set to $offset.
+This method calls L</"send"> method with $buffer set to $buffer, $flags set to 0, $length set to $length, and $buffer_offset set to $offset.
 
 And returns its return value.
 
@@ -316,15 +316,15 @@ Exceptions thrown by L</"send"> method could be thrown.
 
 =head2 read
 
-C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
+C<method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0);>
 
 =head2 sockopt
 
-C<method sockopt : int ($level : int, $optname : int);>
+C<method sockopt : int ($level : int, $option_name : int);>
 
 =head2 setsockopt
 
-C<method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int)
+C<method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int)
 
 =head1 See Also
 

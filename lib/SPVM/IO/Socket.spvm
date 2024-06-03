@@ -159,12 +159,12 @@ class IO::Socket extends IO::Handle {
     return $sockaddr;
   }
   
-  method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buf_offset : int = 0) {
+  method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buffer_offset : int = 0) {
     
-    return $self->sendto($buffer, $flags, undef, $length, $buf_offset);
+    return $self->sendto($buffer, $flags, undef, $length, $buffer_offset);
   }
   
-  method sendto : int ($buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $buf_offset : int = 0) {
+  method sendto : int ($buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $buffer_offset : int = 0) {
     if ($length < 0) {
       $length = length $buffer;
     }
@@ -176,7 +176,7 @@ class IO::Socket extends IO::Handle {
     my $send_length = -1;
     while (1) {
       
-      eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $buf_offset); }
+      eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $buffer_offset); }
       
       if ($@) {
         if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
@@ -194,12 +194,12 @@ class IO::Socket extends IO::Handle {
     return $send_length;
   }
   
-  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0) {
+  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buffer_offset : int = 0) {
     
-    return $self->recvfrom($buffer, $length, $flags, undef, $buf_offset);
+    return $self->recvfrom($buffer, $length, $flags, undef, $buffer_offset);
   }
   
-  method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $buf_offset : int = 0) {
+  method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $buffer_offset : int = 0) {
     
     if ($length < 0) {
       $length = length $buffer;
@@ -210,7 +210,7 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{FD};
     my $recv_length = -1;
     while (1) {
-      eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $buf_offset); }
+      eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $buffer_offset); }
       
       if ($@) {
         if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
@@ -235,20 +235,20 @@ class IO::Socket extends IO::Handle {
     Sys->shutdown($fd, $how);
   }
   
-  method sockopt : string ($level : int, $optname : int) {
+  method sockopt : string ($level : int, $option_name : int) {
     
     my $fd = $self->{FD};
     
-    my $optval = Sys->getsockopt($fd, $level, $optname);
+    my $option_value = Sys->getsockopt($fd, $level, $option_name);
     
-    return $optval;
+    return $option_value;
   }
   
-  method setsockopt : void ($level : int, $optname : int, $optval : object of string|Int) {
+  method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int) {
     
     my $fd = $self->{FD};
     
-    Sys->setsockopt($fd, $level, $optname, $optval);
+    Sys->setsockopt($fd, $level, $option_name, $option_value);
   }
   
   method atmark : int () {
@@ -260,12 +260,12 @@ class IO::Socket extends IO::Handle {
     return $atmark;
   }
   
-  method write : int ($string : string, $length : int = -1, $offset : int = 0) {
-    return $self->send($string, 0, $length, $offset);
+  method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
+    return $self->send($buffer, 0, $length, $offset);
   }
   
-  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
-    return $self->recv($string, $length, 0, $offset);
+  method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
+    return $self->recv($buffer, $length, 0, $offset);
   }
   
   method socket : void () {
