@@ -72,7 +72,7 @@ A timeout seconds for system calls that would set C<errno> to C<EWOULDBLOCK>, li
 
 =head2 Listen
 
-  has Listen : protected int;
+C<has Listen : protected int;>
 
 =head1 Class Methods
 
