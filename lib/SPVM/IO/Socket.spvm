@@ -196,34 +196,10 @@ class IO::Socket extends IO::Handle {
   
   method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buf_offset : int = 0) {
     
-    if ($length < 0) {
-      $length = length $buffer;
-    }
-    
-    my $timeout = $self->{Timeout};
-    
-    my $fd = $self->{FD};
-    my $recv_length = -1;
-    while (1) {
-      eval { $recv_length = Sys->recv($fd, $buffer, $length, $flags, $buf_offset); }
-      
-      if ($@) {
-        if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
-          Go->gosched_io_read($fd, $timeout);
-        }
-        else {
-          die $@;
-        }
-      }
-      else {
-        last;
-      }
-    }
-    
-    return $recv_length;
+    return $self->recvfrom($buffer, $length, $flags, undef, $buf_offset);
   }
   
-  method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from : Sys::Socket::Sockaddr, $buf_offset : int = 0) {
+  method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $buf_offset : int = 0) {
     
     if ($length < 0) {
       $length = length $buffer;
@@ -234,7 +210,7 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{FD};
     my $recv_length = -1;
     while (1) {
-      eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from, $buf_offset); }
+      eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $buf_offset); }
       
       if ($@) {
         if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
