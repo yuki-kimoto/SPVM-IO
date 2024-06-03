@@ -23,7 +23,6 @@ class IO::Socket extends IO::Handle {
   has Proto : protected int;
   has Listen : protected int;
   has Timeout : protected double;
-  has peername : protected Sys::Socket::Sockaddr;
   
   # Class Methods
   static method new : IO::Socket ($options : object[] = undef) {
@@ -159,12 +158,12 @@ class IO::Socket extends IO::Handle {
     return $sockaddr;
   }
   
-  method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buffer_offset : int = 0) {
+  method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0) {
     
-    return $self->sendto($buffer, $flags, undef, $length, $buffer_offset);
+    return $self->sendto($buffer, $flags, undef, $length, $offset);
   }
   
-  method sendto : int ($buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $buffer_offset : int = 0) {
+  method sendto : int ($buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $offset : int = 0) {
     if ($length < 0) {
       $length = length $buffer;
     }
@@ -176,7 +175,7 @@ class IO::Socket extends IO::Handle {
     my $send_length = -1;
     while (1) {
       
-      eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $buffer_offset); }
+      eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $offset); }
       
       if ($@) {
         if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
@@ -194,12 +193,12 @@ class IO::Socket extends IO::Handle {
     return $send_length;
   }
   
-  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buffer_offset : int = 0) {
+  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0) {
     
-    return $self->recvfrom($buffer, $length, $flags, undef, $buffer_offset);
+    return $self->recvfrom($buffer, $length, $flags, undef, $offset);
   }
   
-  method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $buffer_offset : int = 0) {
+  method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $offset : int = 0) {
     
     if ($length < 0) {
       $length = length $buffer;
@@ -210,7 +209,7 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{FD};
     my $recv_length = -1;
     while (1) {
-      eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $buffer_offset); }
+      eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $offset); }
       
       if ($@) {
         if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
