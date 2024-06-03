@@ -164,7 +164,7 @@ Exceptions thrown by L</"recvfrom"> method could be thrown.
 
 =head2 recvfrom
 
-C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $buf_offset : int = 0);>
+C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $buf_offset : int = 0)>
 
 =head2 send
 
