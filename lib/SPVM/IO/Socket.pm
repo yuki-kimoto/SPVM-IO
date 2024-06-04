@@ -152,34 +152,6 @@ Exceptions:
 
 Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
 
-=head2 recv
-
-C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $buffer_offset : int = 0);>
-
-Calls L</"recvfrom"> method with $from set to C<undef> and returns its return value.
-
-Exceptions:
-
-Exceptions thrown by L</"recvfrom"> method could be thrown.
-
-=head2 recvfrom
-
-C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $buffer_offset : int = 0)>
-
-=head2 send
-
-C<method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $buffer_offset : int = 0);>
-
-Calls L</"sendto"> method with $to set to C<undef> and returns its return value.
-
-Exceptions:
-
-Exceptions thrown by L</"sendto"> method could be thrown.
-
-=head2 sendto
-
-C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $buffer_offset : int = 0);>
-
 =head2 close
 
 C<method close : int ();>
@@ -307,6 +279,34 @@ C<method sockopt : int ($level : int, $option_name : int);>
 =head2 setsockopt
 
 C<method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int)
+
+=head2 recvfrom
+
+C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $offset : int = 0)>
+
+=head2 sendto
+
+C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $offset : int = 0);>
+
+=head2 recv
+
+C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0);>
+
+Calls L</"recvfrom"> method given the arguments to this method with $from set to C<undef> and returns its return value.
+
+Exceptions:
+
+Exceptions thrown by L</"recvfrom"> method could be thrown.
+
+=head2 send
+
+C<method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0);>
+
+Calls L</"sendto"> method given the arguments to this method with $to set to C<undef> and returns its return value.
+
+Exceptions:
+
+Exceptions thrown by L</"sendto"> method could be thrown.
 
 =head2 read
 
