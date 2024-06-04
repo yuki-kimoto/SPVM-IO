@@ -34,6 +34,31 @@ class IO::Socket::UNIX extends IO::Socket {
   
   protected method init : void ($options : object[] = undef) {
     
+    my $options_h = Hash->new($options);
+    
+    # Domain option
+    my $domain = $options_h->delete_or_default_int("Domain", -1);
+    unless ($domain >= 0) {
+      $domain = SOCKET->AF_UNIX;
+    }
+    
+    # Proto option
+    my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
+    
+    # Type option
+    my $type = $options_h->delete_or_default_int("Type", -1);
+    unless ($type >= 0) {
+      if ($proto == SOCKET->IPPROTO_TCP) {
+        $type = SOCKET->SOCK_STREAM;
+      }
+      elsif ($proto == SOCKET->IPPROTO_UDP) {
+        $type = SOCKET->SOCK_DGRAM;
+      }
+      elsif ($proto == SOCKET->IPPROTO_ICMP) {
+        $type = SOCKET->SOCK_RAW;
+      }
+    }
+    
     # Reason for Blocking => 1.
     # On Mac, non-blocking can only be set for sockets connected with connect or accept,
     # so when you create a socket, set it to blocking.
@@ -41,30 +66,28 @@ class IO::Socket::UNIX extends IO::Socket {
     
     $self->SUPER::init($options);
     
-    my $options_h = Hash->new($options);
-    
     my $protocol = 0;
     
     my $local = $options_h->delete_or_default_string("Local", undef);
+    $self->{Local} = $local;
+    
+    my $peer = $options_h->delete_or_default_string("Peer", undef);
+    $self->{Peer} = $peer;
+    
+    # Listen option
+    my $listen_backlog = $options_h->get_or_default_int("Listen", -1);
+    $self->{Listen} = $listen_backlog;
     
     if ($local) {
       my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
       $self->bind($sockaddr_un_local);
-    }
-    
-    my $peer = $options_h->delete_or_default_string("Peer", undef);
-    
-    my $type = $self->{Type};
-    
-    if ($options_h->exists("Listen") && $type != SOCKET->SOCK_DGRAM) {
+      
       $self->listen;
     }
     elsif ($peer) {
       my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
       $self->connect($sockaddr_un_peer);
     }
-    
-    $options_h->delete("Listen");
     
     my $blocking = $options_h->get_or_default_int("Blocking", 0);
     $self->{Blocking} = (byte)$blocking;
