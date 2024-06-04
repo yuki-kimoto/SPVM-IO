@@ -300,24 +300,6 @@ Exceptions:
 
 Not implemented.
 
-=head2 write
-
-C<method write : int ($buffer : string, $length : int = -1, $offset : int = 0);>
-
-Writes the length $length from the offset $offset of the string $buffer to the stream associated with the file descriptoer L</"FD">.
-
-This method calls L</"send"> method with $buffer set to $buffer, $flags set to 0, $length set to $length, and $buffer_offset set to $offset.
-
-And returns its return value.
-
-Exceptions:
-
-Exceptions thrown by L</"send"> method could be thrown.
-
-=head2 read
-
-C<method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0);>
-
 =head2 sockopt
 
 C<method sockopt : int ($level : int, $option_name : int);>
@@ -325,6 +307,30 @@ C<method sockopt : int ($level : int, $option_name : int);>
 =head2 setsockopt
 
 C<method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int)
+
+=head2 read
+
+C<method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0);>
+
+Reads the length $length of data from the stream associated with the file descriptoer L</"FD"> and store it to the offset $offset position of the string $string.
+
+And returns the read length.
+
+This method calls L</"recv"> method given the arguments given to this method and returns its return values.
+
+=head2 write
+
+C<method write : int ($buffer : string, $length : int = -1, $offset : int = 0);>
+
+Writes the length $length from the offset $offset of the string $buffer to the stream associated with the file descriptoer L</"FD">.
+
+And returns the write length.
+
+This method calls L</"send"> method given the arguments given to this method and returns its return values.
+
+Exceptions:
+
+Exceptions thrown by L</"send"> method could be thrown.
 
 =head1 See Also
 

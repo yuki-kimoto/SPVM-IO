@@ -259,14 +259,6 @@ class IO::Socket extends IO::Handle {
     return $atmark;
   }
   
-  method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
-    return $self->send($buffer, 0, $length, $offset);
-  }
-  
-  method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
-    return $self->recv($buffer, $length, 0, $offset);
-  }
-  
   method socket : void () {
     
     my $domain = $self->{Domain};
@@ -371,6 +363,14 @@ class IO::Socket extends IO::Handle {
     }
     
     return $client;
+  }
+  
+  method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
+    return $self->recv($buffer, $length, 0, $offset);
+  }
+  
+  method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
+    return $self->send($buffer, 0, $length, $offset);
   }
   
 }
