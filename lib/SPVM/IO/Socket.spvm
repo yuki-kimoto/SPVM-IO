@@ -207,10 +207,10 @@ class IO::Socket extends IO::Handle {
     my $timeout = $self->{Timeout};
     
     my $client_fd = -1;
-    my $client_socket_address = (Sys::Socket::Sockaddr)undef;
+    my $client_sockaddr = (Sys::Socket::Sockaddr)undef;
     
     while (1) {
-      eval { $client_socket_address = Sys->accept(\$client_fd, $fd); }
+      eval { $client_sockaddr = Sys->accept(\$client_fd, $fd); }
       
       if ($@) {
         my $again = 
@@ -236,13 +236,18 @@ class IO::Socket extends IO::Handle {
       Domain => $self->sockdomain,
       Type => $self->socktype,
       Proto => $self->protocol,
+      FieldsInitOnly => 1,
     };
     
     my $class = type_name $self;
     my $client = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$self, $options]);
     
+    unless ($self->{Blocking}) {
+      $self->set_blocking(0);
+    }
+    
     if ($peer_ref) {
-      $peer_ref->[0] = $client_socket_address;
+      $peer_ref->[0] = $client_sockaddr;
     }
     
     return $client;

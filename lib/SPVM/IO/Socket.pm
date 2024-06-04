@@ -216,6 +216,18 @@ Exceptions:
 
 Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
 
+=head2 
+
+C<method accept : IO::Socket ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
+
+Does the same thing that L<accept|https://linux.die.net/man/2/accept> system call does given the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#accept|SPVM::Sys|/"accept">.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#accept|SPVM::Sys|/"accept"> method could be thrown.
+
 =head2 recvfrom
 
 C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $offset : int = 0)>
