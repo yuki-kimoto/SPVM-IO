@@ -37,6 +37,12 @@ Options:
 
 The options for L<IO::Socket#new|SPVM::IO::Socket/"new"> method are available.
 
+=head2 accept
+
+C<method accept : L<IO::Socket::INET|SPVM::IO::Socket::INET> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
+
+Calls L<accept|SPVM::IO::Socke/"new"> method of its super class given the argument given to this method and returns its return value.
+
 =head1 Copyright & License
 
 Copyright (c) 2023 Yuki Kimoto

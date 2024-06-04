@@ -212,7 +212,7 @@ If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import
 
 =head2 accept
 
-C<method accept : IO::Socket::IP ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
+C<method accept : L<IO::Socket::IP|SPVM::IO::Socket::IP> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
 
 Calls L<accept|SPVM::IO::Socke/"new"> method of its super class given the argument given to this method and returns its return value.
 

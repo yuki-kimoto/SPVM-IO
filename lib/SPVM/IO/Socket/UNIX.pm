@@ -89,7 +89,7 @@ C<method peerpath : string ();>
 
 =head2 accept
 
-C<method accept : IO::Socket::UNIX ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
+C<method accept : L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
 
 Calls L<accept|SPVM::IO::Socke/"new"> method of its super class given the argument given to this method and returns its return value.
 
