@@ -26,6 +26,10 @@ L<SPVM::IO::Socket> class has methods for sockets.
 
 =head1 Details
 
+=head2 Porting
+
+This class is a Perl's L<IO::Socket|IO::Socket> porting to L<SPVM>.
+
 =head2 Socket Constant Values
 
 See L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant> about constant values for sockets.
@@ -152,46 +156,6 @@ Exceptions:
 
 Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
 
-=head2 close
-
-C<method close : int ();>
-
-Closes the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
-
-Exceptions:
-
-If this socket is not opened or already closed, an excetpion is thrown.
-
-=head2 sockname
-
-C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
-
-Returns the local socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
-
-This method calls L<Sys#getsockname|SPVM::Sys/"getsockname"> method.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#getsockname|SPVM::Sys/"getsockname"> method could be thrown.
-
-=head2 peername
-
-C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
-
-Returns the remote socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
-
-This method calls L<Sys#getpeername|SPVM::Sys/"getpeername"> method.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#getpeername|SPVM::Sys/"getpeername"> method could be thrown.
-
-=head2 connected
-
-C<method connected : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
-
-If L</"peername"> method does not throw an exception, returns the return value, otherwise returns undef.
-
 =head2 shutdown
 
 C<method shutdown : void ($how : int);>
@@ -216,17 +180,15 @@ Exceptions:
 
 Exceptions thrown by L<Sys#shutdown|SPVM::Sys/"shutdown"> method could be thrown.
 
-=head2 atmark
+=head2 close
 
-C<method atmark : int ();>
+C<method close : int ();>
 
-If the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is currently positioned at the urgent data mark, returns 1, otherwise returns 0.
-
-This method calls L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method.
+Closes the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
 
 Exceptions:
 
-Exceptions thrown by L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method could be thrown.
+If this socket is not opened or already closed, an excetpion is thrown.
 
 =head2 bind
 
@@ -252,34 +214,6 @@ Exceptions:
 
 Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
 
-=head2 peerport
-
-C<method peerport : int ();>
-
-This method is implemented in a child class.
-
-Exceptions:
-
-Not implemented.
-
-=head2 peerhost
-
-C<method peerhost : string ();>
-
-This method is implemented in a child class.
-
-Exceptions:
-
-Not implemented.
-
-=head2 sockopt
-
-C<method sockopt : int ($level : int, $option_name : int);>
-
-=head2 setsockopt
-
-C<method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int)
-
 =head2 recvfrom
 
 C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $offset : int = 0)>
@@ -292,7 +226,7 @@ C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sock
 
 C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0);>
 
-Calls L</"recvfrom"> method given the arguments to this method with $from set to C<undef> and returns its return value.
+Calls L</"recvfrom"> method given the arguments to this method with $from_ref set to C<undef> and returns its return value.
 
 Exceptions:
 
@@ -332,23 +266,93 @@ Exceptions:
 
 Exceptions thrown by L</"send"> method could be thrown.
 
+=head2 sockname
+
+C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
+
+Returns the local socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#getsockname|SPVM::Sys/"getsockname"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#getsockname|SPVM::Sys/"getsockname"> method could be thrown.
+
+=head2 peername
+
+C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
+
+Returns the remote socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#getpeername|SPVM::Sys/"getpeername"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#getpeername|SPVM::Sys/"getpeername"> method could be thrown.
+
+=head2 connected
+
+C<method connected : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
+
+If L</"peername"> method does not throw an exception, returns the return value, otherwise returns undef.
+
+=head2 atmark
+
+C<method atmark : int ();>
+
+If the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is currently positioned at the urgent data mark, returns 1, otherwise returns 0.
+
+This method calls L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method could be thrown.
+
+=head2 sockopt
+
+C<method sockopt : int ($level : int, $option_name : int);>
+
+Gets a socket option of the file descriptor stored in L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field given the socket level $level and the option name $option_name.
+
+This method calls L<Sys#getsockopt|SPVM::Sys/"getsockopt"> method given the arguments given to this method and returns its return value.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#getsockopt|SPVM::Sys/"getsockopt"> method could be thrown.
+
+=head2 setsockopt
+
+C<method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|L<Int|SPVM::Int>);>
+
+Sets a socket option of the file descriptor stored in L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field given the socket level $level, the option name $option_name, and the option value $option_value.
+
+This method calls L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method given the arguments given to this method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method could be thrown.
+
+=head1 Well Known Child Classes
+
+=over 2
+
+=item * L<IO::Socket::IP|SPVM::IO::Socket::IP>
+
+=item * L<IO::Socket::INET|SPVM::IO::Socket::INET>
+
+=item * L<IO::Socket::INET6|SPVM::IO::Socket::INET6>
+
+=back
+
 =head1 See Also
 
-=head2 Sys::Socket
+=over 2
 
-L<Sys::Socket|SPVM::Sys::Socket>
+=item * L<Sys::Socket|SPVM::Sys::Socket>
 
-=head2 Sys::Socket::Constant
+=item * L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant>
 
-L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant>
-
-=head2 IO::Socket::INET
-
-L<IO::Socket::INET|SPVM::IO::Socket::INET>
-
-=head2 Perl's IO::Socket
-
-C<IO::Socket> is a Perl's L<IO::Socket|IO::Socket> porting to L<SPVM>.
+=back
 
 =head1 Copyright & License
 

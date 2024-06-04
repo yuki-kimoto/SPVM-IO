@@ -119,65 +119,6 @@ class IO::Socket extends IO::Handle {
     return $self->{Proto};
   }
   
-  method sockname : Sys::Socket::Sockaddr () {
-    
-    my $fd = $self->{FD};
-    
-    my $sockaddr_sock = Sys->getsockname($fd);
-    
-    return $sockaddr_sock;
-  }
-  
-  method peername : Sys::Socket::Sockaddr () {
-    
-    my $fd = $self->{FD};
-    
-    my $sockaddr_peer = Sys->getpeername($fd);
-    
-    return $sockaddr_peer;
-  }
-  
-  method connected : Sys::Socket::Sockaddr () {
-    
-    my $sockaddr = (Sys::Socket::Sockaddr)undef;
-    
-    eval { $sockaddr = $self->peername; };
-    
-    return $sockaddr;
-  }
-  
-  method shutdown : void ($how : int) {
-    
-    my $fd = $self->{FD};
-    
-    Sys->shutdown($fd, $how);
-  }
-  
-  method sockopt : string ($level : int, $option_name : int) {
-    
-    my $fd = $self->{FD};
-    
-    my $option_value = Sys->getsockopt($fd, $level, $option_name);
-    
-    return $option_value;
-  }
-  
-  method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int) {
-    
-    my $fd = $self->{FD};
-    
-    Sys->setsockopt($fd, $level, $option_name, $option_value);
-  }
-  
-  method atmark : int () {
-    
-    my $fd = $self->{FD};
-    
-    my $atmark = Sys::Socket->sockatmark($fd);
-    
-    return $atmark;
-  }
-  
   method socket : void () {
     
     my $domain = $self->{Domain};
@@ -190,6 +131,13 @@ class IO::Socket extends IO::Handle {
     Sys->socket(\$fd, $domain, $type, $protocol);
     
     $self->{FD} = $fd;
+  }
+  
+  method shutdown : void ($how : int) {
+    
+    my $fd = $self->{FD};
+    
+    Sys->shutdown($fd, $how);
   }
   
   method close : void () {
@@ -373,6 +321,58 @@ class IO::Socket extends IO::Handle {
   method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
     
     return $self->send($buffer, 0, $length, $offset);
+  }
+  
+  method sockname : Sys::Socket::Sockaddr () {
+    
+    my $fd = $self->{FD};
+    
+    my $sockaddr_sock = Sys->getsockname($fd);
+    
+    return $sockaddr_sock;
+  }
+  
+  method peername : Sys::Socket::Sockaddr () {
+    
+    my $fd = $self->{FD};
+    
+    my $sockaddr_peer = Sys->getpeername($fd);
+    
+    return $sockaddr_peer;
+  }
+  
+  method connected : Sys::Socket::Sockaddr () {
+    
+    my $sockaddr = (Sys::Socket::Sockaddr)undef;
+    
+    eval { $sockaddr = $self->peername; };
+    
+    return $sockaddr;
+  }
+  
+  method atmark : int () {
+    
+    my $fd = $self->{FD};
+    
+    my $atmark = Sys::Socket->sockatmark($fd);
+    
+    return $atmark;
+  }
+  
+  method sockopt : string ($level : int, $option_name : int) {
+    
+    my $fd = $self->{FD};
+    
+    my $option_value = Sys->getsockopt($fd, $level, $option_name);
+    
+    return $option_value;
+  }
+  
+  method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int) {
+    
+    my $fd = $self->{FD};
+    
+    Sys->setsockopt($fd, $level, $option_name, $option_value);
   }
   
 }
