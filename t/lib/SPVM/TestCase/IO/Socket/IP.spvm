@@ -488,5 +488,28 @@ class TestCase::IO::Socket::IP {
     
     return 1;
   }
+  
+  static method server_ipv4_basic : int ($port : int) {
+    
+    # Basic
+    {
+      my $host = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      
+      my $send_buffer = "abc";
+      
+      $socket->send($send_buffer);
+      
+      my $recv_buffer = (mutable string)new_string_len length $send_buffer;
+      
+      my $recv_length = $socket->recv($recv_buffer);
+      
+      unless ($recv_buffer eq "abc") {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
 }
 

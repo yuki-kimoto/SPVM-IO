@@ -84,9 +84,9 @@ class IO::Socket::IP extends IO::Socket {
     # Reason for Blocking => 1.
     # On Mac, non-blocking can only be set for sockets connected with connect or accept,
     # so when you create a socket, set it to blocking.
-    $options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type, Blocking => 1});
+    my $super_options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type, Blocking => 1});
     
-    $self->SUPER::init($options);
+    $self->SUPER::init($super_options);
     
     # LocalAddr option
     my $local_address = $options_h->get_or_default_string("LocalAddr", undef);

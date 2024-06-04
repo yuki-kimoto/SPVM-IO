@@ -1,11 +1,16 @@
 class TestUtil {
+  
+  use IO::Socket::INET;
+  
   static method run_echo_server : void ($port : int) {
+    
+    my $localhost = "127.0.0.1";
     
     my $server_socket = IO::Socket::INET->new({
       LocalAddr => $localhost,
       LocalPort => $port,
       Listen    => 5,
-      Reuse => 1,
+      ReuseAddr => 1,
     });
     
     while (1) {
@@ -13,17 +18,12 @@ class TestUtil {
       
       while (1) {
         
-        my $date = new_string_len 1;
+        my $date = (mutable string)new_string_len 1;
         
         my $read_length = $client_socket->read($date);
         
         if ($read_length > 0) {
-          if ($date == '\0') {
-            $client_socket->close;
-          }
-          else {
-            $client_socket->write($date);
-          }
+          $client_socket->write($date);
         }
         else {
           $client_socket->close;
