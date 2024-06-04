@@ -212,6 +212,12 @@ If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import:
 
 If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerport|IO::Socket::IP::Import::IPv6/"peerport"> method.
 
+=head2 accept
+
+C<method accept : IO::Socket::IP ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
+
+Calls L<accept|SPVM::IO::Socke/"new"> method of its super class given the argument given to this method and returns its return value.
+
 =head1 Well Known Child Classes
 
 =over 2

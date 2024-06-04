@@ -276,4 +276,7 @@ class IO::Socket::IP extends IO::Socket {
     return $socket_address;
   }
   
+  method accept : IO::Socket::IP ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
+    return (IO::Socket::IP)$self->SUPER::accept($peer_ref);
+  }
 }

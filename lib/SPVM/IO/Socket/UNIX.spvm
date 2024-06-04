@@ -112,4 +112,8 @@ class IO::Socket::UNIX extends IO::Socket {
     
     return $peerpath;
   }
+  
+  method accept : IO::Socket::UNIX ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
+    return (IO::Socket::UNIX)$self->SUPER::accept($peer_ref);
+  }
 }

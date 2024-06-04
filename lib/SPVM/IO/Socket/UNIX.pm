@@ -28,18 +28,15 @@ The IO::Socket::UNIX class in L<SPVM> has methods for someting.
 
 
 
+=head2 accept
 
-=head1 Repository
+C<method accept : IO::Socket::UNIX ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
 
-
-
-=head1 Author
-
-[--user-name] C<[--user-email]>
+Calls L<accept|SPVM::IO::Socke/"new"> method of its super class given the argument given to this method and returns its return value.
 
 =head1 Copyright & License
 
-Copyright (c) 2023 [--user-name]
+Copyright (c) 2023 Yuki Kimoto
 
 MIT License
 
