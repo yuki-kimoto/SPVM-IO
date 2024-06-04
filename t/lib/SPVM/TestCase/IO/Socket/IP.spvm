@@ -6,6 +6,7 @@ class TestCase::IO::Socket::IP {
   use Go;
   use Fn;
   use Sys::Socket::Constant as SOCKET;
+  use TestUtil;
   
   static method ipv4_fileno : int ($port : int) {
 
@@ -488,3 +489,4 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
 }
+

@@ -50,6 +50,7 @@ t/lib/SPVM/TestCase/IO/Socket/INET.spvm
 t/lib/SPVM/TestCase/IO/Socket/INET6.spvm
 t/lib/SPVM/TestCase/IO/Socket/IP.spvm
 t/lib/SPVM/TestCase/IO/Socket/Online.spvm
+t/lib/SPVM/TestUtil.spvm
 t/lib/TestFile.pm
 t/test_files/file_eof.txt
 t/test_files/fread.txt
