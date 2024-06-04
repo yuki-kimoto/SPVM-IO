@@ -6,9 +6,12 @@ class IO::Socket::UNIX extends IO::Socket {
   use Sys::Socket::Util;
   use Array;
   
+  # Fields
   has Local : string;
+  
   has Peer : string;
   
+  # Class Methods
   static method new : IO::Socket::UNIX ($options : object[] = undef) {
     
     my $self = new IO::Socket::UNIX;

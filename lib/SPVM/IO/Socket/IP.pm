@@ -62,13 +62,13 @@ A local port.
 
 C<has PeerAddr : protected string;>
 
-A remote address.
+A peer address.
 
 =head2 PeerPort
 
 C<has PeerPort : protected int;>
 
-A remote port
+A peer port
 
 =head2 ReuseAddr
 
@@ -124,7 +124,7 @@ L</"Broadcast"> field is set to this value.
 
 =item * C<PeerAddr> : string
 
-A remote address.
+A peer address.
 
 L</"PeerAddr"> field is set to this value.
 
@@ -141,8 +141,6 @@ L</"LocalAddr"> field is set to this value.
 L</"LocalPort"> field is set to this value.
 
 =back
-
-Adding the above options, options in L<IO::Socket#new|SPVM::IO::Socket/"new"> method are available.
 
 =head1 Instance Methods
 
@@ -186,7 +184,7 @@ If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import
 
 C<method peeraddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
 
-Return the remote address.
+Return the peer address.
 
 If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peeraddr|IO::Socket::IP::Import::IPv4/"peeraddr"> method.
 
@@ -196,7 +194,7 @@ If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import
 
 C<method peerhost : string ();>
 
-Returns the remote host name.
+Returns the peer host name.
 
 If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerhost|IO::Socket::IP::Import::IPv4/"peerhost"> method.
 
@@ -206,7 +204,7 @@ If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import
 
 C<method peerport : int ();>
 
-Returns the remote port.
+Returns the peer port.
 
 If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerport|IO::Socket::IP::Import::IPv4/"peerport"> method.
 

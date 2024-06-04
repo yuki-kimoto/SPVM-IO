@@ -296,7 +296,7 @@ Exceptions thrown by L<Sys#getsockname|SPVM::Sys/"getsockname"> method could be 
 
 C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
-Returns the remote socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+Returns the peer socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
 
 This method calls L<Sys#getpeername|SPVM::Sys/"getpeername"> method.
 
