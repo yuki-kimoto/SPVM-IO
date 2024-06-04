@@ -33,6 +33,10 @@ C<static method new : L<IO::Socket::IP|SPVM::IO::Socket::IP> ($options : object[
 
 Same as L<SPVM::IO::Socket::IP#new> method, but the C<Domain> option is set to the return value of L<Sys::Socket::Constant#AF_INET|SPVM::Sys::Socket::Constant/AF_INET> method.
 
+Options:
+
+The options for L<IO::Socket#new|SPVM::IO::Socket/"new"> method are available.
+
 =head1 Copyright & License
 
 Copyright (c) 2023 Yuki Kimoto

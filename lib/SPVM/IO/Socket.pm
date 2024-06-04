@@ -88,6 +88,8 @@ The socket is set to non-blocking mode.
 
 Options:
 
+The following options are available adding to the options for L<IO::Handle#new|SPVM::IO::Handle/"new"> method.
+
 =over 2
 
 =item * Domain : Int

@@ -228,7 +228,7 @@ class IO::Socket extends IO::Handle {
     
     my $options = {
       Timeout => $timeout,
-      fd => $client_fd,
+      FD => $client_fd,
       Domain => $self->sockdomain,
       Type => $self->socktype,
       Proto => $self->protocol,

@@ -65,6 +65,10 @@ L</"Blocking"> field is set to this value.
 
 If this value is 0, L</"set_blocking"> method is called with 0.
 
+=item * C<FieldsInitOnly : Int = 0>
+
+If this value is 1, only initialization of fields are performed without system calls for the file descriptor L</"FD">.
+
 =back
 
 =head1 Instance Methods

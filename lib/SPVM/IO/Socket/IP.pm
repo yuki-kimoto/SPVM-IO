@@ -106,6 +106,8 @@ And returns the new object.
 
 Options:
 
+The following options are available adding the options for L<IO::Socket#new|SPVM::IO::Socket/"new"> method are available.
+
 =over 2
 
 =item * C<ReuseAddr> : string
