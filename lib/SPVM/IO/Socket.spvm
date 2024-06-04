@@ -119,18 +119,6 @@ class IO::Socket extends IO::Handle {
     return $self->{Proto};
   }
   
-  method close : void () {
-    
-    unless ($self->opened) {
-      die "This socket is not opened or already closed.";
-    }
-    
-    my $fd = $self->{FD};
-    
-    Sys::Socket->close($fd);
-    $self->{FD} = -1;
-  }
-  
   method sockname : Sys::Socket::Sockaddr () {
     
     my $fd = $self->{FD};
@@ -202,6 +190,18 @@ class IO::Socket extends IO::Handle {
     Sys->socket(\$fd, $domain, $type, $protocol);
     
     $self->{FD} = $fd;
+  }
+  
+  method close : void () {
+    
+    unless ($self->opened) {
+      die "This socket is not opened or already closed.";
+    }
+    
+    my $fd = $self->{FD};
+    
+    Sys::Socket->close($fd);
+    $self->{FD} = -1;
   }
   
   method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
