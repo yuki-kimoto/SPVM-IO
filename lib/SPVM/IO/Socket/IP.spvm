@@ -129,16 +129,15 @@ class IO::Socket::IP extends IO::Socket {
         $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
       }
       
-      if ($local_port >= 0) {
+      if ($peer_address) {
+        my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
+        $self->connect($peer_socket_address);
+      }
+      elsif ($local_port >= 0) {
         my $local_socket_address = $self->create_socket_address($local_address, $local_port);
         $self->bind($local_socket_address);
         
         $self->listen;
-      }
-      
-      if ($peer_address) {
-        my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
-        $self->connect($peer_socket_address);
       }
       
       my $blocking = $options_h->get_or_default_int("Blocking", 0);

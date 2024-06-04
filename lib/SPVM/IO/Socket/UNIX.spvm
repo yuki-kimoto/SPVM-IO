@@ -78,15 +78,15 @@ class IO::Socket::UNIX extends IO::Socket {
     my $listen_backlog = $options_h->get_or_default_int("Listen", -1);
     $self->{Listen} = $listen_backlog;
     
-    if ($local) {
+    if ($peer) {
+      my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
+      $self->connect($sockaddr_un_peer);
+    }
+    elsif ($local) {
       my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
       $self->bind($sockaddr_un_local);
       
       $self->listen;
-    }
-    elsif ($peer) {
-      my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
-      $self->connect($sockaddr_un_peer);
     }
     
     my $blocking = $options_h->get_or_default_int("Blocking", 0);

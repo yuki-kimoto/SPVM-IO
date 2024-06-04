@@ -98,7 +98,7 @@ Creates a new L<IO::Socket::IP|SPVM::IO::Socket::IP> object.
 
 And creates a socket.
 
-And if L</"ReuseAddr"> field is defined, L<connect|https://linux.die.net/man/2/connect> is executed.
+And if L</"PeerAddr"> field is defined, L<connect|https://linux.die.net/man/2/connect> is executed.
 
 And if L</"LocalPort"> field is defined, L<bind|https://linux.die.net/man/2/bind> and L<listen|https://linux.die.net/man/2/listen> are executed.
 
