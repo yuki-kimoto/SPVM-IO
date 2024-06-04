@@ -55,6 +55,7 @@ class IO::Handle {
       "FD",
       "AutoFlush",
       "Blocking",
+      "FieldsInitOnly",
     ];
     
     return $option_names;
