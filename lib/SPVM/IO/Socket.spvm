@@ -66,13 +66,17 @@ class IO::Socket extends IO::Handle {
     my $timeout = $options_h->get_or_default_double("Timeout", 0.0);
     $self->{Timeout} = $timeout;
     
-    $self->socket;
+    my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
     
-    my $blocking = $options_h->get_or_default_int("Blocking", 0);
-    $self->{Blocking} = (byte)$blocking;
-    
-    unless ($blocking) {
-      $self->set_blocking(0);
+    unless ($fields_init_only) {
+      $self->socket;
+      
+      my $blocking = $options_h->get_or_default_int("Blocking", 0);
+      $self->{Blocking} = (byte)$blocking;
+      
+      unless ($blocking) {
+        $self->set_blocking(0);
+      }
     }
   }
   

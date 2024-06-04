@@ -116,33 +116,37 @@ class IO::Socket::IP extends IO::Socket {
     my $broadcast = $options_h->get_or_default_int("Broadcast", 0);
     $self->{Broadcast} = $broadcast;
     
-    if ($reuse_addr) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
-    }
-    if ($reuse_port) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
-    }
-    if ($broadcast) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
-    }
+    my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
     
-    if ($local_port >= 0) {
-      my $local_socket_address = $self->create_socket_address($local_address, $local_port);
-      $self->bind($local_socket_address);
+    unless ($fields_init_only) {
+      if ($reuse_addr) {
+        $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
+      }
+      if ($reuse_port) {
+        $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
+      }
+      if ($broadcast) {
+        $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
+      }
       
-      $self->listen;
-    }
-    
-    if ($peer_address) {
-      my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
-      $self->connect($peer_socket_address);
-    }
-    
-    my $blocking = $options_h->get_or_default_int("Blocking", 0);
-    $self->{Blocking} = (byte)$blocking;
-    
-    unless ($blocking) {
-      $self->set_blocking(0);
+      if ($local_port >= 0) {
+        my $local_socket_address = $self->create_socket_address($local_address, $local_port);
+        $self->bind($local_socket_address);
+        
+        $self->listen;
+      }
+      
+      if ($peer_address) {
+        my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
+        $self->connect($peer_socket_address);
+      }
+      
+      my $blocking = $options_h->get_or_default_int("Blocking", 0);
+      $self->{Blocking} = (byte)$blocking;
+      
+      unless ($blocking) {
+        $self->set_blocking(0);
+      }
     }
   }
   
