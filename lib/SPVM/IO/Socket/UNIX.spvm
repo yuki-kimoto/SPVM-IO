@@ -65,7 +65,7 @@ class IO::Socket::UNIX extends IO::Socket {
     # Reason for Blocking => 1.
     # On Mac, non-blocking can only be set for sockets connected with connect or accept,
     # so when you create a socket, set it to blocking.
-    my $super_options = Fn->merge_options($options, {FieldsInitOnly => 1, Blocking => 1});
+    my $super_options = Fn->merge_options($options, {FieldsInitOnly => 1});
     
     $self->SUPER::init($super_options);
     
