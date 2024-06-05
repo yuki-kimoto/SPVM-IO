@@ -84,7 +84,7 @@ class IO::Socket::IP extends IO::Socket {
     # Reason for Blocking => 1.
     # On Mac, non-blocking can only be set for sockets connected with connect or accept,
     # so when you create a socket, set it to blocking.
-    my $super_options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type, Blocking => 1});
+    my $super_options = Fn->merge_options($options, {FieldsInitOnly => 1, Domain => $domain, Proto => $proto, Type => $type, Blocking => 1});
     
     $self->SUPER::init($super_options);
     
@@ -123,30 +123,55 @@ class IO::Socket::IP extends IO::Socket {
     my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
     
     unless ($fields_init_only) {
-      if ($reuse_addr) {
-        $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
-      }
-      if ($reuse_port) {
-        $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
-      }
-      if ($broadcast) {
-        $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
-      }
+      $self->configure;
+    }
+  }
+  
+  protected method configure : void () {
+    
+    my $reuse_addr = $self->{ReuseAddr};
+    
+    my $reuse_port = $self->{ReusePort};
+    
+    my $broadcast = $self->{Broadcast};
+    
+    my $peer_address = $self->{PeerAddr};
+    
+    my $peer_port = $self->{PeerPort};
+    
+    my $local_address = $self->{LocalAddr};
+    
+    my $local_port = $self->{LocalPort};
+    
+    my $blocking = $self->{Blocking};
+    
+    $self->socket;
+    
+    if ($reuse_addr) {
+      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
+    }
+    
+    if ($reuse_port) {
+      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
+    }
+    
+    if ($broadcast) {
+      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
+    }
+    
+    if ($peer_address) {
+      my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
+      $self->connect($peer_socket_address);
+    }
+    elsif ($local_port >= 0) {
+      my $local_socket_address = $self->create_socket_address($local_address, $local_port);
+      $self->bind($local_socket_address);
       
-      if ($peer_address) {
-        my $peer_socket_address = $self->create_socket_address($peer_address, $peer_port);
-        $self->connect($peer_socket_address);
-      }
-      elsif ($local_port >= 0) {
-        my $local_socket_address = $self->create_socket_address($local_address, $local_port);
-        $self->bind($local_socket_address);
-        
-        $self->listen;
-      }
-      
-      unless ($blocking) {
-        $self->set_blocking(0);
-      }
+      $self->listen;
+    }
+    
+    unless ($blocking) {
+      $self->set_blocking(0);
     }
   }
   

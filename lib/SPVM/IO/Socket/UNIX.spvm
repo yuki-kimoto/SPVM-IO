@@ -65,7 +65,7 @@ class IO::Socket::UNIX extends IO::Socket {
     # Reason for Blocking => 1.
     # On Mac, non-blocking can only be set for sockets connected with connect or accept,
     # so when you create a socket, set it to blocking.
-    my $super_options = Fn->merge_options($options, {Blocking => 1});
+    my $super_options = Fn->merge_options($options, {FieldsInitOnly => 1, Blocking => 1});
     
     $self->SUPER::init($super_options);
     
@@ -88,20 +88,33 @@ class IO::Socket::UNIX extends IO::Socket {
     my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
     
     unless ($fields_init_only) {
-      if ($peer) {
-        my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
-        $self->connect($sockaddr_un_peer);
-      }
-      elsif ($local) {
-        my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
-        $self->bind($sockaddr_un_local);
-        
-        $self->listen;
-      }
+      $self->configure;
+    }
+  }
+  
+  protected method configure : void () {
+    
+    my $peer = $self->{Peer};
+    
+    my $local = $self->{Local};
+    
+    my $blocking = $self->{Blocking};
+    
+    $self->socket;
+    
+    if ($peer) {
+      my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
+      $self->connect($sockaddr_un_peer);
+    }
+    elsif ($local) {
+      my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
+      $self->bind($sockaddr_un_local);
       
-      unless ($blocking) {
-        $self->set_blocking(0);
-      }
+      $self->listen;
+    }
+    
+    unless ($blocking) {
+      $self->set_blocking(0);
     }
   }
   

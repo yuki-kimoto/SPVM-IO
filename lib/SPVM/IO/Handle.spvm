@@ -48,9 +48,16 @@ class IO::Handle {
     my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
     
     unless ($fields_init_only) {
-      unless ($blocking) {
-        $self->set_blocking(0);
-      }
+      $self->configure;
+    }
+  }
+  
+  protected method configure : void () {
+    
+    my $blocking = $self->{Blocking};
+    
+    unless ($blocking) {
+      $self->set_blocking(0);
     }
   }
   

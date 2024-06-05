@@ -44,7 +44,7 @@ class IO::Socket extends IO::Handle {
     # Reason for Blocking => 1.
     # On Mac, non-blocking can only be set for sockets connected with connect or accept,
     # so when you create a socket, set it to blocking.
-    $self->SUPER::init(Fn->merge_options($options, {Blocking => 1, AutoFlush => $autoflush}));
+    $self->SUPER::init(Fn->merge_options($options, {FieldsInitOnly => 1, Blocking => 1, AutoFlush => $autoflush}));
     
     # Domain option
     my $domain = $options_h->get_or_default_int("Domain", -1);
@@ -73,13 +73,20 @@ class IO::Socket extends IO::Handle {
     my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
     
     unless ($fields_init_only) {
-      $self->socket;
-      
-      unless ($blocking) {
-        $self->set_blocking(0);
-      }
+      $self->configure;
     }
     
+  }
+  
+  protected method configure : void () {
+    
+    my $blocking = $self->{Blocking};
+    
+    $self->socket;
+    
+    unless ($blocking) {
+      $self->set_blocking(0);
+    }
   }
   
   method option_names : string[] () {
@@ -132,6 +139,12 @@ class IO::Socket extends IO::Handle {
     my $type = $self->{Type};
     
     my $protocol = $self->{Proto};
+    
+    warn $domain;
+    
+    warn $type;
+    
+    warn $protocol;
     
     my $fd = -1;
     Sys->socket(\$fd, $domain, $type, $protocol);
