@@ -69,11 +69,11 @@ class IO::Socket::UNIX extends IO::Socket {
     
     $self->SUPER::init($super_options);
     
-    my $protocol = 0;
-    
+    # Local option
     my $local = $options_h->delete_or_default_string("Local", undef);
     $self->{Local} = $local;
     
+    # Peer option
     my $peer = $options_h->delete_or_default_string("Peer", undef);
     $self->{Peer} = $peer;
     
@@ -81,22 +81,27 @@ class IO::Socket::UNIX extends IO::Socket {
     my $listen_backlog = $options_h->get_or_default_int("Listen", -1);
     $self->{Listen} = $listen_backlog;
     
-    if ($peer) {
-      my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
-      $self->connect($sockaddr_un_peer);
-    }
-    elsif ($local) {
-      my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
-      $self->bind($sockaddr_un_local);
-      
-      $self->listen;
-    }
-    
+    # Blocking option
     my $blocking = $options_h->get_or_default_int("Blocking", 0);
     $self->{Blocking} = (byte)$blocking;
     
-    unless ($blocking) {
-      $self->set_blocking(0);
+    my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
+    
+    unless ($fields_init_only) {
+      if ($peer) {
+        my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
+        $self->connect($sockaddr_un_peer);
+      }
+      elsif ($local) {
+        my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
+        $self->bind($sockaddr_un_local);
+        
+        $self->listen;
+      }
+      
+      unless ($blocking) {
+        $self->set_blocking(0);
+      }
     }
   }
   

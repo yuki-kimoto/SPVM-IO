@@ -116,6 +116,10 @@ class IO::Socket::IP extends IO::Socket {
     my $broadcast = $options_h->get_or_default_int("Broadcast", 0);
     $self->{Broadcast} = $broadcast;
     
+    # Blocking option
+    my $blocking = $options_h->get_or_default_int("Blocking", 0);
+    $self->{Blocking} = (byte)$blocking;
+    
     my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
     
     unless ($fields_init_only) {
@@ -139,9 +143,6 @@ class IO::Socket::IP extends IO::Socket {
         
         $self->listen;
       }
-      
-      my $blocking = $options_h->get_or_default_int("Blocking", 0);
-      $self->{Blocking} = (byte)$blocking;
       
       unless ($blocking) {
         $self->set_blocking(0);
