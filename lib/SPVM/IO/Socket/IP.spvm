@@ -118,6 +118,7 @@ class IO::Socket::IP extends IO::Socket {
     
     # Blocking option
     my $blocking = $options_h->get_or_default_int("Blocking", 0);
+    
     $self->{Blocking} = (byte)$blocking;
     
     my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);

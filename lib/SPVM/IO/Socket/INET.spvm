@@ -6,7 +6,7 @@ class IO::Socket::INET extends IO::Socket::IP {
   use Sys::Socket::Constant as SOCKET;
   
   # Class Methods
-  static method new : IO::Socket::IP ($options : object[] = undef) {
+  static method new : IO::Socket::INET ($options : object[] = undef) {
     
     my $self = new IO::Socket::INET;
     

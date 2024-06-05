@@ -5,6 +5,9 @@
     * Add IO::Socket::INET#accept method.
     * Add IO::Socket::INET6#accept method.
     * Add IO::Socket::UNIX#accept method.
+  [Incompatible Changes]
+    * The return type of IO::Socket::INET is changed from IO::Socket::IP to IO::Socket::INET.
+    * The return type of IO::Socket::INET6 is changed from IO::Socket::IP to IO::Socket::INET6.
 0.218 2023-06-03
   [Requirement Changes]
     * Require SPVM::Sys 0.520.
