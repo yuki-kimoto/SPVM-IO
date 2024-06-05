@@ -34,7 +34,7 @@ my $server_ipv4 = Test::TCP->new(
   
   ok(1);
   
-  # ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
+  ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
 }
 
 done_testing;

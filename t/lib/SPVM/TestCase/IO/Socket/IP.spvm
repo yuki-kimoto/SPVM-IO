@@ -505,15 +505,27 @@ class TestCase::IO::Socket::IP {
       my $host = "127.0.0.1";
       my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
       
-      my $send_buffer = "abc";
+      my $send_buffer = "abc\n";
       
       $socket->send($send_buffer);
       
-      my $recv_buffer = (mutable string)new_string_len length $send_buffer;
+      my $string_buffer = StringBuffer->new;
       
-      my $recv_length = $socket->recv($recv_buffer);
+      my $recv_buffer = (mutable string)new_string_len 1;
       
-      unless ($recv_buffer eq "abc") {
+      while (1) {
+        my $recv_length = $socket->recv($recv_buffer);
+        
+        if ($recv_length > 0) {
+          $string_buffer->push($recv_buffer);
+        }
+        
+        if ($recv_buffer eq "\n") {
+          last;
+        }
+      }
+      
+      unless ($string_buffer->to_string eq "abc\n") {
         return 0;
       }
     }
