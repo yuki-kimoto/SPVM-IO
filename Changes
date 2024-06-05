@@ -8,6 +8,8 @@
   [Incompatible Changes]
     * The return type of IO::Socket::INET is changed from IO::Socket::IP to IO::Socket::INET.
     * The return type of IO::Socket::INET6 is changed from IO::Socket::IP to IO::Socket::INET6.
+  [Bug Fix]
+    * Fix the bug that IO::Handle#set_blocking method set Blocking field to a wrong value.
 0.218 2023-06-03
   [Requirement Changes]
     * Require SPVM::Sys 0.520.

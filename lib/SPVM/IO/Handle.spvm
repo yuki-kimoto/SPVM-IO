@@ -121,7 +121,7 @@ class IO::Handle {
       }
     }
     
-    $self->{Blocking} = (byte)!$blocking;
+    $self->{Blocking} = (byte)$blocking;
   }
   
   method close : void () { die "Not implemented."; }
