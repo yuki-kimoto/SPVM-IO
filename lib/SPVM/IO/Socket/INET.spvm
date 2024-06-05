@@ -12,8 +12,6 @@ class IO::Socket::INET extends IO::Socket::IP {
     
     $options = Fn->merge_options($options, {Domain => SOCKET->AF_INET});
     
-    warn dump $options;
-    
     $self->init($options);
     
     return $self;

@@ -140,12 +140,6 @@ class IO::Socket extends IO::Handle {
     
     my $protocol = $self->{Proto};
     
-    warn $domain;
-    
-    warn $type;
-    
-    warn $protocol;
-    
     my $fd = -1;
     Sys->socket(\$fd, $domain, $type, $protocol);
     
@@ -248,10 +242,10 @@ class IO::Socket extends IO::Handle {
     my $options = {
       Timeout => $timeout,
       FD => $client_fd,
-      Domain => $self->sockdomain,
-      Type => $self->socktype,
-      Proto => $self->protocol,
-      Blocking => $self->{Blocking},
+      Domain => $self->{Domain},
+      Type => $self->{Type},
+      Proto => $self->{Proto},
+      Blocking => (int)$self->{Blocking},
       FieldsInitOnly => 1,
     };
     
