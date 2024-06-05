@@ -30,7 +30,7 @@ class IO::Handle {
   }
   
   # Instance Methods
-  method init : void ($options : object[] = undef) {
+  protected method init : void ($options : object[] = undef) {
     
     Fn->check_option_names($options, $self->option_names);
     
