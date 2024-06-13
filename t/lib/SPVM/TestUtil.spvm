@@ -34,7 +34,6 @@ class TestUtil {
           $client_socket->write($data);
         }
         else {
-          $client_socket->close;
           last;
         }
       }
