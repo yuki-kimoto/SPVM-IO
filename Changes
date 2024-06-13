@@ -1,6 +1,7 @@
-0.219 2023-06-03
+0.219 2023-06-14
   [Requirement Changes]
     * Require SPVM::Sys 0.524.
+    * Require Perl v5.20.3.
   [New Features]
     * Add IO::Socket#accept method. This has existed, but not documented.
     * Add IO::Socket::IP#accept method.
