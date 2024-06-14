@@ -23,11 +23,6 @@ my %configure_and_runtime_requires = (
   'SPVM' => '0.989040',
 );
 
-# For HTTP tests
-my %test_requires;
-$test_requires{'Mojolicious'} = '9.36';
-$test_requires{'IO'} = '1.55';
-
 WriteMakefile(
   NAME              => 'SPVM::IO',
   VERSION_FROM      => 'lib/SPVM/IO.pm', # finds $VERSION
@@ -57,9 +52,6 @@ WriteMakefile(
     'SPVM::Sys' => '0.524',
     'SPVM::Math' => '0.11',
     'SPVM::Go' => '0.005',
-  },
-  TEST_REQUIRES => {
-    %test_requires
   },
 );
 
