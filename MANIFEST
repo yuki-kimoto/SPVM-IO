@@ -58,5 +58,3 @@ t/test_files/fread.txt
 t/test_files/fread_eof.txt
 t/test_files/long_line.txt
 t/webapp/basic.pl
-xt/IO_Socket.t
-xt/lib/SPVM/TestCase/IO/Socket/Online.spvm
