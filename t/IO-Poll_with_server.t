@@ -8,14 +8,16 @@ BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 
 use SPVM 'TestCase::IO::Poll';
 
-use Test::TCP;
+use Test::SPVM::Sys::Socket::ServerManager::IP;
 use HTTP::Tiny;
 
 use Mojolicious::Command::daemon;
 
-my $server = Test::TCP->new(
+my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   code => sub {
-    my $port = shift;
+    my ($server_manager) = @_;
+    
+    my $port = $server_manager->port;
     
     my $app = Mojo::Server->new->load_app('t/webapp/basic.pl');
     
@@ -29,7 +31,7 @@ my $server = Test::TCP->new(
 );
 
 {
-  my $port = $server->port;
+  my $port = $server_manager->port;
   
   ok(SPVM::TestCase::IO::Poll->poll_with_server($port));
 }
