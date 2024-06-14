@@ -10,9 +10,6 @@ use SPVM 'TestCase::IO::Poll';
 
 use Test::SPVM::Sys::Socket::ServerManager::IP;
 use Test::SPVM::Sys::Socket::Server;
-use HTTP::Tiny;
-
-use Mojolicious::Command::daemon;
 
 my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   code => sub {
