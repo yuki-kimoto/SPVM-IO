@@ -9,23 +9,21 @@ BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 use SPVM 'TestCase::IO::Socket::IP';
 
 use Test::SPVM::Sys::Socket::ServerManager::IP;
+use Test::SPVM::Sys::Socket::Server;
 
 use HTTP::Tiny;
 
 use Mojolicious::Command::daemon;
 
-my $server_ipv4 = Test::SPVM::Sys::Socket::ServerManager::IP->new(
+my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   code => sub {
     my ($server_manager) = @_;
     
     my $port = $server_manager->port;
     
-    my $app = Mojo::Server->new->load_app('t/webapp/basic.pl');
+    my $server = Test::SPVM::Sys::Socket::Server->new_echo_server_ipv4_tcp(port => $port);
     
-    my $daemon_command = Mojolicious::Command::daemon->new(app => $app);
-    
-    my @args = ("--listen", "http://*:$port");
-    $daemon_command->run(@args);
+    $server->start;
     
     exit 0;
   },
@@ -33,15 +31,15 @@ my $server_ipv4 = Test::SPVM::Sys::Socket::ServerManager::IP->new(
 
 # IPv4
 {
-  my $port = $server_ipv4->port;
+  my $port = $server_manager->port;
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_basic($port));
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_goroutine($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_set_blocking($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_fileno($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_goroutine($port));
 }
 
 done_testing;
