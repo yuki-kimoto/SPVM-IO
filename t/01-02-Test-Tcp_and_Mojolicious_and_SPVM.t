@@ -13,7 +13,7 @@ use HTTP::Tiny;
 
 use Mojolicious::Command::daemon;
 
-my $server = Test::SPVM::Sys::Socket::ServerManager::IP->new(
+my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   code => sub {
     my ($server_manager) = @_;
     
@@ -32,7 +32,7 @@ my $server = Test::SPVM::Sys::Socket::ServerManager::IP->new(
 
 my $http = HTTP::Tiny->new;
 
-my $port = $server->port;
+my $port = $server_manager->port;
 
 my $res = $http->get("http://127.0.0.1:$port/hello");
 

@@ -6,14 +6,16 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 
-use Test::TCP;
+use Test::SPVM::Sys::Socket::ServerManager::IP;
 use HTTP::Tiny;
 
 use Mojolicious::Command::daemon;
 
-my $server = Test::TCP->new(
+my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   code => sub {
-    my $port = shift;
+    my ($server_manager) = @_;
+    
+    my $port = $server_manager->port;
     
     my $app = Mojo::Server->new->load_app('t/webapp/basic.pl');
     
@@ -28,7 +30,7 @@ my $server = Test::TCP->new(
 
 my $http = HTTP::Tiny->new;
 
-my $port = $server->port;
+my $port = $server_manager->port;
 
 my $res = $http->get("http://127.0.0.1:$port/hello");
 
