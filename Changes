@@ -4,6 +4,7 @@
   [Requirement Changes]
     * Require SPVM::Sys 0.524.
     * Require Perl v5.20.3.
+    * Remove Test::TCP requirement.
   [New Features]
     * Add IO::Socket#accept method. This has existed, but not documented.
     * Add IO::Socket::IP#accept method.

@@ -26,7 +26,6 @@ my %configure_and_runtime_requires = (
 # For HTTP tests
 my %test_requires;
 $test_requires{'Mojolicious'} = '9.36';
-$test_requires{'Test::TCP'} = '2.22';
 $test_requires{'IO'} = '1.55';
 
 WriteMakefile(
