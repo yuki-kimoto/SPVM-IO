@@ -141,7 +141,7 @@ class TestCase::IO::Socket::INET6 {
         return 0;
       }
       
-      unless (Fn->contains($content, "Hello")) {
+      unless (Fn->contains($content, "hello")) {
         
         warn dump $content;
         return 0;
@@ -172,7 +172,7 @@ class TestCase::IO::Socket::INET6 {
       
       my $content = $recv_buffer;
       
-      unless (Fn->contains($content, "Hello")) {
+      unless (Fn->contains($content, "hello")) {
         
         warn dump $content;
         return 0;
@@ -204,7 +204,7 @@ class TestCase::IO::Socket::INET6 {
       
       my $content = $recv_buffer;
       
-      unless (Fn->contains($content, "Hello")) {
+      unless (Fn->contains($content, "hello")) {
         
         warn dump $content;
         return 0;
@@ -241,7 +241,7 @@ class TestCase::IO::Socket::INET6 {
       
       my $content = $recv_buffer;
       
-      unless (Fn->contains($content, "Hello")) {
+      unless (Fn->contains($content, "hello")) {
         
         warn dump $content;
         return 0;

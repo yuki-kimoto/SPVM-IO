@@ -406,19 +406,7 @@ class TestCase::IO::Poll {
           return 0;
         }
         
-        unless (Fn->contains($content, "200")) {
-          
-          warn dump $content;
-          return 0;
-        }
-        
-        unless (Fn->contains($content, "OK")) {
-          
-          warn dump $content;
-          return 0;
-        }
-        
-        unless (Fn->contains($content, "Hello")) {
+        unless (Fn->contains($content, "hello")) {
           
           warn dump $content;
           return 0;

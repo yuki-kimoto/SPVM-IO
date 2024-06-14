@@ -1,6 +1,6 @@
 use Mojolicious::Lite;
 
-get '/hello' => {text => 'Hello'};
+get '/hello' => {text => 'hello'};
 
 app->start;
 
