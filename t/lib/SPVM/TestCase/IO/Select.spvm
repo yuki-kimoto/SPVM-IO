@@ -248,6 +248,8 @@ class TestCase::IO::Select {
         my $send_buffer = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
         $socket->send($send_buffer);
         
+        $socket->shutdown(SOCKET->SHUT_WR);
+        
         while (1) {
           my $can_read_fds = $select->can_read;
           

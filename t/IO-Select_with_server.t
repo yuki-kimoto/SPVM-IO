@@ -9,6 +9,7 @@ BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 use SPVM 'TestCase::IO::Select';
 
 use Test::SPVM::Sys::Socket::ServerManager::IP;
+use Test::SPVM::Sys::Socket::Server;
 use HTTP::Tiny;
 
 use Mojolicious::Command::daemon;
@@ -19,12 +20,9 @@ my $server = Test::SPVM::Sys::Socket::ServerManager::IP->new(
     
     my $port = $server_manager->port;
     
-    my $app = Mojo::Server->new->load_app('t/webapp/basic.pl');
+    my $server = Test::SPVM::Sys::Socket::Server->new_echo_server_ipv4_tcp(port => $port);
     
-    my $daemon_command = Mojolicious::Command::daemon->new(app => $app);
-    
-    my @args = ("--listen", "http://*:$port");
-    $daemon_command->run(@args);
+    $server->start;
     
     exit 0;
   },
