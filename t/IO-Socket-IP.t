@@ -8,15 +8,11 @@ BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 
 use SPVM 'TestCase::IO::Socket::IP';
 
-unless ($] >= 5.032000) {
-  plan skip_all => 'This test is skipped because it needs Perl v.5.32.0+';
-}
-
 use Test::SPVM::Sys::Socket::ServerManager::IP;
 
-require HTTP::Tiny;
+use HTTP::Tiny;
 
-require Mojolicious::Command::daemon;
+use Mojolicious::Command::daemon;
 
 my $server_ipv4 = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   code => sub {
