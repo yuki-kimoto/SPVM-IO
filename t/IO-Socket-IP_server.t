@@ -9,14 +9,16 @@ BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 use SPVM 'TestCase::IO::Socket::IP';
 use SPVM 'TestUtil';
 
-use Test::TCP;
+use Test::SPVM::Sys::Socket::ServerManager::IP;
 use HTTP::Tiny;
 
 use Mojolicious::Command::daemon;
 
-my $server_ipv4 = Test::TCP->new(
+my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   code => sub {
-    my $port = shift;
+    my ($server_manager) = @_;
+    
+    my $port = $server_manager->port;
     
     SPVM::TestUtil->run_echo_server($port);
     
@@ -26,7 +28,7 @@ my $server_ipv4 = Test::TCP->new(
 
 # IPv4
 {
-  my $port = $server_ipv4->port;
+  my $port = $server_manager->port;
   
   ok(1);
   
