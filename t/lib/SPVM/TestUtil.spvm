@@ -16,24 +16,43 @@ class TestUtil {
     });
     
     while (1) {
+      
+      warn;
+      
       my $client_socket = $server_socket->accept;
+      
+      warn;
       
       unless ($client_socket is_compile_type IO::Socket::INET) {
         die "[Unexpected Error]Invalid class is return.";
       }
       
+      warn;
+      
       unless ($client_socket is_type IO::Socket::INET) {
         die "[Unexpected Error]Invalid class is return.";
       }
       
+      warn;
+      
       while (1) {
         
         my $data = (mutable string)new_string_len 1;
-        
+      
+      warn;
+      
         my $read_length = $client_socket->read($data);
-        
+      
+      warn;
+      
         if ($read_length > 0) {
+      
+      warn;
+      
           $client_socket->write($data);
+      
+      warn;
+      
         }
         else {
           last;
