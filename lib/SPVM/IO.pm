@@ -44,13 +44,25 @@ Classes in IO distribution in L<SPVM> has methods to manipulate File IO, Sockets
 
 C<static method open : L<IO::File|SPVM::IO::File> ($open_mode : string, $file_name : string);>
 
-Creates a L<IO::File|SPVM::IO::File and opens a file stream given the file $file_name and the open mode $open_mode, and returns the created object.
+Opens a file stream.
 
-This method just calls L<IO::File#new|SPVM::IO::File/"new"> method and returns its return value.
+This method just calls L<IO::File#new|SPVM::IO::File/"new"> method given $file_name $open_mode, returns its return value.
 
 Exceptions:
 
 Exceptions thrown by L<IO::File#new|SPVM::IO::File/"new"> method could be thrown.
+
+=head2 opendir
+
+C<static method opendir : L<IO::Dir|SPVM::IO::Dir> ($dir_path : string);>
+
+Opens a directory stream.
+
+This method just calls L<IO::Dir#new|SPVM::IO::Dir/"new"> method given $dir_path and returns its return value.
+
+Exceptions:
+
+Exceptions thrown by L<IO::Dir#new|SPVM::IO::Dir/"new"> method could be thrown.
 
 =head1 Copyright & License
 

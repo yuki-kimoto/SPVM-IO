@@ -5,9 +5,14 @@ class IO {
   version "0.219";
   
   use IO::File;
+  use IO::Dir;
   
   static method open : IO::File ($open_mode : string, $file_name : string) {
     return IO::File->new($file_name, $open_mode);
+  }
+  
+  static method opendir : IO::Dir ($dir_path : string) {
+    return IO::Dir->new($dir_path);
   }
   
 }

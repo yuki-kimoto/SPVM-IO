@@ -25,4 +25,9 @@ my $test_dir = "$FindBin::Bin";
   ok(SPVM::TestCase::IO->open("$test_dir/test_files_tmp/fread.txt"));
 }
 
+# opendir
+{
+  ok(SPVM::TestCase::IO->opendir);
+}
+
 done_testing;
