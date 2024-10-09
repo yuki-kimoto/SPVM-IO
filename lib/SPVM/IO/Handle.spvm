@@ -2,6 +2,7 @@
 # MIT License
 
 class IO::Handle {
+  use IO;
   use Sys;
   use Sys::IO;
   use Sys::IO::Constant as IO;
