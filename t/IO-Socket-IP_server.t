@@ -31,8 +31,6 @@ use Mojolicious::Command::daemon;
   {
     my $port = $server_manager->port;
     
-    ok(1);
-    
     ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
   }
 }
@@ -55,7 +53,29 @@ use Mojolicious::Command::daemon;
   {
     my $port = $server_manager->port;
     
-    ok(1);
+    ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
+  }
+}
+
+# Repeat the same test to see for Windows.
+{
+  my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
+    code => sub {
+      my ($server_manager) = @_;
+      
+      my $port = $server_manager->port;
+      
+      SPVM::TestUtil->run_echo_server_go($port);
+      
+      exit 0;
+    },
+  );
+  
+  # IPv4
+  {
+    my $port = $server_manager->port;
+    
+    ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
     
     ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
   }

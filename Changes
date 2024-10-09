@@ -2,7 +2,8 @@
   [New Features]
     * Add IO#open method.
     * Add IO#opendir method.
-    
+  [Test Improvement]
+    * Add tests for IO::Socket::IP server features with goroutines.
 0.219 2023-06-14
   [Support Changes]
     * Does not support 32bit systems.
