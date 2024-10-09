@@ -38,6 +38,20 @@ Classes in IO distribution in L<SPVM> has methods to manipulate File IO, Sockets
 
 =back
 
+=head1 Class Methods
+
+=head2 open
+
+C<static method open : L<IO::File|SPVM::IO::File> ($open_mode : string, $file_name : string);>
+
+Creates a L<IO::File|SPVM::IO::File and opens a file stream given the file $file_name and the open mode $open_mode, and returns the created object.
+
+This method just calls L<IO::File#new|SPVM::IO::File/"new"> method and returns its return value.
+
+Exceptions:
+
+Exceptions thrown by L<IO::File#new|SPVM::IO::File/"new"> method could be thrown.
+
 =head1 Copyright & License
 
 Copyright (c) 2023 Yuki Kimoto

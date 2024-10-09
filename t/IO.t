@@ -11,9 +11,18 @@ use SPVM 'Fn';
 use SPVM::IO;
 use SPVM 'IO';
 
+use SPVM 'TestCase::IO';
+
 # Version
 {
   is($SPVM::IO::VERSION, SPVM::Fn->get_version_string('IO'));
+}
+
+my $test_dir = "$FindBin::Bin";
+
+# open
+{
+  ok(SPVM::TestCase::IO->open("$test_dir/test_files_tmp/fread.txt"));
 }
 
 done_testing;

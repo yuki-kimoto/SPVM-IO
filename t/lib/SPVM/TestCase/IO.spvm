@@ -1,0 +1,15 @@
+class TestCase::IO {
+  
+  use IO;
+  
+  static method open : int ($file : string) {
+    {
+      my $io_file = IO->open("<", $file);
+      unless ($io_file) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+}

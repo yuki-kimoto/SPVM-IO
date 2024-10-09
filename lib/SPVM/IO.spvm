@@ -3,4 +3,11 @@
 
 class IO {
   version "0.219";
+  
+  use IO::File;
+  
+  static method open : IO::File ($open_mode : string, $file_name : string) {
+    return IO::File->new($file_name, $open_mode);
+  }
+  
 }
