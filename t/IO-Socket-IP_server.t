@@ -54,7 +54,7 @@ use Test::SPVM::Sys::Socket::ServerManager::IP;
   }
 }
 
-# Repeat the same test to see for Windows.
+# with goroutine
 {
   my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
     code => sub {
