@@ -14,25 +14,51 @@ use HTTP::Tiny;
 
 use Mojolicious::Command::daemon;
 
-my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
-  code => sub {
-    my ($server_manager) = @_;
-    
+{
+  my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
+    code => sub {
+      my ($server_manager) = @_;
+      
+      my $port = $server_manager->port;
+      
+      SPVM::TestUtil->run_echo_server($port);
+      
+      exit 0;
+    },
+  );
+
+  # IPv4
+  {
     my $port = $server_manager->port;
     
-    SPVM::TestUtil->run_echo_server($port);
+    ok(1);
     
-    exit 0;
-  },
-);
+    ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
+  }
+}
 
-# IPv4
+# Repeat the same test to see for Windows.
 {
-  my $port = $server_manager->port;
+  my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
+    code => sub {
+      my ($server_manager) = @_;
+      
+      my $port = $server_manager->port;
+      
+      SPVM::TestUtil->run_echo_server($port);
+      
+      exit 0;
+    },
+  );
   
-  ok(1);
-  
-  ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
+  # IPv4
+  {
+    my $port = $server_manager->port;
+    
+    ok(1);
+    
+    ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
+  }
 }
 
 done_testing;
