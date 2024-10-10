@@ -205,7 +205,7 @@ class IO::File extends IO::Handle {
     Sys::IO->ftruncate($fd, $legnth);
   }
   
-  private method fdopen : void ($fd : int, $open_mode : string) {
+  protected method fdopen : void ($fd : int, $open_mode : string) {
     
     unless ($open_mode) {
       die "The open mode \$open_mode must be defined.";

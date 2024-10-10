@@ -103,20 +103,6 @@ class IO::Socket extends IO::Handle {
     return $self->{Proto};
   }
   
-  method socket : void () {
-    
-    my $domain = $self->{Domain};
-    
-    my $type = $self->{Type};
-    
-    my $protocol = $self->{Proto};
-    
-    my $fd = -1;
-    Sys->socket(\$fd, $domain, $type, $protocol);
-    
-    $self->{FD} = $fd;
-  }
-  
   method shutdown : void ($how : int) {
     
     my $fd = $self->{FD};
@@ -134,50 +120,6 @@ class IO::Socket extends IO::Handle {
     
     Sys::Socket->close($fd);
     $self->{FD} = -1;
-  }
-  
-  method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
-    
-    my $timeout = $self->{Timeout};
-    
-    my $fd = $self->{FD};
-    
-    eval { Sys->connect($fd, $sockaddr); }
-    
-    if ($@) {
-      my $again = 
-        Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
-        || Sys::Socket::Errno->errno == Sys::Socket::Errno->EINPROGRESS
-        || Sys::Socket::Errno->errno == Errno->EINTR
-      ;
-      
-      if ($again) {
-        Go->gosched_io_write($fd, $timeout);
-      }
-      else {
-        die $@;
-      }
-    }
-  }
-  
-  method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
-    
-    my $fd = $self->{FD};
-    
-    Sys->bind($fd, $sockaddr);
-  }
-  
-  method listen : void () {
-    
-    my $fd = $self->{FD};
-    
-    my $listen = $self->{Listen};
-    
-    unless ($listen > 0) {
-      die "\"Listen\" field must be greater than 0.";
-    }
-    
-    Sys->listen($fd, $listen);
   }
   
   method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
@@ -357,6 +299,64 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{FD};
     
     Sys->setsockopt($fd, $level, $option_name, $option_value);
+  }
+  
+  protected method socket : void () {
+    
+    my $domain = $self->{Domain};
+    
+    my $type = $self->{Type};
+    
+    my $protocol = $self->{Proto};
+    
+    my $fd = -1;
+    Sys->socket(\$fd, $domain, $type, $protocol);
+    
+    $self->{FD} = $fd;
+  }
+  
+  protected method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
+    
+    my $timeout = $self->{Timeout};
+    
+    my $fd = $self->{FD};
+    
+    eval { Sys->connect($fd, $sockaddr); }
+    
+    if ($@) {
+      my $again = 
+        Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
+        || Sys::Socket::Errno->errno == Sys::Socket::Errno->EINPROGRESS
+        || Sys::Socket::Errno->errno == Errno->EINTR
+      ;
+      
+      if ($again) {
+        Go->gosched_io_write($fd, $timeout);
+      }
+      else {
+        die $@;
+      }
+    }
+  }
+  
+  protected method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
+    
+    my $fd = $self->{FD};
+    
+    Sys->bind($fd, $sockaddr);
+  }
+  
+  protected method listen : void () {
+    
+    my $fd = $self->{FD};
+    
+    my $listen = $self->{Listen};
+    
+    unless ($listen > 0) {
+      die "\"Listen\" field must be greater than 0.";
+    }
+    
+    Sys->listen($fd, $listen);
   }
   
 }

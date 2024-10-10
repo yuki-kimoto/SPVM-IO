@@ -274,7 +274,7 @@ Exceptions thrown by L<Sys::IO#ftruncate|SPVM::Sys::IO/"ftruncate"> method could
 
 =head2 fdopen
 
-C<private method fdopen : void ($fd : int, $open_mode : string);>
+C<protected method fdopen : void ($fd : int, $open_mode : string);>
 
 Opens a file given the file descriptor $fd and the open mode $open_mode.
 

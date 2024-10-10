@@ -134,20 +134,6 @@ C<method DESTROY : void ();>
 
 A destructor. This method closes the socket by calling L</"close"> method if the socket is opened.
 
-=head2 socket
-
-C<method socket : void ();>
-
-Opens a socket using L</"Domain"> field, L</"Type"> field, and L</"Protocal"> field.
-
-L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is set to the file descriptor of the opened socket.
-
-This method calls L<Sys#socket|Sys/"socket"> method.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
-
 =head2 shutdown
 
 C<method shutdown : void ($how : int);>
@@ -181,30 +167,6 @@ Closes the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::H
 Exceptions:
 
 If this socket is not opened or already closed, an excetpion is thrown.
-
-=head2 bind
-
-C<method bind : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
-
-Does the same thing that L<bind|https://linux.die.net/man/2/bind> system call does given a socket address $sockaddr and the file descriptor stored in L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
-
-This method calls L<Sys#bind|SPVM::Sys|/"bind">.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#bind|SPVM::Sys|/"bind"> method could be thrown.
-
-=head2 listen
-
-C<method listen : void ();>
-
-Does the same thing that L<listen|https://linux.die.net/man/2/listen> system call does given the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
-
-This method calls L<Sys#listen|SPVM::Sys|/"listen">.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
 
 =head2 accept
 
@@ -335,6 +297,48 @@ This method calls L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method given the argu
 Exceptions:
 
 Exceptions thrown by L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method could be thrown.
+
+=head2 connect
+
+C<protected method connect : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
+
+=head2 socket
+
+C<protected method socket : void ();>
+
+Opens a socket using L</"Domain"> field, L</"Type"> field, and L</"Protocal"> field.
+
+L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is set to the file descriptor of the opened socket.
+
+This method calls L<Sys#socket|Sys/"socket"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
+
+=head2 bind
+
+C<protected method bind : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
+
+Does the same thing that L<bind|https://linux.die.net/man/2/bind> system call does given a socket address $sockaddr and the file descriptor stored in L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#bind|SPVM::Sys|/"bind">.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#bind|SPVM::Sys|/"bind"> method could be thrown.
+
+=head2 listen
+
+C<protected method listen : void ();>
+
+Does the same thing that L<listen|https://linux.die.net/man/2/listen> system call does given the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#listen|SPVM::Sys|/"listen">.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
 
 =head1 Well Known Child Classes
 

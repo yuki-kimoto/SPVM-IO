@@ -6,7 +6,11 @@
     * Fix a bug that IO::Socket::UNIX does not work well.
   [Incompatible Changes]
     * Remove IO::Handle#new method and IO::Handle becomes an abstruct class.
-    * IO::File#fdopen method becomes a private method.
+    * IO::File#fdopen method becomes a protected method.
+    * IO::Socket#listen method becomes a protected method.
+    * IO::Socket#bind method becomes a protected method.
+    * IO::Socket#connect method becomes a protected method.
+    * IO::Socket#socket method becomes a protected method.
 0.221 2023-10-10
   [Internal Changes]
     * IO::Handle#set_blocking method always perform a system call.
