@@ -141,13 +141,15 @@ class TestUtil {
     });
     
     unless ($server_socket->hostpath eq $sock_path) {
-      $test_success_ref->[5] = 0;
+      warn;
+      $test_success_ref->[0] = 0;
     }
     
     my $client_socket = $server_socket->accept;
     
     unless ($client_socket->hostpath eq $sock_path) {
-      $test_success_ref->[6] = 0;
+      warn;
+      $test_success_ref->[0] = 0;
     }
     
     while (1) {

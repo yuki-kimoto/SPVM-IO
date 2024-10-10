@@ -10,20 +10,10 @@ class TestCase::IO::Socket::UNIX {
   
   static method accept : int ($sock_path : string) {
     
-    
-    
-    
-    
-    
-    
     my $test_success_ref = [
+      1,
       0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
+      0
     ];
     
     my $wg = Go::Sync::WaitGroup->new;
@@ -33,6 +23,7 @@ class TestCase::IO::Socket::UNIX {
     # Run a echo server
     Go->go([$wg : Go::Sync::WaitGroup, $sock_path : string, $test_success_ref : int[]] method : void () {
       
+      $test_success_ref->[1] = 1;
       
       TestUtil->run_echo_server_accept_once_unix($sock_path, $test_success_ref);
       
@@ -42,23 +33,26 @@ class TestCase::IO::Socket::UNIX {
     # Tests
     Go->go([$wg : Go::Sync::WaitGroup, $test_success_ref : int[], $sock_path : string] method : void () {
       
-      $test_success_ref->[0] = 1;
+      $test_success_ref->[2] = 1;
       
       {
         my $socket = IO::Socket::UNIX->new({Peer => $sock_path});
         
         unless ($socket->connected) {
-          $test_success_ref->[2] = 0;
+          warn;
+          $test_success_ref->[0] = 0;
         }
         
         my $peerpath = $socket->peerpath;
         unless ($peerpath eq $sock_path) {
-          $test_success_ref->[3] = 0;
+          warn;
+          $test_success_ref->[0] = 0;
         }
         
         my $hostpath = $socket->hostpath;
         unless ($hostpath eq "") {
-          $test_success_ref->[4] = 0;
+          warn;
+          $test_success_ref->[0] = 0;
         }
         
         my $send_buffer = "abc\n";
@@ -84,7 +78,8 @@ class TestCase::IO::Socket::UNIX {
         }
         
         unless ($string_buffer->to_string eq "abc\n") {
-          $test_success_ref->[1] = 0;
+          warn;
+          $test_success_ref->[0] = 0;
         }
         
       }
@@ -96,12 +91,7 @@ class TestCase::IO::Socket::UNIX {
     
     $wg->wait;
     
-    my $expected = new int[@$test_success_ref];
-    for (my $i = 0; $i < @$test_success_ref; $i++) {
-      $expected->[$i] = 1;
-    }
-    
-    return Array->equals($test_success_ref, $expected);
+    return Array->equals($test_success_ref, [1, 1, 1]);
   }
 }
 
