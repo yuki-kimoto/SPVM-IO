@@ -17,7 +17,7 @@ class IO::File extends IO::Handle {
     
     my $self = new IO::File;
     
-    $self->init({FieldsInitOnly => 1});
+    $self->init;
     
     if ($file_name) {
       $self->open($file_name, $open_mode);
@@ -32,7 +32,7 @@ class IO::File extends IO::Handle {
     
     my $self = new IO::File;
     
-    $self->init({FieldsInitOnly => 1});
+    $self->init;
     
     $self->fdopen($fd, $open_mode);
     

@@ -31,9 +31,7 @@ class IO::Socket extends IO::Handle {
     
     my $autoflush = $options_h->get_or_default_int("AutoFlush", 1);
     
-    # On Mac, non-blocking can only be set for sockets connected with connect or accept,
-    # so when you create a socket, set it to blocking.
-    $self->SUPER::init(Fn->merge_options($options, {FieldsInitOnly => 1, AutoFlush => $autoflush}));
+    $self->SUPER::init(Fn->merge_options($options, {AutoFlush => $autoflush}));
     
     # Domain option
     my $domain = $options_h->get_or_default_int("Domain", -1);
