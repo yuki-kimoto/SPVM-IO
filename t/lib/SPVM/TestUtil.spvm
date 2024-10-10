@@ -148,10 +148,6 @@ class TestUtil {
     
     while (1) {
       
-    unless ($client_socket->connected) {
-      die;
-    }
-    
       my $data = (mutable string)new_string_len 1;
       
       my $read_length = $client_socket->read($data);
