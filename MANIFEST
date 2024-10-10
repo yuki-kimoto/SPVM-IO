@@ -39,7 +39,7 @@ t/IO-Socket-INET.t
 t/IO-Socket-INET6.t.disable
 t/IO-Socket-IP.t
 t/IO-Socket-IP_IPv6.t.disable
-t/IO-Socket-IP_server.t.disable
+t/IO-Socket-IP_server.t
 t/IO.t
 t/lib/SPVM/TestCase/IO.spvm
 t/lib/SPVM/TestCase/IO/Dir.spvm
