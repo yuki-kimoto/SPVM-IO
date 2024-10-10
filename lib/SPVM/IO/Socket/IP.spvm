@@ -32,6 +32,8 @@ class IO::Socket::IP extends IO::Socket {
     
     $self->init($options);
     
+    $self->configure;
+    
     return $self;
   }
   
@@ -81,8 +83,6 @@ class IO::Socket::IP extends IO::Socket {
       }
     }
     
-    # On Mac, non-blocking can only be set for sockets connected with connect or accept,
-    # so when you create a socket, set it to blocking.
     my $super_options = Fn->merge_options($options, {FieldsInitOnly => 1, Domain => $domain, Proto => $proto, Type => $type});
     
     $self->SUPER::init($super_options);
@@ -115,11 +115,6 @@ class IO::Socket::IP extends IO::Socket {
     my $broadcast = $options_h->get_or_default_int("Broadcast", 0);
     $self->{Broadcast} = $broadcast;
     
-    my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
-    
-    unless ($fields_init_only) {
-      $self->configure;
-    }
   }
   
   protected method configure : void () {
@@ -138,7 +133,11 @@ class IO::Socket::IP extends IO::Socket {
     
     my $local_port = $self->{LocalPort};
     
-    $self->socket;
+    my $fd = $self->{FD};
+    
+    unless ($fd >= 0) {
+      $self->socket;
+    }
     
     if ($reuse_addr) {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
@@ -161,6 +160,12 @@ class IO::Socket::IP extends IO::Socket {
       $self->bind($local_socket_address);
       
       $self->listen;
+    }
+    elsif ($fd >= 0) {
+      # Do nothing
+    }
+    else {
+      die "Can't create a client socket or a server socket because PeerAddr option is not specified or LocalPort is not specified corectly.";
     }
     
     # This must be after calling connect method because Mac does not support non-blocking mode to non-connected socket.

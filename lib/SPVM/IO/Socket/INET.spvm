@@ -14,6 +14,8 @@ class IO::Socket::INET extends IO::Socket::IP {
     
     $self->init($options);
     
+    $self->configure;
+    
     return $self;
   }
   

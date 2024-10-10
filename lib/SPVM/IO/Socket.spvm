@@ -60,19 +60,6 @@ class IO::Socket extends IO::Handle {
       die "Blocking option is not allowed in IO::Socket class and its child classes.";
     }
     
-    my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
-    
-    unless ($fields_init_only) {
-      $self->configure;
-    }
-    
-  }
-  
-  protected method configure : void () {
-    
-    $self->socket;
-    
-    $self->set_blocking(0);
   }
   
   method option_names : string[] () {
@@ -231,13 +218,12 @@ class IO::Socket extends IO::Handle {
       Domain => $self->{Domain},
       Type => $self->{Type},
       Proto => $self->{Proto},
-      FieldsInitOnly => 1,
     };
     
     my $class = type_name $self;
     my $client = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$options]);
     
-    $client->set_blocking(0);
+    $client->configure;
     
     if ($peer_ref) {
       $peer_ref->[0] = $client_sockaddr;
