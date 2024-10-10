@@ -24,7 +24,7 @@ class IO::Socket::UNIX extends IO::Socket {
   }
   
   # Instance Methods
-  method option_names : string[] () {
+  protected method option_names : string[] () {
     
     my $option_names = Array->merge_string(
       $self->SUPER::option_names,
@@ -115,4 +115,5 @@ class IO::Socket::UNIX extends IO::Socket {
   method accept : IO::Socket::UNIX ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
     return (IO::Socket::UNIX)$self->SUPER::accept($peer_ref);
   }
+  
 }

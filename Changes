@@ -1,3 +1,8 @@
+0.223 2023-10-11
+  [Test Improvement]
+    * Improve tests for IO::Socket::UNIT.
+  [Internal Changes]
+    * IO::Socket::UNIX#option_names becomes protected method.
 0.222 2023-10-10
   [Internal Changes]
     * Remove IO::File#configure method.
