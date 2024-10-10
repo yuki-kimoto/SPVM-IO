@@ -104,4 +104,32 @@ class TestUtil {
       $accept_count--;
     }
   }
+  
+  static method run_echo_server_accept_once : void ($port : int) {
+    
+    my $localhost = "127.0.0.1";
+    
+    my $server_socket = IO::Socket::IP->new({
+      LocalAddr => $localhost,
+      LocalPort => $port,
+      Listen    => 5,
+      ReuseAddr => 1,
+    });
+    
+    my $client_socket = $server_socket->accept;
+    
+    while (1) {
+      
+      my $data = (mutable string)new_string_len 1;
+      
+      my $read_length = $client_socket->read($data);
+      
+      if ($read_length > 0) {
+        $client_socket->write($data);
+      }
+      else {
+        last;
+      }
+    }
+  }
 }
