@@ -3,8 +3,9 @@
     * Remove IO::File#configure method.
   [Bug Fix]
     * Fix a bug that IO::File#new_from_fd returns IO::Handle instead of IO::File.
+    * Fix a bug that IO::Socket::UNIX does not work well.
   [Incompatible Changes]
-    * Remove IO::Handle#new method.
+    * Remove IO::Handle#new method and IO::Handle becomes an abstruct class.
 0.221 2023-10-10
   [Internal Changes]
     * IO::Handle#set_blocking method always perform a system call.

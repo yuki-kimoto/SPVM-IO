@@ -10,6 +10,12 @@ SPVM::IO::Handle - I/O Handling
 
 IO::Handle class in L<SPVM> has methods to handle file handles.
 
+=head1 Details
+
+IO::Handle class is an abstract class.
+
+See L</"Well Known Child Classes"> about its child classes.
+
 =head1 Usage
   
   use IO::Handle;

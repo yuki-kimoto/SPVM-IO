@@ -18,6 +18,8 @@ class IO::Socket::UNIX extends IO::Socket {
     
     $self->init($options);
     
+    $self->configure;
+    
     return $self;
   }
   
@@ -62,12 +64,7 @@ class IO::Socket::UNIX extends IO::Socket {
       }
     }
     
-    # Reason for Blocking => 1.
-    # On Mac, non-blocking can only be set for sockets connected with connect or accept,
-    # so when you create a socket, set it to blocking.
-    my $super_options = Fn->merge_options($options, {FieldsInitOnly => 1});
-    
-    $self->SUPER::init($super_options);
+    $self->SUPER::init($options);
     
     # Local option
     my $local = $options_h->delete_or_default_string("Local", undef);
@@ -80,16 +77,6 @@ class IO::Socket::UNIX extends IO::Socket {
     # Listen option
     my $listen_backlog = $options_h->get_or_default_int("Listen", -1);
     $self->{Listen} = $listen_backlog;
-    
-    # Blocking option
-    my $blocking = $options_h->get_or_default_int("Blocking", 0);
-    $self->{Blocking} = (byte)$blocking;
-    
-    my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
-    
-    unless ($fields_init_only) {
-      $self->configure;
-    }
   }
   
   protected method configure : void () {
@@ -97,8 +84,6 @@ class IO::Socket::UNIX extends IO::Socket {
     my $peer = $self->{Peer};
     
     my $local = $self->{Local};
-    
-    my $blocking = $self->{Blocking};
     
     $self->socket;
     
@@ -113,9 +98,7 @@ class IO::Socket::UNIX extends IO::Socket {
       $self->listen;
     }
     
-    unless ($blocking) {
-      $self->set_blocking(0);
-    }
+    $self->set_blocking(0);
   }
   
   method hostpath : string () {
