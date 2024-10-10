@@ -21,8 +21,6 @@ class IO::File extends IO::Handle {
     
     if ($file_name) {
       $self->open($file_name, $open_mode);
-      
-      $self->configure;
     }
     
     return $self;
@@ -36,19 +34,7 @@ class IO::File extends IO::Handle {
     
     $self->fdopen($fd, $open_mode);
     
-    $self->configure;
-    
     return $self;
-  }
-  
-  protected method configure : void () {
-    
-    my $blocking = $self->{Blocking};
-    
-    # This is because default blocking mode is blocking mode in all OSs, but Windows does not support non-blocking mode in file handles.
-    unless ($blocking) {
-      $self->set_blocking(0);
-    }
   }
   
   # Instance methods
