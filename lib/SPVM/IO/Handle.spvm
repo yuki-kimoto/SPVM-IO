@@ -45,21 +45,6 @@ class IO::Handle {
     
     my $blocking = $options_h->get_or_default_int("Blocking", 1);
     $self->{Blocking} = (byte)$blocking;
-    
-    my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
-    
-    unless ($fields_init_only) {
-      $self->configure;
-    }
-  }
-  
-  protected method configure : void () {
-    
-    my $blocking = $self->{Blocking};
-    
-    unless ($blocking) {
-      $self->set_blocking(0);
-    }
   }
   
   method option_names : string[] () {
@@ -67,7 +52,6 @@ class IO::Handle {
       "FD",
       "AutoFlush",
       "Blocking",
-      "FieldsInitOnly",
     ];
     
     return $option_names;
