@@ -1,6 +1,9 @@
 0.221 2023-10-09
   [Internal Changes]
     * IO::Handle#set_blocking method always perform a system call.
+  [Incompatible Changes]
+    * Blocking option ins IO::Socket and its child class is not allowed. Its blocking mode is always non-blocking mode.
+      
 0.220001 2023-10-09
   [Test Fix]
     * Disable server tests for IO::Socket::IP for Windows segfault for now.

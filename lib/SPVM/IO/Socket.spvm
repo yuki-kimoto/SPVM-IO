@@ -41,7 +41,6 @@ class IO::Socket extends IO::Handle {
     
     my $autoflush = $options_h->get_or_default_int("AutoFlush", 1);
     
-    # Reason for Blocking => 1.
     # On Mac, non-blocking can only be set for sockets connected with connect or accept,
     # so when you create a socket, set it to blocking.
     $self->SUPER::init(Fn->merge_options($options, {FieldsInitOnly => 1, AutoFlush => $autoflush}));
@@ -67,8 +66,9 @@ class IO::Socket extends IO::Handle {
     $self->{Timeout} = $timeout;
     
     # Blocking option
-    my $blocking = $options_h->get_or_default_int("Blocking", 0);
-    $self->{Blocking} = (byte)$blocking;
+    if ($options_h->exists("Blocking")) {
+      die "Blocking option is not allowed in IO::Socket class and its child classes.";
+    }
     
     my $fields_init_only = $options_h->get_or_default_int("FieldsInitOnly", 0);
     
@@ -80,13 +80,9 @@ class IO::Socket extends IO::Handle {
   
   protected method configure : void () {
     
-    my $blocking = $self->{Blocking};
-    
     $self->socket;
     
-    unless ($blocking) {
-      $self->set_blocking(0);
-    }
+    $self->set_blocking(0);
   }
   
   method option_names : string[] () {
@@ -245,16 +241,13 @@ class IO::Socket extends IO::Handle {
       Domain => $self->{Domain},
       Type => $self->{Type},
       Proto => $self->{Proto},
-      Blocking => (int)$self->{Blocking},
       FieldsInitOnly => 1,
     };
     
     my $class = type_name $self;
     my $client = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$options]);
     
-    unless ($self->{Blocking}) {
-      $self->set_blocking(0);
-    }
+    $self->set_blocking(0);
     
     if ($peer_ref) {
       $peer_ref->[0] = $client_sockaddr;
