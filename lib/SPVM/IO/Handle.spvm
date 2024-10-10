@@ -99,27 +99,24 @@ class IO::Handle {
     
     my $current_blocking = $self->{Blocking};
     
-    unless (!!$blocking == $current_blocking) {
+    my $fd = $self->{FD};
+    
+    if (Sys::OS->is_windows) {
+      my $flags = [(int)!$blocking];
+      $self->ioctl(IOCTL->FIONBIO, $flags);
+    }
+    else {
+      my $newmode = $self->fcntl(IO->F_GETFL);
       
-      my $fd = $self->{FD};
-      
-      if (Sys::OS->is_windows) {
-        my $flags = [(int)!$blocking];
-        $self->ioctl(IOCTL->FIONBIO, $flags);
+      if ($blocking == 0) {
+        $newmode &= ~IO->O_NDELAY;
+        $newmode |= IO->O_NONBLOCK;
       }
       else {
-        my $newmode = $self->fcntl(IO->F_GETFL);
-        
-        if ($blocking == 0) {
-          $newmode &= ~IO->O_NDELAY;
-          $newmode |= IO->O_NONBLOCK;
-        }
-        else {
-          $newmode &= ~(IO->O_NDELAY|IO->O_NONBLOCK);
-        }
-        
-        $self->fcntl(IO->F_SETFL, $newmode);
+        $newmode &= ~(IO->O_NDELAY|IO->O_NONBLOCK);
       }
+      
+      $self->fcntl(IO->F_SETFL, $newmode);
     }
     
     $self->{Blocking} = (byte)$blocking;
