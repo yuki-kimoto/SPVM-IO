@@ -163,6 +163,7 @@ class IO::Socket::IP extends IO::Socket {
       $self->listen;
     }
     
+    # This must be after calling connect method because Mac does not support non-blocking mode to non-connected socket.
     $self->set_blocking(0);
   }
   
