@@ -22,13 +22,6 @@ class IO::Handle {
   has Blocking : protected byte;
   
   # Class Methods
-  static method new : IO::Handle ($options : object[] = undef) {
-    my $self = new IO::Handle;
-    
-    $self->init($options);
-    
-    return $self;
-  }
   
   # Instance Methods
   protected method init : void ($options : object[] = undef) {

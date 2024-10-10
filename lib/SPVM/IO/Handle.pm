@@ -13,7 +13,6 @@ IO::Handle class in L<SPVM> has methods to handle file handles.
 =head1 Usage
   
   use IO::Handle;
-  my $handle = IO::Handle->new;
 
 =head1 Details
 
@@ -41,11 +40,13 @@ A flag for blocking IO.
 
 =head1 Class Methods
 
-=head2 new
+=head1 Instance Methods
 
-C<static method new : L<IO::Handle|SPVM::IO::Handle> ($options : object[]);>
+=head2 init
 
-Creates a new L<IO::Handle|SPVM::IO::Handle> object, and returns it.
+C<protected method init : void ($options : object[] = undef);>
+
+Initializes fields given the options $options.
 
 Options:
 
@@ -65,13 +66,7 @@ L</"Blocking"> field is set to this value.
 
 If this value is 0, L</"set_blocking"> method is called with 0.
 
-=item * C<FieldsInitOnly : Int = 0>
-
-If this value is 1, only initialization of fields are performed without system calls for the file descriptor L</"FD">.
-
 =back
-
-=head1 Instance Methods
 
 =head2 fileno
 
