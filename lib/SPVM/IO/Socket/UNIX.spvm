@@ -47,24 +47,16 @@ class IO::Socket::UNIX extends IO::Socket {
       $domain = SOCKET->AF_UNIX;
     }
     
-    # Proto option
-    my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
-    
     # Type option
     my $type = $options_h->delete_or_default_int("Type", -1);
     unless ($type >= 0) {
-      if ($proto == SOCKET->IPPROTO_TCP) {
-        $type = SOCKET->SOCK_STREAM;
-      }
-      elsif ($proto == SOCKET->IPPROTO_UDP) {
-        $type = SOCKET->SOCK_DGRAM;
-      }
-      elsif ($proto == SOCKET->IPPROTO_ICMP) {
-        $type = SOCKET->SOCK_RAW;
-      }
+      $type = SOCKET->SOCK_STREAM;
     }
     
-    $self->SUPER::init($options);
+    # Proto option
+    my $proto = $options_h->delete_or_default_int("Proto", 0);
+    
+    $self->SUPER::init(Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type}));
     
     # Local option
     my $local = $options_h->delete_or_default_string("Local", undef);
