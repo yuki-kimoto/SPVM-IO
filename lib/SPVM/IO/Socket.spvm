@@ -136,7 +136,7 @@ class IO::Socket extends IO::Handle {
     
     my $domain = $self->{Domain};
     
-    my $type = $self->{Type};
+    my $type = $self->{Type} | SOCKET->SOCK_NONBLOCK;
     
     my $protocol = $self->{Proto};
     
@@ -219,6 +219,7 @@ class IO::Socket extends IO::Handle {
     my $client_sockaddr = (Sys::Socket::Sockaddr)undef;
     
     while (1) {
+      
       eval { $client_sockaddr = Sys->accept(\$client_fd, $fd); }
       
       if ($@) {

@@ -11,28 +11,8 @@ use SPVM 'TestUtil';
 
 use Test::SPVM::Sys::Socket::ServerManager::IP;
 
-# with goroutine
-{
-  my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
-    code => sub {
-      my ($server_manager) = @_;
-      
-      my $port = $server_manager->port;
-      
-      SPVM::TestUtil->run_echo_server_go($port);
-      
-      exit 0;
-    },
-  );
-  
-  # IPv4
-  {
-    my $port = $server_manager->port;
-    
-    ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
-    
-    ok(SPVM::TestCase::IO::Socket::IP->server_ipv4_basic($port));
-  }
-}
+my $port = Test::SPVM::Sys::Socket::Util::get_available_port();
+
+ok(SPVM::TestCase::IO::Socket::IP->accept($port));
 
 done_testing;

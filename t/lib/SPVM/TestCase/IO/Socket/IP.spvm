@@ -8,6 +8,7 @@ class TestCase::IO::Socket::IP {
   use Sys::Socket::Constant as SOCKET;
   use TestUtil;
   
+  
   static method ipv4_fileno : int ($port : int) {
 
     # Socket
@@ -510,41 +511,64 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method server_ipv4_basic : int ($port : int) {
+  static method accept : int ($port : int) {
     
-    # Basic
-    {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+    my $test_success_ref = [0];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    
+    $wg->add(2);
+    
+    # Run a echo server
+    Go->go([$wg : Go::Sync::WaitGroup, $port : int] method : void () {
+      TestUtil->run_echo_server_accept_once($port);
       
-      my $send_buffer = "abc\n";
+      $wg->done;
+    });
+    
+    # Tests
+    Go->go([$wg : Go::Sync::WaitGroup, $test_success_ref : int[], $port : int] method : void () {
       
-      $socket->send($send_buffer);
-      
-      $socket->shutdown(SOCKET->SHUT_WR);
-      
-      my $string_buffer = StringBuffer->new;
-      
-      my $recv_buffer = (mutable string)new_string_len 1;
-      
-      while (1) {
-        my $recv_length = $socket->recv($recv_buffer);
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
         
-        if ($recv_length > 0) {
-          $string_buffer->push($recv_buffer);
+        my $send_buffer = "abc\n";
+        
+        $socket->send($send_buffer);
+        
+        $socket->shutdown(SOCKET->SHUT_WR);
+        
+        my $string_buffer = StringBuffer->new;
+        
+        my $recv_buffer = (mutable string)new_string_len 1;
+        
+        while (1) {
+          
+          my $recv_length = $socket->recv($recv_buffer);
+          
+          if ($recv_length > 0) {
+            $string_buffer->push($recv_buffer);
+          }
+          
+          if ($recv_buffer eq "\n") {
+            last;
+          }
         }
         
-        if ($recv_buffer eq "\n") {
-          last;
+        if ($string_buffer->to_string eq "abc\n") {
+          $test_success_ref->[0] = 1;
         }
       }
       
-      unless ($string_buffer->to_string eq "abc\n") {
-        return 0;
-      }
-    }
+      $wg->done;
+    });
     
-    return 1;
+    Go->gosched;
+    
+    $wg->wait;
+    
+    return $test_success_ref->[0];
   }
 }
 
