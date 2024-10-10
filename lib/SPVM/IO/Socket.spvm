@@ -223,8 +223,6 @@ class IO::Socket extends IO::Handle {
     my $class = type_name $self;
     my $client = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$options]);
     
-    $client->configure;
-    
     if ($peer_ref) {
       $peer_ref->[0] = $client_sockaddr;
     }
