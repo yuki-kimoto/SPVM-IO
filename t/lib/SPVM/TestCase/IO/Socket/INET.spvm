@@ -6,10 +6,9 @@ class TestCase::IO::Socket::INET {
   use Go;
   use Fn;
   use Sys::Socket::Constant as SOCKET;
-      
   
   static method fileno : int ($port : int) {
-
+    
     # Socket
     my $host = "127.0.0.1";
     my $socket = IO::Socket::INET->new({PeerAddr => $host, PeerPort => $port});
@@ -23,7 +22,7 @@ class TestCase::IO::Socket::INET {
     
     return 1;
   }
-
+  
   static method goroutine : int ($port : int) {
     
     my $wg = Go::Sync::WaitGroup->new;
