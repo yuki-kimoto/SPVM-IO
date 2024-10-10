@@ -6,6 +6,7 @@
     * Blocking option ins IO::Socket and its child classes is not allowed. Its blocking mode is always non-blocking mode.
   [Bug Fix]
     * Fix a bug that IO::Socket and its child classes are not non-blocking mode.
+    * Fix a bug that acceptted client is not non-blocking mode.
     
 0.220001 2023-10-09
   [Test Fix]
