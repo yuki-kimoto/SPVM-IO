@@ -42,28 +42,28 @@ class IO::Socket::UNIX extends IO::Socket {
     my $options_h = Hash->new($options);
     
     # Domain option
-    my $domain = $options_h->delete_or_default_int("Domain", -1);
+    my $domain = $options_h->get_or_default_int("Domain", -1);
     unless ($domain >= 0) {
       $domain = SOCKET->AF_UNIX;
     }
     
     # Type option
-    my $type = $options_h->delete_or_default_int("Type", -1);
+    my $type = $options_h->get_or_default_int("Type", -1);
     unless ($type >= 0) {
       $type = SOCKET->SOCK_STREAM;
     }
     
     # Proto option
-    my $proto = $options_h->delete_or_default_int("Proto", 0);
+    my $proto = $options_h->get_or_default_int("Proto", 0);
     
     $self->SUPER::init(Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type}));
     
     # Local option
-    my $local = $options_h->delete_or_default_string("Local", undef);
+    my $local = $options_h->get_or_default_string("Local", undef);
     $self->{Local} = $local;
     
     # Peer option
-    my $peer = $options_h->delete_or_default_string("Peer", undef);
+    my $peer = $options_h->get_or_default_string("Peer", undef);
     $self->{Peer} = $peer;
     
     # Listen option
@@ -84,8 +84,11 @@ class IO::Socket::UNIX extends IO::Socket {
       $self->connect($sockaddr_un_peer);
     }
     elsif ($local) {
+      warn $local;
+      
       my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
       $self->bind($sockaddr_un_local);
+      warn;
       
       $self->listen;
     }
