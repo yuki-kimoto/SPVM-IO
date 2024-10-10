@@ -66,7 +66,7 @@ Exceptions thrown by L</"open"> method could be thrown.
 
 =head2 new_from_fd
 
-C<static method new_from_fd : IO::Handle ($fd : int, $open_mode : string);>
+C<static method new_from_fd : L<IO::File|SPVM::IO::File> ($fd : int, $open_mode : string);>
 
 Creates a new L<IO::File|SPVM::IO::File> object.
 

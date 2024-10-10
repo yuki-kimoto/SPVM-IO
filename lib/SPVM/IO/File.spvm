@@ -26,7 +26,7 @@ class IO::File extends IO::Handle {
     return $self;
   }
   
-  static method new_from_fd : IO::Handle ($fd : int, $open_mode : string) {
+  static method new_from_fd : IO::File ($fd : int, $open_mode : string) {
     
     my $self = new IO::File;
     
