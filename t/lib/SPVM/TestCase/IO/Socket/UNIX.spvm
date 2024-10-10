@@ -1,0 +1,69 @@
+class TestCase::IO::Socket::UNIX {
+  use IO::Socket;
+  use IO::Socket::IP;
+  use IO::Socket::UNIX;
+  use Go::Sync::WaitGroup;
+  use Go;
+  use Fn;
+  use Sys::Socket::Constant as SOCKET;
+  use TestUtil;
+  
+  static method accept : int ($sock_path : string) {
+    
+    my $test_success_ref = [0];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    
+    $wg->add(2);
+    
+    # Run a echo server
+    Go->go([$wg : Go::Sync::WaitGroup, $sock_path : string] method : void () {
+      TestUtil->run_echo_server_accept_once_unix($sock_path);
+      
+      $wg->done;
+    });
+    
+    # Tests
+    Go->go([$wg : Go::Sync::WaitGroup, $test_success_ref : int[], $sock_path : string] method : void () {
+      
+      {
+        my $socket = IO::Socket::UNIX->new({Peer => $sock_path});
+        
+        my $send_buffer = "abc\n";
+        
+        $socket->send($send_buffer);
+        
+        $socket->shutdown(SOCKET->SHUT_WR);
+        
+        my $string_buffer = StringBuffer->new;
+        
+        my $recv_buffer = (mutable string)new_string_len 1;
+        
+        while (1) {
+          my $recv_length = $socket->recv($recv_buffer);
+          
+          if ($recv_length > 0) {
+            $string_buffer->push($recv_buffer);
+          }
+          
+          if ($recv_buffer eq "\n") {
+            last;
+          }
+        }
+        
+        if ($string_buffer->to_string eq "abc\n") {
+          $test_success_ref->[0] = 1;
+        }
+      }
+      
+      $wg->done;
+    });
+    
+    Go->gosched;
+    
+    $wg->wait;
+    
+    return $test_success_ref->[0];
+  }
+}
+

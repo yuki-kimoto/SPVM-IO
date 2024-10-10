@@ -77,19 +77,19 @@ class IO::Socket::UNIX extends IO::Socket {
     
     my $local = $self->{Local};
     
-    $self->socket;
+    my $fd = $self->{FD};
+    
+    unless ($fd >= 0) {
+      $self->socket;
+    }
     
     if ($peer) {
       my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
       $self->connect($sockaddr_un_peer);
     }
     elsif ($local) {
-      warn $local;
-      
       my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
       $self->bind($sockaddr_un_local);
-      warn;
-      
       $self->listen;
     }
     

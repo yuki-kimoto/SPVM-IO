@@ -132,4 +132,37 @@ class TestUtil {
       }
     }
   }
+  
+  static method run_echo_server_accept_once_unix : void ($sock_path : string) {
+    
+    my $server_socket = IO::Socket::UNIX->new({
+      Local => $sock_path,
+      Listen    => 5,
+    });
+    
+    my $client_socket = $server_socket->accept;
+    
+    unless ($client_socket->connected) {
+      die;
+    }
+    
+    while (1) {
+      
+    unless ($client_socket->connected) {
+      die;
+    }
+    
+      my $data = (mutable string)new_string_len 1;
+      
+      my $read_length = $client_socket->read($data);
+      
+      if ($read_length > 0) {
+        $client_socket->write($data);
+      }
+      else {
+        last;
+      }
+    }
+  }
+  
 }

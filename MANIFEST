@@ -40,6 +40,7 @@ t/IO-Socket-INET6.t.disable
 t/IO-Socket-IP.t
 t/IO-Socket-IP_IPv6.t.disable
 t/IO-Socket-IP_server.t
+t/IO-Socket-UNIX_server.t
 t/IO.t
 t/lib/SPVM/TestCase/IO.spvm
 t/lib/SPVM/TestCase/IO/Dir.spvm
@@ -50,6 +51,7 @@ t/lib/SPVM/TestCase/IO/Socket/INET.spvm
 t/lib/SPVM/TestCase/IO/Socket/INET6.spvm
 t/lib/SPVM/TestCase/IO/Socket/IP.spvm
 t/lib/SPVM/TestCase/IO/Socket/Online.spvm
+t/lib/SPVM/TestCase/IO/Socket/UNIX.spvm
 t/lib/SPVM/TestUtil.spvm
 t/lib/TestFile.pm
 t/test_files/file_eof.txt
