@@ -13,18 +13,12 @@ L<SPVM::IO::Socket> class has methods for sockets.
 =head1 Usage
   
   use IO::Socket;
-  use Sys::Socket::Constant as SOCKET;
-  
-  # Create a new AF_INET socket
-  my $socket = IO::Socket->new({Domain => SOCKET->AF_INET});
-  
-  # Create a new AF_INET6 socket
-  my $socket = IO::Socket->new({Domain => SOCKET->AF_INET6});
-  
-  # Create a new AF_UNIX socket
-  my $socket = IO::Socket->new({Domain => SOCKET->AF_UNIX});
 
 =head1 Details
+
+IO::Socket is an abstract class.
+
+See L</"Well Known Child Classes"> about child classes of this class.
 
 =head2 Porting
 
@@ -78,17 +72,13 @@ A timeout seconds for system calls that would set C<errno> to C<EWOULDBLOCK>, li
 
 C<has Listen : protected int;>
 
-=head1 Class Methods
+=head2 init
 
-=head2 new
-
-C<static method new : IO::Socket ($options : object[] = undef);>
-
-The socket is set to non-blocking mode.
+C<protected method init : void ($options : object[] = undef);>
 
 Options:
 
-The following options are available adding to the options for L<IO::Handle#new|SPVM::IO::Handle/"new"> method.
+The following options are available adding to the options for L<IO::Handle#init|SPVM::IO::Handle/"init"> method.
 
 =over 2
 

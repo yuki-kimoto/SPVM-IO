@@ -24,16 +24,6 @@ class IO::Socket extends IO::Handle {
   has Listen : protected int;
   has Timeout : protected double;
   
-  # Class Methods
-  static method new : IO::Socket ($options : object[] = undef) {
-    
-    my $self = new IO::Socket;
-    
-    $self->init($options);
-    
-    return $self;
-  }
-  
   # Instance Methods
   protected method init : void ($options : object[] = undef) {
     
