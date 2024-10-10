@@ -1,6 +1,7 @@
 0.221 2023-10-10
   [Internal Changes]
     * IO::Handle#set_blocking method always perform a system call.
+    * configure method is implemented in IO::File class and it is called from new and new_from_fd method.
   [Incompatible Changes]
     * Blocking option ins IO::Socket and its child classes is not allowed. Its blocking mode is always non-blocking mode.
   [Bug Fix]
