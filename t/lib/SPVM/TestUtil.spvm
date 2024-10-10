@@ -65,7 +65,7 @@ class TestUtil {
     
     my $localhost = "127.0.0.1";
     
-    my $server_socket = IO::Socket::INET->new({
+    my $server_socket = IO::Socket::IP->new({
       LocalAddr => $localhost,
       LocalPort => $port,
       Listen    => 5,

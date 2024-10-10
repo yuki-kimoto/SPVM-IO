@@ -136,7 +136,7 @@ class IO::Socket extends IO::Handle {
     
     my $domain = $self->{Domain};
     
-    my $type = $self->{Type} | SOCKET->SOCK_NONBLOCK;
+    my $type = $self->{Type};
     
     my $protocol = $self->{Proto};
     
