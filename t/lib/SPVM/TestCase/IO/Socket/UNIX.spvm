@@ -10,7 +10,7 @@ class TestCase::IO::Socket::UNIX {
   
   static method accept : int ($sock_path : string) {
     
-    my $test_success_ref = [0, 1, 1];
+    my $test_success_ref = [0, 1, 1, 1];
     
     my $wg = Go::Sync::WaitGroup->new;
     
@@ -33,6 +33,11 @@ class TestCase::IO::Socket::UNIX {
         
         unless ($socket->connected) {
           $test_success_ref->[2] = 0;
+        }
+        
+        my $peerpath = $socket->peerpath;
+        unless ($peerpath eq $sock_path) {
+          $test_success_ref->[3] = 0;
         }
         
         my $send_buffer = "abc\n";
@@ -75,7 +80,7 @@ class TestCase::IO::Socket::UNIX {
       $expected->[$i] = 1;
     }
     
-    return Array->equals($test_success_ref, [1, 1, 1]);
+    return Array->equals($test_success_ref, $expected);
   }
 }
 
