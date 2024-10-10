@@ -133,17 +133,21 @@ class TestUtil {
     }
   }
   
-  static method run_echo_server_accept_once_unix : void ($sock_path : string) {
+  static method run_echo_server_accept_once_unix : void ($sock_path : string, $test_success_ref : int[]) {
     
     my $server_socket = IO::Socket::UNIX->new({
       Local => $sock_path,
       Listen    => 5,
     });
     
+    unless ($server_socket->hostpath eq $sock_path) {
+      $test_success_ref->[5] = 0;
+    }
+    
     my $client_socket = $server_socket->accept;
     
-    unless ($client_socket->connected) {
-      die;
+    unless ($client_socket->hostpath eq $sock_path) {
+      $test_success_ref->[6] = 0;
     }
     
     while (1) {
