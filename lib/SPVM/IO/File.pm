@@ -98,24 +98,6 @@ The open mode $open_mode must be defined. Otherwise an exception is thrown.
 
 If a file is already opened, an exception is thrown.
 
-=head2 fdopen
-
-C<method fdopen : void ($fd : int, $open_mode : string);>
-
-Opens a file given the file descriptor $fd and the open mode $open_mode.
-
-This method calls L<Sys#fdopen|SPVM::Sys/"fdopen"> method.
-
-L</"FileStream"> field is set to the opened file stream.
-
-L</"InputLineNumber"> field is set to 0.
-
-Exceptions:
-
-The open mode $open_mode must be defined. Otherwise an exception is thrown.
-
-If a file is already opened, an exception is thrown.
-
 =head1 Instance Methods
 
 =head2 input_line_number
@@ -289,6 +271,24 @@ This method calls L<Sys::IO#ftruncate|SPVM::Sys::IO/"ftruncate"> method with the
 Exceptions:
 
 Exceptions thrown by L<Sys::IO#ftruncate|SPVM::Sys::IO/"ftruncate"> method could be thrown.
+
+=head2 fdopen
+
+C<private method fdopen : void ($fd : int, $open_mode : string);>
+
+Opens a file given the file descriptor $fd and the open mode $open_mode.
+
+This method calls L<Sys#fdopen|SPVM::Sys/"fdopen"> method.
+
+L</"FileStream"> field is set to the opened file stream.
+
+L</"InputLineNumber"> field is set to 0.
+
+Exceptions:
+
+The open mode $open_mode must be defined. Otherwise an exception is thrown.
+
+If a file is already opened, an exception is thrown.
 
 =head1 See Also
 

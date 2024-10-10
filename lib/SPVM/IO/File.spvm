@@ -72,27 +72,6 @@ class IO::File extends IO::Handle {
     $self->{FD} = $fd;
   }
   
-  method fdopen : void ($fd : int, $open_mode : string) {
-    
-    unless ($open_mode) {
-      die "The open mode \$open_mode must be defined.";
-    }
-    
-    if ($self->opened) {
-      die "Already opened.";
-    }
-    
-    my $file_stream_ref = [(Sys::IO::FileStream)undef];
-    
-    Sys->fdopen($file_stream_ref, $open_mode, $fd);
-    
-    my $file_stream = $file_stream_ref->[0];
-    
-    $self->{FileStream} = $file_stream;
-    
-    $self->{FD} = $fd;
-  }
-  
   method close : void () {
     
     my $file_stream = $self->{FileStream};
@@ -224,6 +203,27 @@ class IO::File extends IO::Handle {
     my $fd = $self->{FD};
     
     Sys::IO->ftruncate($fd, $legnth);
+  }
+  
+  private method fdopen : void ($fd : int, $open_mode : string) {
+    
+    unless ($open_mode) {
+      die "The open mode \$open_mode must be defined.";
+    }
+    
+    if ($self->opened) {
+      die "Already opened.";
+    }
+    
+    my $file_stream_ref = [(Sys::IO::FileStream)undef];
+    
+    Sys->fdopen($file_stream_ref, $open_mode, $fd);
+    
+    my $file_stream = $file_stream_ref->[0];
+    
+    $self->{FileStream} = $file_stream;
+    
+    $self->{FD} = $fd;
   }
   
 }
