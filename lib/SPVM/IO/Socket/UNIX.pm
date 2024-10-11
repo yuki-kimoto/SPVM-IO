@@ -77,13 +77,15 @@ Options:
 
 The following options are available adding the options for L<IO::Socket#init|SPVM::IO::Socket/"init"> method are available.
 
+[Name][Type][Default Value]
+
 =over 2
 
-=item * C<Peer> : string
+=item * C<Peer> : string = undef
 
 L</"Peer"> field is set to this value.
 
-=item * C<Local> : string
+=item * C<Local> : string = undef
 
 L</"Local"> field is set to this value.
 

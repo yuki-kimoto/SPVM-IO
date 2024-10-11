@@ -9,7 +9,6 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
 =head1 Usage
 
   use IO::Socket::IP;
-  use Sys::Socket;
   use Sys::Socket::Constant as SOCKET;
   
   # Client Socket
@@ -38,7 +37,7 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
 
 =head1 Description
 
-IO::Socket::INET class in L<SPVM> has methods to create IPv4/IPv6 Sockets.
+IO::Socket::INET class in L<SPVM> represents a IPv4 or IPv6 Socket.
 
 =head1 Super Class
 
@@ -104,9 +103,19 @@ And if L</"LocalPort"> field is defined, L<bind|https://linux.die.net/man/2/bind
 
 And returns the new object.
 
+=head1 Instance Methods
+
+=head2 init
+
+C<protected method init : void ($options : object[] = undef);>
+
+Initializes fields of this instance given the option $options.
+
 Options:
 
 The following options are available adding the options for L<IO::Socket#new|SPVM::IO::Socket/"new"> method are available.
+
+[Name][Type][Default Value]
 
 =over 2
 
@@ -142,14 +151,6 @@ L</"LocalPort"> field is set to this value.
 
 =back
 
-=head1 Instance Methods
-
-=head2 init
-
-C<protected method init : void ($options : object[] = undef);>
-
-Initializes this instance.
-
 =head2 sockaddr
 
 C<method sockaddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
@@ -176,6 +177,8 @@ C<method sockport : int ();>
 
 Returns the local port.
 
+Implementation:
+
 If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockport|IO::Socket::IP::Import::IPv4/"sockport"> method.
 
 If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockport|IO::Socket::IP::Import::IPv6/"sockport"> method.
@@ -185,6 +188,8 @@ If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import
 C<method peeraddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
 
 Return the peer address.
+
+Implementation:
 
 If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peeraddr|IO::Socket::IP::Import::IPv4/"peeraddr"> method.
 
@@ -196,6 +201,8 @@ C<method peerhost : string ();>
 
 Returns the peer host name.
 
+Implementation:
+
 If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerhost|IO::Socket::IP::Import::IPv4/"peerhost"> method.
 
 If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerhost|IO::Socket::IP::Import::IPv6/"peerhost"> method.
@@ -206,6 +213,8 @@ C<method peerport : int ();>
 
 Returns the peer port.
 
+Implementation:
+
 If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerport|IO::Socket::IP::Import::IPv4/"peerport"> method.
 
 If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerport|IO::Socket::IP::Import::IPv6/"peerport"> method.
@@ -214,7 +223,7 @@ If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import
 
 C<method accept : L<IO::Socket::IP|SPVM::IO::Socket::IP> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
 
-Calls L<accept|SPVM::IO::Socke/"new"> method of its super class given the argument given to this method and returns its return value.
+This method is the same as L<accept|SPVM::IO::Socket/"accept"> method, but its return type is different.
 
 =head1 Well Known Child Classes
 
@@ -223,6 +232,14 @@ Calls L<accept|SPVM::IO::Socke/"new"> method of its super class given the argume
 =item * L<IO::Socket::INET|SPVM::IO::Socket::INET>
 
 =item * L<IO::Socket::INET6|SPVM::IO::Socket::INET6>
+
+=back
+
+=head2 See Also
+
+=over 2
+
+=item * L<SPVM::IO::Socket::UNIX>
 
 =back
 
