@@ -24,4 +24,7 @@ class IO::Socket::INET6 extends IO::Socket::IP {
     return (IO::Socket::INET6)$self->SUPER::accept($peer_ref);
   }
   
+  method DESTROY : void () {
+    $self->SUPER::DESTROY;
+  }
 }

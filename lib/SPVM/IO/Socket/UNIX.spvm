@@ -114,4 +114,8 @@ class IO::Socket::UNIX extends IO::Socket {
     return (IO::Socket::UNIX)$self->SUPER::accept($peer_ref);
   }
   
+  
+  method DESTROY : void () {
+    $self->SUPER::DESTROY;
+  }
 }

@@ -1,3 +1,9 @@
+0.224 2023-10-11
+  [Bug Fix]
+    * Fix a bug that IO::Socket::INET does not call DESTROY method in IO::Socket.
+    * Fix a bug that IO::Socket::INET6 does not call DESTROY method in IO::Socket.
+    * Fix a bug that IO::Socket::UNIX does not call DESTROY method in IO::Socket.
+    
 0.223 2023-10-11
   [Test Improvement]
     * Improve tests for IO::Socket::UNIX.
