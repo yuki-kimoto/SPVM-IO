@@ -7,7 +7,11 @@
     * Add docs for IO::Socket::UNIX.
     * Improve docs for IO::Socket::INET.
     * Improve docs for IO::Socket::INET6.
-    
+  [Document Improvement]
+    * Add docs for IO::Socket::UNIX.
+    * Improve docs for IO::Socket::INET.
+    * Improve docs for IO::Socket::INET6.
+  
   [Imcompatible Changes]
     * Changes the beheivior of options in IO::Socket::UNIX.
     
@@ -16,6 +20,7 @@
       Type field is set to SOCK_STREAM if Type option is not specified.
       
       Proto field is always set to 0.
+    * Listen default value becomes 0 from -1.
     
 0.222 2023-10-10
   [Internal Changes]

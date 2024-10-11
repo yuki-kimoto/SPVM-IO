@@ -82,15 +82,17 @@ The following options are available adding to the options for L<IO::Handle#init|
 
 =over 2
 
-=item * Domain : Int
+=item * B<Names> : B<Types> = B<Default Values>
 
-=item * Type : Int
+=item * C<Domain> : Int = -1
 
-=item * Proto : Int
+=item * C<Type> : Int = -1
 
-=item * Timeout : Double
+=item * C<Proto> : Int = -1
 
-=item * Listen : Int
+=item * C<Timeout> : Double = 0.0
+
+=item * C<Listen> : Int = 0
 
 =back
 
