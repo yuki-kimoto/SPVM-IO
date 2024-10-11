@@ -6,30 +6,32 @@ package SPVM::IO::Socket::UNIX;
 
 =head1 Name
 
-SPVM::IO::Socket::UNIX - Short Description
+SPVM::IO::Socket::UNIX - UNIX Domain Socket
 
 =head1 Description
 
-The IO::Socket::UNIX class in L<SPVM> has methods for someting.
+IO::Socket::UNIX class in L<SPVM> represents a UNIX domain socket.
 
 =head1 Usage
 
   use IO::Socket::UNIX;
-  use Sys::Socket;
-  use Sys::Socket::Constant as SOCKET;
   
   # Client
-  my $socket_path = "my_socket.sock";
-  my $io_socket = IO::Socket::UNIX->new({
-    Peer => $socket_path,
+  my $sock_path = "/tmp/test.sock";
+  my $socket = IO::Socket::UNIX->new({
+    Peer => $sock_path,
   });
   
   # Server
-  my $socket_path = "my_socket.sock";
-  my $io_socket = IO::Socket::UNIX->new({
-    Local => $socket_path,
+  my $sock_path = "/tmp/test.sock";
+  my $socket = IO::Socket::UNIX->new({
+    Local => $sock_path,
     Listen    => 5,
   });
+
+=head1 Inheritance
+
+L<IO::Socket|SPVM::IO::Socket>
 
 =head1 Fields
 
@@ -51,19 +53,29 @@ A peer path.
 
 C<static method new : L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX> ($options : object[] = undef);>
 
-Creates a new L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX> object.
+Creates a new L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX> object given the options $options, and returns it.
 
-And creates a Unix domain socket.
+This object represents a UNIX domain socket.
 
-And if L</"Peer"> field is defined, L<connect|https://linux.die.net/man/2/connect> is executed.
+If L</"Peer"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
 
-And if L</"Local"> field is defined, L<bind|https://linux.die.net/man/2/bind> and L<listen|https://linux.die.net/man/2/listen> are executed.
+If L</"Local"> field is specified, this object becomes a server socket. It calls L<bind|SPVM::IO::Socket/"bind"> method and L<listen|SPVM::IO::Socket/"listen"> method.
 
-And returns the new object.
+See L</"init"> method about the options $options.
+
+The blocking mode of the socket is set to non-blocking mode.
+
+=head1 Instance Methods
+
+=head2 init
+
+C<protected method init : void ($options : object[] = undef);>
+
+Initializes fields of this instance given the options $options.
 
 Options:
 
-The following options are available adding the options for L<IO::Socket#new|SPVM::IO::Socket/"new"> method are available.
+The following options are available adding the options for L<IO::Socket#init|SPVM::IO::Socket/"init"> method are available.
 
 =over 2
 
@@ -77,21 +89,47 @@ L</"Local"> field is set to this value.
 
 =back
 
-=head1 Instance Methods
-
 =head2 hostpath
 
 C<method hostpath : string ();>
+
+Returns the pathname to the fifo at the local end.
 
 =head2 peerpath
 
 C<method peerpath : string ();>
 
+Returns the pathanme to the fifo at the peer end.
+
 =head2 accept
 
 C<method accept : L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
 
-Calls L<accept|SPVM::IO::Socke/"new"> method of its super class given the argument given to this method and returns its return value.
+This method is the same as L<accept|SPVM::IO::Socket/"accept"> method, but its return value is different.
+
+=head1 FAQ
+
+=head2 How to create a temporary file for a UNIX domain socket?
+
+Use L<File::Temp|SPVM::File::Temp> class.
+
+  my $tmp_dir = File::Temp->newdir;
+  
+  my $tmp_dir_name = $tmp_dir->dirname;
+  
+  my $tmp_file = "$tmp_dir_name/test.sock";
+
+=head2 Does a Unix domain socket work on Windows?
+
+Yes, if Windows is recent.
+
+=head2 See Also
+
+=over 2
+
+=item * L<SPVM::IO::Socket::IP>
+
+=back
 
 =head1 Copyright & License
 
