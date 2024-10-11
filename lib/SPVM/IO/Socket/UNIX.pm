@@ -10,7 +10,7 @@ SPVM::IO::Socket::UNIX - UNIX Domain Socket
 
 =head1 Description
 
-IO::Socket::UNIX class in L<SPVM> represents a UNIX domain socket.
+IO::Socket::UNIX class in L<SPVM> represents an UNIX domain socket.
 
 =head1 Usage
 
@@ -59,7 +59,7 @@ This object represents a UNIX domain socket.
 
 If L</"Peer"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
 
-If L</"Local"> field is specified, this object becomes a server socket. It calls L<bind|SPVM::IO::Socket/"bind"> method and L<listen|SPVM::IO::Socket/"listen"> method.
+If L</"Listen"> field is a positive value, this object becomes a server socket. It calls L<bind|SPVM::IO::Socket/"bind"> method and L<listen|SPVM::IO::Socket/"listen"> method.
 
 See L</"init"> method about the options $options.
 
@@ -93,7 +93,7 @@ L</"Local"> field is set to this value.
 
 L<Domain|IO::Socket#Domain> field is always set to C<AF_UNIX>.
 
-L<Type|IO::Socket#Type> field is set to SOCK_STREAM if C<Type> option is not specified.
+L<Type|IO::Socket#Type> field is set to C<SOCK_STREAM> if C<Type> option is not specified.
 
 L<Proto|IO::Socket#Proto> field is always set to 0.
 

@@ -61,10 +61,7 @@ class IO::Socket::IP extends IO::Socket {
     my $options_h = Hash->new($options);
     
     # Domain option
-    my $domain = $options_h->delete_or_default_int("Domain", -1);
-    unless ($domain >= 0) {
-      $domain = SOCKET->AF_INET;
-    }
+    my $domain = $options_h->delete_or_default_int("Domain", SOCKET->AF_INET);
     
     # Proto option
     my $proto = $options_h->delete_or_default_int("Proto", SOCKET->IPPROTO_TCP);
@@ -83,16 +80,14 @@ class IO::Socket::IP extends IO::Socket {
       }
     }
     
-    my $super_options = Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type});
-    
-    $self->SUPER::init($super_options);
+    $self->SUPER::init(Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type}));
     
     # LocalAddr option
     my $local_address = $options_h->get_or_default_string("LocalAddr", undef);
     $self->{LocalAddr} = $local_address;
     
     # LocalPort option
-    my $local_port = $options_h->get_or_default_int("LocalPort", -1);
+    my $local_port = $options_h->get_or_default_int("LocalPort", 0);
     $self->{LocalPort} = $local_port;
     
     # PeerAddr option
@@ -100,7 +95,7 @@ class IO::Socket::IP extends IO::Socket {
     $self->{PeerAddr} = $peer_address;
     
     # PeerPort option
-    my $peer_port = $options_h->get_or_default_int("PeerPort", -1);
+    my $peer_port = $options_h->get_or_default_int("PeerPort", 0);
     $self->{PeerPort} = $peer_port;
     
     # ReuseAddr option

@@ -14,13 +14,13 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
   # Client Socket
   my $host = "www.perl.org";
   my $port = 80;
-  my $io_socket = IO::Socket::IP->new({
+  my $socket = IO::Socket::IP->new({
     PeerAddr => $host,
     PeerPort => $port
   });
   
   # Server Socket
-  my $io_socket = IO::Socket::IP->new({
+  my $socket = IO::Socket::IP->new({
     LocalAddr => 'localhost',
     LocalPort => 9000,
     Listen    => 5,
@@ -29,7 +29,7 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
   # IPv6 Client Socket
   my $host = "google.com";
   my $port = 80;
-  my $io_socket = IO::Socket::IP->new({
+  my $socket = IO::Socket::IP->new({
     PeerAddr => $host,
     PeerPort => $port,
     Domain => SOCKET->AF_INET6,
@@ -37,7 +37,7 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
 
 =head1 Description
 
-IO::Socket::INET class in L<SPVM> represents a IPv4 or IPv6 Socket.
+IO::Socket::INET class in L<SPVM> represents an IPv4 or IPv6 socket.
 
 =head1 Super Class
 
@@ -67,7 +67,7 @@ A peer address.
 
 C<has PeerPort : protected int;>
 
-A peer port
+A peer port.
 
 =head2 ReuseAddr
 
@@ -93,15 +93,23 @@ If this field is a true value, The L<SO_BROADCAST|https://linux.die.net/man/3/se
 
 C<static method new : L<IO::Socket::IP|SPVM::IO::Socket::IP> ($options : object[] = undef);>
 
-Creates a new L<IO::Socket::IP|SPVM::IO::Socket::IP> object.
+Creates a new L<IO::Socket::IP|SPVM::IO::Socket::IP> object given the options $options, and returns it.
 
-And creates a socket.
+This object represents a IPv4 or IPv6 domain socket.
 
-And if L</"PeerAddr"> field is defined, L<connect|https://linux.die.net/man/2/connect> is executed.
+If L</"ReuseAddr"> field is a true value, 1 is set to C<SO_REUSEADD> option of this socket.
 
-And if L</"LocalPort"> field is defined, L<bind|https://linux.die.net/man/2/bind> and L<listen|https://linux.die.net/man/2/listen> are executed.
+If L</"ReusePort"> field is a true value, 1 is set to C<SO_REUSEPORT> option of this socket.
 
-And returns the new object.
+If L</"Broadcast"> field is a true value, 1 is set to C<SO_BROADCAST> option of this socket.
+
+If L</"Peer"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
+
+If L</"Listen"> field is a positive value, this object becomes a server socket. It calls L<bind|SPVM::IO::Socket/"bind"> method and L<listen|SPVM::IO::Socket/"listen"> method.
+
+See L</"init"> method about the options $options.
+
+The blocking mode of the socket is set to non-blocking mode.
 
 =head1 Instance Methods
 
@@ -113,43 +121,53 @@ Initializes fields of this instance given the option $options.
 
 Options:
 
-The following options are available adding the options for L<IO::Socket#new|SPVM::IO::Socket/"new"> method are available.
+The following options are available adding the options for L<IO::Socket#init|SPVM::IO::Socket/"init"> method are available.
 
 [Name][Type][Default Value]
 
 =over 2
 
-=item * C<ReuseAddr> : string
+=item * C<ReuseAddr> : string = undef
 
 L</"ReuseAddr"> field is set to this value.
 
-=item * C<ReusePort> : Int
+=item * C<ReusePort> : Int = 0
 
 L</"ReusePort"> field is set to this value.
 
-=item * C<Broadcast> : Int
+=item * C<Broadcast> : Int = 0
 
 L</"Broadcast"> field is set to this value.
 
-=item * C<PeerAddr> : string
-
-A peer address.
+=item * C<PeerAddr> : string = undef
 
 L</"PeerAddr"> field is set to this value.
 
-=item * C<PeerPort> : Int
+=item * C<PeerPort> : Int = 0
 
 L</"PeerPort"> field is set to this value.
 
-=item * C<LocalAddr> : string
+=item * C<LocalAddr> : string = undef
 
 L</"LocalAddr"> field is set to this value.
 
-=item * C<LocalPort> : Int
+=item * C<LocalPort> : Int = 0
 
 L</"LocalPort"> field is set to this value.
 
 =back
+
+L<Domain|IO::Socket#Domain> field is set to C<AF_INET> if C<Domain> option is not specified.
+
+L<Proto|IO::Socket#Proto> field is set to C<IPPROTO_TCP> if C<Proto> option is not specified.
+
+L<Type|IO::Socket#Type> field is set to the following value according to the value of L<Proto|IO::Socket#Type> field.
+
+If the value of C<Proto> is C<IPPROTO_TCP>, the C<Type> field is set to C<SOCK_STREAM>.
+
+If the value of C<Proto> is C<IPPROTO_UDP>, the C<Type> field is set to C<SOCK_DGRAM>.
+
+If the value of C<Proto> is C<IPPROTO_ICMP>, the C<Type> field is set to C<SOCK_RAW>.
 
 =head2 sockaddr
 
