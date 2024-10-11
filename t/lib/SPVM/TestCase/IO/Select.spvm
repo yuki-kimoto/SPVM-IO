@@ -225,15 +225,9 @@ class TestCase::IO::Select {
       $select->add($sockets->[1]->fileno);
       $select->add($sockets->[2]->fileno);
       
-      warn;
-      
       my $can_write_fds = $select->can_write;
       
-      warn;
-      
       my $has_exception_fds = $select->has_exception(0);
-      
-      warn;
       
       unless (@$can_write_fds) {
         return 0;
