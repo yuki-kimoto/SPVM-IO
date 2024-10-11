@@ -42,19 +42,13 @@ class IO::Socket::UNIX extends IO::Socket {
     my $options_h = Hash->new($options);
     
     # Domain option
-    my $domain = $options_h->get_or_default_int("Domain", -1);
-    unless ($domain >= 0) {
-      $domain = SOCKET->AF_UNIX;
-    }
+    my $domain = SOCKET->AF_UNIX;
     
     # Type option
-    my $type = $options_h->get_or_default_int("Type", -1);
-    unless ($type >= 0) {
-      $type = SOCKET->SOCK_STREAM;
-    }
+    my $type = $options_h->get_or_default_int("Type", SOCKET->SOCK_STREAM);
     
     # Proto option
-    my $proto = $options_h->get_or_default_int("Proto", 0);
+    my $proto = 0;
     
     $self->SUPER::init(Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type}));
     
@@ -65,10 +59,6 @@ class IO::Socket::UNIX extends IO::Socket {
     # Peer option
     my $peer = $options_h->get_or_default_string("Peer", undef);
     $self->{Peer} = $peer;
-    
-    # Listen option
-    my $listen_backlog = $options_h->get_or_default_int("Listen", -1);
-    $self->{Listen} = $listen_backlog;
   }
   
   protected method configure : void () {

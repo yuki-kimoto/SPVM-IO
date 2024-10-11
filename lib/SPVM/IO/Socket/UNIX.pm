@@ -89,6 +89,12 @@ L</"Local"> field is set to this value.
 
 =back
 
+L<Domain|IO::Socket#Domain> field is always set to C<AF_UNIX>.
+
+L<Type|IO::Socket#Type> field is set to SOCK_STREAM if C<Type> option is not specified.
+
+L<Proto|IO::Socket#Proto> field is always set to 0.
+
 =head2 hostpath
 
 C<method hostpath : string ();>
