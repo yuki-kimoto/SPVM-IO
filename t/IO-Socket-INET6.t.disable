@@ -44,27 +44,14 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
     
     exit 0;
   },
+  host => '::1'
 );
-
-warn;
 
 {
   my $port = $server_manager->port;
-
-warn;
-
   ok(SPVM::TestCase::IO::Socket::INET6->basic($port));
-
-warn;
-
   ok(SPVM::TestCase::IO::Socket::INET6->goroutine($port));
-
-warn;
-
   ok(SPVM::TestCase::IO::Socket::INET6->set_blocking($port));
-
-warn;
-
   ok(SPVM::TestCase::IO::Socket::INET6->fileno($port));
 }
 
