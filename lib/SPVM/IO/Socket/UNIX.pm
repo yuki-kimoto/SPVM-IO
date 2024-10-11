@@ -29,7 +29,7 @@ IO::Socket::UNIX class in L<SPVM> represents a UNIX domain socket.
     Listen    => 5,
   });
 
-=head1 Inheritance
+=head1 Super Class
 
 L<IO::Socket|SPVM::IO::Socket>
 
@@ -111,7 +111,7 @@ Returns the pathanme to the fifo at the peer end.
 
 C<method accept : L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
 
-This method is the same as L<accept|SPVM::IO::Socket/"accept"> method, but its return value is different.
+This method is the same as L<accept|SPVM::IO::Socket/"accept"> method, but its return type is different.
 
 =head1 FAQ
 

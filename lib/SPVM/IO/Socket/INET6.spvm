@@ -9,7 +9,9 @@ class IO::Socket::INET6 extends IO::Socket::IP {
     
     my $self = new IO::Socket::INET6;
     
-    $options = Fn->merge_options($options, {Domain => SOCKET->AF_INET6});
+    my $domain = SOCKET->AF_INET6;
+    
+    $options = Fn->merge_options($options, {Domain => $domain});
     
     $self->init($options);
     
@@ -21,4 +23,5 @@ class IO::Socket::INET6 extends IO::Socket::IP {
   method accept : IO::Socket::INET6 ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
     return (IO::Socket::INET6)$self->SUPER::accept($peer_ref);
   }
+  
 }

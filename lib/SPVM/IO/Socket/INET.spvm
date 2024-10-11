@@ -10,7 +10,9 @@ class IO::Socket::INET extends IO::Socket::IP {
     
     my $self = new IO::Socket::INET;
     
-    $options = Fn->merge_options($options, {Domain => SOCKET->AF_INET});
+    my $domain = SOCKET->AF_INET;
+    
+    $options = Fn->merge_options($options, {Domain => $domain});
     
     $self->init($options);
     

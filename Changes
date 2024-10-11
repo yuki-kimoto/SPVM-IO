@@ -5,6 +5,9 @@
     * IO::Socket::UNIX#option_names becomes protected method.
   [Document Improvement]
     * Add docs for IO::Socket::UNIX.
+    * Improve docs for IO::Socket::INET.
+    * Improve docs for IO::Socket::INET6.
+    
   [Imcompatible Changes]
     * Changes the beheivior of options in IO::Socket::UNIX.
     
