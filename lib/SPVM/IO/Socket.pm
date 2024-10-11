@@ -80,9 +80,9 @@ Options:
 
 The following options are available adding to the options for L<IO::Handle#init|SPVM::IO::Handle/"init"> method.
 
-=over 2
+[Name][Type][Default Value]
 
-=item * B<Names> : B<Types> = B<Default Values>
+=over 2
 
 =item * C<Domain> : Int = -1
 
