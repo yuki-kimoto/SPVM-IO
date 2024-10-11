@@ -7,42 +7,65 @@ use lib "$FindBin::Bin/lib";
 BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 
 use SPVM 'TestCase::IO::Socket::INET6';
+use SPVM 'IO::Socket::INET6';
 
-use Net::EmptyPort;
-use Test::TCP;
+my $api = SPVM::api();
 
-unless (Net::EmptyPort::can_bind('::1')) {
-  plan skip_all => "IPv6 not available"
+use Test::SPVM::Sys::Socket::ServerManager::IP;
+use Test::SPVM::Sys::Socket::Server;
+
+use SPVM 'Int';
+
+{
+  eval {
+    my $socket = SPVM::IO::Socket::INET6->new(
+      $api->new_options({
+        LocalAddr => $api->new_string('::1'),
+        Listen => SPVM::Int->new(1)
+      })
+    );
+  };
+  
+  if ($api->get_exception) {
+    plan skip_all => "IPv6 not available"
+  }
 }
 
-use HTTP::Tiny;
-
-use Mojolicious::Command::daemon;
-
-my $server = Test::TCP->new(
+my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   code => sub {
-    my $port = shift;
+    my ($server_manager) = @_;
     
-    my $app = Mojo::Server->new->load_app('t/webapp/basic.pl');
+    my $port = $server_manager->port;
     
-    my $daemon_command = Mojolicious::Command::daemon->new(app => $app);
+    my $server = Test::SPVM::Sys::Socket::Server->new_echo_server_ipv6_tcp(port => $port);
     
-    my @args = ("--listen", "http://[::1]:$port");
-    $daemon_command->run(@args);
+    $DB::single = 1;
+    $server->start;
     
     exit 0;
   },
-  host => '::1',
 );
 
-my $port = $server->port;
+warn;
 
-ok(SPVM::TestCase::IO::Socket::INET6->basic($port));
+{
+  my $port = $server_manager->port;
 
-ok(SPVM::TestCase::IO::Socket::INET6->set_blocking($port));
+warn;
 
-ok(SPVM::TestCase::IO::Socket::INET6->fileno($port));
+  ok(SPVM::TestCase::IO::Socket::INET6->basic($port));
 
-ok(SPVM::TestCase::IO::Socket::INET6->goroutine($port));
+warn;
+
+  ok(SPVM::TestCase::IO::Socket::INET6->goroutine($port));
+
+warn;
+
+  ok(SPVM::TestCase::IO::Socket::INET6->set_blocking($port));
+
+warn;
+
+  ok(SPVM::TestCase::IO::Socket::INET6->fileno($port));
+}
 
 done_testing;
