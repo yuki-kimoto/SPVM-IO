@@ -38,7 +38,6 @@ t/IO-Select_with_server.t
 t/IO-Socket-INET.t
 t/IO-Socket-INET6.t
 t/IO-Socket-IP.t
-t/IO-Socket-IP_IPv6.t.disable
 t/IO-Socket-IP_server.t
 t/IO-Socket-UNIX_server.t
 t/IO.t
