@@ -67,6 +67,8 @@ class IO::Socket::UNIX extends IO::Socket {
     
     my $local = $self->{Local};
     
+    my $listen = $self->{Listen};
+    
     my $fd = $self->{FD};
     
     unless ($fd >= 0) {
@@ -77,10 +79,16 @@ class IO::Socket::UNIX extends IO::Socket {
       my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
       $self->connect($sockaddr_un_peer);
     }
-    elsif ($local) {
+    elsif ($listen > 0) {
       my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
       $self->bind($sockaddr_un_local);
       $self->listen;
+    }
+    elsif ($fd > 0) {
+      # Do nothing
+    }
+    else {
+      die "Peer option must be sepcified if this socket is a clienet socket. Listen option must be a positive number if this socket is a server socket.";
     }
     
     $self->set_blocking(0);
