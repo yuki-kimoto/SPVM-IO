@@ -39,7 +39,6 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
     
     my $server = Test::SPVM::Sys::Socket::Server->new_echo_server_ipv6_tcp(port => $port);
     
-    $DB::single = 1;
     $server->start;
     
     exit 0;
