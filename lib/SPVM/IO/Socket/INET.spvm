@@ -24,8 +24,4 @@ class IO::Socket::INET extends IO::Socket::IP {
   method accept : IO::Socket::INET ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
     return (IO::Socket::INET)$self->SUPER::accept($peer_ref);
   }
-  
-  method DESTROY : void () {
-    $self->SUPER::DESTROY;
-  }
 }
