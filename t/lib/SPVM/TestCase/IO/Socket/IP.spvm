@@ -219,6 +219,22 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
+  static method ipv4_peerhost : int ($port : int) {
+    
+    {
+      my $host = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      
+      my $peerhost = $socket->peerhost;
+      
+      unless ($peerhost eq $host) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
   static method ipv4_peerport : int ($port : int) {
     
     {
@@ -228,6 +244,22 @@ class TestCase::IO::Socket::IP {
       my $peerport = $socket->peerport;
       
       unless ($peerport == $port) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
+  static method ipv4_sockhost : int ($port : int) {
+    
+    {
+      my $host = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      
+      my $sockhost = $socket->sockhost;
+      
+      unless ($sockhost eq $host) {
         return 0;
       }
     }
@@ -531,6 +563,22 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
 
+  static method ipv6_peerhost : int ($port : int) {
+    
+    {
+      my $host = "::1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      
+      my $peerhost = $socket->peerhost;
+      
+      unless ($peerhost eq $host) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
   static method ipv6_peerport : int ($port : int) {
     
     {
@@ -540,6 +588,22 @@ class TestCase::IO::Socket::IP {
       my $peerport = $socket->peerport;
       
       unless ($peerport == $port) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
+  static method ipv6_sockhost : int ($port : int) {
+    
+    {
+      my $host = "::1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      
+      my $sockhost = $socket->sockhost;
+      
+      unless ($sockhost eq $host) {
         return 0;
       }
     }
