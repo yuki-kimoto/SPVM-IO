@@ -37,6 +37,7 @@ t/IO-Select.t
 t/IO-Select_with_server.t
 t/IO-Socket-INET.t
 t/IO-Socket-INET6.t
+t/IO-Socket-IP-ipv6.t
 t/IO-Socket-IP.t
 t/IO-Socket-IP_server.t
 t/IO-Socket-UNIX_server.t

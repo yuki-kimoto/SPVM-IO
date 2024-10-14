@@ -38,7 +38,9 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     
     my $sockport_network_byte_order = $sockaddr_in_sock->sin_port;
     
-    my $sockport = Sys::Socket->ntohs((short)$sockport_network_byte_order);
+    my $sockport_short_unsigned = Sys::Socket->ntohs((short)$sockport_network_byte_order);
+    
+    my $sockport = $sockport_short_unsigned->(int) & 0xFFFF;
     
     return $sockport;
   }
@@ -68,7 +70,9 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     
     my $peerport_network_byte_order = $sockaddr_in_peer->sin_port;
     
-    my $peerport = Sys::Socket->ntohs((short)$peerport_network_byte_order);
+    my $peerport_short_unsigned = Sys::Socket->ntohs((short)$peerport_network_byte_order);
+    
+    my $peerport = $peerport_short_unsigned->(int) & 0xFFFF;
     
     return $peerport;
   }
