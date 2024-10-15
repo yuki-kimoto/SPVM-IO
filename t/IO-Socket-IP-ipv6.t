@@ -44,11 +44,10 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   host => '::1'
 );
 
-# IPv6
 {
   my $port = $server_manager->port;
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv6_extra($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv6_new($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_peerport($port));
   
@@ -61,6 +60,9 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_peeraddr($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_sockaddr($port));
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv6_extra($port));
+  
 }
 
 done_testing;
