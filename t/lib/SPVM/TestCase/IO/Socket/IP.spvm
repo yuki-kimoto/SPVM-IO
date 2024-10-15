@@ -7,6 +7,7 @@ class TestCase::IO::Socket::IP {
   use Fn;
   use Sys::Socket::Constant as SOCKET;
   use TestUtil;
+  use Sys::OS;
   
   static method ipv4_new : int ($port : int) {
     
@@ -39,7 +40,10 @@ class TestCase::IO::Socket::IP {
       }
       
       # ReusePort
-      {
+      if (Sys::OS->is_windows) {
+        warn "[Skip Test]Windows do not support SO_REUSEPOR.";
+      }
+      else {
         my $host = "127.0.0.1";
         my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, ReusePort => 1});
         
