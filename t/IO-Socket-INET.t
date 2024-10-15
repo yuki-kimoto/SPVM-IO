@@ -31,8 +31,6 @@ ok(SPVM::TestCase::IO::Socket::INET->basic($port));
 
 ok(SPVM::TestCase::IO::Socket::INET->goroutine($port));
 
-ok(SPVM::TestCase::IO::Socket::INET->set_blocking($port));
-
 ok(SPVM::TestCase::IO::Socket::INET->fileno($port));
 
 done_testing;

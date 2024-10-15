@@ -342,6 +342,16 @@ Exceptions:
 
 Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
 
+=head2 set_blocking
+
+C<method set_blocking : void ($blocking : int);>
+
+This method is the same as L<IO::Handle#set_blocking|SPVM::IO::Handle/"set_blocking"> method, but if a true value is given to $blocking, an exception is thrown.
+
+Exceptions:
+
+Calling set_blocking method given a true value on an IO::Socket object is forbidden.
+
 =head1 Well Known Child Classes
 
 =over 2

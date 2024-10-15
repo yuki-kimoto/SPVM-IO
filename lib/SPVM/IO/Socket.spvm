@@ -359,4 +359,13 @@ class IO::Socket extends IO::Handle {
     Sys->listen($fd, $listen);
   }
   
+  method set_blocking : void ($blocking : int) {
+    
+    if ($blocking) {
+      die "Calling set_blocking method given a true value on an IO::Socket object is forbidden.";
+    }
+    
+    $self->SUPER::set_blocking($blocking);
+  }
+  
 }
