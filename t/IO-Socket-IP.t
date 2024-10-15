@@ -31,7 +31,7 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_basic($port));
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_goroutine($port));
+  ok(SPVM::TestCase::IO::Socket::IP->goroutine($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->fileno($port));
   
