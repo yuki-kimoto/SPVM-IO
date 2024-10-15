@@ -44,6 +44,12 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_peerhost($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockhost($port));
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr($port));
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_peeraddr($port));
+  
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr($port));
 }
 
 done_testing;

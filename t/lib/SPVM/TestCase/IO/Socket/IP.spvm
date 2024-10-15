@@ -284,6 +284,38 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
+  static method ipv4_sockaddr : int ($port : int) {
+    
+    {
+      my $addr = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $addr, PeerPort => $port});
+      
+      my $sockaddr = $socket->sockaddr;
+      
+      unless ($sockaddr is_type Sys::Socket::In_addr) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
+  static method ipv4_peeraddr : int ($port : int) {
+    
+    {
+      my $addr = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $addr, PeerPort => $port});
+      
+      my $peeraddr = $socket->peeraddr;
+      
+      unless ($peeraddr is_type Sys::Socket::In_addr) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
   static method ipv4_set_blocking : int ($port : int) {
     
     # blocking
@@ -623,6 +655,38 @@ class TestCase::IO::Socket::IP {
         return 0;
       }
       
+    }
+    
+    return 1;
+  }
+  
+  static method ipv6_peeraddr : int ($port : int) {
+    
+    {
+      my $host = "::1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      
+      my $peeraddr = $socket->peeraddr;
+      
+      unless ($peeraddr is_type Sys::Socket::In6_addr) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
+  static method ipv6_sockaddr : int ($port : int) {
+    
+    {
+      my $host = "::1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      
+      my $sockaddr = $socket->sockaddr;
+      
+      unless ($sockaddr is_type Sys::Socket::In6_addr) {
+        return 0;
+      }
     }
     
     return 1;
