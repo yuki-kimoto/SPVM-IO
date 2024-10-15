@@ -48,7 +48,7 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
 {
   my $port = $server_manager->port;
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv6_basic($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv6_extra($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_peerport($port));
   

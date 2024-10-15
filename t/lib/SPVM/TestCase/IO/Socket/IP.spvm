@@ -355,7 +355,7 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method ipv6_basic : int ($port : int) {
+  static method ipv6_extra : int ($port : int) {
     
     # Basic
     {
