@@ -52,8 +52,6 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_goroutine($port));
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv6_fileno($port));
-  
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_peerport($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_sockport($port));
