@@ -190,6 +190,8 @@ class TestCase::IO::Socket::IP {
         return 0;
       }
       
+      $socket->set_blocking(0);
+      
       my $send_buffer = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
       $socket->send($send_buffer);
       
