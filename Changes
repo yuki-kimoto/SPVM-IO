@@ -3,6 +3,8 @@
     * Require SPVM 0.990021
   [Incompatibe Changes]
     * IO::Socket::IP#set_blocking method throw an exception if a true value is given.
+    * IO::Socket::IP#new dose not set SOCK_RAW Type for IPPROTO_ICMP Proto. This is Perl's IO::Socket::IP compatible beheivior.
+    
   [Document Improvement]
     * Improve docs for IO::Socket::IP
     * Improve docs for IO::Socket::IP::Import::IPv4.

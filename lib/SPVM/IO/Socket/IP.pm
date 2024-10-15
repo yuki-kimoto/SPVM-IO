@@ -167,8 +167,6 @@ If the value of C<Proto> is C<IPPROTO_TCP>, the C<Type> field is set to C<SOCK_S
 
 If the value of C<Proto> is C<IPPROTO_UDP>, the C<Type> field is set to C<SOCK_DGRAM>.
 
-If the value of C<Proto> is C<IPPROTO_ICMP>, the C<Type> field is set to C<SOCK_RAW>.
-
 =head2 sockaddr
 
 C<method sockaddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base> ();>
