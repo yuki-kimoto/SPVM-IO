@@ -48,6 +48,7 @@ t/lib/SPVM/TestCase/IO/Dir.spvm
 t/lib/SPVM/TestCase/IO/File.spvm
 t/lib/SPVM/TestCase/IO/Poll.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
+t/lib/SPVM/TestCase/IO/Socket.spvm
 t/lib/SPVM/TestCase/IO/Socket/INET.spvm
 t/lib/SPVM/TestCase/IO/Socket/INET6.spvm
 t/lib/SPVM/TestCase/IO/Socket/IP.spvm

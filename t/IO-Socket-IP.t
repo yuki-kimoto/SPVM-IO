@@ -29,17 +29,7 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
 {
   my $port = $server_manager->port;
   
-  ok(SPVM::TestCase::IO::Socket::IP->new($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->shutdown($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->close($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->send_recv($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->goroutine($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->extra($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_new($port));
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_peerport($port));
   

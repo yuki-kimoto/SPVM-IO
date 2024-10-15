@@ -6,7 +6,7 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
 
-use SPVM 'TestCase::IO::Socket::IP';
+use SPVM 'TestCase::IO::Socket';
 
 use Test::SPVM::Sys::Socket::ServerManager::IP;
 use Test::SPVM::Sys::Socket::Server;
@@ -28,9 +28,20 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
 {
   my $port = $server_manager->port;
   
-  ok(SPVM::TestCase::IO::Socket::IP->set_blocking($port));
+  ok(SPVM::TestCase::IO::Socket->set_blocking($port));
   
-  ok(SPVM::TestCase::IO::Socket::IP->fileno($port));
+  ok(SPVM::TestCase::IO::Socket->fileno($port));
+  
+  ok(SPVM::TestCase::IO::Socket->shutdown($port));
+  
+  ok(SPVM::TestCase::IO::Socket->close($port));
+  
+  ok(SPVM::TestCase::IO::Socket->send_recv($port));
+  
+  ok(SPVM::TestCase::IO::Socket->goroutine($port));
+  
+  ok(SPVM::TestCase::IO::Socket->extra($port));
+  
 }
 
 done_testing;
