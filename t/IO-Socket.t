@@ -25,27 +25,12 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   },
 );
 
-# IPv4
 {
   my $port = $server_manager->port;
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_basic($port));
+  ok(SPVM::TestCase::IO::Socket::IP->set_blocking($port));
   
-  ok(SPVM::TestCase::IO::Socket::IP->goroutine($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_peerport($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockport($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_peerhost($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockhost($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_peeraddr($port));
-  
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr($port));
+  ok(SPVM::TestCase::IO::Socket::IP->fileno($port));
 }
 
 done_testing;

@@ -41,6 +41,7 @@ t/IO-Socket-IP-ipv6.t
 t/IO-Socket-IP.t
 t/IO-Socket-IP_server.t
 t/IO-Socket-UNIX_server.t
+t/IO-Socket.t
 t/IO.t
 t/lib/SPVM/TestCase/IO.spvm
 t/lib/SPVM/TestCase/IO/Dir.spvm
