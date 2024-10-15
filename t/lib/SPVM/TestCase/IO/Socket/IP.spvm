@@ -57,7 +57,7 @@ class TestCase::IO::Socket::IP {
       # Broadcast
       {
         my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Broadcast => 1});
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Proto => SOCKET->IPPROTO_UDP, Broadcast => 1});
         
         my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST);
         
