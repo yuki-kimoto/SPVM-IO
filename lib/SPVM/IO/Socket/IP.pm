@@ -73,19 +73,19 @@ A peer port.
 
 C<has ReuseAddr : protected int;>
 
-If this field is a true value, The L<SO_REUSEADDR|https://linux.die.net/man/3/setsockopt> socket option is set.
+If this field is a true value, L<SO_REUSEADDR|https://linux.die.net/man/3/setsockopt> socket option is set.
 
 =head2 ReusePort
 
 C<has ReusePort : protected int;>
 
-If this field is a true value, The C<SO_REUSEPORT> socket option is set.
+If this field is a true value, C<SO_REUSEPORT> socket option is set.
 
 =head2 Broadcast
 
 C<has Broadcast : protected int;>
 
-If this field is a true value, The L<SO_BROADCAST|https://linux.die.net/man/3/setsockopt> socket option is set.
+If this field is a true value, L<SO_BROADCAST|https://linux.die.net/man/3/setsockopt> socket option is set.
 
 =head1 Class Methods
 
@@ -103,9 +103,9 @@ If L</"ReusePort"> field is a true value, 1 is set to C<SO_REUSEPORT> option of 
 
 If L</"Broadcast"> field is a true value, 1 is set to C<SO_BROADCAST> option of this socket.
 
-If L</"Peer"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
+If L</"PeerAddr"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
 
-If L</"Listen"> field is a positive value, this object becomes a server socket. It calls L<bind|SPVM::IO::Socket/"bind"> method and L<listen|SPVM::IO::Socket/"listen"> method.
+If L<Listen|SPVM::IO::Socket/"Listen"> field is a positive value, this object becomes a server socket. It calls L<bind|SPVM::IO::Socket/"bind"> method and L<listen|SPVM::IO::Socket/"listen"> method.
 
 See L</"init"> method about the options $options.
 
@@ -157,11 +157,11 @@ L</"LocalPort"> field is set to this value.
 
 =back
 
-L<Domain|IO::Socket#Domain> field is set to C<AF_INET> if C<Domain> option is not specified.
+L<Domain|SPVM::IO::Socket/"Domain"> field is set to C<AF_INET> if C<Domain> option is not specified.
 
-L<Proto|IO::Socket#Proto> field is set to C<IPPROTO_TCP> if C<Proto> option is not specified.
+L<Proto|SPVM::IO::Socket/"Proto"> field is set to C<IPPROTO_TCP> if C<Proto> option is not specified.
 
-L<Type|IO::Socket#Type> field is set to the following value according to the value of L<Proto|IO::Socket#Type> field.
+L<Type|SPVM::IO::Socket/"Type"> field is set to the following value according to the value of L<Proto|SPVM::IO::Socket/"Proto"> field.
 
 If the value of C<Proto> is C<IPPROTO_TCP>, the C<Type> field is set to C<SOCK_STREAM>.
 
@@ -175,9 +175,9 @@ C<method sockaddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base>
 
 Returns the local address.
 
-If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockaddr|IO::Socket::IP::Import::IPv4/"sockaddr"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockaddr|SPVM::IO::Socket::IP::Import::IPv4/"sockaddr"> method.
 
-If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockaddr|IO::Socket::IP::Import::IPv6/"sockaddr"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockaddr|SPVM::IO::Socket::IP::Import::IPv6/"sockaddr"> method.
 
 =head2 sockhost
 
@@ -185,9 +185,9 @@ C<method sockhost : string ();>
 
 Returns the local host name.
 
-If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockhost|IO::Socket::IP::Import::IPv4/"sockhost"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockhost|SPVM::IO::Socket::IP::Import::IPv4/"sockhost"> method.
 
-If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockhost|IO::Socket::IP::Import::IPv6/"sockhost"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockhost|SPVM::IO::Socket::IP::Import::IPv6/"sockhost"> method.
 
 =head2 sockport
 
@@ -197,9 +197,9 @@ Returns the local port.
 
 Implementation:
 
-If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockport|IO::Socket::IP::Import::IPv4/"sockport"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockport|SPVM::IO::Socket::IP::Import::IPv4/"sockport"> method.
 
-If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockport|IO::Socket::IP::Import::IPv6/"sockport"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockport|SPVM::IO::Socket::IP::Import::IPv6/"sockport"> method.
 
 =head2 peeraddr
 
@@ -209,9 +209,9 @@ Return the peer address.
 
 Implementation:
 
-If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peeraddr|IO::Socket::IP::Import::IPv4/"peeraddr"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peeraddr|SPVM::IO::Socket::IP::Import::IPv4/"peeraddr"> method.
 
-If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peeraddr|IO::Socket::IP::Import::IPv6/"peeraddr"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peeraddr|SPVM::IO::Socket::IP::Import::IPv6/"peeraddr"> method.
 
 =head2 peerhost
 
@@ -221,9 +221,9 @@ Returns the peer host name.
 
 Implementation:
 
-If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerhost|IO::Socket::IP::Import::IPv4/"peerhost"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerhost|SPVM::IO::Socket::IP::Import::IPv4/"peerhost"> method.
 
-If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerhost|IO::Socket::IP::Import::IPv6/"peerhost"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerhost|SPVM::IO::Socket::IP::Import::IPv6/"peerhost"> method.
 
 =head2 peerport
 
@@ -233,9 +233,9 @@ Returns the peer port.
 
 Implementation:
 
-If L</"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerport|IO::Socket::IP::Import::IPv4/"peerport"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerport|SPVM::IO::Socket::IP::Import::IPv4/"peerport"> method.
 
-If L</"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerport|IO::Socket::IP::Import::IPv6/"peerport"> method.
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerport|SPVM::IO::Socket::IP::Import::IPv6/"peerport"> method.
 
 =head2 accept
 

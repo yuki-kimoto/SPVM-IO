@@ -1,9 +1,14 @@
 0.225 2023-10-15
   [Requirement Changes]
-  
     * Require SPVM 0.990021
   [Incompatibe Changes]
     * IO::Socket::IP#set_blocking method throw an exception if a true value is given.
+  [Document Improvement]
+    * Improve docs for IO::Socket::IP
+    * Improve docs for IO::Socket::IP::Import::IPv4.
+    * Improve docs for IO::Socket::IP::Import::IPv6.
+  [Test Improvement]
+    * Add tests for IO::Socket::IP.
     
 0.224 2023-10-11
   [Bug Fix]
