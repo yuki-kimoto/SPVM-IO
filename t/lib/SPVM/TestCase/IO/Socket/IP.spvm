@@ -41,7 +41,7 @@ class TestCase::IO::Socket::IP {
       
       # ReusePort
       if (Sys::OS->is_windows) {
-        warn "[Skip Test]Windows do not support SO_REUSEPOR.";
+        warn "[Skip Test]Windows do not support SO_REUSEPORT.";
       }
       else {
         my $host = "127.0.0.1";
