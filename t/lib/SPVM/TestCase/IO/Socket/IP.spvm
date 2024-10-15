@@ -24,6 +24,29 @@ class TestCase::IO::Socket::IP {
       
     }
     
+    # Options
+    {
+      # ReuseAddr
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, ReuseAddr => 1});
+        
+        my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR);
+        
+        unless ($ret) {
+          return 0;
+        }
+      }
+    }
+
+=pod
+
+  has ReusePort : protected int;
+  
+  has Broadcast : protected int;
+
+=cut
+
     return 1;
   }
   
