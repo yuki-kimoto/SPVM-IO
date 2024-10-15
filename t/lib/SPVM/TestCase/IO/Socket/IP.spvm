@@ -37,6 +37,18 @@ class TestCase::IO::Socket::IP {
           return 0;
         }
       }
+      
+      # ReusePort
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, ReusePort => 1});
+        
+        my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT);
+        
+        unless ($ret) {
+          return 0;
+        }
+      }
     }
 
 =pod
