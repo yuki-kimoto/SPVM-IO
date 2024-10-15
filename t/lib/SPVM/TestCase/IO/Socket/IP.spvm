@@ -49,16 +49,20 @@ class TestCase::IO::Socket::IP {
           return 0;
         }
       }
+      
+      # Broadcast
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Broadcast => 1});
+        
+        my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST);
+        
+        unless ($ret) {
+          return 0;
+        }
+      }
     }
-
-=pod
-
-  has ReusePort : protected int;
-  
-  has Broadcast : protected int;
-
-=cut
-
+    
     return 1;
   }
   
