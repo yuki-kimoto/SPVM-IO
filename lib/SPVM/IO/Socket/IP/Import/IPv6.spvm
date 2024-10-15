@@ -15,6 +15,7 @@ class IO::Socket::IP::Import::IPv6 : interface_t {
   # Interface Methods
   method sockname : Sys::Socket::Sockaddr ();
   
+  # Instance Methods
   method sockaddr : Sys::Socket::In_addr_base () {
     my $sockaddr_in6_sock = (Sys::Socket::Sockaddr::In6)$self->sockname;
     
