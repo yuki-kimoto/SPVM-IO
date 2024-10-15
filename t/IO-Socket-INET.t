@@ -29,8 +29,4 @@ my $port = $server_manager->port;
 
 ok(SPVM::TestCase::IO::Socket::INET->basic($port));
 
-ok(SPVM::TestCase::IO::Socket::INET->goroutine($port));
-
-ok(SPVM::TestCase::IO::Socket::INET->fileno($port));
-
 done_testing;

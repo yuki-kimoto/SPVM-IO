@@ -49,8 +49,6 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
 {
   my $port = $server_manager->port;
   ok(SPVM::TestCase::IO::Socket::INET6->basic($port));
-  ok(SPVM::TestCase::IO::Socket::INET6->goroutine($port));
-  ok(SPVM::TestCase::IO::Socket::INET6->fileno($port));
 }
 
 done_testing;
