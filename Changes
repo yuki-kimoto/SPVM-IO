@@ -3,6 +3,16 @@
     * AutoFlush field is moved from IO::Handle to IO::File.
     * set_autoflush method is moved from IO::Handle to IO::File.
     * autoflush method is moved from IO::Handle to IO::File.
+    * Default values of options for IO::Socket#init method are changed.
+      
+      Domain = 0
+      
+      Proto = 0
+      
+      Type = 0
+      
+      Listen = 0
+      
   [Document Improvement]
     * Add IO::open link to docs for IO::Dir class.
     * Add IO::opendir link to docs for IO::File class.
