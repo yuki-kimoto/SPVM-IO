@@ -304,9 +304,7 @@ This method calls L</"recv"> method given the arguments given to this method and
 
 C<method write : int ($buffer : string, $length : int = -1, $offset : int = 0);>
 
-Writes the length $length from the offset $offset of the string $buffer to the stream associated with the file descriptoer L</"FD">.
-
-And returns the write length.
+Perform write operation.
 
 This method calls L</"send"> method given the arguments given to this method and returns its return values.
 

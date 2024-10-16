@@ -229,22 +229,30 @@ class IO::Socket extends IO::Handle {
   
   method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0) {
     
-    return $self->recvfrom($buffer, $length, $flags, undef, $offset);
+    my $from_ref = (Sys::Socket::Sockaddr[])undef;
+    
+    return $self->recvfrom($buffer, $length, $flags, $from_ref, $offset);
   }
   
   method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0) {
+    
+    my $to = (Sys::Socket::Sockaddr)undef;
     
     return $self->sendto($buffer, $flags, undef, $length, $offset);
   }
   
   method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
     
-    return $self->recv($buffer, $length, 0, $offset);
+    my $flags = 0;
+    
+    return $self->recv($buffer, $length, $flags, $offset);
   }
   
   method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
     
-    return $self->send($buffer, 0, $length, $offset);
+    my $flags = 0;
+    
+    return $self->send($buffer, $flags, $length, $offset);
   }
   
   method sockname : Sys::Socket::Sockaddr () {
