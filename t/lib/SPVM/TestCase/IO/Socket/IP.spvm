@@ -187,7 +187,6 @@ class TestCase::IO::Socket::IP {
   
   static method ipv6_new : int ($port : int) {
     
-    # Basic
     {
       my $host = "::1";
       my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
@@ -199,7 +198,20 @@ class TestCase::IO::Socket::IP {
       unless ($socket->connected) {
         return 0;
       }
-      
+    }
+    
+    # Options
+    {
+      {
+        my $host = "::1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6, V6Only => 1});
+        
+        my $ret = Sys->getsockopt($socket->fileno, SOCKET->IPPROTO_IPV6, SOCKET->IPV6_V6ONLY);
+        
+        unless ($ret) {
+          return 0;
+        }
+      }
     }
     
     return 1;

@@ -25,6 +25,10 @@ class IO::Socket::IP extends IO::Socket {
   
   has Broadcast : protected int;
   
+  has V6Only : byte;
+  
+  has V6OnlySpecified : byte;
+  
   # Class Methods
   static method new : IO::Socket::IP ($options : object[] = undef) {
     
@@ -50,6 +54,7 @@ class IO::Socket::IP extends IO::Socket {
         "ReuseAddr",
         "ReusePort",
         "Broadcast",
+        "V6Only",
       ]
     );
     
@@ -107,6 +112,13 @@ class IO::Socket::IP extends IO::Socket {
     my $broadcast = $options_h->get_or_default_int("Broadcast", 0);
     $self->{Broadcast} = $broadcast;
     
+    # V6Only option
+    if ($options_h->exists("V6Only")) {
+      $self->{V6OnlySpecified} = 1;
+      
+      my $v6only = $options_h->get_int("V6Only");
+      $self->{V6Only} = (byte)$v6only;
+    }
   }
   
   protected method configure : void () {
@@ -143,6 +155,10 @@ class IO::Socket::IP extends IO::Socket {
     
     if ($broadcast) {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
+    }
+    
+    if ($self->{V6OnlySpecified}) {
+      $self->setsockopt(SOCKET->IPPROTO_IPV6, SOCKET->IPV6_V6ONLY, !!$self->{V6Only});
     }
     
     if ($peer_address) {

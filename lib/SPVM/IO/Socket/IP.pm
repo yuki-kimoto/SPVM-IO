@@ -73,19 +73,31 @@ A peer port.
 
 C<has ReuseAddr : protected int;>
 
-If this field is a true value, L<SO_REUSEADDR|https://linux.die.net/man/3/setsockopt> socket option is set.
+The value of L<SO_REUSEADDR|https://linux.die.net/man/3/setsockopt> socket option.
 
 =head2 ReusePort
 
 C<has ReusePort : protected int;>
 
-If this field is a true value, C<SO_REUSEPORT> socket option is set.
+The value of C<SO_REUSEPORT> socket option.
 
 =head2 Broadcast
 
 C<has Broadcast : protected int;>
 
-If this field is a true value, L<SO_BROADCAST|https://linux.die.net/man/3/setsockopt> socket option is set.
+The value of L<SO_BROADCAST|https://linux.die.net/man/3/setsockopt> socket option.
+
+=head2 V6Only
+
+  has V6Only : byte;
+
+The value of L<IPV6_V6ONLY|https://man7.org/linux/man-pages/man7/ipv6.7.html> socket option.
+
+=head2 V6OnlySpecified
+
+  has V6OnlySpecified : byte;
+
+If this field is a true value, C<V6Only> option is specified on L</"init"> method.
 
 =head1 Class Methods
 
@@ -97,11 +109,15 @@ Creates a new L<IO::Socket::IP|SPVM::IO::Socket::IP> object given the options $o
 
 This object represents a IPv4 or IPv6 domain socket.
 
-If L</"ReuseAddr"> field is a true value, 1 is set to C<SO_REUSEADD> option of this socket.
+If L</"ReuseAddr"> field is a true value, C<SO_REUSEADD> option of this socket is set to 1.
 
-If L</"ReusePort"> field is a true value, 1 is set to C<SO_REUSEPORT> option of this socket.
+If L</"ReusePort"> field is a true value, C<SO_REUSEPORT> option of this socket is set to 1.
 
-If L</"Broadcast"> field is a true value, 1 is set to C<SO_BROADCAST> option of this socket.
+If L</"Broadcast"> field is a true value, C<SO_BROADCAST> option of this socket is set to 1.
+
+If the value of L</"V6OnlySpecified"> field is a true value, C<IPV6_V6ONLY> option of this socket is set to the following value.
+
+If the value of L</"V6Only"> field is a true value, it is set to 1, otherwise 0.
 
 If L</"PeerAddr"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
 
@@ -152,6 +168,10 @@ L</"LocalAddr"> field is set to this value.
 =item * C<LocalPort> : Int = 0
 
 L</"LocalPort"> field is set to this value.
+
+=item * C<V6Only> : Int = undef
+
+If this option is specified, L</"V6OnlySpecified"> is set to 1 and L</"V6Only"> field is set to this value.
 
 =back
 

@@ -1,4 +1,7 @@
 0.226 2023-10-16
+  [New Features]
+    * Add V6Only option to IO::Socket::IP#init method.
+  
   [Imcompatible Changes]
     * AutoFlush field is moved from IO::Handle to IO::File.
     * set_autoflush method is moved from IO::Handle to IO::File.
