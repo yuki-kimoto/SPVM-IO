@@ -287,5 +287,41 @@ class TestCase::IO::Socket {
     return 1;
   }
   
+  static method timeout : int ($port : int) {
+    
+    {
+      my $host = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      
+      $socket->set_timeout(10.5);
+      
+      my $timeout = $socket->timeout;
+      
+      unless ($timeout == 10.5) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
+  static method set_timeout : int ($port : int) {
+    
+    {
+      my $host = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      
+      $socket->set_timeout(10.5);
+      
+      my $timeout = $socket->timeout;
+      
+      unless ($timeout == 10.5) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
 }
 
