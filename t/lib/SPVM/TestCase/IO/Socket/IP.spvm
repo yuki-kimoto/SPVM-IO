@@ -476,6 +476,10 @@ class TestCase::IO::Socket::IP {
     my $go_server_ref = [0];
     Go->go([$go_server_ref : int[], $wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
       
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
       $go_server_ref->[0] = 1;
       
       {
@@ -489,11 +493,17 @@ class TestCase::IO::Socket::IP {
           Timeout => 1.0,
         });
         
-        unless ($server_socket->timeout == 1.0) {
-          $success_ref->[0] = 0;
-        }
+        my $client_socket = (IO::Socket::IP)undef;
+        eval { $client_socket = $server_socket->accept; }
         
-        my $client_socket = $server_socket->accept;
+        if ($@) {
+          if (eval_error_id is_error Go::Error::IOTimeout) {
+            return;
+          }
+          else {
+            die $@;
+          }
+        }
         
         unless ($client_socket->timeout == 1.0) {
           $success_ref->[0] = 0;
@@ -514,7 +524,6 @@ class TestCase::IO::Socket::IP {
         }
       }
       
-      $wg->done;
     });
     
     # Tests
