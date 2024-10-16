@@ -8,7 +8,7 @@ SPVM::IO::Socket - Sockets
 
 =head1 Description
 
-L<SPVM::IO::Socket> class has methods for sockets.
+IO::Socket class in L<SPVM> represents a socket.
 
 =head1 Usage
   
@@ -20,23 +20,31 @@ IO::Socket is an abstract class.
 
 See L</"Well Known Child Classes"> about child classes of this class.
 
-=head2 Porting
-
-This class is a Perl's L<IO::Socket|IO::Socket> porting to L<SPVM>.
-
 =head2 Socket Constant Values
 
 See L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant> about constant values for sockets.
 
 =head2 Goroutine
 
-IO::Socket class works with L<Go|SPVM::Go> class.
+Connect, accept, read, and write operations in IO::Socket class work with L<goroutines|SPVM::Go>.
 
-Sockets created with IO::Socket class are non-blocking sockets by default.
+Non-blocking mode of a L<IO::Socket|SPVM::IO::Socket> object is enabled.
 
-If a socket connect, accept, read, or write operation needs to wait for IO, the program passes control to a Goroutine.
+If an IO wait occurs, control is transferred to another goroutine.
 
-The control will return when IO waiting is finished or a timeout occurs.
+This allows you to write connect, accept, read, and write operations as if they were synchronous.
+
+=head1 Well Known Child Classes
+
+=over 2
+
+=item * L<IO::Socket::IP|SPVM::IO::Socket::IP>
+
+=item * L<IO::Socket::INET|SPVM::IO::Socket::INET>
+
+=item * L<IO::Socket::INET6|SPVM::IO::Socket::INET6>
+
+=back
 
 =head1 Super Class
 
@@ -48,29 +56,33 @@ L<IO::Handle|SPVM::IO::Handle>
 
 C<has Domain : protected int;>
 
-A protocol family, like C<AF_INET>, C<AF_INET6>, C<AF_UNIX>.
+A protocol family, such as C<AF_INET>, C<AF_INET6>, C<AF_UNIX>.
 
 =head2 Type
 
 C<has Type : protected int;>
 
-A socket type, like C<SOCK_STREAM>, C<SOCK_DGRAM>.
+A socket type, such as C<SOCK_STREAM>, C<SOCK_DGRAM>, C<SOCK_RAW>.
 
 =head2 Proto
 
 C<has Proto : protected ro int;>
 
-A particular protocol, normally this is set to 0.
+A socket protocol, such as C<IPPROTO_TCP>, C<IPPROTO_UDP>.
 
 =head2 Timeout
 
 C<has Timeout : protected double;>
 
-A timeout seconds for system calls that would set C<errno> to C<EWOULDBLOCK>, like C<read()>, C<write()>, C<connect()>, C<accept()>.
+A timeout seconds for read, write, connect, accept operations.
 
 =head2 Listen
 
 C<has Listen : protected int;>
+
+The number of listen backlog.
+
+=head1 Instance Methods
 
 =head2 init
 
@@ -84,11 +96,11 @@ The following options are available adding to the options for L<IO::Handle#init|
 
 =over 2
 
-=item * C<Domain> : Int = -1
+=item * C<Domain> : Int = 0
 
-=item * C<Type> : Int = -1
+=item * C<Type> : Int = 0
 
-=item * C<Proto> : Int = -1
+=item * C<Proto> : Int = 0
 
 =item * C<Timeout> : Double = 0.0
 
@@ -97,8 +109,6 @@ The following options are available adding to the options for L<IO::Handle#init|
 =back
 
 See also L<SPVM::Sys::Socket::Constant>.
-
-=head1 Instance Methods
 
 =head2 sockdomain
 
@@ -352,18 +362,6 @@ Exceptions:
 
 Calling set_blocking method given a true value on an IO::Socket object is forbidden.
 
-=head1 Well Known Child Classes
-
-=over 2
-
-=item * L<IO::Socket::IP|SPVM::IO::Socket::IP>
-
-=item * L<IO::Socket::INET|SPVM::IO::Socket::INET>
-
-=item * L<IO::Socket::INET6|SPVM::IO::Socket::INET6>
-
-=back
-
 =head1 See Also
 
 =over 2
@@ -373,6 +371,10 @@ Calling set_blocking method given a true value on an IO::Socket object is forbid
 =item * L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant>
 
 =back
+
+=head1 Porting
+
+This class is a Perl's L<IO::Socket|IO::Socket> porting to L<SPVM>.
 
 =head1 Copyright & License
 

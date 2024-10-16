@@ -32,12 +32,6 @@ C<has FD : protected int;>
 
 A file descriptor.
 
-=head2 AutoFlush
-
-C<has AutoFlush : protected byte;>
-
-A flag for auto flush.
-
 =head2 Blocking
 
 C<has Blocking : protected byte;>
@@ -62,10 +56,6 @@ Options:
 
 L</"FD"> field is set to this value.
 
-=item * C<AutoFlush : Int = 0>
-
-L</"AutoFlush"> field is set to this value.
-
 =item * C<Blocking : Int = 1>
 
 L</"Blocking"> field is set to this value.
@@ -85,18 +75,6 @@ Returns the value of L</"FD"> field.
 C<method opened : int ();>
 
 If L</"FD"> is greater than or equal to 0, returns 1. Otherwise returns 0.
-
-=head2 autoflush
-
-C<method autoflush : int ();>
-
-Returns the value of L</"AutoFlush"> field.
-
-=head2 set_autoflush
-
-C<method set_autoflush : void ($autoflush : int);>
-
-Sets L</"AutoFlush"> field to $autoflush.
 
 =head2 blocking
 

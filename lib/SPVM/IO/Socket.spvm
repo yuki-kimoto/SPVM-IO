@@ -29,20 +29,18 @@ class IO::Socket extends IO::Handle {
     
     my $options_h = Hash->new($options);
     
-    my $autoflush = $options_h->get_or_default_int("AutoFlush", 1);
-    
-    $self->SUPER::init(Fn->merge_options($options, {AutoFlush => $autoflush}));
+    $self->SUPER::init(Fn->merge_options($options, {}));
     
     # Domain option
-    my $domain = $options_h->get_or_default_int("Domain", -1);
+    my $domain = $options_h->get_or_default_int("Domain", 0);
     $self->{Domain} = $domain;
     
     # Proto option
-    my $proto = $options_h->get_or_default_int("Proto", -1);
+    my $proto = $options_h->get_or_default_int("Proto", 0);
     $self->{Proto} = $proto;
     
     # Type option
-    my $type = $options_h->get_or_default_int("Type", -1);
+    my $type = $options_h->get_or_default_int("Type", 0);
     $self->{Type} = $type;
     
     # Listen option

@@ -17,8 +17,6 @@ class IO::Handle {
   # Fields
   has FD : protected int;
   
-  has AutoFlush : protected byte;
-  
   has Blocking : protected byte;
   
   # Class Methods
@@ -33,9 +31,6 @@ class IO::Handle {
     my $fd = $options_h->get_or_default_int("FD", -1);
     $self->{FD} = $fd;
     
-    my $autoflush = $options_h->get_or_default_int("AutoFlush", 0);
-    $self->{AutoFlush} = (byte)$autoflush;
-    
     my $blocking = $options_h->get_or_default_int("Blocking", 1);
     $self->{Blocking} = (byte)$blocking;
   }
@@ -43,19 +38,10 @@ class IO::Handle {
   method option_names : string[] () {
     my $option_names = [
       "FD",
-      "AutoFlush",
       "Blocking",
     ];
     
     return $option_names;
-  }
-  
-  method autoflush : int () {
-    return $self->{AutoFlush};
-  }
-  
-  method set_autoflush : void ($autoflush : int) {
-    $self->{AutoFlush} = (byte)$autoflush;
   }
   
   method opened : int () {

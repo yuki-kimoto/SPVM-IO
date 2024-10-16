@@ -4,11 +4,11 @@ package SPVM::IO::File;
 
 =head1 Name
 
-SPVM::IO::File - File IO
+SPVM::IO::File - File Stream
 
 =head1 Description
 
-IO::File class in L<SPVM> has methods for File IO.
+IO::File class in L<SPVM> represents a file stream.
 
 =head1 Usage
   
@@ -23,10 +23,6 @@ IO::File class in L<SPVM> has methods for File IO.
   while (my $line = $fh->readline) {
     
   }
-
-=head1 Details
-
-This class is a Perl's L<IO::File|IO::File> porting to L<SPVM>.
 
 =head1 Super Class
 
@@ -46,6 +42,12 @@ C<has InputLineNumber : long;>
 
 The current line number. This value is incremented by L</"getline"> method.
 
+=head2 AutoFlush
+
+C<has AutoFlush : protected byte;>
+
+A flag for auto flush.
+
 =head1 Class Methods
 
 =head2 new
@@ -63,6 +65,10 @@ If $file_name is not defined, a file is not opened.
 Exceptions:
 
 Exceptions thrown by L</"open"> method could be thrown.
+
+See Also:
+
+See L<IO#open|SPVM::IO/"open"> method if you find a method ported from Perl opendir function.
 
 =head2 new_from_fd
 
@@ -184,6 +190,8 @@ Writes the length $length from the offset $offset of the string $string to the f
 
 This method calls L<Sys::IO#fwrite|SPVM::Sys::IO/"fwrite"> method.
 
+If L</"AutoFlush"> field is a true value, thie method calls L</"flush"> method after the write operation.
+
 Exceptions:
 
 Exceptions thrown by L<Sys::IO#fwrite|SPVM::Sys::IO/"fwrite"> method could be thrown.
@@ -290,6 +298,18 @@ The open mode $open_mode must be defined. Otherwise an exception is thrown.
 
 If a file is already opened, an exception is thrown.
 
+=head2 autoflush
+
+C<method autoflush : int ();>
+
+Returns the value of L</"AutoFlush"> field.
+
+=head2 set_autoflush
+
+C<method set_autoflush : void ($autoflush : int);>
+
+Sets L</"AutoFlush"> field to $autoflush.
+
 =head1 See Also
 
 =over 2
@@ -301,6 +321,10 @@ If a file is already opened, an exception is thrown.
 =item * L<Sys::IO|SPVM::Sys::IO>
 
 =back
+
+=head1 Porting
+
+This class is a Perl's L<IO::File|IO::File> porting to L<SPVM>.
 
 =head1 Copyright & License
 

@@ -56,6 +56,10 @@ Exceptions:
 
 Exceptions thrown by L</"open"> method could be thrown.
 
+See Also:
+
+See L<IO#opendir|SPVM::IO/"opendir"> method if you find a method ported from Perl opendir function.
+
 =head1 Instance Methods
 
 =head2 open

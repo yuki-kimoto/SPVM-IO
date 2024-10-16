@@ -12,6 +12,8 @@ class IO::File extends IO::Handle {
   
   has InputLineNumber : long;
   
+  has AutoFlush : protected byte;
+  
   # Class methods
   static method new : IO::File ($file_name : string = undef, $open_mode : string = undef) {
     
@@ -224,6 +226,14 @@ class IO::File extends IO::Handle {
     $self->{FileStream} = $file_stream;
     
     $self->{FD} = $fd;
+  }
+  
+  method autoflush : int () {
+    return $self->{AutoFlush};
+  }
+  
+  method set_autoflush : void ($autoflush : int) {
+    $self->{AutoFlush} = (byte)$autoflush;
   }
   
 }
