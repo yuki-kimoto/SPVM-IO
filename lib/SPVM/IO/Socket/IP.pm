@@ -109,8 +109,6 @@ If L<Listen|SPVM::IO::Socket/"Listen"> field is a positive value, this object be
 
 See L</"init"> method about the options $options.
 
-The blocking mode of the socket is set to non-blocking mode.
-
 =head1 Instance Methods
 
 =head2 init

@@ -108,7 +108,13 @@ The following options are available adding to the options for L<IO::Handle#init|
 
 =back
 
-See also L<SPVM::Sys::Socket::Constant>.
+The blocking mode of the socket is set to non-blocking mode.
+
+=head2 DESTROY
+
+C<method DESTROY : void ();>
+
+Closes the socket by L</"close"> method if the socket is opened.
 
 =head2 sockdomain
 
@@ -140,17 +146,91 @@ C<method set_timeout : void ($timeout : double);>
 
 Sets L</"Timeout"> field to $timeout.
 
-=head2 DESTROY
+=head2 set_blocking
 
-C<method DESTROY : void ();>
+C<method set_blocking : void ($blocking : int);>
 
-A destructor. This method closes the socket by calling L</"close"> method if the socket is opened.
+This method is the same as L<IO::Handle#set_blocking|SPVM::IO::Handle/"set_blocking"> method, but if a true value is given to $blocking, an exception is thrown.
+
+Exceptions:
+
+Calling set_blocking method given a true value on an IO::Socket object is forbidden.
+
+=head2 socket
+
+C<protected method socket : void ();>
+
+Opens a socket using L</"Domain"> field, L</"Type"> field, and L</"Protocal"> field.
+
+L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is set to the file descriptor of the socket.
+
+This method calls L<Sys#socket|Sys/"socket"> method.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
+
+=head2 connect
+
+C<protected method connect : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
+
+Performs connect operation.
+
+This method calls L<Sys#connect> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and $sockaddr.
+
+If connect operation need to be performed again for IO wait, L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout> field.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#connect> method could be thrown.
+
+=head2 bind
+
+C<protected method bind : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
+
+Perform bind operation.
+
+This method calls L<Sys#bind|SPVM::Sys|/"bind"> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and $sockaddr.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#bind|SPVM::Sys|/"bind"> method could be thrown.
+
+=head2 listen
+
+C<protected method listen : void ();>
+
+Does the same thing that L<listen|https://linux.die.net/man/2/listen> system call does given the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+
+This method calls L<Sys#listen|SPVM::Sys|/"listen">.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
+
+=head2 accept
+
+C<method accept : L<IO::Socket|SPVM::IO::Socket> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
+
+Performs accept operation and returns a client socket object.
+
+The type of the returned object is the type of this instance.
+
+This method calls L<Sys#accept|SPVM::Sys|/"accept"> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and $peer_ref.
+
+If accept operation need to be performed again for IO wait, L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout> field.
+
+$peer_ref at index 0 is set to a client socket address if specified.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#accept|SPVM::Sys|/"accept"> method could be thrown.
 
 =head2 shutdown
 
 C<method shutdown : void ($how : int);>
 
-Shuts down the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field given the way $how.
+Performs shutdown operation given the way $how.
 
 This method calls L<Sys#shutdown|SPVM::Sys/"shutdown"> method.
 
@@ -172,25 +252,15 @@ Exceptions thrown by L<Sys#shutdown|SPVM::Sys/"shutdown"> method could be thrown
 
 =head2 close
 
-C<method close : int ();>
+C<method close : void ();>
 
-Closes the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+Performs close operation.
+
+This method calls L<Sys::Socket#close|SPVM::Sys::Socket/"close"> method
 
 Exceptions:
 
 If this socket is not opened or already closed, an excetpion is thrown.
-
-=head2 accept
-
-C<method accept : L<IO::Socket|SPVM::IO::Socket> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
-
-Does the same thing that L<accept|https://linux.die.net/man/2/accept> system call does given the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
-
-This method calls L<Sys#accept|SPVM::Sys|/"accept">.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#accept|SPVM::Sys|/"accept"> method could be thrown.
 
 =head2 recvfrom
 
@@ -309,58 +379,6 @@ This method calls L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method given the argu
 Exceptions:
 
 Exceptions thrown by L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method could be thrown.
-
-=head2 connect
-
-C<protected method connect : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
-
-=head2 socket
-
-C<protected method socket : void ();>
-
-Opens a socket using L</"Domain"> field, L</"Type"> field, and L</"Protocal"> field.
-
-L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is set to the file descriptor of the opened socket.
-
-This method calls L<Sys#socket|Sys/"socket"> method.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
-
-=head2 bind
-
-C<protected method bind : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
-
-Does the same thing that L<bind|https://linux.die.net/man/2/bind> system call does given a socket address $sockaddr and the file descriptor stored in L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
-
-This method calls L<Sys#bind|SPVM::Sys|/"bind">.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#bind|SPVM::Sys|/"bind"> method could be thrown.
-
-=head2 listen
-
-C<protected method listen : void ();>
-
-Does the same thing that L<listen|https://linux.die.net/man/2/listen> system call does given the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
-
-This method calls L<Sys#listen|SPVM::Sys|/"listen">.
-
-Exceptions:
-
-Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
-
-=head2 set_blocking
-
-C<method set_blocking : void ($blocking : int);>
-
-This method is the same as L<IO::Handle#set_blocking|SPVM::IO::Handle/"set_blocking"> method, but if a true value is given to $blocking, an exception is thrown.
-
-Exceptions:
-
-Calling set_blocking method given a true value on an IO::Socket object is forbidden.
 
 =head1 See Also
 

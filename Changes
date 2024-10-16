@@ -16,6 +16,8 @@
   [Document Improvement]
     * Add IO::open link to docs for IO::Dir class.
     * Add IO::opendir link to docs for IO::File class.
+  [Document Fix]
+    * Fix a doc that IO::Socket#close returned int type instead of void type.
     
 0.225 2023-10-15
   [Requirement Changes]
