@@ -71,19 +71,19 @@ A peer port.
 
 =head2 ReuseAddr
 
-C<has ReuseAddr : protected int;>
+C<has ReuseAddr : protected byte;>
 
 The value of L<SO_REUSEADDR|https://linux.die.net/man/3/setsockopt> socket option.
 
 =head2 ReusePort
 
-C<has ReusePort : protected int;>
+C<has ReusePort : protected byte;>
 
 The value of C<SO_REUSEPORT> socket option.
 
 =head2 Broadcast
 
-C<has Broadcast : protected int;>
+C<has Broadcast : protected byte;>
 
 The value of L<SO_BROADCAST|https://linux.die.net/man/3/setsockopt> socket option.
 

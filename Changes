@@ -15,7 +15,10 @@
       Type = 0
       
       Listen = 0
-      
+    * The type of IO::Socket::IP#ReuseAddr becomes byte.
+    * The type of IO::Socket::IP#ReusePort becomes byte.
+    * The type of IO::Socket::IP#Broadcast becomes byte.
+    
   [Document Improvement]
     * Add IO::open link to docs for IO::Dir class.
     * Add IO::opendir link to docs for IO::File class.

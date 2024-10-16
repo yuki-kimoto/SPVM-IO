@@ -19,11 +19,11 @@ class IO::Socket::IP extends IO::Socket {
   
   has PeerPort : protected int;
   
-  has ReuseAddr : protected int;
+  has ReuseAddr : protected byte;
   
-  has ReusePort : protected int;
+  has ReusePort : protected byte;
   
-  has Broadcast : protected int;
+  has Broadcast : protected byte;
   
   has V6Only : byte;
   
@@ -102,15 +102,15 @@ class IO::Socket::IP extends IO::Socket {
     
     # ReuseAddr option
     my $reuse_addr = $options_h->get_or_default_int("ReuseAddr", 0);
-    $self->{ReuseAddr} = $reuse_addr;
+    $self->{ReuseAddr} = (byte)$reuse_addr;
     
     # ReusePort option
     my $reuse_port = $options_h->get_or_default_int("ReusePort", 0);
-    $self->{ReusePort} = $reuse_port;
+    $self->{ReusePort} = (byte)$reuse_port;
     
     # Broadcast option
     my $broadcast = $options_h->get_or_default_int("Broadcast", 0);
-    $self->{Broadcast} = $broadcast;
+    $self->{Broadcast} = (byte)$broadcast;
     
     # V6Only option
     if ($options_h->exists("V6Only")) {
