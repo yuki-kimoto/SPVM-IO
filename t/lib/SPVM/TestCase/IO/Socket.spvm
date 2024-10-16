@@ -344,8 +344,10 @@ class TestCase::IO::Socket {
   }
   
   static method atmark : int ($port : int) {
-    
-    {
+    if (Sys::OS->is_windows) {
+      die "[Skip Test]Windows do not support atmark method.";
+    }
+    else {
       my $host = "127.0.0.1";
       my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
       
