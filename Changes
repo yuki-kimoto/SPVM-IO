@@ -20,6 +20,7 @@
     * The type of IO::Socket::IP#Broadcast becomes byte.
     
   [Document Improvement]
+    * Improve docs for IO::Socket.
     * Add IO::open link to docs for IO::Dir class.
     * Add IO::opendir link to docs for IO::File class.
   [Document Fix]
