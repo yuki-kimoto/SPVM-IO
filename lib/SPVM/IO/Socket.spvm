@@ -238,7 +238,7 @@ class IO::Socket extends IO::Handle {
     
     my $to = (Sys::Socket::Sockaddr)undef;
     
-    return $self->sendto($buffer, $flags, undef, $length, $offset);
+    return $self->sendto($buffer, $flags, $to, $length, $offset);
   }
   
   method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {

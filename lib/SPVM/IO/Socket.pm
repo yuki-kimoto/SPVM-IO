@@ -266,15 +266,37 @@ If this socket is not opened or already closed, an excetpion is thrown.
 
 C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $offset : int = 0)>
 
+Performs recvfrom operation and returns read length.
+
+This method calls L<Sys#recvfrom> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field, $buffer, $length, $flags, $from_ref, $offset, and returns its return value.
+
+If recvfrom operation need to be performed again for IO wait, L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout> field.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#recvfrom> method could be thrown.
+
 =head2 sendto
 
 C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $offset : int = 0);>
+
+Performs sendto operation and returns write length.
+
+This method calls L<Sys#sendto> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field, $buffer, $flags, $to, $length, $offset, and returns its return value.
+
+If sendto operation need to be performed again for IO wait, L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout> field.
+
+Exceptions:
+
+Exceptions thrown by L<Sys#sendto> method could be thrown.
 
 =head2 recv
 
 C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0);>
 
-Calls L</"recvfrom"> method given the arguments to this method with $from_ref set to C<undef> and returns its return value.
+Performs recv operation.
+
+Thie method just calls L</"recvfrom"> method given $buffer, $length, $flags, $from_ref set to undef, $offset, and returns its return value.
 
 Exceptions:
 
@@ -284,7 +306,9 @@ Exceptions thrown by L</"recvfrom"> method could be thrown.
 
 C<method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0);>
 
-Calls L</"sendto"> method given the arguments to this method with $to set to C<undef> and returns its return value.
+Performs send operation.
+
+This method just calls L</"sendto"> method given $buffer, $flags, $to set to 0, $length, $offset, and returns its return value.
 
 Exceptions:
 
@@ -294,11 +318,13 @@ Exceptions thrown by L</"sendto"> method could be thrown.
 
 C<method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0);>
 
-Reads the length $length of data from the stream associated with the file descriptoer L</"FD"> and store it to the offset $offset position of the string $string.
+Perform read operation.
 
-And returns the read length.
+This method just calls L</"recv"> method given $buffer, $length, $flags set to 0, $offset, and returns its return values.
 
-This method calls L</"recv"> method given the arguments given to this method and returns its return values.
+Exceptions:
+
+Exceptions thrown by L</"recv"> method could be thrown.
 
 =head2 write
 
@@ -306,7 +332,7 @@ C<method write : int ($buffer : string, $length : int = -1, $offset : int = 0);>
 
 Perform write operation.
 
-This method calls L</"send"> method given the arguments given to this method and returns its return values.
+This method just calls L</"send"> method given $buffer, $flags set to 0, $length, $offset, and returns its return values.
 
 Exceptions:
 
@@ -316,9 +342,9 @@ Exceptions thrown by L</"send"> method could be thrown.
 
 C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
-Returns the local socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+Returns a L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> for a local address.
 
-This method calls L<Sys#getsockname|SPVM::Sys/"getsockname"> method.
+This method calls L<Sys#getsockname|SPVM::Sys/"getsockname"> method given the vlaue of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
 
 Exceptions:
 
@@ -328,9 +354,9 @@ Exceptions thrown by L<Sys#getsockname|SPVM::Sys/"getsockname"> method could be 
 
 C<method peername : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
-Returns the peer socket address of the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
+Returns a L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> for a remote address.
 
-This method calls L<Sys#getpeername|SPVM::Sys/"getpeername"> method.
+This method calls L<Sys#getpeername|SPVM::Sys/"getpeername"> method given the vlaue of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
 
 Exceptions:
 
@@ -340,15 +366,17 @@ Exceptions thrown by L<Sys#getpeername|SPVM::Sys/"getpeername"> method could be 
 
 C<method connected : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>
 
-If L</"peername"> method does not throw an exception, returns the return value, otherwise returns undef.
+Checks if the socket is connected.
+
+If L</"peername"> method does not throw an exception, returns a L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> object, otherwise returns undef.
 
 =head2 atmark
 
 C<method atmark : int ();>
 
-If the socket assciated with the file descriptor L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field is currently positioned at the urgent data mark, returns 1, otherwise returns 0.
+Perform atmark operation and returns the result.
 
-This method calls L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method.
+This method just calls L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> method given the vlaue of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field.
 
 Exceptions:
 
@@ -358,9 +386,11 @@ Exceptions thrown by L<Sys::Socket#sockatmark|SPVM::Sys::Socket/"sockatmark"> me
 
 C<method sockopt : int ($level : int, $option_name : int);>
 
+Perform sockopt operation and returns the result.
+
 Gets a socket option of the file descriptor stored in L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field given the socket level $level and the option name $option_name.
 
-This method calls L<Sys#getsockopt|SPVM::Sys/"getsockopt"> method given the arguments given to this method and returns its return value.
+This method just calls L<Sys#getsockopt|SPVM::Sys/"getsockopt"> method given the vlaue of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field, $level, $opton_name, and its return value.
 
 Exceptions:
 
@@ -370,9 +400,9 @@ Exceptions thrown by L<Sys#getsockopt|SPVM::Sys/"getsockopt"> method could be th
 
 C<method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|L<Int|SPVM::Int>);>
 
-Sets a socket option of the file descriptor stored in L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field given the socket level $level, the option name $option_name, and the option value $option_value.
+Perform setsockopt operation.
 
-This method calls L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method given the arguments given to this method.
+This method just calls L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method given the arguments given the vlaue of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field, $level, $option_name.
 
 Exceptions:
 
