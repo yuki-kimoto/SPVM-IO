@@ -345,7 +345,7 @@ class TestCase::IO::Socket {
   
   static method atmark : int ($port : int) {
     if (Sys::OS->is_windows) {
-      die "[Skip Test]Windows do not support atmark method.";
+      warn "[Skip Test]Windows do not support atmark method.";
     }
     else {
       my $host = "127.0.0.1";
