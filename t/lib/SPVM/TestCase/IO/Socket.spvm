@@ -323,5 +323,25 @@ class TestCase::IO::Socket {
     return 1;
   }
   
+  static method connected : int ($port : int) {
+    
+    {
+      my $host = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      
+      my $connected = $socket->connected;
+      
+      unless ($connected) {
+         return 0;
+      }
+      
+      unless ($connected isa Sys::Socket::Sockaddr) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
 }
 
