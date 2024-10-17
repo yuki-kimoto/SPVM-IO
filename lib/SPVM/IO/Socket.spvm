@@ -185,6 +185,7 @@ class IO::Socket extends IO::Handle {
       if ($@) {
         if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
           Go->gosched_io_read($fd, $timeout);
+          next;
         }
         else {
           die $@;
@@ -215,6 +216,7 @@ class IO::Socket extends IO::Handle {
       if ($@) {
         if (Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK || Sys::Socket::Errno->errno == Errno->EINTR) {
           Go->gosched_io_write($fd, $timeout);
+          next;
         }
         else {
           die $@;
