@@ -328,20 +328,26 @@ class IO::Socket extends IO::Handle {
     
     my $fd = $self->{FD};
     
-    eval { Sys->connect($fd, $sockaddr); }
-    
-    if ($@) {
-      my $again = 
-        Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
-        || Sys::Socket::Errno->errno == Sys::Socket::Errno->EINPROGRESS
-        || Sys::Socket::Errno->errno == Errno->EINTR
-      ;
+    while (1) {
+      eval { Sys->connect($fd, $sockaddr); }
       
-      if ($again) {
-        Go->gosched_io_write($fd, $timeout);
+      if ($@) {
+        my $again = 
+          Sys::Socket::Errno->errno == Sys::Socket::Errno->EWOULDBLOCK
+          || Sys::Socket::Errno->errno == Sys::Socket::Errno->EINPROGRESS
+          || Sys::Socket::Errno->errno == Errno->EINTR
+        ;
+        
+        if ($again) {
+          Go->gosched_io_write($fd, $timeout);
+          next;
+        }
+        else {
+          die $@;
+        }
       }
       else {
-        die $@;
+        last;
       }
     }
   }

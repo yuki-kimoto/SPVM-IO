@@ -180,9 +180,15 @@ This method calls L<Sys#connect> method given the value of L<IO::Handle#FD|SPVM:
 
 If connect operation need to be performed again for IO wait, L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout> field.
 
+And when the current goroutine is returned, this method retries connect operation.
+
+If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of the L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
+
 Exceptions:
 
 Exceptions thrown by L<Sys#connect> method could be thrown.
+
+Exceptions thrown by L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method could be thrown.
 
 =head2 bind
 
@@ -220,11 +226,17 @@ This method calls L<Sys#accept|SPVM::Sys|/"accept"> method given the value of L<
 
 If accept operation need to be performed again for IO wait, L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout> field.
 
+And when the current goroutine is returned, this method retries acceptt operation.
+
+If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of the L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
+
 $peer_ref at index 0 is set to a client socket address if specified.
 
 Exceptions:
 
 Exceptions thrown by L<Sys#accept|SPVM::Sys|/"accept"> method could be thrown.
+
+Exceptions thrown by L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method could be thrown.
 
 =head2 shutdown
 
