@@ -2,7 +2,12 @@
   [Bug Fix]
     * Fix a bug that IO::Socket#connect method do not retry connect operation when a retry is needed.
   
-  
+  [Document Improvement]
+    * Fix and improve docs for IO::Socket#connect method.
+    * Fix and improve docs for IO::Socket#accept method.
+    * Fix and improve docs for IO::Socket#recvfrom method.
+    * Fix and improve docs for IO::Socket#sendto method.
+    
 0.226 2023-10-16
   [New Features]
     * Add V6Only option to IO::Socket::IP#init method.
