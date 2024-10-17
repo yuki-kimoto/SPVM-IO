@@ -140,6 +140,7 @@ class IO::Socket extends IO::Handle {
         
         if ($again) {
           Go->gosched_io_read($fd, $timeout);
+          next;
         }
         else {
           die $@;
