@@ -1,3 +1,7 @@
+0.229 2023-10-19
+  [Requirement Changes]
+    * Require SPVM::Go 0.008.
+  
 0.228 2023-10-18
   [Requirement Changes]
     * Require SPVM::Sys 0.528.
