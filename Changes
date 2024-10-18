@@ -1,7 +1,9 @@
-0.227 2023-10-18
+0.228 2023-10-18
   [Requirement Changes]
     * Require SPVM::Sys 0.528.
-  
+  [Bug Fix]
+    * Fix a bug checking Errno->EINTR instead of Sys::Socket::Errno->EINTR.
+      
 0.227 2023-10-17
   [Bug Fix]
     * Fix a bug that IO::Socket#connect method do not retry connect operation when a retry is needed.
