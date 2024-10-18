@@ -1,3 +1,7 @@
+0.227 2023-10-18
+  [Requirement Changes]
+    * Require SPVM::Sys 0.528.
+  
 0.227 2023-10-17
   [Bug Fix]
     * Fix a bug that IO::Socket#connect method do not retry connect operation when a retry is needed.
