@@ -2,7 +2,7 @@
 # MIT License
 
 class IO {
-  version "0.227";
+  version "0.228";
   
   use IO::File;
   use IO::Dir;
