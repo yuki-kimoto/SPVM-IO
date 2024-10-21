@@ -1,4 +1,7 @@
 0.230 2023-10-22
+  [Changes]
+    * Operate non-blocking getaddrinfo using Net::DNS::Native.
+    
   [Requirement Changes]
     * Require SPVM::Net::DNS::Native 0.001.
 

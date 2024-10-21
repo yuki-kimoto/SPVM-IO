@@ -11,6 +11,7 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
   use Sys::Socket::In_addr_base;
   use Sys::Socket::Util;
   use IO::Socket::IP;
+  use Net::DNS::Native;
   
   # Interface Methods
   method sockname : Sys::Socket::Sockaddr ();
@@ -90,7 +91,10 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     my $hints = Sys::Socket::Addrinfo->new;
     $hints->set_ai_family(SOCKET->AF_INET);
     
-    Sys::Socket->getaddrinfo($address, undef, $hints, $res_ref);
+    my $service = (string)undef;
+    
+    my $dns = Net::DNS::Native->new;
+    $dns->getaddrinfo($address, $service, $hints, $res_ref);
     
     my $res = $res_ref->[0];
     
@@ -99,7 +103,7 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
       $socket_address->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
     }
     else {
-      die "Sys::Socket->getaddrinfo cannot get an address.";
+      die "getaddrinfo cannot get an address.";
     }
     
     return $socket_address;
