@@ -1,12 +1,9 @@
-0.229001 2023-10-21
-  [Test Improvement]
-    * Add tests for accept timeout and read timeout for IO::Socket::IP.
-
 0.229 2023-10-19
   [Requirement Changes]
     * Require SPVM::Go 0.008.
   [Test Improvement]
     * Add tests for IO::Socekt::IP#accept method.
+    * Add tests for accept timeout and read timeout for IO::Socket::IP.
     
 0.228 2023-10-18
   [Requirement Changes]
