@@ -79,12 +79,12 @@ class IO::Socket::IP::Import::IPv6 : interface_t {
     return $peerport;
   }
   
-  private method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
+  private method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
     # Socket information
-    my $socket_address = Sys::Socket::Sockaddr::In6->new;
-    $socket_address->set_sin6_family(SOCKET->AF_INET6);
-    $socket_address->set_sin6_port(Sys::Socket->htons((short)$port));
+    my $sockaddr = Sys::Socket::Sockaddr::In6->new;
+    $sockaddr->set_sin6_family(SOCKET->AF_INET6);
+    $sockaddr->set_sin6_port(Sys::Socket->htons((short)$port));
     
     my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
     
@@ -100,13 +100,13 @@ class IO::Socket::IP::Import::IPv6 : interface_t {
     
     if ($res) {
       my $res_array = $res->to_array;
-      $socket_address->set_sin6_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In6)->sin6_addr);
+      $sockaddr->set_sin6_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In6)->sin6_addr);
     }
     else {
       die "getaddrinfo cannot get an address.";
     }
     
-    return $socket_address;
+    return $sockaddr;
   }
   
 }

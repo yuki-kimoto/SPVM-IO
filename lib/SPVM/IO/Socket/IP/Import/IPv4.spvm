@@ -79,12 +79,12 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     return $peerport;
   }
   
-  private method create_socket_address : Sys::Socket::Sockaddr ($address : string, $port : int) {
+  private method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
     # Socket information
-    my $socket_address = Sys::Socket::Sockaddr::In->new;
-    $socket_address->set_sin_family(SOCKET->AF_INET);
-    $socket_address->set_sin_port(Sys::Socket->htons((short)$port));
+    my $sockaddr = Sys::Socket::Sockaddr::In->new;
+    $sockaddr->set_sin_family(SOCKET->AF_INET);
+    $sockaddr->set_sin_port(Sys::Socket->htons((short)$port));
     
     my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
     
@@ -100,13 +100,13 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     
     if ($res) {
       my $res_array = $res->to_array;
-      $socket_address->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
+      $sockaddr->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
     }
     else {
       die "getaddrinfo cannot get an address.";
     }
     
-    return $socket_address;
+    return $sockaddr;
   }
   
 }
