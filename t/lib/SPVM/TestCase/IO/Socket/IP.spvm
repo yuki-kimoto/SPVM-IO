@@ -8,6 +8,12 @@ class TestCase::IO::Socket::IP {
   use Sys::Socket::Constant as SOCKET;
   use TestUtil;
   use Sys::OS;
+  use Sys::Signal;
+  use Sys::Signal::Constant as SIGNAL;
+  
+  INIT {
+    Sys::Signal->signal(SIGNAL->SIGPIPE, Sys::Signal->SIG_IGN);
+  }
   
   static method ipv4_new : int ($port : int) {
     
@@ -718,7 +724,7 @@ class TestCase::IO::Socket::IP {
     
     my $wg = Go::Sync::WaitGroup->new;
     
-    $wg->add(3);
+    $wg->add(2);
     
     # Run a echo server
     my $go_server_ref = [0];
@@ -773,10 +779,15 @@ class TestCase::IO::Socket::IP {
             
             Go->sleep(0.5);
             
-            my $read_length = $client_socket->read($data);
+            my $read_length = 0;
+            eval { $read_length = $client_socket->read($data); }
             
             if ($read_length > 0) {
-              $client_socket->write($data);
+              eval { $client_socket->write($data); }
+              
+              if ($@) {
+                last;
+              }
             }
             else {
               last;
@@ -791,7 +802,10 @@ class TestCase::IO::Socket::IP {
     my $go_tests_ref = [0];
     Go->go([$go_tests_ref : int[], $wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int, $ch_server_stop : Go::Channel] method : void () {
       
-      $go_tests_ref->[0] = 1;
+      Fn->defer([$wg : Go::Sync::WaitGroup, $ch_server_stop : Go::Channel] method : void () {
+        $ch_server_stop->write(1);
+        $wg->done;
+      });
       
       {
         my $host = "127.0.0.1";
@@ -812,9 +826,9 @@ class TestCase::IO::Socket::IP {
         unless ($@ && eval_error_id is_error Go::Error::IOTimeout) {
           $success_ref->[0] = 0;
         }
+        
+        $go_tests_ref->[0] = 1;
       }
-      
-      $wg->done;
     });
     
     Go->gosched;
