@@ -712,5 +712,124 @@ class TestCase::IO::Socket::IP {
     return $success_ref->[0];
   }
   
+  static method read_timeout : int ($port : int) {
+    
+    my $success_ref = [1];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    
+    $wg->add(3);
+    
+    # Run a echo server
+    my $go_server_ref = [0];
+    my $ch_server_stop = Go->make;
+    Go->go([$go_server_ref : int[], $wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int, $ch_server_stop : Go::Channel] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      $go_server_ref->[0] = 1;
+      
+      {
+        my $localhost = "127.0.0.1";
+        
+        my $server_socket = IO::Socket::IP->new({
+          LocalAddr => $localhost,
+          LocalPort => $port,
+          Listen    => 5,
+          ReuseAddr => 1,
+          Timeout => 1.0,
+        });
+        
+        my $select_server_stop = Go->new_select;
+        $select_server_stop->set_non_blocking(1);
+        $select_server_stop->add_read($ch_server_stop);
+        
+        while (1) {
+          my $client_socket = (IO::Socket::IP)undef;
+          
+          eval { $client_socket = $server_socket->accept; }
+          
+          if ($@) {
+            if (eval_error_id is_error Go::Error::IOTimeout) {
+              
+              my $result_server_stop = $select_server_stop->select;
+              
+              if ($result_server_stop) {
+                last;
+              }
+              
+              next;
+            }
+            else {
+              die $@;
+            }
+          }
+          
+          while (1) {
+            
+            my $data = (mutable string)new_string_len 1;
+            
+            Go->sleep(0.5);
+            
+            my $read_length = $client_socket->read($data);
+            
+            if ($read_length > 0) {
+              $client_socket->write($data);
+            }
+            else {
+              last;
+            }
+          }
+        }
+      }
+      
+    });
+    
+    # Tests
+    my $go_tests_ref = [0];
+    Go->go([$go_tests_ref : int[], $wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int, $ch_server_stop : Go::Channel] method : void () {
+      
+      $go_tests_ref->[0] = 1;
+      
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Timeout => 0.25});
+        
+        my $send_buffer = "abc\n";
+        
+        $socket->send($send_buffer);
+        
+        $socket->shutdown(SOCKET->SHUT_WR);
+        
+        my $string_buffer = StringBuffer->new;
+        
+        my $recv_buffer = (mutable string)new_string_len 1;
+        
+        eval { $socket->recv($recv_buffer); }
+        
+        unless ($@ && eval_error_id is_error Go::Error::IOTimeout) {
+          $success_ref->[0] = 0;
+        }
+      }
+      
+      $wg->done;
+    });
+    
+    Go->gosched;
+    
+    $wg->wait;
+    
+    unless ($go_server_ref->[0]) {
+      return 0;
+    }
+    
+    unless ($go_tests_ref->[0]) {
+      return 0;
+    }
+    
+    return $success_ref->[0];
+  }
 }
 
