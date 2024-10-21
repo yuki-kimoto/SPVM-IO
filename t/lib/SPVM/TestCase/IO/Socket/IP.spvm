@@ -12,7 +12,9 @@ class TestCase::IO::Socket::IP {
   use Sys::Signal::Constant as SIGNAL;
   
   INIT {
-    Sys::Signal->signal(SIGNAL->SIGPIPE, Sys::Signal->SIG_IGN);
+    unless (Sys::OS->is_windows) {
+      Sys::Signal->signal(SIGNAL->SIGPIPE, Sys::Signal->SIG_IGN);
+    }
   }
   
   static method ipv4_new : int ($port : int) {
