@@ -81,7 +81,6 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
   
   private method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
-    # Socket information
     my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
     
     my $hints = Sys::Socket::Addrinfo->new;

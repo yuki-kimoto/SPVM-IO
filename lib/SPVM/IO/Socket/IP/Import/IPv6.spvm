@@ -81,26 +81,25 @@ class IO::Socket::IP::Import::IPv6 : interface_t {
   
   private method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
-    # Socket information
-    my $sockaddr = Sys::Socket::Sockaddr::In6->new;
-    $sockaddr->set_sin6_family(SOCKET->AF_INET6);
-    $sockaddr->set_sin6_port(Sys::Socket->htons((short)$port));
-    
-    my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
-    
-    my $hints = Sys::Socket::Addrinfo->new;
-    $hints->set_ai_family(SOCKET->AF_INET6);
+    my $dns = Net::DNS::Native->new;
     
     my $service = (string)undef;
+    my $hints = Sys::Socket::Addrinfo->new;
+    $hints->set_ai_family(SOCKET->AF_INET6);
+    my $addrinfo_list_ref = new Sys::Socket::AddrinfoLinkedList[1];
     
-    my $dns = Net::DNS::Native->new;
-    $dns->getaddrinfo($address, $service, $hints, $res_ref);
+    $dns->getaddrinfo($address, $service, $hints, $addrinfo_list_ref);
     
-    my $res = $res_ref->[0];
+    my $addrinfo_list = $addrinfo_list_ref->[0];
     
-    if ($res) {
-      my $res_array = $res->to_array;
-      $sockaddr->set_sin6_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In6)->sin6_addr);
+    my $sockaddr = (Sys::Socket::Sockaddr)undef;
+    if ($addrinfo_list) {
+      my $addrinfo_list_array = $addrinfo_list->to_array;
+      
+      my $in6_addr = $addrinfo_list_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In6)->sin6_addr;
+      my $sockaddr_in6 = Sys::Socket::Util->sockaddr_in6($port, $in6_addr);
+      
+      $sockaddr = $sockaddr_in6;
     }
     else {
       die "getaddrinfo cannot get an address.";
