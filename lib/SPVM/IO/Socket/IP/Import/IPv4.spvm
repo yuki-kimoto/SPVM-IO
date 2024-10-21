@@ -97,10 +97,9 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     my $sockaddr = (Sys::Socket::Sockaddr)undef;
     if ($res) {
       my $res_array = $res->to_array;
-      my $sockaddr_in = Sys::Socket::Sockaddr::In->new;
-      $sockaddr_in->set_sin_family(SOCKET->AF_INET);
-      $sockaddr_in->set_sin_port(Sys::Socket->htons((short)$port));
-      $sockaddr_in->set_sin_addr($res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr);
+      
+      my $in_addr = $res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr;
+      my $sockaddr_in = Sys::Socket::Util->sockaddr_in($port, $in_addr);
       
       $sockaddr = $sockaddr_in;
     }
