@@ -81,23 +81,22 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
   
   private method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
-    my $res_ref = new Sys::Socket::AddrinfoLinkedList[1];
+    my $dns = Net::DNS::Native->new;
     
     my $hints = Sys::Socket::Addrinfo->new;
     $hints->set_ai_family(SOCKET->AF_INET);
-    
     my $service = (string)undef;
+    my $addrinfo_list_ref = new Sys::Socket::AddrinfoLinkedList[1];
     
-    my $dns = Net::DNS::Native->new;
-    $dns->getaddrinfo($address, $service, $hints, $res_ref);
+    $dns->getaddrinfo($address, $service, $hints, $addrinfo_list_ref);
     
-    my $res = $res_ref->[0];
+    my $addrinfo_list = $addrinfo_list_ref->[0];
     
     my $sockaddr = (Sys::Socket::Sockaddr)undef;
-    if ($res) {
-      my $res_array = $res->to_array;
+    if ($addrinfo_list) {
+      my $addrinfo_list_array = $addrinfo_list->to_array;
       
-      my $in_addr = $res_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr;
+      my $in_addr = $addrinfo_list_array->[0]->ai_addr->(Sys::Socket::Sockaddr::In)->sin_addr;
       my $sockaddr_in = Sys::Socket::Util->sockaddr_in($port, $in_addr);
       
       $sockaddr = $sockaddr_in;
