@@ -52,13 +52,17 @@ class IO::Socket::UNIX extends IO::Socket {
     
     $self->SUPER::init(Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type}));
     
+    # Peer option
+    my $peer = $options_h->get_or_default_string("Peer", undef);
+    $self->{Peer} = $peer;
+    
     # Local option
     my $local = $options_h->get_or_default_string("Local", undef);
     $self->{Local} = $local;
     
-    # Peer option
-    my $peer = $options_h->get_or_default_string("Peer", undef);
-    $self->{Peer} = $peer;
+    if ($peer && $local) {
+      die "Peer option and Local option cannot be used together.";
+    }
   }
   
   protected method configure : void () {
@@ -75,17 +79,20 @@ class IO::Socket::UNIX extends IO::Socket {
       $self->socket;
     }
     
+    # Client
     if ($peer) {
       my $sockaddr = Sys::Socket::Util->sockaddr_un($peer);
       $self->{Sockaddr} = $sockaddr;
       $self->connect;
     }
+    # Server
     elsif ($listen > 0) {
       my $sockaddr = Sys::Socket::Util->sockaddr_un($local);
       $self->{Sockaddr} = $sockaddr;
       $self->bind;
       $self->listen;
     }
+    # Accepted client
     elsif ($fd > 0) {
       # Do nothing
     }

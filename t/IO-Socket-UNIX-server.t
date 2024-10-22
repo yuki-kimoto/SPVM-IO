@@ -24,6 +24,8 @@ use File::Temp ();
 my $tmp_dir = File::Temp->newdir;
 my $sock_path = "$tmp_dir/test.sock";
 
+ok(SPVM::TestCase::IO::Socket::UNIX->new($sock_path));
+
 ok(SPVM::TestCase::IO::Socket::UNIX->accept($sock_path));
 
 # All object is freed

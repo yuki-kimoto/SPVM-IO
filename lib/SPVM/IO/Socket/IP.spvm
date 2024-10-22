@@ -119,6 +119,12 @@ class IO::Socket::IP extends IO::Socket {
       my $v6only = $options_h->get_int("V6Only");
       $self->{V6Only} = (byte)$v6only;
     }
+    
+    my $listen = $self->{Listen};
+    
+    if ($peer_address && $listen > 0) {
+      die "PeerAddr option and Listen option cannot be used together.";
+    }
   }
   
   protected method configure : void () {

@@ -93,6 +93,18 @@ class TestCase::IO::Socket::IP {
       }
     }
     
+    # Exceptions
+    {
+      {
+        my $host = "127.0.0.1";
+        eval { my $socket = IO::Socket::IP->new({PeerAddr => $host, Listen => 1}); }
+        
+        unless ($@) {
+          return 0;
+        }
+      }
+    }
+    
     return 1;
   }
   

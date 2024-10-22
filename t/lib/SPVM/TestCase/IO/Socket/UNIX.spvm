@@ -8,6 +8,22 @@ class TestCase::IO::Socket::UNIX {
   use Sys::Socket::Constant as SOCKET;
   use TestUtil;
   
+  static method new : int ($sock_path : string) {
+    
+    # Exceptions
+    {
+      {
+        eval { my $socket = IO::Socket::UNIX->new({Peer => $sock_path, Local => $sock_path});; }
+        
+        unless ($@) {
+          return 0;
+        }
+      }
+    }
+    
+    return 1;
+  }
+  
   static method accept : int ($sock_path : string) {
     
     my $test_success_ref = [

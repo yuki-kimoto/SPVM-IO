@@ -1,6 +1,9 @@
 0.231 2023-10-22
   [Changes]
     * Add IO::Socket#Sockaddr field.
+    * Throw an exception when PeerAddr and Listen option in IO::Socket::IP#init  are used together.
+    * Throw an exception when Peer and Local option in IO::Socket::Unix#init are used together.
+   
   [Incompatible Changes]
     * Change arguments of IO::Socket#connect method.
       [Before]
