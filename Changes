@@ -1,3 +1,18 @@
+0.231 2023-10-22
+  [Changes]
+    * Add IO::Socket#Sockaddr field.
+  [Incompatible Changes]
+    * Change arguments of IO::Socket#connect method.
+      [Before]
+        protected method connect : void ($sockaddr : Sys::Socket::Sockaddr);
+      [After]
+        protected method connect : void ();
+    * Change arguments of IO::Socket#bind method.
+      [Before]
+        protected method bind : void ($sockaddr : Sys::Socket::Sockaddr);
+      [After]
+        protected method bind : void ();
+    
 0.230 2023-10-22
   [Changes]
     * Operate non-blocking getaddrinfo using Net::DNS::Native.

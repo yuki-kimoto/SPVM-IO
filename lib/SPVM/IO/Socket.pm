@@ -82,6 +82,12 @@ C<has Listen : protected int;>
 
 The number of listen backlog.
 
+=head2 Sockaddr
+
+C<has Sockaddr : protected L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>;>
+
+A L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> object used by L</"connect"> or L</"bind"> method.
+
 =head1 Instance Methods
 
 =head2 init
@@ -172,11 +178,11 @@ Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
 
 =head2 connect
 
-C<protected method connect : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>);>
+C<protected method connect : void ();>
 
 Performs connect operation.
 
-This method calls L<Sys#connect> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and $sockaddr.
+This method calls L<Sys#connect> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Sockaddr"> field.
 
 If connect operation need to be performed again for IO wait, L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
 
@@ -196,7 +202,7 @@ C<protected method bind : void ($sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::S
 
 Perform bind operation.
 
-This method calls L<Sys#bind|SPVM::Sys|/"bind"> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and $sockaddr.
+This method calls L<Sys#bind|SPVM::Sys|/"bind"> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Sockaddr"> field.
 
 Exceptions:
 

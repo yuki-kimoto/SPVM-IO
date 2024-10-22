@@ -76,12 +76,14 @@ class IO::Socket::UNIX extends IO::Socket {
     }
     
     if ($peer) {
-      my $sockaddr_un_peer = Sys::Socket::Util->sockaddr_un($peer);
-      $self->connect($sockaddr_un_peer);
+      my $sockaddr = Sys::Socket::Util->sockaddr_un($peer);
+      $self->{Sockaddr} = $sockaddr;
+      $self->connect;
     }
     elsif ($listen > 0) {
-      my $sockaddr_un_local = Sys::Socket::Util->sockaddr_un($local);
-      $self->bind($sockaddr_un_local);
+      my $sockaddr = Sys::Socket::Util->sockaddr_un($local);
+      $self->{Sockaddr} = $sockaddr;
+      $self->bind;
       $self->listen;
     }
     elsif ($fd > 0) {

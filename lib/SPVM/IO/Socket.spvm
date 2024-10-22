@@ -24,6 +24,8 @@ class IO::Socket extends IO::Handle {
   has Listen : protected int;
   has Timeout : protected double;
   
+  has Sockaddr : protected Sys::Socket::Sockaddr;
+  
   # Instance Methods
   protected method init : void ($options : object[] = undef) {
     
@@ -325,11 +327,13 @@ class IO::Socket extends IO::Handle {
     $self->{FD} = $fd;
   }
   
-  protected method connect : void ($sockaddr : Sys::Socket::Sockaddr) {
-    
-    my $timeout = $self->{Timeout};
+  protected method connect : void () {
     
     my $fd = $self->{FD};
+    
+    my $sockaddr = $self->{Sockaddr};
+    
+    my $timeout = $self->{Timeout};
     
     while (1) {
       eval { Sys->connect($fd, $sockaddr); }
@@ -351,7 +355,9 @@ class IO::Socket extends IO::Handle {
     }
   }
   
-  protected method bind : void ($sockaddr : Sys::Socket::Sockaddr) {
+  protected method bind : void () {
+    
+    my $sockaddr = $self->{Sockaddr};
     
     my $fd = $self->{FD};
     

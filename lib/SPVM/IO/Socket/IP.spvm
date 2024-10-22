@@ -162,12 +162,16 @@ class IO::Socket::IP extends IO::Socket {
     }
     
     if ($peer_address) {
-      my $peer_sockaddr = $self->create_sockaddr($peer_address, $peer_port);
-      $self->connect($peer_sockaddr);
+      my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
+      $self->{Sockaddr} = $sockaddr;
+      
+      $self->connect;
     }
     elsif ($listen > 0) {
-      my $local_sockaddr = $self->create_sockaddr($local_address, $local_port);
-      $self->bind($local_sockaddr);
+      my $sockaddr = $self->create_sockaddr($local_address, $local_port);
+      $self->{Sockaddr} = $sockaddr;
+      
+      $self->bind;
       
       $self->listen;
     }
