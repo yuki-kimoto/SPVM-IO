@@ -79,7 +79,7 @@ class IO::Socket::IP::Import::IPv4 : interface_t {
     return $peerport;
   }
   
-  private method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
+  method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
     my $dns = Net::DNS::Native->new;
     

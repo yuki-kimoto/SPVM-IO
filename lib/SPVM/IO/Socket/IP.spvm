@@ -291,7 +291,11 @@ class IO::Socket::IP extends IO::Socket {
     return $peerport;
   }
   
-  private method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
+  method accept : IO::Socket::IP ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
+    return (IO::Socket::IP)$self->SUPER::accept($peer_ref);
+  }
+  
+  protected method create_sockaddr : Sys::Socket::Sockaddr ($address : string, $port : int) {
     
     my $sockaddr = (Sys::Socket::Sockaddr)undef;
     
@@ -307,10 +311,6 @@ class IO::Socket::IP extends IO::Socket {
     }
     
     return $sockaddr;
-  }
-  
-  method accept : IO::Socket::IP ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
-    return (IO::Socket::IP)$self->SUPER::accept($peer_ref);
   }
   
 }

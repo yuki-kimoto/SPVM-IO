@@ -4,6 +4,11 @@
     
   [Requirement Changes]
     * Require SPVM::Net::DNS::Native 0.001.
+  
+  [New Features]
+    * Add IO::Socket::IP#create_sockaddr method.
+    * Add IO::Socket::IP::Import::IPv4#create_sockaddr method.
+    * Add IO::Socket::IP::Import::IPv6#create_sockaddr method.
 
 0.229 2023-10-19
   [Requirement Changes]

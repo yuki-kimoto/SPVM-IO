@@ -259,6 +259,20 @@ C<method accept : L<IO::Socket::IP|SPVM::IO::Socket::IP> ($peer_ref : L<Sys::Soc
 
 This method is the same as L<accept|SPVM::IO::Socket/"accept"> method, but its return type is different.
 
+=head2  create_sockaddr
+
+C<protected method create_sockaddr : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ($address : string, $port : int);>
+
+Creates a L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> object given the address $address and the port $port.
+
+$address is allowed to be a domain name, a host name, an IP address. The name resolution is performed in a non-blocking way.
+
+Implementation:
+
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#create_sockaddr|SPVM::IO::Socket::IP::Import::IPv4/"create_sockaddr"> method.
+
+If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#create_sockaddr|SPVM::IO::Socket::IP::Import::IPv6/"create_sockaddr"> method.
+
 =head1 Well Known Child Classes
 
 =over 2
@@ -273,7 +287,15 @@ This method is the same as L<accept|SPVM::IO::Socket/"accept"> method, but its r
 
 =over 2
 
-=item * L<SPVM::IO::Socket::UNIX>
+=item * L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX>
+
+=item * L<Sys::Socket|SPVM::Sys::Socket>
+
+=item * L<Sys::Socket::Util|SPVM::Sys::Socket::Util>
+
+=item * L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant>
+
+=item * L<Net::DNS::Native|SPVM::Net::DNS::Native>
 
 =back
 
