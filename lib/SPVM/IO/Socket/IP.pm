@@ -75,11 +75,15 @@ C<has ReuseAddr : protected byte;>
 
 The value of L<SO_REUSEADDR|https://linux.die.net/man/3/setsockopt> socket option.
 
+This field expects a boolean value.
+
 =head2 ReusePort
 
 C<has ReusePort : protected byte;>
 
 The value of C<SO_REUSEPORT> socket option.
+
+This field expects a boolean value.
 
 =head2 Broadcast
 
@@ -87,11 +91,15 @@ C<has Broadcast : protected byte;>
 
 The value of L<SO_BROADCAST|https://linux.die.net/man/3/setsockopt> socket option.
 
+This field expects a boolean value.
+
 =head2 V6Only
 
   has V6Only : byte;
 
 The value of L<IPV6_V6ONLY|https://man7.org/linux/man-pages/man7/ipv6.7.html> socket option.
+
+This field expects a boolean value.
 
 =head2 V6OnlySpecified
 

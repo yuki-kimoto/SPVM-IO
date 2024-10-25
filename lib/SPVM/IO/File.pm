@@ -48,6 +48,8 @@ C<has AutoFlush : protected byte;>
 
 A flag for auto flush.
 
+This field expects a boolean value.
+
 =head1 Class Methods
 
 =head2 new
