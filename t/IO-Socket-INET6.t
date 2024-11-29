@@ -17,16 +17,12 @@ use Test::SPVM::Sys::Socket::Server;
 use SPVM 'Int';
 
 {
-  eval {
-    my $socket = SPVM::IO::Socket::INET6->new(
-      $api->new_options({
-        LocalAddr => $api->new_string('::1'),
-        Listen => SPVM::Int->new(1)
-      })
-    );
-  };
+  my $socket = IO::Socket::IP->new(
+    LocalAddr => '::1',
+    Listen => 1
+  );
   
-  if ($api->get_exception) {
+  unless ($socket) {
     plan skip_all => "IPv6 not available"
   }
 }

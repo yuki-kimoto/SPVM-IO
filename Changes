@@ -1,3 +1,7 @@
+0.232 2023-11-29
+  [Test Fix]
+    * Fix a test bug of IPv6 test skip.
+  
 0.231 2023-10-22
   [Changes]
     * Add IO::Socket#Sockaddr field.
