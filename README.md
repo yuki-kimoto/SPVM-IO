@@ -1,4 +1,3 @@
 # SPVM::IO
 
-SPVM::IO is a I/O modules for File IO, Socket, select.
-
+<a href="https://metacpan.org/pod/SPVM::IO">SPVM::IO</a>
