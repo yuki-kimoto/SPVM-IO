@@ -2,6 +2,8 @@
 # MIT License
 
 class IO::Poll {
+  version_from IO;
+  
   use Sys::Poll;
   use Sys::Poll::PollfdArray;
   use Sys::Poll::Constant as POLL;

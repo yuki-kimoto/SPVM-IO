@@ -7,6 +7,7 @@ use lib "$FindBin::Bin/lib";
 
 BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build" };
 
+use SPVM 'Fn';
 use SPVM 'TestCase::IO::File';
 
 use TestFile;
@@ -24,8 +25,9 @@ sub slurp_binmode {
   return $output;
 }
 
-# Start objects count
-my $start_memory_blocks_count = SPVM::api->get_memory_blocks_count();
+my $api = SPVM::api();
+
+my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
 # Copy test_files to test_files_tmp with replacing os newline
 TestFile::copy_test_files_tmp();
@@ -145,8 +147,9 @@ my $test_dir = "$FindBin::Bin";
 }
 
 
-# All object is freed
-my $end_memory_blocks_count = SPVM::api->get_memory_blocks_count();
+SPVM::Fn->destroy_runtime_permanent_vars;
+
+my $end_memory_blocks_count = $api->get_memory_blocks_count;
 is($end_memory_blocks_count, $start_memory_blocks_count);
 
 done_testing;

@@ -13,6 +13,10 @@ use SPVM 'IO';
 
 use SPVM 'TestCase::IO';
 
+my $api = SPVM::api();
+
+my $start_memory_blocks_count = $api->get_memory_blocks_count;
+
 # Version
 {
   is($SPVM::IO::VERSION, SPVM::Fn->get_version_string('IO'));
@@ -29,5 +33,10 @@ my $test_dir = "$FindBin::Bin";
 {
   ok(SPVM::TestCase::IO->opendir);
 }
+
+SPVM::Fn->destroy_runtime_permanent_vars;
+
+my $end_memory_blocks_count = $api->get_memory_blocks_count;
+is($end_memory_blocks_count, $start_memory_blocks_count);
 
 done_testing;

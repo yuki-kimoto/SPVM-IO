@@ -2,6 +2,7 @@
 # MIT License
 
 class IO::Dir {
+  version_from IO;
   
   use Sys;
   use Sys::IO;

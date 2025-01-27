@@ -2,6 +2,7 @@
 # MIT License
 
 class IO::Socket::INET extends IO::Socket::IP {
+  version_from IO;
   
   use Sys::Socket::Constant as SOCKET;
   

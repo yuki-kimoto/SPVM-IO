@@ -2,6 +2,7 @@
 # MIT License
 
 class IO::Socket::IP extends IO::Socket {
+  version_from IO;
   
   use Sys::Socket::Constant as SOCKET;
   use Sys::Socket::Sockaddr;

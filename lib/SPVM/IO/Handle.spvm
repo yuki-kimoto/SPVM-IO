@@ -2,6 +2,8 @@
 # MIT License
 
 class IO::Handle {
+  version_from IO;
+  
   use IO;
   use Sys;
   use Sys::IO;

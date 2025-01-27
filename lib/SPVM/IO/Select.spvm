@@ -2,6 +2,8 @@
 # MIT License
 
 class IO::Select {
+  version_from IO;
+  
   use IntList;
   use Math;
   use Sys::Time::Timeval;
