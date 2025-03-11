@@ -78,6 +78,10 @@ class IO::File extends IO::Handle {
   
   method close : void () {
     
+    unless ($self->opened) {
+      die "This file is not opened or already closed.";
+    }
+    
     my $file_stream = $self->{FileStream};
     
     Sys::IO->fclose($file_stream);

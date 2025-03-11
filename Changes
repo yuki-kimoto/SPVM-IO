@@ -1,7 +1,8 @@
 0.235 2025-03-12
   [Bug Fix]
     * Fix a bug that IO::File#read method's $legnth is not set to the default value.
-    
+  [Changes]
+    * IO::File#close throws an exception when the file is not opened.
 0.234 2025-02-21
   [Test Internal Chnages]
     * Do not use Fn#grep method.
