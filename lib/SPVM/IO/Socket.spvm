@@ -172,7 +172,7 @@ class IO::Socket extends IO::Handle {
   
   method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $offset : int = 0) {
     
-    if ($length < 0) {
+    unless ($length >= 0) {
       $length = length $buffer;
     }
     
@@ -203,7 +203,8 @@ class IO::Socket extends IO::Handle {
   }
   
   method sendto : int ($buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $offset : int = 0) {
-    if ($length < 0) {
+    
+    unless ($length >= 0) {
       $length = length $buffer;
     }
     
