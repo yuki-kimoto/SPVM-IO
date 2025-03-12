@@ -96,7 +96,7 @@ And sets L</"Blocking"> field to $blocking.
 
 C<method close : int ();>
 
-Closes the stream associated with the file descriptoer L</"FD">.
+Closes the handle associated with the file descriptoer L</"FD">.
 
 This method is implemented in a child class.
 
@@ -185,6 +185,12 @@ C<method truncate : void ($legnth : long);>
 Trancates the stream associated with the file descriptoer L</"FD">.
 
 This method is implemented in a child class.
+
+=head2 DESTROY
+
+C<method DESTROY : void ();>
+
+If this handle is opened(L</"opened"> method returns a true value), closes the handle by L</"close"> method.
 
 =head1 Well Known Child Classes
 

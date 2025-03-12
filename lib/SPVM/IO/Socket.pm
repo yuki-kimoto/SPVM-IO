@@ -116,12 +116,6 @@ The following options are available adding to the options for L<IO::Handle#init|
 
 The blocking mode of the socket is set to non-blocking mode.
 
-=head2 DESTROY
-
-C<method DESTROY : void ();>
-
-Closes the socket by L</"close"> method if the socket is opened.
-
 =head2 sockdomain
 
 C<method sockdomain : int ();>

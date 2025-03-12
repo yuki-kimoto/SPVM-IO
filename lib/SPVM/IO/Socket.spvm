@@ -78,13 +78,6 @@ class IO::Socket extends IO::Handle {
     return $option_names;
   }
   
-  method DESTROY : void () {
-    
-    if ($self->opened) {
-      $self->close;
-    }
-  }
-  
   method timeout : double () {
     return $self->{Timeout};
   }

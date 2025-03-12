@@ -135,4 +135,12 @@ class IO::Handle {
   
   method truncate : void ($legnth : long) { die "Not implemented."; }
   
+  method DESTROY : void () {
+    
+    if ($self->opened) {
+      $self->close;
+    }
+    
+  }
+  
 }
