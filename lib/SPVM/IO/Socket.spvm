@@ -18,12 +18,24 @@ class IO::Socket extends IO::Handle {
   use Fn;
   use Native::MethodCall;
   
+  # Enemerations
+  protected enum {
+    SOCKET_CATEGORY_CLIENT,
+    SOCKET_CATEGORY_SERVER,
+    SOCKET_CATEGORY_ACCEPTED,
+  }
+  
   # Fields
+  has SocketCategory : int;
   
   has Domain : protected int;
+  
   has Type : protected int;
+  
   has Proto : protected int;
+  
   has Listen : protected int;
+  
   has Timeout : protected double;
   
   has Sockaddr : protected Sys::Socket::Sockaddr;
