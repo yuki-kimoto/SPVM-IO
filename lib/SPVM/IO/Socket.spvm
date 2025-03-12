@@ -20,6 +20,7 @@ class IO::Socket extends IO::Handle {
   
   # Enemerations
   protected enum {
+    SOCKET_CATEGORY_UNKNOWN,
     SOCKET_CATEGORY_CLIENT,
     SOCKET_CATEGORY_SERVER,
     SOCKET_CATEGORY_ACCEPTED,

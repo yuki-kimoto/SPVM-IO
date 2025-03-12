@@ -123,9 +123,25 @@ class IO::Socket::IP extends IO::Socket {
     
     my $listen = $self->{Listen};
     
+    my $fd = $self->{FD};
+    
     if ($peer_address && $listen > 0) {
       die "PeerAddr option and Listen option cannot be used together.";
     }
+    
+    if ($peer_address) {
+      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
+    }
+    elsif ($listen) {
+      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_SERVER;
+    }
+    elsif ($fd >= 0) {
+      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_ACCEPTED;
+    }
+    else {
+      die "[Unexpected Error]Unexpected socket category.";
+    }
+    
   }
   
   protected method configure : void () {
@@ -168,25 +184,22 @@ class IO::Socket::IP extends IO::Socket {
       $self->setsockopt(SOCKET->IPPROTO_IPV6, SOCKET->IPV6_V6ONLY, !!$self->{V6Only});
     }
     
-    if ($peer_address) {
-      my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
-      $self->{Sockaddr} = $sockaddr;
-      
-      $self->connect;
-    }
-    elsif ($listen > 0) {
-      my $sockaddr = $self->create_sockaddr($local_address, $local_port);
-      $self->{Sockaddr} = $sockaddr;
-      
-      $self->bind;
-      
-      $self->listen;
-    }
-    elsif ($fd >= 0) {
-      # Do nothing
-    }
-    else {
-      die "PeerAddr option must be sepcified if this socket is a clienet socket. Listen option must be a positive number if this socket is a server socket.";
+    my $SocketCategory = $self->{SocketCategory};
+    switch ($SocketCategory) {
+      case IO::Socket->SOCKET_CATEGORY_CLIENT : {
+        my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
+        $self->{Sockaddr} = $sockaddr;
+        
+        $self->connect;
+      }
+      case IO::Socket->SOCKET_CATEGORY_SERVER : {
+        my $sockaddr = $self->create_sockaddr($local_address, $local_port);
+        $self->{Sockaddr} = $sockaddr;
+        
+        $self->bind;
+        
+        $self->listen;
+      }
     }
     
     # This must be after calling connect method because Mac does not support non-blocking mode to non-connected socket.
