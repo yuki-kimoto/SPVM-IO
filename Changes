@@ -6,6 +6,10 @@
   [Changes]
     * IO::File#close throws an exception when the file is not opened.
     * Add DESTROY method to IO::Handle and remove that in IO::Socket.
+  
+  [Requirement Changes]
+    * Require SPVM 0.990047.
+    
 0.234 2025-02-21
   [Test Internal Chnages]
     * Do not use Fn#grep method.
