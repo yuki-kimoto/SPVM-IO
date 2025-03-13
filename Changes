@@ -1,3 +1,8 @@
+0.236 2025-03-13
+  [New Features]
+    * Add IO::File#seek method.
+    * Add IO::File#tell method.
+    
 0.235 2025-03-12
   [Bug Fix]
     * Fix a bug that IO::File#read method's $legnth is not set to the default value.

@@ -239,11 +239,27 @@ class IO::File extends IO::Handle {
   }
   
   method autoflush : int () {
+    
     return $self->{AutoFlush};
   }
   
   method set_autoflush : void ($autoflush : int) {
+    
     $self->{AutoFlush} = (byte)$autoflush;
+  }
+  
+  method seek : void ($offset : long, $whence : int) {
+    
+    my $file_stream = $self->{FileStream};
+    
+    Sys->seek($file_stream, $offset, $whence);
+  }
+  
+  method tell : long () {
+    
+    my $file_stream = $self->{FileStream};
+    
+    return Sys->tell($file_stream);
   }
   
 }

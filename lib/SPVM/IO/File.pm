@@ -312,6 +312,18 @@ C<method set_autoflush : void ($autoflush : int);>
 
 Sets L</"AutoFlush"> field to $autoflush.
 
+=head2 seek
+
+C<method seek : void ($offset : long, $whence : int);>
+
+Calls L<Sys#seek|SPVM::Sys/"seek"> method given the value of L</"FileStream"> field, $offset, $whence.
+
+=head2 tell
+
+C<method tell : long ();>
+
+Calls L<Sys#tell|SPVM::Sys/"tell"> method given the value of L</"FileStream"> field, and returns its return value.
+
 =head1 See Also
 
 =over 2

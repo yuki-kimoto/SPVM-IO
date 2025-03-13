@@ -156,6 +156,11 @@ my $test_dir = "$FindBin::Bin";
   ok(SPVM::TestCase::IO::File->getlines($sp_file));
 }
 
+# read,seek
+{
+  my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+  ok(SPVM::TestCase::IO::File->read_and_seek($sp_file));
+}
 
 SPVM::Fn->destroy_runtime_permanent_vars;
 
