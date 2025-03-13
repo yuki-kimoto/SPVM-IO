@@ -78,6 +78,16 @@ my $test_dir = "$FindBin::Bin";
   }
 }
 
+# autoflush
+{
+  {
+    my $file = "$test_dir/test_files_tmp/io_file_test_print.txt";
+    ok(SPVM::TestCase::IO::File->autoflush($file));
+    my $output = slurp_binmode($file);
+    is($output, 'Hello');
+  }
+}
+
 # write
 {
   {
