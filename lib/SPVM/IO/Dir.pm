@@ -76,11 +76,9 @@ Exceptions thrown by L<Sys#opendir|SPVM::Sys/"opendir"> method could be thrown.
 
 =head2 read
 
-C<method read : Sys::IO::Dirent ();>
+C<method read : string ();>
 
-Reads a directory entry from the directory stream stored in L</"dir_stream"> field and returns it.
-
-This method calls L<Sys#readdir|SPVM::Sys/"readdir"> method.
+Calls L<Sys#readdir|SPVM::Sys/"readdir"> method given the value of L</"dir_stream"> field, and returns its return value.
 
 Exceptions:
 

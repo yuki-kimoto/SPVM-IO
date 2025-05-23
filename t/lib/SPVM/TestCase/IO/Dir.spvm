@@ -17,9 +17,9 @@ class TestCase::IO::Dir {
         return 0;
       }
       
-      my $dirent = $dh->read;
+      my $name = $dh->read;
       
-      unless ($dirent) {
+      unless ($name) {
         return 0;
       }
     }
@@ -70,15 +70,12 @@ class TestCase::IO::Dir {
         return 0;
       }
       
-      my $dirent = $dh->read;
+      my $name = $dh->read;
       
-      unless ($dirent) {
+      unless ($name) {
         return 0;
       }
       
-      unless ($dirent->d_name) {
-        return 0;
-      }
     }
     
     {
@@ -90,8 +87,8 @@ class TestCase::IO::Dir {
       
       my $dir_names_list = StringList->new;
       
-      while (my $dirent = $dh->read) {
-        my $dir_name = $dirent->d_name;
+      while (my $name = $dh->read) {
+        my $dir_name = $name;
         
         $dir_names_list->push($dir_name);
       }
@@ -128,25 +125,21 @@ class TestCase::IO::Dir {
       
       my $offset = $dh->tell;
       
-      my $dirent = $dh->read;
-      
-      my $dirent_d_name = $dirent->d_name;
+      my $name = $dh->read;
       
       $dh->seek($offset);
       
-      my $dirent2 = $dh->read;
+      my $name2 = $dh->read;
       
-      my $dirent2_d_name = $dirent->d_name;
-      
-      unless ($dirent_d_name) {
+      unless ($name) {
         return 0;
       }
       
-      unless ($dirent2_d_name) {
+      unless ($name2) {
         return 0;
       }
       
-      unless ($dirent_d_name eq $dirent2_d_name) {
+      unless ($name eq $name2) {
         return 0;
       }
     }
@@ -163,25 +156,21 @@ class TestCase::IO::Dir {
       
       my $offset = $dh->tell;
       
-      my $dirent = $dh->read;
-      
-      my $dirent_d_name = $dirent->d_name;
+      my $name = $dh->read;
       
       $dh->seek($offset);
       
-      my $dirent2 = $dh->read;
+      my $name2 = $dh->read;
       
-      my $dirent2_d_name = $dirent->d_name;
-      
-      unless ($dirent_d_name) {
+      unless ($name) {
         return 0;
       }
       
-      unless ($dirent2_d_name) {
+      unless ($name2) {
         return 0;
       }
       
-      unless ($dirent_d_name eq $dirent2_d_name) {
+      unless ($name eq $name2) {
         return 0;
       }
     }
@@ -196,25 +185,21 @@ class TestCase::IO::Dir {
     {
       my $dh = IO::Dir->new($dir_path);
       
-      my $dirent = $dh->read;
-      
-      my $dirent_d_name = $dirent->d_name;
+      my $name = $dh->read;
       
       $dh->rewind;
       
-      my $dirent2 = $dh->read;
+      my $name2 = $dh->read;
       
-      my $dirent2_d_name = $dirent->d_name;
-      
-      unless ($dirent_d_name) {
+      unless ($name) {
         return 0;
       }
       
-      unless ($dirent2_d_name) {
+      unless ($name2) {
         return 0;
       }
       
-      unless ($dirent_d_name eq $dirent2_d_name) {
+      unless ($name eq $name2) {
         return 0;
       }
     }

@@ -35,13 +35,13 @@ class IO::Dir {
     $self->{dir_stream} = $dir_stream;
   }
   
-  method read : Sys::IO::Dirent () {
+  method read : string () {
     
     my $dir_stream = $self->{dir_stream};
     
-    my $dirent = Sys->readdir($dir_stream);
+    my $name = Sys->readdir($dir_stream);
     
-    return $dirent;
+    return $name;
   }
   
   method seek : void ($offset : long) {

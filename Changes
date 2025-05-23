@@ -1,3 +1,8 @@
+0.237 2025-05-23
+  [Requirement Changes]
+    * Require SPVM::Sys 0.540.
+  [Incompatible Changes]
+    * IO::Dir#read method returns a file name instead of a directory entry.
 0.236 2025-03-13
   [New Features]
     * Add IO::File#seek method.
