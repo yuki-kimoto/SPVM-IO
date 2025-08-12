@@ -54,11 +54,11 @@ This field expects a boolean value.
 
 =head2 new
 
-C<static method new : L<IO::File|SPVM::IO::File> ($file_name : string = undef, $open_mode : string = undef);>
+C<static method new : L<IO::File|SPVM::IO::File> ($file_name : string, $open_mode : object of string|Int = undef, $perms : int = -1);>
 
 Creates a new L<IO::File|SPVM::IO::File> object.
 
-And opens a file given the file name $file_name and the open mode $open_mode by calling L</"open"> method.
+And calls L</"open"> method given the arguments.
 
 And returns the new object.
 
@@ -88,11 +88,13 @@ Exceptions thrown by L</"fdopen"> method could be thrown.
 
 =head2 open
 
-C<method open : void ($file_name : string, $open_mode : string);>
+C<method open : void ($file_name : string, $open_mode : object of string|Int = undef, $perms : int = -1);>
 
-Opens a file given the file name $file_name and the open mode $open_mode.
+Opens a file given the file name $file_name, the open mode $open_mode, the permissions $perms.
 
-This method calls L<Sys#open|SPVM::Sys/"open"> method.
+If type type of $open_mode is string, this method calls L<Sys#open|SPVM::Sys/"open"> method.
+
+Otherwise if the type of $open_mode is Int, this method calls L<Sys#sysopen|SPVM::Sys/"sysopen"> method and L<Sys#fdopen|SPVM::Sys/"fdopen"> method.
 
 L</"FileStream"> field is set to the opened file stream.
 

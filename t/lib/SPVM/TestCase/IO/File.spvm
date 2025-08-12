@@ -3,7 +3,11 @@ class TestCase::IO::File {
   use StringList;
   use Fn;
   use Array;
-
+  
+  our $TEST_DIR : rw string;
+  
+  our $TEST_TMP_DIR : rw cache string;
+  
   static method flush : int ($file : string) {
     
     my $io_file = IO::File->new($file, ">");

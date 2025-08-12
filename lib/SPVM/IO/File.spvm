@@ -8,6 +8,7 @@ class IO::File extends IO::Handle {
   use Sys::IO;
   use Sys::IO::FileStream;
   use StringBuffer;
+  use Sys::IO::Constant as IO;
   
   # Fields
   has FileStream : Sys::IO::FileStream;
@@ -17,14 +18,14 @@ class IO::File extends IO::Handle {
   has AutoFlush : protected byte;
   
   # Class methods
-  static method new : IO::File ($file_name : string = undef, $open_mode : string = undef) {
+  static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perms : int = -1) {
     
     my $self = new IO::File;
     
     $self->init;
     
     if ($file_name) {
-      $self->open($file_name, $open_mode);
+      $self->open($file_name, $open_mode, $perms);
     }
     
     return $self;
@@ -50,7 +51,7 @@ class IO::File extends IO::Handle {
     return $self->{InputLineNumber};
   }
   
-  method open : void ($file_name : string, $open_mode : string) {
+  method open : void ($file_name : string, $open_mode : object of string|Int = undef, $perms : int = -1) {
     
     unless ($file_name) {
       die "The file name \$file_name must be defined.";
@@ -65,7 +66,22 @@ class IO::File extends IO::Handle {
     }
     
     my $file_stream_ref = [(Sys::IO::FileStream)undef];
-    Sys->open($file_stream_ref, (string)$open_mode, $file_name);
+    
+    if ($open_mode isa string) {
+      Sys->open($file_stream_ref, (string)$open_mode, $file_name);
+    }
+    elsif ($open_mode isa Int) {
+      my $fd = -1;
+      my $int_mode = (int)$open_mode;
+      Sys->sysopen(\$fd, $file_name, $int_mode, $perms);
+      
+      my $open_mode_string = &_intmode2str($int_mode);
+      
+      Sys->fdopen($file_stream_ref, $open_mode_string, $fd);
+    }
+    else {
+      die "The type of the open mode \$open_mode must be string or Int.";
+    }
     
     my $file_stream = $file_stream_ref->[0];
     
@@ -74,6 +90,40 @@ class IO::File extends IO::Handle {
     my $fd = Sys->fileno($file_stream);
     
     $self->{FD} = $fd;
+  }
+  
+  private static method _intmode2str : string($rawmode : int) {
+    
+    my $mode = (string)undef;
+    
+    my $access_mode = $rawmode & IO->O_ACCMODE;
+    
+    if ($access_mode == IO->O_RDONLY) {
+      $mode = "r";
+    }
+    elsif ($rawmode & IO->O_APPEND) {
+      $mode = "a";
+      if ($access_mode != IO->O_WRONLY) {
+        $mode .= "+";
+      }
+    }
+    else {
+      if ($access_mode == IO->O_WRONLY) {
+        $mode = "w";
+      }
+      else {
+        $mode = "r";
+        $mode .= "+";
+      }
+    }
+    
+    unless ($mode) {
+      die "Invalid interger modes are specified.";
+    }
+    
+    $mode .= "b";
+    
+    return $mode;
   }
   
   method close : void () {
