@@ -48,10 +48,7 @@ SPVM::TestCase::IO::File->SET_TEST_TMP_DIR($TEST_TMP_DIR);
 # close
 {
   {
-    my $file = "$TEST_TMP_DIR/io_file_test_flush.txt";
-    ok(SPVM::TestCase::IO::File->close($file));
-    my $output = slurp_binmode($file);
-    is($output, 'Hello');
+    ok(SPVM::TestCase::IO::File->close);
   }
 }
 
