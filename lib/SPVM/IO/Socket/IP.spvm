@@ -180,6 +180,12 @@ class IO::Socket::IP extends IO::Socket {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
     }
     
+    # Nagle algorizm is on over TCP
+    my $type = $self->socktype;
+    if ($type == SOCKET->SOCK_STREAM) {
+      $self->setsockopt(SOCKET->IPPROTO_TCP, SOCKET->TCP_NODELAY, 1);
+    }
+    
     if ($self->{V6OnlySpecified}) {
       $self->setsockopt(SOCKET->IPPROTO_IPV6, SOCKET->IPV6_V6ONLY, !!$self->{V6Only});
     }

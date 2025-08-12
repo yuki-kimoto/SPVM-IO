@@ -145,6 +145,8 @@ Options:
 
 The following options are available adding the options for L<IO::Socket#init|SPVM::IO::Socket/"init"> method are available.
 
+Nagle algorizm is on over TCP.
+
 [Name][Type][Default Value]
 
 =over 2

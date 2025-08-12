@@ -1,3 +1,7 @@
+0.238 2025-08-12
+  [Changes]
+    * Nagle algorizm is on over TCP.
+    
 0.237 2025-05-23
   [Requirement Changes]
     * Require SPVM::Sys 0.540.
