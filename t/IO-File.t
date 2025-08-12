@@ -72,12 +72,7 @@ ok(SPVM::TestCase::IO::File->read);
 }
 
 ok(SPVM::TestCase::IO::File->getlines);
-
-# read,seek
-{
-  my $sp_file = SPVM::api->new_string("$TEST_TMP_DIR/fread.txt");
-  ok(SPVM::TestCase::IO::File->read_and_seek($sp_file));
-}
+ok(SPVM::TestCase::IO::File->read_and_seek);
 
 SPVM::Fn->destroy_runtime_permanent_vars;
 

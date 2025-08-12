@@ -541,7 +541,8 @@ class TestCase::IO::File {
     return 1;
   }
   
-  static method read_and_seek : int ($file : string) {
+  static method read_and_seek : int () {
+    my $file = "$TEST_TMP_DIR/fread.txt";
     {
       my $io_file = IO::File->new($file, "<");
       unless ($io_file) {
