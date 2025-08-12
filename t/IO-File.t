@@ -43,7 +43,7 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 # flush
 {
   {
-    my $file = "$test_dir/test_files_tmp/io_file_test_flush.txt";
+    my $file = "$test_tmp_dir/io_file_test_flush.txt";
     ok(SPVM::TestCase::IO::File->flush($file));
     my $output = slurp_binmode($file);
     is($output, 'Hello');
@@ -53,7 +53,7 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 # close
 {
   {
-    my $file = "$test_dir/test_files_tmp/io_file_test_flush.txt";
+    my $file = "$test_tmp_dir/io_file_test_flush.txt";
     ok(SPVM::TestCase::IO::File->close($file));
     my $output = slurp_binmode($file);
     is($output, 'Hello');
@@ -63,21 +63,21 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 # print
 {
   {
-    my $file = "$test_dir/test_files_tmp/io_file_test_print.txt";
+    my $file = "$test_tmp_dir/io_file_test_print.txt";
     ok(SPVM::TestCase::IO::File->print($file));
     my $output = slurp_binmode($file);
     is($output, 'Hello');
   }
 
   {
-    my $file = "$test_dir/test_files_tmp/io_file_test_print_newline.txt";
+    my $file = "$test_tmp_dir/io_file_test_print_newline.txt";
     ok(SPVM::TestCase::IO::File->print_newline($file));
     my $output = slurp_binmode($file);
     is($output, "\x0A");
   }
 
   {
-    my $file = "$test_dir/test_files_tmp/io_file_test_print_long_lines.txt";
+    my $file = "$test_tmp_dir/io_file_test_print_long_lines.txt";
     ok(SPVM::TestCase::IO::File->print_long_lines($file));
     my $output = slurp_binmode($file);
     is($output, "AAAAAAAAAAAAA\x0ABBBBBBBBBBBBBBBBBBB\x0ACCCCCCCCCCCCCCCCCCCCCCCCCCC\x0ADDDDDDDDDDDDDDDDDDDDDDDDD\x0AEEEEEEEEEEEEEEEEEEEEEE\x0AFFFFFFFFFFFFFF\x0A");
@@ -87,7 +87,7 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 # autoflush
 {
   {
-    my $file = "$test_dir/test_files_tmp/io_file_test_print.txt";
+    my $file = "$test_tmp_dir/io_file_test_print.txt";
     ok(SPVM::TestCase::IO::File->autoflush($file));
     my $output = slurp_binmode($file);
     is($output, 'Hello');
@@ -97,7 +97,7 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 # write
 {
   {
-    my $file = "$test_dir/test_files_tmp/io_file_test_write.txt";
+    my $file = "$test_tmp_dir/io_file_test_write.txt";
     ok(SPVM::TestCase::IO::File->write($file));
     my $output = slurp_binmode($file);
     is($output, 'Hello');
@@ -106,32 +106,32 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
 # open
 {
-  my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+  my $sp_file = SPVM::api->new_string("$test_tmp_dir/fread.txt");
   ok(SPVM::TestCase::IO::File->open($sp_file));
 }
 
 # read
 {
-  my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+  my $sp_file = SPVM::api->new_string("$test_tmp_dir/fread.txt");
   ok(SPVM::TestCase::IO::File->read($sp_file));
 }
 
 # getline
 {
   {
-    my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+    my $sp_file = SPVM::api->new_string("$test_tmp_dir/fread.txt");
     ok(SPVM::TestCase::IO::File->getline($sp_file));
   }
   {
-    my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+    my $sp_file = SPVM::api->new_string("$test_tmp_dir/fread.txt");
     ok(SPVM::TestCase::IO::File->getline_while($sp_file));
   }
   {
-    my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/file_eof.txt");
+    my $sp_file = SPVM::api->new_string("$test_tmp_dir/file_eof.txt");
     ok(SPVM::TestCase::IO::File->getline_eof($sp_file));
   }
   {
-    my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/long_line.txt");
+    my $sp_file = SPVM::api->new_string("$test_tmp_dir/long_line.txt");
     ok(SPVM::TestCase::IO::File->getline_long_line($sp_file));
   }
 }
@@ -139,32 +139,32 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 # getline and chompr
 {
   {
-    my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+    my $sp_file = SPVM::api->new_string("$test_tmp_dir/fread.txt");
     ok(SPVM::TestCase::IO::File->getline_chompr($sp_file));
   }
   {
-    my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+    my $sp_file = SPVM::api->new_string("$test_tmp_dir/fread.txt");
     ok(SPVM::TestCase::IO::File->getline_chompr_while($sp_file));
   }
   {
-    my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/file_eof.txt");
+    my $sp_file = SPVM::api->new_string("$test_tmp_dir/file_eof.txt");
     ok(SPVM::TestCase::IO::File->getline_chompr_eof($sp_file));
   }
   {
-    my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/long_line.txt");
+    my $sp_file = SPVM::api->new_string("$test_tmp_dir/long_line.txt");
     ok(SPVM::TestCase::IO::File->getline_chompr_long_line($sp_file));
   }
 }
 
 # getlines
 {
-  my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+  my $sp_file = SPVM::api->new_string("$test_tmp_dir/fread.txt");
   ok(SPVM::TestCase::IO::File->getlines($sp_file));
 }
 
 # read,seek
 {
-  my $sp_file = SPVM::api->new_string("$test_dir/test_files_tmp/fread.txt");
+  my $sp_file = SPVM::api->new_string("$test_tmp_dir/fread.txt");
   ok(SPVM::TestCase::IO::File->read_and_seek($sp_file));
 }
 
