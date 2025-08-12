@@ -232,7 +232,9 @@ class TestCase::IO::File {
     return 1;
   }
   
-  static method getline : int ($file : string) {
+  static method getline : int () {
+    my $file = "$TEST_TMP_DIR/fread.txt";
+    
     my $io_file = IO::File->new($file, "<");
     unless ($io_file) {
       die "Can't open file $file";
@@ -268,7 +270,9 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method getline_while : int ($file : string) {
+  static method getline_while : int () {
+    my $file = "$TEST_TMP_DIR/fread.txt";
+    
     my $io_file = IO::File->new($file, "<");
     unless ($io_file) {
       die "Can't open file $file";
@@ -289,7 +293,9 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method getline_eof : int ($file : string) {
+  static method getline_eof : int () {
+    my $file = "$TEST_TMP_DIR/file_eof.txt";
+    
     my $io_file = IO::File->new($file, "<");
     unless ($io_file) {
       die "Can't open file $file";
@@ -332,7 +338,9 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method getline_long_line : int ($file : string) {
+  static method getline_long_line : int () {
+    my $file = "$TEST_TMP_DIR/long_line.txt";
+    
     my $io_file = IO::File->new($file, "<");
     unless ($io_file) {
       die "Can't open file $file";
