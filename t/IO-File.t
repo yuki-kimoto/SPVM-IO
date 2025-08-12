@@ -52,12 +52,7 @@ ok(SPVM::TestCase::IO::File->close);
 
 ok(SPVM::TestCase::IO::File->autoflush);
 ok(SPVM::TestCase::IO::File->write);
-
-# open
-{
-  my $sp_file = SPVM::api->new_string("$TEST_TMP_DIR/fread.txt");
-  ok(SPVM::TestCase::IO::File->open($sp_file));
-}
+ok(SPVM::TestCase::IO::File->open);
 
 # read
 {
