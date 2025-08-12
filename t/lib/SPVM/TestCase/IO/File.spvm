@@ -4,18 +4,32 @@ class TestCase::IO::File {
   use Fn;
   use Array;
   
-  our $TEST_DIR : rw string;
+  our $TEST_DIR : rw cache string;
   
   our $TEST_TMP_DIR : rw cache string;
   
-  static method flush : int ($file : string) {
+  static method flush : int () {
     
-    my $io_file = IO::File->new($file, ">");
+    my $file = "$TEST_TMP_DIR/io_file_test_flush.txt";
     
-    $io_file->print("He");
-    $io_file->flush;
-    $io_file->print("llo");
-    $io_file->flush;
+    {
+      my $io_file = IO::File->new($file, ">");
+      
+      $io_file->print("He");
+      $io_file->flush;
+      $io_file->print("llo");
+      $io_file->flush;
+    }
+    
+    {
+      my $fh = IO->open("<", $file);
+      
+      my $content = $fh->getlines;
+      
+      unless ($content eq "Hello") {
+        return 0;
+      }
+    }
     
     return 1;
   }

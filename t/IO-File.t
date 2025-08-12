@@ -27,6 +27,8 @@ sub slurp_binmode {
 
 my $api = SPVM::api();
 
+my $start_memory_blocks_count = $api->get_memory_blocks_count;
+
 # Copy test_files to test_files_tmp with replacing os newline
 TestFile::copy_test_files_tmp();
 
@@ -36,18 +38,11 @@ my $TEST_TMP_DIR = "$test_dir/test_files_tmp";
 
 SPVM::TestCase::IO::File->SET_TEST_DIR($test_dir);
 
-SPVM::TestCase::IO::File->TEST_TMP_DIR($TEST_TMP_DIR);
-
-my $start_memory_blocks_count = $api->get_memory_blocks_count;
+SPVM::TestCase::IO::File->SET_TEST_TMP_DIR($TEST_TMP_DIR);
 
 # flush
 {
-  {
-    my $file = "$TEST_TMP_DIR/io_file_test_flush.txt";
-    ok(SPVM::TestCase::IO::File->flush($file));
-    my $output = slurp_binmode($file);
-    is($output, 'Hello');
-  }
+  ok(SPVM::TestCase::IO::File->flush);
 }
 
 # close
