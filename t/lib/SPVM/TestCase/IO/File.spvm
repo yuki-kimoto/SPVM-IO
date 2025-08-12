@@ -3,6 +3,7 @@ class TestCase::IO::File {
   use StringList;
   use Fn;
   use Array;
+  use Sys::IO::Constant as IOC;
   
   our $TEST_DIR : rw cache string;
   
@@ -188,7 +189,70 @@ class TestCase::IO::File {
     
     return 1;
   }
-
+  
+  static method open_with_int_mode : int () {
+    
+    {
+      my $file = "$TEST_TMP_DIR/open_with_int_mode_hello.txt";
+      
+      {
+        my $io_file = IO::File->new($file, IOC->O_WRONLY|IOC->O_CREAT|IOC->O_TRUNC);
+      }
+      
+      {
+        my $io_file = IO::File->new($file, IOC->O_WRONLY);
+        $io_file->print("Hello");
+      }
+      
+      {
+        my $io_file = IO::File->new($file, IOC->O_RDONLY);
+        
+        unless ($io_file->getlines eq "Hello") {
+          return 0;
+        }
+      }
+      
+      {
+        my $io_file = IO::File->new($file, IOC->O_RDWR|IOC->O_TRUNC);
+        
+        $io_file->print("Good");
+        
+        $io_file->seek(0, IOC->SEEK_SET);
+        
+        unless ($io_file->getlines eq "Good") {
+          return 0;
+        }
+      }
+      
+      {
+        my $io_file = IO::File->new($file, IOC->O_WRONLY|IOC->O_APPEND);
+        
+        $io_file->print("Bad");
+      }
+      
+      {
+        my $io_file = IO::File->new($file, IOC->O_RDONLY);
+        
+        unless ($io_file->getlines eq "GoodBad") {
+          return 0;
+        }
+      }
+      
+      {
+        eval { IO::File->new($file, IOC->O_WRONLY|IOC->O_CREAT|IOC->O_TRUNC|IOC->O_EXCL); }
+        
+        warn "[Test Output]open_with_int_mode:IOC->O_EXCL:" . Fn->substr($@, 0, 150) . ".";
+        
+        unless ($@) {
+          return 0;
+        }
+      }
+      
+    }
+    
+    return 1;
+  }
+  
   static method read : int () {
     my $file = "$TEST_TMP_DIR/fread.txt";
     

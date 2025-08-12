@@ -52,7 +52,11 @@ ok(SPVM::TestCase::IO::File->close);
 
 ok(SPVM::TestCase::IO::File->autoflush);
 ok(SPVM::TestCase::IO::File->write);
-ok(SPVM::TestCase::IO::File->open);
+{
+  ok(SPVM::TestCase::IO::File->open);
+  ok(SPVM::TestCase::IO::File->open_with_int_mode);
+}
+
 ok(SPVM::TestCase::IO::File->read);
 
 # getline

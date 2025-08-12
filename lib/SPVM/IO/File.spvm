@@ -75,7 +75,7 @@ class IO::File extends IO::Handle {
       my $int_mode = (int)$open_mode;
       Sys->sysopen(\$fd, $file_name, $int_mode, $perms);
       
-      my $open_mode_string = &_intmode2str($int_mode);
+      my $open_mode_string = &_int_mode_to_string($int_mode);
       
       Sys->fdopen($file_stream_ref, $open_mode_string, $fd);
     }
@@ -92,16 +92,16 @@ class IO::File extends IO::Handle {
     $self->{FD} = $fd;
   }
   
-  private static method _intmode2str : string($rawmode : int) {
+  private static method _int_mode_to_string : string($int_mode : int) {
     
     my $mode = (string)undef;
     
-    my $access_mode = $rawmode & IO->O_ACCMODE;
+    my $access_mode = $int_mode & IO->O_ACCMODE;
     
     if ($access_mode == IO->O_RDONLY) {
       $mode = "r";
     }
-    elsif ($rawmode & IO->O_APPEND) {
+    elsif ($int_mode & IO->O_APPEND) {
       $mode = "a";
       if ($access_mode != IO->O_WRONLY) {
         $mode .= "+";
