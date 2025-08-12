@@ -65,22 +65,10 @@ ok(SPVM::TestCase::IO::File->read);
 
 # getline and chompr
 {
-  {
-    my $sp_file = SPVM::api->new_string("$TEST_TMP_DIR/fread.txt");
-    ok(SPVM::TestCase::IO::File->getline_chompr($sp_file));
-  }
-  {
-    my $sp_file = SPVM::api->new_string("$TEST_TMP_DIR/fread.txt");
-    ok(SPVM::TestCase::IO::File->getline_chompr_while($sp_file));
-  }
-  {
-    my $sp_file = SPVM::api->new_string("$TEST_TMP_DIR/file_eof.txt");
-    ok(SPVM::TestCase::IO::File->getline_chompr_eof($sp_file));
-  }
-  {
-    my $sp_file = SPVM::api->new_string("$TEST_TMP_DIR/long_line.txt");
-    ok(SPVM::TestCase::IO::File->getline_chompr_long_line($sp_file));
-  }
+  ok(SPVM::TestCase::IO::File->getline_chompr);
+  ok(SPVM::TestCase::IO::File->getline_chompr_while);
+  ok(SPVM::TestCase::IO::File->getline_chompr_eof);
+  ok(SPVM::TestCase::IO::File->getline_chompr_long_line);
 }
 
 # getlines

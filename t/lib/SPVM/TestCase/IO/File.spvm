@@ -8,7 +8,7 @@ class TestCase::IO::File {
   
   our $TEST_TMP_DIR : rw cache string;
   
-  static method slurp : string ($file : string ) {
+  static method slurp : string ($file : string) {
     
     my $fh = IO->open("<", $file);
     
@@ -376,7 +376,9 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method getline_chompr : int ($file : string) {
+  static method getline_chompr : int () {
+    my $file = "$TEST_TMP_DIR/fread.txt";
+    
     my $io_file = IO::File->new($file, "<");
     unless ($io_file) {
       die "Can't open file $file";
@@ -415,7 +417,8 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method getline_chompr_while : int ($file : string) {
+  static method getline_chompr_while : int () {
+    my $file = "$TEST_TMP_DIR/fread.txt";
     my $io_file = IO::File->new($file, "<");
     unless ($io_file) {
       die "Can't open file $file";
@@ -435,7 +438,8 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method getline_chompr_eof : int ($file : string) {
+  static method getline_chompr_eof : int () {
+    my $file = "$TEST_TMP_DIR/file_eof.txt";
     my $io_file = IO::File->new($file, "<");
     unless ($io_file) {
       die "Can't open file $file";
@@ -482,7 +486,8 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method getline_chompr_long_line : int ($file : string) {
+  static method getline_chompr_long_line : int () {
+    my $file = "$TEST_TMP_DIR/long_line.txt";
     my $io_file = IO::File->new($file, "<");
     unless ($io_file) {
       die "Can't open file $file";
