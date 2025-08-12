@@ -8,6 +8,15 @@ class TestCase::IO::File {
   
   our $TEST_TMP_DIR : rw cache string;
   
+  static method slurp : string ($file : string ) {
+    
+    my $fh = IO->open("<", $file);
+    
+    my $content = $fh->getlines;
+    
+    return $content;
+  }
+  
   static method flush : int () {
     
     my $file = "$TEST_TMP_DIR/io_file_test_flush.txt";
@@ -21,14 +30,8 @@ class TestCase::IO::File {
       $io_file->flush;
     }
     
-    {
-      my $fh = IO->open("<", $file);
-      
-      my $content = $fh->getlines;
-      
-      unless ($content eq "Hello") {
-        return 0;
-      }
+    unless (&slurp($file) eq "Hello") {
+      return 0;
     }
     
     return 1;
@@ -46,14 +49,8 @@ class TestCase::IO::File {
       $io_file->close;
     }
     
-    {
-      my $fh = IO->open("<", $file);
-      
-      my $content = $fh->getlines;
-      
-      unless ($content eq "Hello") {
-        return 0;
-      }
+    unless (&slurp($file) eq "Hello") {
+      return 0;
     }
     
     return 1;
@@ -94,14 +91,8 @@ class TestCase::IO::File {
       $io_file->print("Hello");
     }
     
-    {
-      my $fh = IO->open("<", $file);
-      
-      my $content = $fh->getlines;
-      
-      unless ($content eq "Hello") {
-        return 0;
-      }
+    unless (&slurp($file) eq "Hello") {
+      return 0;
     }
     
     return 1;
@@ -119,13 +110,22 @@ class TestCase::IO::File {
     return 1;
   }
   
-  static method print_newline : int ($file : string) {
-    my $io_file = IO::File->new($file, ">");
-    unless ($io_file) {
-      return 0;
+  static method print_newline : int () {
+    
+    my $file = "$TEST_TMP_DIR/io_file_test_print_newline.txt";
+    
+    {
+      my $io_file = IO::File->new($file, ">");
+      unless ($io_file) {
+        return 0;
+      }
+      
+      $io_file->print("\n");
     }
     
-    $io_file->print("\n");
+    unless (&slurp($file) eq "\x0A") {
+      return 0;
+    }
     
     return 1;
   }
