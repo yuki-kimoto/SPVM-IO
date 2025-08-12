@@ -50,15 +50,7 @@ ok(SPVM::TestCase::IO::File->close);
   ok(SPVM::TestCase::IO::File->print_long_lines);
 }
 
-# autoflush
-{
-  {
-    my $file = "$TEST_TMP_DIR/io_file_test_print.txt";
-    ok(SPVM::TestCase::IO::File->autoflush($file));
-    my $output = slurp_binmode($file);
-    is($output, 'Hello');
-  }
-}
+ok(SPVM::TestCase::IO::File->autoflush);
 
 # write
 {

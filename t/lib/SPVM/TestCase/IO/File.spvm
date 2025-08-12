@@ -56,24 +56,32 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method autoflush : int ($file : string) {
+  static method autoflush : int () {
     
-    my $io_file = IO::File->new($file, ">");
-    unless ($io_file) {
-      return 0;
+    my $file = "$TEST_TMP_DIR/io_file_test_print.txt";
+    
+    {
+      my $io_file = IO::File->new($file, ">");
+      unless ($io_file) {
+        return 0;
+      }
+      
+      my $io_file_default = $io_file->autoflush;
+      unless ($io_file_default == 0) {
+        return 0;
+      }
+      
+      $io_file->set_autoflush(1);
+      unless ($io_file->autoflush == 1) {
+        return 0;
+      }
+      
+      $io_file->print("Hello");
     }
     
-    my $io_file_default = $io_file->autoflush;
-    unless ($io_file_default == 0) {
+    unless (&slurp($file) eq "Hello") {
       return 0;
     }
-    
-    $io_file->set_autoflush(1);
-    unless ($io_file->autoflush == 1) {
-      return 0;
-    }
-    
-    $io_file->print("Hello");
     
     return 1;
   }
