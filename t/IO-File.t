@@ -40,34 +40,14 @@ SPVM::TestCase::IO::File->SET_TEST_DIR($test_dir);
 
 SPVM::TestCase::IO::File->SET_TEST_TMP_DIR($TEST_TMP_DIR);
 
-# flush
-{
-  ok(SPVM::TestCase::IO::File->flush);
-}
-
-# close
-{
-  {
-    ok(SPVM::TestCase::IO::File->close);
-  }
-}
+ok(SPVM::TestCase::IO::File->flush);
+ok(SPVM::TestCase::IO::File->close);
 
 # print
 {
-  {
-    ok(SPVM::TestCase::IO::File->print);
-  }
-
-  {
-    ok(SPVM::TestCase::IO::File->print_newline);
-  }
-
-  {
-    my $file = "$TEST_TMP_DIR/io_file_test_print_long_lines.txt";
-    ok(SPVM::TestCase::IO::File->print_long_lines($file));
-    my $output = slurp_binmode($file);
-    is($output, "AAAAAAAAAAAAA\x0ABBBBBBBBBBBBBBBBBBB\x0ACCCCCCCCCCCCCCCCCCCCCCCCCCC\x0ADDDDDDDDDDDDDDDDDDDDDDDDD\x0AEEEEEEEEEEEEEEEEEEEEEE\x0AFFFFFFFFFFFFFF\x0A");
-  }
+  ok(SPVM::TestCase::IO::File->print);
+  ok(SPVM::TestCase::IO::File->print_newline);
+  ok(SPVM::TestCase::IO::File->print_long_lines);
 }
 
 # autoflush

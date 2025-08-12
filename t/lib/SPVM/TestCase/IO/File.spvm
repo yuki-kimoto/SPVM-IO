@@ -130,13 +130,21 @@ class TestCase::IO::File {
     return 1;
   }
   
-  static method print_long_lines : int ($file : string) {
-    my $io_file = IO::File->new($file, ">");
-    unless ($io_file) {
-      return 0;
+  static method print_long_lines : int () {
+    my $file = "$TEST_TMP_DIR/io_file_test_print_long_lines.txt";
+    
+    {
+      my $io_file = IO::File->new($file, ">");
+      unless ($io_file) {
+        return 0;
+      }
+      
+      $io_file->print("AAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBB\nCCCCCCCCCCCCCCCCCCCCCCCCCCC\nDDDDDDDDDDDDDDDDDDDDDDDDD\nEEEEEEEEEEEEEEEEEEEEEE\nFFFFFFFFFFFFFF\n");
     }
     
-    $io_file->print("AAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBB\nCCCCCCCCCCCCCCCCCCCCCCCCCCC\nDDDDDDDDDDDDDDDDDDDDDDDDD\nEEEEEEEEEEEEEEEEEEEEEE\nFFFFFFFFFFFFFF\n");
+    unless (&slurp($file) eq "AAAAAAAAAAAAA\x0ABBBBBBBBBBBBBBBBBBB\x0ACCCCCCCCCCCCCCCCCCCCCCCCCCC\x0ADDDDDDDDDDDDDDDDDDDDDDDDD\x0AEEEEEEEEEEEEEEEEEEEEEE\x0AFFFFFFFFFFFFFF\x0A") {
+      return 0;
+    }
     
     return 1;
   }
