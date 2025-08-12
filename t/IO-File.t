@@ -71,11 +71,7 @@ ok(SPVM::TestCase::IO::File->read);
   ok(SPVM::TestCase::IO::File->getline_chompr_long_line);
 }
 
-# getlines
-{
-  my $sp_file = SPVM::api->new_string("$TEST_TMP_DIR/fread.txt");
-  ok(SPVM::TestCase::IO::File->getlines($sp_file));
-}
+ok(SPVM::TestCase::IO::File->getlines);
 
 # read,seek
 {

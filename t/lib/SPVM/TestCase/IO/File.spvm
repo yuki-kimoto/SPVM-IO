@@ -526,7 +526,8 @@ class TestCase::IO::File {
     return 1;
   }
 
-  static method getlines : int ($file : string) {
+  static method getlines : int () {
+    my $file = "$TEST_TMP_DIR/fread.txt";
     {
       my $io_file = IO::File->new($file, "<");
       
