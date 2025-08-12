@@ -106,14 +106,22 @@ class TestCase::IO::File {
     return 1;
   }
   
-  static method write : int ($file : string) {
+  static method write : int () {
     
-    my $io_file = IO::File->new($file, ">");
-    unless ($io_file) {
-      return 0;
+    my $file = "$TEST_TMP_DIR/io_file_test_write.txt";
+    
+    {
+      my $io_file = IO::File->new($file, ">");
+      unless ($io_file) {
+        return 0;
+      }
+      
+      $io_file->write("Hello");
     }
     
-    $io_file->write("Hello");
+    unless (&slurp($file) eq "Hello") {
+      return 0;
+    }
     
     return 1;
   }
