@@ -196,17 +196,25 @@ If this handle is opened(L</"opened"> method returns a true value), closes the h
 
 =over 2
 
-L<IO::File|SPVM::IO::File>
+=item * L<IO::File|SPVM::IO::File>
 
-L<IO::Socket|SPVM::IO::Socket>
+=item * L<IO::Socket|SPVM::IO::Socket>
 
-L<IO::Socket::IP|SPVM::IO::Socket::IP>
+=item * L<IO::Socket::IP|SPVM::IO::Socket::IP>
 
-L<IO::Socket::INET|SPVM::IO::Socket::INET>
+=item * L<IO::Socket::INET|SPVM::IO::Socket::INET>
 
-L<IO::Socket::INET6|SPVM::IO::Socket::INET6>
+=item * L<IO::Socket::INET6|SPVM::IO::Socket::INET6>
 
-L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX>
+=item * L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX>
+
+=back
+
+=head1 See Also
+
+=over 2
+
+=item * L<IO|SPVM::IO>
 
 =back
 

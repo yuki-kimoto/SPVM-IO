@@ -303,6 +303,12 @@ If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L
 
 =over 2
 
+=item * L<IO::Socket|SPVM::IO::Socket>
+
+=item * L<IO::Handle|SPVM::IO::Handle>
+
+=item * L<IO|SPVM::IO>
+
 =item * L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX>
 
 =item * L<Sys::Socket|SPVM::Sys::Socket>

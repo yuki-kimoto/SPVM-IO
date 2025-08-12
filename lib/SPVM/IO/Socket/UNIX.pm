@@ -135,7 +135,13 @@ Yes, if Windows is recent.
 
 =over 2
 
-=item * L<SPVM::IO::Socket::IP>
+=item * L<IO::Socket::IP|SPVM::IO::Socket::IP>
+
+=item * L<IO::Socket|SPVM::IO::Socket>
+
+=item * L<IO::Handle|SPVM::IO::Handle>
+
+=item * L<IO|SPVM::IO>
 
 =back
 

@@ -330,6 +330,8 @@ Calls L<Sys#tell|SPVM::Sys/"tell"> method given the value of L</"FileStream"> fi
 
 =item * L<IO::Handle|SPVM::IO::Handle>
 
+=item * L<IO|SPVM::IO>
+
 =item * L<Sys|SPVM::Sys>
 
 =item * L<Sys::IO|SPVM::Sys::IO>

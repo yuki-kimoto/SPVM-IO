@@ -92,6 +92,20 @@ Implementation:
 
 This method resolves $address using L<Net::DNS::Native#getaddrinfo|SPVM::Net::DNS::Native/"getaddrinfo"> method in non-blocking way and creates a L<Sys::Socket::Sockaddr::In|SPVM::Sys::Socket::Sockaddr::In> object from the resolved IP address and $port.
 
+=head2 See Also
+
+=over 2
+
+=item * L<IO::Socket::IP|SPVM::IO::Socket::IP>
+
+=item * L<IO::Socket|SPVM::IO::Socket>
+
+=item * L<IO::Handle|SPVM::IO::Handle>
+
+=item * L<IO|SPVM::IO>
+
+=back
+
 =head1 Copyright & License
 
 Copyright (c) 2024 Yuki Kimoto

@@ -436,6 +436,10 @@ Exceptions thrown by L<Sys#setsockopt|SPVM::Sys/"setsockopt"> method could be th
 
 =over 2
 
+=item * L<IO::Handle|SPVM::IO::Handle>
+
+=item * L<IO|SPVM::IO>
+
 =item * L<Sys::Socket|SPVM::Sys::Socket>
 
 =item * L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant>

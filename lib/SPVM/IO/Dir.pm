@@ -28,10 +28,6 @@ The IO::Dir class in L<SPVM> has methods for directory streams.
 
 =head1 Details
 
-=head2 Porting
-
-This class is a Perl's L<IO::Dir> porting to L<SPVM>.
-
 =head2 Implementation
 
 An opened directory stream is automatically closed when the instance is destroyed.
@@ -139,6 +135,20 @@ Exceptions thrown by L<Sys#closedir|SPVM::Sys/"closedir"> method could be thrown
 C<method opened : int ();>
 
 If the directory stream stored in L</"dir_stream"> is opened, returns 1, otherwise returns 0.
+
+=head1 See Also
+
+=over 2
+
+=item * L<IO::File|SPVM::IO::File>
+
+=item * L<IO|SPVM::IO>
+
+=back
+
+=head2 Porting
+
+This class is a Perl's L<IO::Dir> porting to L<SPVM>.
 
 =head1 Copyright & License
 

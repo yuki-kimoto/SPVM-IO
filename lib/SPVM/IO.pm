@@ -6,11 +6,25 @@ our $VERSION = "0.237";
 
 =head1 Name
 
-SPVM::IO - File IO, Sockets, Select/Polling.
+SPVM::IO - File IO, Sockets, Directory Manipulation, Select/Polling.
 
 =head1 Description
 
-Classes in IO distribution in L<SPVM> has methods to manipulate File IO, Sockets, Select/Polling.
+Classes in IO distribution in L<SPVM> has methods to manipulate file IO, directory manipulation, sockets, select/polling.
+
+=head1 Usage
+  
+  use IO;
+  
+  # Write a line
+  my $fh = IO->open(">", "foo.txt");
+  $fh->say("Hello");>
+  
+  # Read lines
+  my $dh = IO->opendir("dir");
+  while (my $dir = $dh->read) {
+    
+  }
 
 =head1 Modules
 

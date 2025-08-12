@@ -150,6 +150,8 @@ Returns the event mask which represents the events that happened on the file des
 
 =over 2
 
+=item * L<IO|SPVM::IO>
+
 =item * L<IO::Select|SPVM::IO::Select>
 
 =item * L<Go|SPVM::Go>

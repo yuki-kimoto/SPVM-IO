@@ -113,6 +113,8 @@ The timeout $timeout specifies the minimum interval that select() system call sh
 
 =item * L<Sys::Select|SPVM::Sys::Select>
 
+=item * L<IO|SPVM::IO>
+
 =back
 
 =head1 Copyright & License
