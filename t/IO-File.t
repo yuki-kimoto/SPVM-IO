@@ -32,9 +32,11 @@ TestFile::copy_test_files_tmp();
 
 my $test_dir = "$FindBin::Bin";
 
+my $test_tmp_dir = "$test_dir/test_files_tmp";
+
 SPVM::TestCase::IO::File->SET_TEST_DIR($test_dir);
 
-SPVM::TestCase::IO::File->TEST_TMP_DIR("$test_dir/test_files_tmp");
+SPVM::TestCase::IO::File->TEST_TMP_DIR($test_tmp_dir);
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
