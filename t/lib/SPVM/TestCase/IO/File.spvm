@@ -248,6 +248,20 @@ class TestCase::IO::File {
         }
       }
       
+      {
+        my $io_file = IO::File->new($file, IOC->O_RDWR|IOC->O_APPEND);
+        
+        $io_file->print("Yes");
+      }
+      
+      {
+        my $io_file = IO::File->new($file, IOC->O_RDONLY);
+        
+        unless ($io_file->getlines eq "GoodBadYes") {
+          return 0;
+        }
+      }
+      
     }
     
     return 1;
