@@ -92,9 +92,9 @@ C<method open : void ($file_name : string, $open_mode : object of string|Int = u
 
 Opens a file given the file name $file_name, the open mode $open_mode, the permissions $perms.
 
-If type type of $open_mode is string, this method calls L<Sys#open|SPVM::Sys/"open"> method.
+If type type of $open_mode is string, this method calls L<Sys#open|SPVM::Sys/"open"> method given $open_mode, $file_name.
 
-Otherwise if the type of $open_mode is Int, this method calls L<Sys#sysopen|SPVM::Sys/"sysopen"> method and L<Sys#fdopen|SPVM::Sys/"fdopen"> method.
+Otherwise if the type of $open_mode is Int, this method calls L<Sys#sysopen|SPVM::Sys/"sysopen"> method given $open_mode, $file_name, $perms, and calls L<Sys#fdopen|SPVM::Sys/"fdopen"> method.
 
 L</"FileStream"> field is set to the opened file stream.
 
