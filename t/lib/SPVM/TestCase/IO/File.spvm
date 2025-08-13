@@ -196,7 +196,7 @@ class TestCase::IO::File {
       my $file = "$TEST_TMP_DIR/open_with_int_mode_hello.txt";
       
       {
-        my $io_file = IO::File->new($file, IOC->O_WRONLY|IOC->O_CREAT|IOC->O_TRUNC);
+        my $io_file = IO::File->new($file, IOC->O_WRONLY|IOC->O_CREAT|IOC->O_TRUNC, 0644);
       }
       
       {
