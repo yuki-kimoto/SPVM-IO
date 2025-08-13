@@ -182,7 +182,7 @@ If connect operation need to be performed again for IO wait, L<Go#gosched_io_wri
 
 And when the current goroutine is returned, this method retries connect operation.
 
-If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of the L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
+If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
 
 Exceptions:
 
@@ -228,7 +228,7 @@ If accept operation need to be performed again for IO wait, L<Go#gosched_io_read
 
 And when the current goroutine is returned, this method retries accept operation.
 
-If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of the L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
+If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
 
 $peer_ref at index 0 is set to a client socket address if specified.
 
@@ -286,7 +286,7 @@ If recvfrom operation need to be performed again for IO wait, L<Go#gosched_io_re
 
 And when the current goroutine is returned, this method retries recvfrom operation.
 
-If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of the L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
+If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
 
 Exceptions:
 
@@ -306,7 +306,7 @@ If sendto operation need to be performed again for IO wait, L<Go#gosched_io_writ
 
 And when the current goroutine is returned, this method retries sendto operation.
 
-If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of the L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
+If timeout occurs, an exception is thrown set C<eval_error_id> to the basic type ID of L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> class.
 
 Exceptions:
 
