@@ -380,7 +380,7 @@ class IO::Socket extends IO::Handle {
     my $listen = $self->{Listen};
     
     unless ($listen > 0) {
-      die "\"Listen\" field must be greater than 0.";
+      die "'Listen' field must be greater than 0.";
     }
     
     Sys->listen($fd, $listen);
