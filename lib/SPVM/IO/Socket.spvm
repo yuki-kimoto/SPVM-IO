@@ -49,23 +49,23 @@ class IO::Socket extends IO::Handle {
     $self->SUPER::init(Fn->merge_options($options, {}));
     
     # Domain option
-    my $domain = $options_h->get_or_default_int("Domain", 0);
+    my $domain = $options_h->get_or_default("Domain", 0)->(int);
     $self->{Domain} = $domain;
     
     # Proto option
-    my $proto = $options_h->get_or_default_int("Proto", 0);
+    my $proto = $options_h->get_or_default("Proto", 0)->(int);
     $self->{Proto} = $proto;
     
     # Type option
-    my $type = $options_h->get_or_default_int("Type", 0);
+    my $type = $options_h->get_or_default("Type", 0)->(int);
     $self->{Type} = $type;
     
     # Listen option
-    my $listen_backlog = $options_h->get_or_default_int("Listen", 0);
+    my $listen_backlog = $options_h->get_or_default("Listen", 0)->(int);
     $self->{Listen} = $listen_backlog;
     
     # Timeout option
-    my $timeout = $options_h->get_or_default_double("Timeout", 0.0);
+    my $timeout = $options_h->get_or_default("Timeout", 0.0)->(double);
     $self->{Timeout} = $timeout;
     
     # Blocking option
