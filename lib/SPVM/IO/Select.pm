@@ -29,9 +29,9 @@ This class is a Perl's L<IO::Select|IO::Select> porting to L<SPVM>.
 
 =head1 Fields
 
-=head2 fds_list
+=head2 fds
 
-C<has fds_list : L<IntList|SPVM::IntList>;>
+C<has fds : int[];>
 
 A list of file descriptors.
 
@@ -43,7 +43,7 @@ C<static method new : L<IO::Select|SPVM::IO::Select> ();>
 
 Creates a new L<IO::Select|SPVM::IO::Select> object and returns it.
 
-Internally, a L<IntList|SPVM::IntList> object with zero-length is created, and L</"fds_list"> is set to it.
+Internally, a L<IntList|SPVM::IntList> object with zero-length is created, and L</"fds"> is set to it.
 
 =head1 Instance Methods
 
@@ -51,15 +51,15 @@ Internally, a L<IntList|SPVM::IntList> object with zero-length is created, and L
 
 C<method add : void ($fd : int);>
 
-Adds the file descriptor $fd to L</"fds_list"> field.
+Adds the file descriptor $fd to L</"fds"> field.
 
-If $fd is already contained in L</"fds_list"> field, nothing is performed.
+If $fd is already contained in L</"fds"> field, nothing is performed.
 
 =head2 remove
 
 C<method remove : void ($fd : int);>
 
-Removes the file descriptor $fd from L</"fds_list"> field.
+Removes the file descriptor $fd from L</"fds"> field.
 
 If $fd is not found, nothing is performed.
 
@@ -67,25 +67,25 @@ If $fd is not found, nothing is performed.
 
 C<method exists : int ($fd : int);>
 
-If the file descriptor $fd is contained in L</"fds_list"> field, returns 1, otherwise returns 0.
+If the file descriptor $fd is contained in L</"fds"> field, returns 1, otherwise returns 0.
 
 =head2 fds
 
 C<method fds : int[] ();>
 
-Converts L</"fds_list"> field to an array and returns it.
+Copies L</"fds"> and returns it.
 
 =head2 count
 
 C<method count : int ();>
 
-Returns the length of L</"fds_list"> field.
+Returns the length of L</"fds"> field.
 
 =head2 can_read
 
 C<method can_read : int[] ($timeout : double = -1);>
 
-Returns readable file descriptors in L</"fds_list"> field.
+Returns readable file descriptors in L</"fds"> field.
 
 This method calls L<Sys::Select#select|SPVM::Sys::Select/"select"> method.
 
@@ -95,7 +95,7 @@ The timeout $timeout specifies the minimum interval that select() system call sh
 
 C<method can_write : int[] ($timeout : double = -1);>
 
-Returns writable file descriptors in L</"fds_list"> field.
+Returns writable file descriptors in L</"fds"> field.
 
 The timeout $timeout specifies the minimum interval that select() system call should block waiting for a file descriptor to become ready. If $timeout is 0, then select() returns immediately. If $timeout is a negative value, select() can block indefinitely.
 
@@ -103,7 +103,7 @@ The timeout $timeout specifies the minimum interval that select() system call sh
 
 C<method has_exception : int[] ($timeout : double = -1);>
 
-Returns file descriptors that causes exceptions in L</"fds_list"> field.
+Returns file descriptors that causes exceptions in L</"fds"> field.
 
 The timeout $timeout specifies the minimum interval that select() system call should block waiting for a file descriptor to become ready. If $timeout is 0, then select() returns immediately. If $timeout is a negative value, select() can block indefinitely.
 

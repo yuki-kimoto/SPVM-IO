@@ -12,14 +12,14 @@ class IO::Select {
   use Sys::Select::Constant as SELECT;
   
   # Fields
-  has fds_list : IntList;
+  has fds : int[];
   
   # Class Methods
   static method new : IO::Select () {
     
     my $self = new IO::Select;
     
-    $self->{fds_list} = IntList->new;
+    $self->{fds} = new int [0];
     
     return $self;
   }
@@ -27,7 +27,7 @@ class IO::Select {
   method add : void ($fd : int) {
     
     my $found = 0;
-    my $fds_list = $self->{fds_list};
+    my $fds_list = IntList->new_ref($self->{fds});
     
     for (my $i = 0; $i < $fds_list->length; $i++) {
       my $self_fd = $fds_list->get($i);
@@ -45,7 +45,7 @@ class IO::Select {
   
   method remove : void ($fd : int) {
     
-    my $fds_list = $self->{fds_list};
+    my $fds_list = IntList->new_ref($self->{fds});
     
     my $removed = 0;
     for (my $i = 0; $i < $fds_list->length; $i++) {
@@ -60,7 +60,7 @@ class IO::Select {
   
   method exists : int ($fd : int) {
     
-    my $fds_list = $self->{fds_list};
+    my $fds_list = IntList->new_ref($self->{fds});
     
     for (my $i = 0; $i < $fds_list->length; $i++) {
       my $self_fd = $fds_list->get($i);
@@ -75,16 +75,16 @@ class IO::Select {
   
   method fds : int[] () {
     
-    return $self->{fds_list}->to_array;
+    return Array->copy_int($self->{fds});
   }
   
   method count : int () {
     
-    return $self->{fds_list}->length;
+    return @{$self->{fds}};
   }
   
   method can_read : int[] ($timeout : double = -1) {
-    my $fds_list = $self->{fds_list};
+    my $fds_list = IntList->new_ref($self->{fds});;
     my $fds = $fds_list->to_array;
     
     my $timeout_int = 0.0;
@@ -126,7 +126,7 @@ class IO::Select {
   }
   
   method can_write : int[] ($timeout : double = -1) {
-    my $fds_list = $self->{fds_list};
+    my $fds_list = IntList->new_ref($self->{fds});;
     my $fds = $fds_list->to_array;
     
     my $timeout_int = 0.0;
@@ -168,7 +168,7 @@ class IO::Select {
   }
   
   method has_exception : int[] ($timeout : double = -1) {
-    my $fds_list = $self->{fds_list};
+    my $fds_list = IntList->new_ref($self->{fds});;
     my $fds = $fds_list->to_array;
     
     my $timeout_int = 0.0;

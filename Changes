@@ -1,3 +1,11 @@
+0.240 2025-10-13
+  [Incompatible Changes]
+    * IO::Select#fds_list field is changed.
+      [Before]
+      has fds_list : IntList;
+      [After]
+      has fds : int[];
+    
 0.239 2025-10-13
   [Internal Changes]
     * Do internal changes to catch up latest SPVM.
