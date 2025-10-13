@@ -64,20 +64,20 @@ class IO::Socket::IP extends IO::Socket {
   
   protected method init : void ($options : object[] = undef) {
     
-    my $options_h = Hash->new($options);
+    my $options = Hash->new($options);
     
     # Domain option
-    my $domain = $options_h->get_or_default("Domain", SOCKET->AF_INET)->(int);
-    $options_h->delete("Domain");
+    my $domain = $options->get_or_default("Domain", SOCKET->AF_INET)->(int);
     
     # Proto option
-    my $proto = $options_h->get_or_default("Proto", SOCKET->IPPROTO_TCP)->(int);
-    $options_h->delete("Proto");
+    my $proto = $options->get_or_default("Proto", SOCKET->IPPROTO_TCP)->(int);
     
     # Type option
-    my $type = $options_h->get_or_default("Type", -1)->(int);
-    $options_h->delete("Type");
-    unless ($type >= 0) {
+    my $type = -1;
+    if ($options->exists("Type")) {
+      $type = $options->get("Type")->(int);
+    }
+    else {
       if ($proto == SOCKET->IPPROTO_TCP) {
         $type = SOCKET->SOCK_STREAM;
       }
@@ -86,41 +86,41 @@ class IO::Socket::IP extends IO::Socket {
       }
     }
     
-    $self->SUPER::init(Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type}));
+    $self->SUPER::init(Fn->merge_options($options->to_array, {Domain => $domain, Proto => $proto, Type => $type}));
     
     # LocalAddr option
-    my $local_address = $options_h->get_or_default("LocalAddr", undef)->(string);
+    my $local_address = $options->get_or_default("LocalAddr", undef)->(string);
     $self->{LocalAddr} = $local_address;
     
     # LocalPort option
-    my $local_port = $options_h->get_or_default("LocalPort", 0)->(int);
+    my $local_port = $options->get_or_default("LocalPort", 0)->(int);
     $self->{LocalPort} = $local_port;
     
     # PeerAddr option
-    my $peer_address = $options_h->get_or_default("PeerAddr", undef)->(string);
+    my $peer_address = $options->get_or_default("PeerAddr", undef)->(string);
     $self->{PeerAddr} = $peer_address;
     
     # PeerPort option
-    my $peer_port = $options_h->get_or_default("PeerPort", 0)->(int);
+    my $peer_port = $options->get_or_default("PeerPort", 0)->(int);
     $self->{PeerPort} = $peer_port;
     
     # ReuseAddr option
-    my $reuse_addr = $options_h->get_or_default("ReuseAddr", 0)->(int);
+    my $reuse_addr = $options->get_or_default("ReuseAddr", 0)->(int);
     $self->{ReuseAddr} = (byte)$reuse_addr;
     
     # ReusePort option
-    my $reuse_port = $options_h->get_or_default("ReusePort", 0)->(int);
+    my $reuse_port = $options->get_or_default("ReusePort", 0)->(int);
     $self->{ReusePort} = (byte)$reuse_port;
     
     # Broadcast option
-    my $broadcast = $options_h->get_or_default("Broadcast", 0)->(int);
+    my $broadcast = $options->get_or_default("Broadcast", 0)->(int);
     $self->{Broadcast} = (byte)$broadcast;
     
     # V6Only option
-    if ($options_h->exists("V6Only")) {
+    if ($options->exists("V6Only")) {
       $self->{V6OnlySpecified} = 1;
       
-      my $v6only = $options_h->{"V6Only"}->(int);
+      my $v6only = $options->{"V6Only"}->(int);
       $self->{V6Only} = (byte)$v6only;
     }
     
