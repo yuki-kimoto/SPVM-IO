@@ -89,24 +89,19 @@ class IO::Socket::IP extends IO::Socket {
     $self->SUPER::init(Fn->merge_options($options->to_array, {Domain => $domain, Proto => $proto, Type => $type}));
     
     # LocalAddr option
-    my $local_address = $options->get_or_default("LocalAddr", undef)->(string);
-    $self->{LocalAddr} = $local_address;
+    $self->{LocalAddr} = $options->get_or_default("LocalAddr", undef)->(string);
     
     # LocalPort option
-    my $local_port = $options->get_or_default("LocalPort", 0)->(int);
-    $self->{LocalPort} = $local_port;
+    $self->{LocalPort} = $options->get_or_default("LocalPort", 0)->(int);
     
     # PeerAddr option
-    my $peer_address = $options->get_or_default("PeerAddr", undef)->(string);
-    $self->{PeerAddr} = $peer_address;
+    $self->{PeerAddr} = $options->get_or_default("PeerAddr", undef)->(string);
     
     # PeerPort option
-    my $peer_port = $options->get_or_default("PeerPort", 0)->(int);
-    $self->{PeerPort} = $peer_port;
+    $self->{PeerPort} = $options->get_or_default("PeerPort", 0)->(int);
     
     # ReuseAddr option
-    my $reuse_addr = $options->get_or_default("ReuseAddr", 0)->(int);
-    $self->{ReuseAddr} = (byte)$reuse_addr;
+    $self->{ReuseAddr} = $options->get_or_default("ReuseAddr", 0)->(byte);
     
     # ReusePort option
     my $reuse_port = $options->get_or_default("ReusePort", 0)->(int);
@@ -128,11 +123,11 @@ class IO::Socket::IP extends IO::Socket {
     
     my $fd = $self->{FD};
     
-    if ($peer_address && $listen > 0) {
+    if ($self->{PeerAddr} && $listen > 0) {
       die "PeerAddr option and Listen option cannot be used together.";
     }
     
-    if ($peer_address) {
+    if ($self->{PeerAddr}) {
       $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
     }
     elsif ($listen) {
