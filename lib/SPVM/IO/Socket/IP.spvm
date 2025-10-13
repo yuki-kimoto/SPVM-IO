@@ -112,21 +112,17 @@ class IO::Socket::IP extends IO::Socket {
       $self->{V6Only} = $options->{"V6Only"}->(byte);
     }
     
-    my $listen = $self->{Listen};
-    
-    my $fd = $self->{FD};
-    
-    if ($self->{PeerAddr} && $listen > 0) {
+    if ($self->{PeerAddr} && $self->{Listen} > 0) {
       die "PeerAddr option and Listen option cannot be used together.";
     }
     
     if ($self->{PeerAddr}) {
       $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
     }
-    elsif ($listen) {
+    elsif ($self->{Listen}) {
       $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_SERVER;
     }
-    elsif ($fd >= 0) {
+    elsif ($self->{FD} >= 0) {
       $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_ACCEPTED;
     }
     else {
