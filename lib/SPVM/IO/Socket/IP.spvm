@@ -28,8 +28,6 @@ class IO::Socket::IP extends IO::Socket {
   
   has V6Only : byte;
   
-  has V6OnlySpecified : byte;
-  
   # Class Methods
   static method new : IO::Socket::IP ($options : object[] = undef) {
     
@@ -104,19 +102,14 @@ class IO::Socket::IP extends IO::Socket {
     $self->{ReuseAddr} = $options->get_or_default("ReuseAddr", 0)->(byte);
     
     # ReusePort option
-    my $reuse_port = $options->get_or_default("ReusePort", 0)->(int);
-    $self->{ReusePort} = (byte)$reuse_port;
+    $self->{ReusePort} = $options->get_or_default("ReusePort", 0)->(byte);
     
     # Broadcast option
-    my $broadcast = $options->get_or_default("Broadcast", 0)->(int);
-    $self->{Broadcast} = (byte)$broadcast;
+    $self->{Broadcast} = $options->get_or_default("Broadcast", 0)->(byte);
     
     # V6Only option
     if ($options->exists("V6Only")) {
-      $self->{V6OnlySpecified} = 1;
-      
-      my $v6only = $options->{"V6Only"}->(int);
-      $self->{V6Only} = (byte)$v6only;
+      $self->{V6Only} = $options->{"V6Only"}->(byte);
     }
     
     my $listen = $self->{Listen};
@@ -184,7 +177,7 @@ class IO::Socket::IP extends IO::Socket {
       $self->setsockopt(SOCKET->IPPROTO_TCP, SOCKET->TCP_NODELAY, 1);
     }
     
-    if ($self->{V6OnlySpecified}) {
+    if (exists $self->{V6Only}) {
       $self->setsockopt(SOCKET->IPPROTO_IPV6, SOCKET->IPV6_V6ONLY, !!$self->{V6Only});
     }
     
