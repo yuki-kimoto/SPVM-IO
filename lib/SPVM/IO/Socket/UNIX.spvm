@@ -41,28 +41,26 @@ class IO::Socket::UNIX extends IO::Socket {
   
   protected method init : void ($options : object[] = undef) {
     
-    my $options_h = Hash->new($options);
+    my $options = Hash->new($options);
     
     # Domain option
     my $domain = SOCKET->AF_UNIX;
     
     # Type option
-    my $type = $options_h->get_or_default("Type", SOCKET->SOCK_STREAM)->(int);
+    my $type = $options->get_or_default("Type", SOCKET->SOCK_STREAM)->(int);
     
     # Proto option
     my $proto = 0;
     
-    $self->SUPER::init(Fn->merge_options($options, {Domain => $domain, Proto => $proto, Type => $type}));
+    $self->SUPER::init(Fn->merge_options($options->to_array, {Domain => $domain, Proto => $proto, Type => $type}));
     
     # Peer option
-    my $peer = $options_h->get_or_default("Peer", undef)->(string);
-    $self->{Peer} = $peer;
+    $self->{Peer} = $options->get_or_default("Peer", undef)->(string);
     
     # Local option
-    my $local = $options_h->get_or_default("Local", undef)->(string);
-    $self->{Local} = $local;
+    $self->{Local} = $options->get_or_default("Local", undef)->(string);
     
-    if ($peer && $local) {
+    if ($self->{Peer} && $self->{Local}) {
       die "Peer option and Local option cannot be used together.";
     }
   }
