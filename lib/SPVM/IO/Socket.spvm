@@ -49,24 +49,19 @@ class IO::Socket extends IO::Handle {
     my $options = Hash->new($options);
     
     # Domain option
-    my $domain = $options->get_or_default("Domain", 0)->(int);
     $self->{Domain} = $options->get_or_default("Domain", 0)->(int);
     
     # Proto option
-    my $proto = $options->get_or_default("Proto", 0)->(int);
-    $self->{Proto} = $proto;
+    $self->{Proto} = $options->get_or_default("Proto", 0)->(int);
     
     # Type option
-    my $type = $options->get_or_default("Type", 0)->(int);
-    $self->{Type} = $type;
+    $self->{Type} = $options->get_or_default("Type", 0)->(int);
     
     # Listen option
-    my $listen_backlog = $options->get_or_default("Listen", 0)->(int);
-    $self->{Listen} = $listen_backlog;
+    $self->{Listen} = $options->get_or_default("Listen", 0)->(int);
     
     # Timeout option
-    my $timeout = $options->get_or_default("Timeout", 0.0)->(double);
-    $self->{Timeout} = $timeout;
+    $self->{Timeout} = $options->get_or_default("Timeout", 0.0)->(double);
     
     # Blocking option
     if ($options->exists("Blocking")) {
