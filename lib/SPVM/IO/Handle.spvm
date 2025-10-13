@@ -28,13 +28,11 @@ class IO::Handle {
     
     Fn->check_option_names($options, $self->option_names);
     
-    my $options_h = Hash->new($options);
+    my $options = Hash->new($options);
     
-    my $fd = $options_h->get_or_default("FD", -1)->(int);
-    $self->{FD} = $fd;
+    $self->{FD} = $options->get_or_default("FD", -1)->(int);
     
-    my $blocking = $options_h->get_or_default("Blocking", 1)->(int);
-    $self->{Blocking} = (byte)$blocking;
+    $self->{Blocking} = $options->get_or_default("Blocking", 1)->(byte);
   }
   
   method option_names : string[] () {
