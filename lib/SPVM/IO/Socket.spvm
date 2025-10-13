@@ -44,32 +44,32 @@ class IO::Socket extends IO::Handle {
   # Instance Methods
   protected method init : void ($options : object[] = undef) {
     
-    my $options_h = Hash->new($options);
+    $self->SUPER::init($options);
     
-    $self->SUPER::init(Fn->merge_options($options, {}));
+    my $options = Hash->new($options);
     
     # Domain option
-    my $domain = $options_h->get_or_default("Domain", 0)->(int);
-    $self->{Domain} = $domain;
+    my $domain = $options->get_or_default("Domain", 0)->(int);
+    $self->{Domain} = $options->get_or_default("Domain", 0)->(int);
     
     # Proto option
-    my $proto = $options_h->get_or_default("Proto", 0)->(int);
+    my $proto = $options->get_or_default("Proto", 0)->(int);
     $self->{Proto} = $proto;
     
     # Type option
-    my $type = $options_h->get_or_default("Type", 0)->(int);
+    my $type = $options->get_or_default("Type", 0)->(int);
     $self->{Type} = $type;
     
     # Listen option
-    my $listen_backlog = $options_h->get_or_default("Listen", 0)->(int);
+    my $listen_backlog = $options->get_or_default("Listen", 0)->(int);
     $self->{Listen} = $listen_backlog;
     
     # Timeout option
-    my $timeout = $options_h->get_or_default("Timeout", 0.0)->(double);
+    my $timeout = $options->get_or_default("Timeout", 0.0)->(double);
     $self->{Timeout} = $timeout;
     
     # Blocking option
-    if ($options_h->exists("Blocking")) {
+    if ($options->exists("Blocking")) {
       die "Blocking option is not allowed in IO::Socket class and its child classes.";
     }
     
