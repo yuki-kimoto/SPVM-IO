@@ -1,3 +1,7 @@
+0.242 2025-10-14
+  [Internal Changes]
+    * Refactor options.
+
 0.241 2025-10-13
   [Incompatible Changes]
     * IO::Poll#disabled_fd_indexes field is changed.
