@@ -1,3 +1,11 @@
+0.241 2025-10-13
+  [Incompatible Changes]
+    * IO::Poll#disabled_fd_indexes field is changed.
+      [Before]
+      has disabled_fd_indexes : IntList;
+      [After]
+      has disabled_fd_indexes : int[];
+    
 0.240 2025-10-13
   [Incompatible Changes]
     * IO::Select#fds_list field is changed.

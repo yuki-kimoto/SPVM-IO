@@ -48,7 +48,7 @@ A hash whose keys are file descriptors and whose values are indexes of L</"pollf
 
 =head2 disabled_fd_indexes
 
-C<has disabled_fd_indexes : L<IntList|SPVM::IntList>;>
+C<has disabled_fd_indexes : int[];>
 
 A list of indexes of disabled file descriptors of L</"pollfd_array">.
 
@@ -66,7 +66,7 @@ A L<Sys::Poll::PollfdArray|SPVM::Sys::Poll::PollfdArray> object is created and s
 
 A L<Hash|SPVM::Hash> object is created and sets L</"fd_indexes_h"> field to it.
 
-An L<IntList|SPVM::IntList> object is created and sets L</"disabled_fd_indexes"> field to it.
+An empty int array is created and sets L</"disabled_fd_indexes"> field to it.
 
 =head1 Instance Methods
 

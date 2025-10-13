@@ -14,7 +14,7 @@ class IO::Poll {
   
   has fd_indexes_h : Hash of Int;
   
-  has disabled_fd_indexes : IntList;
+  has disabled_fd_indexes : int[];
   
   # Class Methods
   static method new : IO::Poll () {
@@ -29,7 +29,7 @@ class IO::Poll {
     my $fd_indexes_h = Hash->new;
     $self->{fd_indexes_h} = $fd_indexes_h;
     
-    my $disabled_fd_indexes = IntList->new;
+    my $disabled_fd_indexes = new int[0];
     $self->{disabled_fd_indexes} = $disabled_fd_indexes;
     
     return $self;
@@ -44,7 +44,7 @@ class IO::Poll {
     
     my $disabled_fd_indexes = $self->{disabled_fd_indexes};
     
-    my $disabled_fd_indexes_length = $disabled_fd_indexes->length;
+    my $disabled_fd_indexes_length = @$disabled_fd_indexes;
     
     my $fds_length = $pollfd_array_length - $disabled_fd_indexes_length;
     
@@ -104,9 +104,9 @@ class IO::Poll {
         $fd_index = (int)$fd_index_object;
       }
       else {
-        my $disabled_fd_indexes = $self->{disabled_fd_indexes};
+        my $disabled_fd_indexes = IntList->new_ref($self->{disabled_fd_indexes});
         
-        if ($disabled_fd_indexes->length > 0) {
+        if (@$disabled_fd_indexes > 0) {
           $fd_index = (int)$disabled_fd_indexes->pop;
           $pollfd_array->set_fd($fd_index, $fd);
         }
@@ -126,7 +126,7 @@ class IO::Poll {
         
         $pollfd_array->set_fd($fd_index, -1);
         
-        my $disabled_fd_indexes = $self->{disabled_fd_indexes};
+        my $disabled_fd_indexes = IntList->new_ref($self->{disabled_fd_indexes});
         
         $disabled_fd_indexes->push($fd_index);
         
