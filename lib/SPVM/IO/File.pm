@@ -212,7 +212,7 @@ Same as the following method call.
 
 =head2 printf
 
-C<method printf : void ($format : string, $args : object[]...);>
+C<method printf : void ($format : string, $args : object...);>
 
 Outputs a string fomatted with the format $format and its parameters $args to the file stream L</"FileStream">.
 

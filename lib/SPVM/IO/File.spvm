@@ -218,7 +218,7 @@ class IO::File extends IO::Handle {
     $self->write($string);
   }
   
-  method printf : void ($format : string, $args : object[]) {
+  method printf : void ($format : string, $args : object...) {
     my $formated_string = Format->sprintf($format, $args);
     $self->print($formated_string);
   }

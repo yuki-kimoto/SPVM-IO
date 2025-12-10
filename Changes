@@ -5,7 +5,14 @@
     * Move IO::Handle#print method to IO::File#print.
     * Move IO::Handle#printf method to IO::File#printf.
     * Move IO::Handle#say method to IO::File#say.
-    
+    * Implement IO::Handle#sysread method.
+    * Implement IO::Handle#syswrite method.
+    * Change IO::File#printf argument
+      [Before]
+      method printf : void ($format : string, $args : object[]);
+      [After]
+      method printf : void ($format : string, $args : object...);
+      
 0.242 2025-10-14
   [Internal Changes]
     * Refactor options.
