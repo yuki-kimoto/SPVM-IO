@@ -340,7 +340,7 @@ Exceptions thrown by L</"sendto"> method could be thrown.
 
 =head2 sysread
 
-C<method sysread : int ($buffer : mutable string, $length : int = -1, $offset : int = 0);>
+C<method sysread : int ($buffer : mutable string, $length : int, $offset : int = 0);>
 
 Perform sysread operation.
 

@@ -100,25 +100,21 @@ Closes the handle associated with the file descriptoer L</"FD">.
 
 This method is implemented in a child class.
 
-=head2 read
+=head2 sysread
 
-C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
+C<method sysread : int ($string : mutable string, $length : int, $offset : int = 0);>
 
 Reads the length $length of data from the stream associated with the file descriptoer L</"FD"> and store it to the offset $offset position of the string $string.
 
 And returns the read length.
 
-This method is implemented in a child class.
+=head2 syswrite
 
-=head2 write
-
-C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
+C<method syswrite : int ($string : string, $length : int = -1, $offset : int = 0);>
 
 Writes the length $length from the offset $offset of the string $string to the stream associated with the file descriptoer L</"FD">.
 
 And returns the write length.
-
-This method is implemented in a child class.
 
 =head2 stat
 

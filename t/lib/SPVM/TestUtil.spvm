@@ -30,7 +30,7 @@ class TestUtil {
         
         my $data = (mutable string)new_string_len 1;
         
-        my $read_length = $client_socket->sysread($data);
+        my $read_length = $client_socket->sysread($data, length $data);
         
         if ($read_length > 0) {
           $client_socket->syswrite($data);
@@ -83,7 +83,7 @@ class TestUtil {
             
             my $data = (mutable string)new_string_len 1;
             
-            my $read_length = $client_socket->sysread($data);
+            my $read_length = $client_socket->sysread($data, length $data);
             
             if ($read_length > 0) {
               $client_socket->syswrite($data);
@@ -122,7 +122,7 @@ class TestUtil {
       
       my $data = (mutable string)new_string_len 1;
       
-      my $read_length = $client_socket->sysread($data);
+      my $read_length = $client_socket->sysread($data, length $data);
       
       if ($read_length > 0) {
         $client_socket->syswrite($data);
@@ -141,14 +141,12 @@ class TestUtil {
     });
     
     unless ($server_socket->hostpath eq $sock_path) {
-      warn;
       $test_success_ref->[0] = 0;
     }
     
     my $client_socket = $server_socket->accept;
     
     unless ($client_socket->hostpath eq $sock_path) {
-      warn;
       $test_success_ref->[0] = 0;
     }
     
@@ -156,7 +154,7 @@ class TestUtil {
       
       my $data = (mutable string)new_string_len 1;
       
-      my $read_length = $client_socket->sysread($data);
+      my $read_length = $client_socket->sysread($data, length $data);
       
       if ($read_length > 0) {
         $client_socket->syswrite($data);

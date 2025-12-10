@@ -251,7 +251,7 @@ class IO::Socket extends IO::Handle {
     return $self->sendto($buffer, $flags, $to, $length, $offset);
   }
   
-  method sysread : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
+  method sysread : int ($buffer : mutable string, $length : int, $offset : int = 0) {
     
     my $flags = 0;
     

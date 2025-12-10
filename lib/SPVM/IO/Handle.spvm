@@ -87,9 +87,23 @@ class IO::Handle {
   
   method close : void () { die "Not implemented."; }
   
-  method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
+  method sysread : int ($string : mutable string, $length : int, $offset : int = 0) {
+    
+    my $fd = $self->{FD};
+    
+    my $read_length = Sys->sysread($fd, $string, $length, $offset);
+    
+    return $read_length;
+  }
   
-  method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
+  method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
+    
+    my $fd = $self->{FD};
+    
+    my $write_length = Sys->syswrite($fd, $string, $length, $offset);
+    
+    return $write_length;
+  }
   
   method stat : Sys::IO::Stat () {
     my $fd = $self->{FD};
