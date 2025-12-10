@@ -536,7 +536,7 @@ class TestCase::IO::Socket::IP {
           my $read_length = $client_socket->read($data);
           
           if ($read_length > 0) {
-            $client_socket->write($data);
+            $client_socket->syswrite($data);
           }
           else {
             last;
@@ -663,7 +663,7 @@ class TestCase::IO::Socket::IP {
             my $read_length = $client_socket->read($data);
             
             if ($read_length > 0) {
-              $client_socket->write($data);
+              $client_socket->syswrite($data);
             }
             else {
               last;
@@ -797,7 +797,7 @@ class TestCase::IO::Socket::IP {
             eval { $read_length = $client_socket->read($data); }
             
             if ($read_length > 0) {
-              eval { $client_socket->write($data); }
+              eval { $client_socket->syswrite($data); }
               
               if ($@) {
                 last;

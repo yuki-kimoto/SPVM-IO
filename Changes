@@ -1,3 +1,7 @@
+0.243 2025-12-10
+  [Incompatible Changes]
+    * Rename IO::Socket#write method to syswrite.
+
 0.242 2025-10-14
   [Internal Changes]
     * Refactor options.

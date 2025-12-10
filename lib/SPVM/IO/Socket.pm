@@ -350,11 +350,11 @@ Exceptions:
 
 Exceptions thrown by L</"recv"> method could be thrown.
 
-=head2 write
+=head2 syswrite
 
-C<method write : int ($buffer : string, $length : int = -1, $offset : int = 0);>
+C<method syswrite : int ($buffer : string, $length : int = -1, $offset : int = 0);>
 
-Perform write operation.
+Perform syswrite operation.
 
 This method just calls L</"send"> method given $buffer, $flags set to 0, $length, $offset, and returns its return values.
 
