@@ -12,7 +12,8 @@
       method printf : void ($format : string, $args : object[]);
       [After]
       method printf : void ($format : string, $args : object...);
-      
+  [Changes]
+    * IO::File#open method close the file if the handle is already opened.
 0.242 2025-10-14
   [Internal Changes]
     * Refactor options.

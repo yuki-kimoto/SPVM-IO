@@ -62,7 +62,7 @@ class IO::File extends IO::Handle {
     }
     
     if ($self->opened) {
-      die "Already opened.";
+      $self->close;
     }
     
     my $file_stream_ref = [(Sys::IO::FileStream)undef];

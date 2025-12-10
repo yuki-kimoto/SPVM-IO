@@ -249,6 +249,13 @@ class TestCase::IO::File {
       $@ = undef;
     }
     
+    {
+      my $io_file = IO::File->new($file, "<");
+      
+      $io_file->open($file, "<");
+      
+    }
+    
     return 1;
   }
   
