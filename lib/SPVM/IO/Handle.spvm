@@ -87,7 +87,12 @@ class IO::Handle {
   
   method close : void () { die "Not implemented."; }
   
-  method sysread : int ($string : mutable string, $length : int, $offset : int = 0) {
+  # $length is optional instead of Perl's one
+  method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
+    
+    unless ($length > -1) {
+      $length = length $string;
+    }
     
     my $fd = $self->{FD};
     

@@ -102,7 +102,7 @@ This method is implemented in a child class.
 
 =head2 sysread
 
-C<method sysread : int ($string : mutable string, $length : int, $offset : int = 0);>
+C<method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
 
 Reads the length $length of data from the stream associated with the file descriptoer L</"FD"> and store it to the offset $offset position of the string $string.
 

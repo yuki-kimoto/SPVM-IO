@@ -251,7 +251,16 @@ class IO::Socket extends IO::Handle {
     return $self->sendto($buffer, $flags, $to, $length, $offset);
   }
   
-  method sysread : int ($buffer : mutable string, $length : int, $offset : int = 0) {
+  method sysread : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
+    
+    my $flags = 0;
+    
+    return $self->recv($buffer, $length, $flags, $offset);
+  }
+  
+  method read : int ($buffer : mutable string, $length : int, $offset : int = 0) {
+    
+    diag "IO::Socket#read method is deprecated. Use sysread method instead.";
     
     my $flags = 0;
     
@@ -259,6 +268,15 @@ class IO::Socket extends IO::Handle {
   }
   
   method syswrite : int ($buffer : string, $length : int = -1, $offset : int = 0) {
+    
+    my $flags = 0;
+    
+    return $self->send($buffer, $flags, $length, $offset);
+  }
+  
+  method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
+    
+    diag "IO::Socket#write method is deprecated. Use syswrite method instead.";
     
     my $flags = 0;
     

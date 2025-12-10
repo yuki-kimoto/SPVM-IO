@@ -383,7 +383,7 @@ class TestCase::IO::File {
       
       my $buffer = (mutable string)new_string_len 5;
       {
-        my $sysread_length = $io_file->sysread($buffer, length $buffer);
+        my $sysread_length = $io_file->sysread($buffer);
         unless ((string)$buffer eq "abcd\n") {
           return 0;
         }
