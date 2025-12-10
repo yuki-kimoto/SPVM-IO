@@ -338,11 +338,11 @@ Exceptions:
 
 Exceptions thrown by L</"sendto"> method could be thrown.
 
-=head2 read
+=head2 sysread
 
-C<method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0);>
+C<method sysread : int ($buffer : mutable string, $length : int = -1, $offset : int = 0);>
 
-Perform read operation.
+Perform sysread operation.
 
 This method just calls L</"recv"> method given $buffer, $length, $flags set to 0, $offset, and returns its return values.
 
