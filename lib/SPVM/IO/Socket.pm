@@ -350,18 +350,6 @@ Exceptions:
 
 Exceptions thrown by L</"recv"> method could be thrown.
 
-=head2 write
-
-C<method write : int ($buffer : string, $length : int = -1, $offset : int = 0);>
-
-Perform write operation.
-
-This method just calls L</"send"> method given $buffer, $flags set to 0, $length, $offset, and returns its return values.
-
-Exceptions:
-
-Exceptions thrown by L</"send"> method could be thrown.
-
 =head2 sockname
 
 C<method sockname : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> ();>

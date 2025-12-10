@@ -1,3 +1,9 @@
+0.243 2025-12-10
+  [Incompatible Changes]
+    * Sorry, Remove IO::Socket#write method.
+      
+      This is because "write" means File buffering IO.
+      
 0.242 2025-10-14
   [Internal Changes]
     * Refactor options.

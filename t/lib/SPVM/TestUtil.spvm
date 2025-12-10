@@ -125,7 +125,7 @@ class TestUtil {
       my $read_length = $client_socket->read($data);
       
       if ($read_length > 0) {
-        $client_socket->write($data);
+        $client_socket->send($data);
       }
       else {
         last;
@@ -159,7 +159,7 @@ class TestUtil {
       my $read_length = $client_socket->read($data);
       
       if ($read_length > 0) {
-        $client_socket->write($data);
+        $client_socket->send($data);
       }
       else {
         last;

@@ -258,13 +258,6 @@ class IO::Socket extends IO::Handle {
     return $self->recv($buffer, $length, $flags, $offset);
   }
   
-  method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
-    
-    my $flags = 0;
-    
-    return $self->send($buffer, $flags, $length, $offset);
-  }
-  
   method sockname : Sys::Socket::Sockaddr () {
     
     my $fd = $self->{FD};
