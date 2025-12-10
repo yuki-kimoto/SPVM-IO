@@ -2,7 +2,10 @@
   [Incompatible Changes]
     * Rename IO::Socket#write method to syswrite.
     * Rename IO::Socket#read method to sysread.
-
+    * Move IO::Handle#print method to IO::File#print.
+    * Move IO::Handle#printf method to IO::File#printf.
+    * Move IO::Handle#say method to IO::File#say.
+    
 0.242 2025-10-14
   [Internal Changes]
     * Refactor options.

@@ -200,6 +200,38 @@ Exceptions:
 
 Exceptions thrown by L<Sys::IO#fwrite|SPVM::Sys::IO/"fwrite"> method could be thrown.
 
+=head2 print
+
+C<method print : void ($string : string);>
+
+Outputs the string $string to the file stream L</"FileStream">.
+
+Same as the following method call.
+
+  $handle->write($string);
+
+=head2 printf
+
+C<method printf : void ($format : string, $args : object[]...);>
+
+Outputs a string fomatted with the format $format and its parameters $args to the file stream L</"FileStream">.
+
+Same as the following method call.
+
+  my $formated_string = Format->sprintf($format, $args);
+  $handle->print($formated_string);
+
+=head2 say
+
+C<method say : void ($string : string);>
+
+Outputs the string $string and C<\n> to the file stream L</"FileStream">.
+
+Same as the following method call.
+
+  $handle->print($string);
+  $handle->print("\n");
+
 =head2 flush
 
 C<method flush : void ();>

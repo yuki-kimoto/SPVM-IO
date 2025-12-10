@@ -214,6 +214,20 @@ class IO::File extends IO::Handle {
     return $write_length;
   }
   
+  method print : void ($string : string) {
+    $self->write($string);
+  }
+  
+  method printf : void ($format : string, $args : object[]) {
+    my $formated_string = Format->sprintf($format, $args);
+    $self->print($formated_string);
+  }
+  
+  method say : void ($string : string) {
+    $self->print($string);
+    $self->print("\n");
+  }
+  
   method flush : void () {
     
     my $file_stream = $self->{FileStream};

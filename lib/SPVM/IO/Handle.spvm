@@ -91,20 +91,6 @@ class IO::Handle {
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) { die "Not implemented."; }
   
-  method print : void ($string : string) {
-    $self->write($string);
-  }
-  
-  method printf : void ($format : string, $args : object[]) {
-    my $formated_string = Format->sprintf($format, $args);
-    $self->print($formated_string);
-  }
-  
-  method say : void ($string : string) {
-    $self->print($string);
-    $self->print("\n");
-  }
-  
   method stat : Sys::IO::Stat () {
     my $fd = $self->{FD};
     
