@@ -50,6 +50,8 @@ ok(SPVM::TestCase::IO::File->close);
   ok(SPVM::TestCase::IO::File->print_long_lines);
 }
 
+ok(SPVM::TestCase::IO::File->say);
+ok(SPVM::TestCase::IO::File->printf);
 ok(SPVM::TestCase::IO::File->autoflush);
 ok(SPVM::TestCase::IO::File->write);
 {
