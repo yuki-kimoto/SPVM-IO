@@ -258,7 +258,7 @@ class IO::Socket extends IO::Handle {
     return $self->recv($buffer, $length, $flags, $offset);
   }
   
-  method read : int ($buffer : mutable string, $length : int, $offset : int = 0) {
+  method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
     
     diag "IO::Socket#read method is deprecated. Use sysread method instead.";
     
