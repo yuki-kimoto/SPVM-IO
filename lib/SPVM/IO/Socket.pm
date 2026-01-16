@@ -178,7 +178,7 @@ Performs connect operation.
 
 This method calls L<Sys#connect> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Sockaddr"> field.
 
-If connect operation need to be performed again for IO wait, L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
+If connect operation need to be performed again for IO wait, L<Go#gosched_io_write_sec|SPVM::Go/"gosched_io_write_sec"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
 
 And when the current goroutine is returned, this method retries connect operation.
 
@@ -188,7 +188,7 @@ Exceptions:
 
 Exceptions thrown by L<Sys#connect> method could be thrown.
 
-Exceptions thrown by L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method could be thrown.
+Exceptions thrown by L<Go#gosched_io_write_sec|SPVM::Go/"gosched_io_write_sec"> method could be thrown.
 
 =head2 bind
 
@@ -224,7 +224,7 @@ The type of the returned object is the type of this instance.
 
 This method calls L<Sys#accept|SPVM::Sys|/"accept"> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and $peer_ref.
 
-If accept operation need to be performed again for IO wait, L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
+If accept operation need to be performed again for IO wait, L<Go#gosched_io_read_sec|SPVM::Go/"gosched_io_read_sec"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
 
 And when the current goroutine is returned, this method retries accept operation.
 
@@ -236,7 +236,7 @@ Exceptions:
 
 Exceptions thrown by L<Sys#accept|SPVM::Sys|/"accept"> method could be thrown.
 
-Exceptions thrown by L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method could be thrown.
+Exceptions thrown by L<Go#gosched_io_read_sec|SPVM::Go/"gosched_io_read_sec"> method could be thrown.
 
 =head2 shutdown
 
@@ -282,7 +282,7 @@ Performs recvfrom operation and returns read length.
 
 This method calls L<Sys#recvfrom|SPVM::Sys/"recvfrom"> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field, $buffer, $length, $flags, $from_ref, $offset, and returns its return value.
 
-If recvfrom operation need to be performed again for IO wait, L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
+If recvfrom operation need to be performed again for IO wait, L<Go#gosched_io_read_sec|SPVM::Go/"gosched_io_read_sec"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
 
 And when the current goroutine is returned, this method retries recvfrom operation.
 
@@ -292,7 +292,7 @@ Exceptions:
 
 Exceptions thrown by L<Sys#recvfrom|SPVM::Sys/"recvfrom"> method could be thrown.
 
-Exceptions thrown by L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method could be thrown.
+Exceptions thrown by L<Go#gosched_io_read_sec|SPVM::Go/"gosched_io_read_sec"> method could be thrown.
 
 =head2 sendto
 
@@ -302,7 +302,7 @@ Performs sendto operation and returns write length.
 
 This method calls L<Sys#sendto|SPVM::Sys/"sendto"> method given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field, $buffer, $flags, $to, $length, $offset, and returns its return value.
 
-If sendto operation need to be performed again for IO wait, L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
+If sendto operation need to be performed again for IO wait, L<Go#gosched_io_write_sec|SPVM::Go/"gosched_io_write_sec"> method is called given the value of L<IO::Handle#FD|SPVM::IO::Handle/"FD"> field and the value of L</"Timeout"> field.
 
 And when the current goroutine is returned, this method retries sendto operation.
 
@@ -312,7 +312,7 @@ Exceptions:
 
 Exceptions thrown by L<Sys#sendto|SPVM::Sys/"sendto"> method could be thrown.
 
-Exceptions thrown by L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method could be thrown.
+Exceptions thrown by L<Go#gosched_io_write_sec|SPVM::Go/"gosched_io_write_sec"> method could be thrown.
 
 =head2 recv
 

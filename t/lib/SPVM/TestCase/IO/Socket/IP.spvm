@@ -800,7 +800,7 @@ class TestCase::IO::Socket::IP {
               
               my $data = (mutable string)new_string_len 1;
               
-              Go->sleep(0.5);
+              Go->sleep_sec(0.5);
               
               my $read_length = 0;
               eval { $read_length = $client_socket->sysread($data, length $data); }

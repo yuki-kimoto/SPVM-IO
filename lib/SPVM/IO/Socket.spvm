@@ -141,7 +141,7 @@ class IO::Socket extends IO::Handle {
         my $again = Sys::Socket::Errno->is_accept_again(Sys::Socket::Errno->errno);
         
         if ($again) {
-          Go->gosched_io_read($fd, $timeout);
+          Go->gosched_io_read_sec($fd, $timeout);
           next;
         }
         else {
@@ -188,7 +188,7 @@ class IO::Socket extends IO::Handle {
         my $again = Sys::Socket::Errno->is_read_again(Sys::Socket::Errno->errno);
         
         if ($again) {
-          Go->gosched_io_read($fd, $timeout);
+          Go->gosched_io_read_sec($fd, $timeout);
           next;
         }
         else {
@@ -222,7 +222,7 @@ class IO::Socket extends IO::Handle {
         my $again = Sys::Socket::Errno->is_write_again(Sys::Socket::Errno->errno);
         
         if ($again) {
-          Go->gosched_io_write($fd, $timeout);
+          Go->gosched_io_write_sec($fd, $timeout);
           next;
         }
         else {
@@ -364,7 +364,7 @@ class IO::Socket extends IO::Handle {
         my $again = Sys::Socket::Errno->is_connect_again(Sys::Socket::Errno->errno);
         
         if ($again) {
-          Go->gosched_io_write($fd, $timeout);
+          Go->gosched_io_write_sec($fd, $timeout);
           next;
         }
         else {
