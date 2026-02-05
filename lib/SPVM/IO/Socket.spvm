@@ -114,19 +114,17 @@ class IO::Socket extends IO::Handle {
     if ($deadline) {
       my $now = Go::Time->now;
       
-      # If the deadline has already passed, throw DeadlineExceeded with a message.
+      # If the deadline has already passed, throw DeadlineExceeded immediately.
       if ($now->after($deadline)) {
         die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
       }
       
       $final_duration = $deadline->sub($now);
       
-      # Double check for precision issues.
       if ($final_duration->{nsec} <= 0) {
         die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
       }
       
-      # If Timeout field is also set, use the shorter one.
       if ($default_timeout_sec > 0) {
         my $timeout_duration = Go::Duration_1l->new_from_sec($default_timeout_sec);
         if ($timeout_duration->{nsec} < $final_duration->{nsec}) {
@@ -180,16 +178,23 @@ class IO::Socket extends IO::Handle {
     my $client_sockaddr = (Sys::Socket::Sockaddr)undef;
     
     while (1) {
-      # Calculate the duration until the deadline or inactivity timeout.
       my $timeout_duration = $self->get_remaining_duration;
       
       eval { $client_sockaddr = Sys->accept(\$client_fd, $fd); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_accept_again(Sys::Socket::Errno->errno);
         if ($again) {
-          # Yield the control to the scheduler with the remaining duration.
-          # If the duration expires, an exception is thrown from this method.
-          Go->gosched_io_read($fd, $timeout_duration);
+          eval { Go->gosched_io_read($fd, $timeout_duration); }
+          # Handle potential timeout from scheduler
+          if ($@) {
+            if ($@ isa Go::Error::IOTimeout) {
+              my $deadline = $self->{Deadline};
+              if ($deadline && Go::Time->now->after($deadline)) {
+                die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
+              }
+            }
+            die $@;
+          }
           next;
         }
         die $@;
@@ -222,7 +227,16 @@ class IO::Socket extends IO::Handle {
       if ($@) {
         my $again = Sys::Socket::Errno->is_read_again(Sys::Socket::Errno->errno);
         if ($again) {
-          Go->gosched_io_read($fd, $timeout_duration);
+          eval { Go->gosched_io_read($fd, $timeout_duration); }
+          if ($@) {
+            if ($@ isa Go::Error::IOTimeout) {
+              my $deadline = $self->{Deadline};
+              if ($deadline && Go::Time->now->after($deadline)) {
+                die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
+              }
+            }
+            die $@;
+          }
           next;
         }
         die $@;
@@ -242,7 +256,16 @@ class IO::Socket extends IO::Handle {
       if ($@) {
         my $again = Sys::Socket::Errno->is_write_again(Sys::Socket::Errno->errno);
         if ($again) {
-          Go->gosched_io_write($fd, $timeout_duration);
+          eval { Go->gosched_io_write($fd, $timeout_duration); }
+          if ($@) {
+            if ($@ isa Go::Error::IOTimeout) {
+              my $deadline = $self->{Deadline};
+              if ($deadline && Go::Time->now->after($deadline)) {
+                die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
+              }
+            }
+            die $@;
+          }
           next;
         }
         die $@;
@@ -323,15 +346,22 @@ class IO::Socket extends IO::Handle {
     my $sockaddr = $self->{Sockaddr};
     
     while (1) {
-      # Calculate the duration until the deadline or inactivity timeout.
       my $timeout_duration = $self->get_remaining_duration;
       
       eval { Sys->connect($fd, $sockaddr); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_connect_again(Sys::Socket::Errno->errno);
         if ($again) {
-          # Yield the control to the scheduler until writable or the timeout expires.
-          Go->gosched_io_write($fd, $timeout_duration);
+          eval { Go->gosched_io_write($fd, $timeout_duration); }
+          if ($@) {
+            if ($@ isa Go::Error::IOTimeout) {
+              my $deadline = $self->{Deadline};
+              if ($deadline && Go::Time->now->after($deadline)) {
+                die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
+              }
+            }
+            die $@;
+          }
           next;
         }
         die $@;
