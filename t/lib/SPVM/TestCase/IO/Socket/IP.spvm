@@ -522,7 +522,7 @@ class TestCase::IO::Socket::IP {
           eval { $client_socket = $server_socket->accept; }
           
           if ($@) {
-            if (eval_error_id is_error Go::Error::IOTimeout) {
+            if ($@ isa Go::Error::IOTimeout) {
               return;
             }
             else {
@@ -648,7 +648,7 @@ class TestCase::IO::Socket::IP {
             eval { $client_socket = $server_socket->accept; }
             
             if ($@) {
-              if (eval_error_id is_error Go::Error::IOTimeout) {
+              if ($@ isa Go::Error::IOTimeout) {
                 
                  my $result_server_stop = $select_server_stop->select;
                 
@@ -781,7 +781,7 @@ class TestCase::IO::Socket::IP {
             eval { $client_socket = $server_socket->accept; }
             
             if ($@) {
-              if (eval_error_id is_error Go::Error::IOTimeout) {
+              if ($@ isa Go::Error::IOTimeout) {
                 
                 my $result_server_stop = $select_server_stop->select;
                 
@@ -845,7 +845,7 @@ class TestCase::IO::Socket::IP {
           
           eval { $socket->recv($recv_buffer); }
           
-          unless ($@ && eval_error_id is_error Go::Error::IOTimeout) {
+          unless ($@ && $@ isa Go::Error::IOTimeout) {
             $success_ref->[0] = 0;
           }
           
@@ -889,7 +889,7 @@ class TestCase::IO::Socket::IP {
       
       if ($@) {
         # Check if the error is Go::Context::Error::DeadlineExceeded.
-        unless (eval_error_id is_error Go::Context::Error::DeadlineExceeded) {
+        unless ($@ isa Go::Context::Error::DeadlineExceeded) {
           warn "Unexpected error: " . $@;
           $success_ref->[0] = 0;
         }
