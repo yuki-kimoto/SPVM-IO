@@ -1081,5 +1081,120 @@ class TestCase::IO::Socket::IP {
     return $success_ref->[0];
   }
   
+  # Test for ReadDeadline
+  static method read_deadline_specific : int ($port : int) {
+    
+    my $success_ref = [1];
+    my $ch_ready = Go->make(1);
+    
+    # Server side
+    Go->go([$port : int, $ch_ready : Go::Channel] method : void () {
+      eval {
+        my $listen_socket = IO::Socket::IP->new({
+          LocalAddr => "127.0.0.1",
+          LocalPort => $port,
+          Listen => 5,
+          ReuseAddr => 1,
+        });
+        $ch_ready->write(1);
+        my $client_socket = $listen_socket->accept;
+        # Server sleeps to trigger client-side read timeout
+        Go->sleep(Go::Duration_1l->new_from_sec(1.0));
+        $client_socket->close;
+        $listen_socket->close;
+      }
+    });
+    
+    # Client side
+    Go->go([$port : int, $success_ref : int[], $ch_ready : Go::Channel] method : void () {
+      eval {
+        $ch_ready->read;
+        my $socket = IO::Socket::IP->new({
+          PeerAddr => "127.0.0.1",
+          PeerPort => $port,
+        });
+        
+        # Set a short ReadDeadline.
+        # Even if Deadline is set to a longer time, ReadDeadline should be prioritized.
+        my $read_deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.3));
+        my $far_deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(10.0));
+        
+        $socket->set_read_deadline($read_deadline);
+        $socket->set_deadline($far_deadline);
+        
+        my $buffer = (mutable string)new_string_len 1024;
+        $socket->sysread($buffer);
+        
+        warn "sysread unexpectedly succeeded before ReadDeadline.";
+        $success_ref->[0] = 0;
+      }
+      if ($@) {
+        unless ($@ isa Go::Context::Error::DeadlineExceeded) {
+          warn "Unexpected error type in sysread: " . $@;
+          $success_ref->[0] = 0;
+        }
+      }
+    });
+    
+    Go->gosched;
+    return $success_ref->[0];
+  }
+
+  # Test for WriteDeadline
+  static method write_deadline_specific : int ($port : int) {
+    
+    my $success_ref = [1];
+    my $ch_ready = Go->make(1);
+    
+    # Server side
+    Go->go([$port : int, $ch_ready : Go::Channel] method : void () {
+      eval {
+        my $listen_socket = IO::Socket::IP->new({
+          LocalAddr => "127.0.0.1",
+          LocalPort => $port,
+          Listen => 5,
+          ReuseAddr => 1,
+        });
+        $ch_ready->write(1);
+        my $client_socket = $listen_socket->accept;
+        # Do not read to let the client's send buffer fill up.
+        Go->sleep(Go::Duration_1l->new_from_sec(1.5));
+        $client_socket->close;
+        $listen_socket->close;
+      }
+    });
+    
+    # Client side
+    Go->go([$port : int, $success_ref : int[], $ch_ready : Go::Channel] method : void () {
+      eval {
+        $ch_ready->read;
+        my $socket = IO::Socket::IP->new({
+          PeerAddr => "127.0.0.1",
+          PeerPort => $port,
+        });
+        
+        # Set a short WriteDeadline.
+        my $write_deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.3));
+        $socket->set_write_deadline($write_deadline);
+        
+        my $payload = Fn->repeat("a", 8192);
+        while (1) {
+          $socket->syswrite($payload);
+        }
+      }
+      if ($@) {
+        unless ($@ isa Go::Context::Error::DeadlineExceeded) {
+          warn "Unexpected error type in syswrite: " . $@;
+          $success_ref->[0] = 0;
+        }
+      } else {
+        $success_ref->[0] = 0;
+      }
+    });
+    
+    Go->gosched;
+    return $success_ref->[0];
+  }
+  
 }
 

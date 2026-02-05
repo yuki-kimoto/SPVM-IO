@@ -38,6 +38,18 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
   ok(SPVM::TestCase::IO::Socket::IP->accept_deadline($port));
 }
 
+# read_deadline_specific test (Priority check)
+{
+  my $port = Test::SPVM::Sys::Socket::Util::get_available_port;
+  ok(SPVM::TestCase::IO::Socket::IP->read_deadline_specific($port));
+}
+
+# write_deadline_specific test (Priority check)
+{
+  my $port = Test::SPVM::Sys::Socket::Util::get_available_port;
+  ok(SPVM::TestCase::IO::Socket::IP->write_deadline_specific($port));
+}
+
 $api->destroy_runtime_permanent_vars;
 
 my $end_memory_blocks_count = $api->get_memory_blocks_count;
