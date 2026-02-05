@@ -54,25 +54,35 @@ class IO::Socket extends IO::Handle {
     my $options = Hash->new($options);
     
     # Domain option
-    $self->{Domain} = $options->get_or_default("Domain", 0)->(int);
+    if ($options->exists("Domain")) {
+      $self->{Domain} = $options->get("Domain")->(int);
+    }
     
     # Proto option
-    $self->{Proto} = $options->get_or_default("Proto", 0)->(int);
+    if ($options->exists("Proto")) {
+      $self->{Proto} = $options->get("Proto")->(int);
+    }
     
     # Type option
-    $self->{Type} = $options->get_or_default("Type", 0)->(int);
+    if ($options->exists("Type")) {
+      $self->{Type} = $options->get("Type")->(int);
+    }
     
     # Listen option
-    $self->{Listen} = $options->get_or_default("Listen", 0)->(int);
+    if ($options->exists("Listen")) {
+      $self->{Listen} = $options->get("Listen")->(int);
+    }
     
     # Timeout option
-    $self->{Timeout} = $options->get_or_default("Timeout", 0.0)->(double);
+    if ($options->exists("Timeout")) {
+      $self->{Timeout} = $options->get("Timeout")->(double);
+    }
     
     # Deadline option
     if ($options->exists("Deadline")) {
-      $self->{Deadline} = (Go::Time)$options->get("Deadline");
+      $self->{Deadline} = $options->get("Deadline")->(Go::Time);
     }
-
+    
     # Blocking option
     if ($options->exists("Blocking")) {
       die "Blocking option is not allowed in IO::Socket class and its child classes.";
