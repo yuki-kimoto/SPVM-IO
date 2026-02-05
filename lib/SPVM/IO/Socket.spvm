@@ -19,6 +19,7 @@ class IO::Socket extends IO::Handle {
   use Native::MethodCall;
   use Go::Time;
   use Go::Duration_1l;
+  use Go::Context::Error::DeadlineExceeded;
   
   # Enumerations
   protected enum {
@@ -112,13 +113,20 @@ class IO::Socket extends IO::Handle {
 
     if ($deadline) {
       my $now = Go::Time->now;
+      
+      # If the deadline has already passed, throw DeadlineExceeded with a message.
       if ($now->after($deadline)) {
-        die "Deadline exceeded.";
+        die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
       }
+      
       $final_duration = $deadline->sub($now);
+      
+      # Double check for precision issues.
       if ($final_duration->{nsec} <= 0) {
-        die "Deadline exceeded.";
+        die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
       }
+      
+      # If Timeout field is also set, use the shorter one.
       if ($default_timeout_sec > 0) {
         my $timeout_duration = Go::Duration_1l->new_from_sec($default_timeout_sec);
         if ($timeout_duration->{nsec} < $final_duration->{nsec}) {

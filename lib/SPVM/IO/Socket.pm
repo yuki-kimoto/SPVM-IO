@@ -92,7 +92,7 @@ A L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> object used by L</"connec
 
 C<has Deadline : protected L<Go::Time|SPVM::Go::Time>;>
 
-An B<absolute deadline> for I/O operations.
+An B<absolute deadline> for I/O operations. If this deadline is reached, the operation is interrupted, and a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
 
 =head1 Instance Methods
 
@@ -204,6 +204,8 @@ This method supports both the inactivity L</"Timeout"> and the absolute L</"Dead
 
 Exceptions:
 
+If the absolute deadline is reached, a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+
 Exceptions thrown by L<Sys#connect> method could be thrown.
 
 Exceptions thrown by L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method could be thrown.
@@ -246,6 +248,8 @@ Returns a new client socket instance.
 
 Exceptions:
 
+If the absolute deadline is reached, a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+
 Exceptions thrown by L<Sys#accept|SPVM::Sys|/"accept"> method could be thrown.
 
 Exceptions thrown by L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method could be thrown.
@@ -284,6 +288,8 @@ If no data is available, it yields until the socket is ready, the B<inactivity t
 
 Exceptions:
 
+If the absolute deadline is reached, a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+
 Exceptions thrown by L<Sys#recvfrom|SPVM::Sys/"recvfrom"> method could be thrown.
 
 Exceptions thrown by L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method could be thrown (e.g., L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout>).
@@ -297,6 +303,8 @@ Performs sendto operation and returns write length.
 If the transmit buffer is full, it yields until space becomes available, the B<inactivity timeout> (L</"Timeout">) expires, or the B<deadline> (L</"Deadline">) is reached.
 
 Exceptions:
+
+If the absolute deadline is reached, a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
 
 Exceptions thrown by L<Sys#sendto|SPVM::Sys/"sendto"> method could be thrown.
 
