@@ -1,3 +1,7 @@
+0.246 2026-01-18
+  [Requirement Changes]
+    * Require SPVM::Go 0.025.
+  
 0.245 2026-01-17
   [Internal Changes]
     * Catch up with latest Go.
