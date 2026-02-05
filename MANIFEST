@@ -44,6 +44,7 @@ t/IO-Select-server.t
 t/IO-Select.t
 t/IO-Socket-INET.t
 t/IO-Socket-INET6.t
+t/IO-Socket-IP-deadline.t
 t/IO-Socket-IP-ipv6.t
 t/IO-Socket-IP-server.t
 t/IO-Socket-IP.t
