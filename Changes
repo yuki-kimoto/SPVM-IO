@@ -1,7 +1,12 @@
-0.246 2026-01-18
+0.246 2026-02-05
   [Requirement Changes]
     * Require SPVM::Go 0.025.
-  
+  [New Features]
+    * Add Deadline, ReadDeadline, and WriteDeadline fields to the IO::Socket class to allow setting absolute I/O deadlines.
+  [Incompatible Changes]
+    * Modify the accept method to no longer inherit the Timeout field from the listening socket to follow Go's networking behavior.
+  [Test Improvement]
+    * Update the test suite to use httpbin for more robust and realistic network I/O testing.
 0.245 2026-01-17
   [Internal Changes]
     * Catch up with latest Go.
