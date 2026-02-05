@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Yuki Kimoto
+# Copyright (c) 2026 Yuki Kimoto
 # MIT License
 
 class IO::Socket extends IO::Handle {
@@ -17,8 +17,10 @@ class IO::Socket extends IO::Handle {
   use Sys::Socket::Errno;
   use Fn;
   use Native::MethodCall;
+  use Go::Time;
+  use Go::Duration_1l;
   
-  # Enemerations
+  # Enumerations
   protected enum {
     SOCKET_CATEGORY_UNKNOWN,
     SOCKET_CATEGORY_CLIENT,
@@ -40,6 +42,9 @@ class IO::Socket extends IO::Handle {
   has Timeout : protected double;
   
   has Sockaddr : protected Sys::Socket::Sockaddr;
+
+  # An absolute deadline for I/O operations.
+  has Deadline : rw Go::Time;
   
   # Instance Methods
   protected method init : void ($options : object[] = undef) {
@@ -63,15 +68,18 @@ class IO::Socket extends IO::Handle {
     # Timeout option
     $self->{Timeout} = $options->get_or_default("Timeout", 0.0)->(double);
     
+    # Deadline option
+    if ($options->exists("Deadline")) {
+      $self->{Deadline} = (Go::Time)$options->get("Deadline");
+    }
+
     # Blocking option
     if ($options->exists("Blocking")) {
       die "Blocking option is not allowed in IO::Socket class and its child classes.";
     }
-    
   }
   
   method option_names : string[] () {
-    
     my $option_names = Array->merge_string(
       $self->SUPER::option_names,
       [
@@ -80,10 +88,38 @@ class IO::Socket extends IO::Handle {
         "Proto",
         "Listen",
         "Timeout",
+        "Deadline",
       ]
     );
-    
     return $option_names;
+  }
+
+  # Calculates the remaining duration based on Deadline and Timeout fields.
+  private method get_remaining_duration : Go::Duration_1l () {
+    my $deadline = $self->{Deadline};
+    my $default_timeout_sec = $self->{Timeout};
+    my $final_duration : Go::Duration_1l;
+
+    if ($deadline) {
+      my $now = Go::Time->now;
+      if ($now->after($deadline)) {
+        die "Deadline exceeded.";
+      }
+      $final_duration = $deadline->sub($now);
+      if ($final_duration->{nsec} <= 0) {
+        die "Deadline exceeded.";
+      }
+      if ($default_timeout_sec > 0) {
+        my $timeout_duration = Go::Duration_1l->new_from_sec($default_timeout_sec);
+        if ($timeout_duration->{nsec} < $final_duration->{nsec}) {
+          $final_duration = $timeout_duration;
+        }
+      }
+    }
+    elsif ($default_timeout_sec > 0) {
+      $final_duration = Go::Duration_1l->new_from_sec($default_timeout_sec);
+    }
+    return $final_duration;
   }
   
   method timeout : double () {
@@ -107,54 +143,53 @@ class IO::Socket extends IO::Handle {
   }
   
   method shutdown : void ($how : int) {
-    
     my $fd = $self->{FD};
-    
     Sys->shutdown($fd, $how);
   }
   
   method close : void () {
-    
     unless ($self->opened) {
       die "This socket is not opened or already closed.";
     }
-    
     my $fd = $self->{FD};
-    
     Sys::Socket->close($fd);
     $self->{FD} = -1;
   }
   
   method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
-    
     my $fd = $self->{FD};
-    
-    my $timeout = $self->{Timeout};
-    
     my $client_fd = -1;
     my $client_sockaddr = (Sys::Socket::Sockaddr)undef;
     
+    my $deadline = $self->{Deadline};
+    if ($deadline) {
+      Go->go([$deadline : Go::Time, $fd : int] method : void () {
+        my $now = Go::Time->now;
+        my $diff_duration = $deadline->sub($now);
+        if ($diff_duration->{nsec} > 0) {
+          Go->sleep($diff_duration);
+        }
+        Sys::Socket->close($fd);
+      });
+    }
+
     while (1) {
+      my $timeout_duration = $self->get_remaining_duration;
       eval { $client_sockaddr = Sys->accept(\$client_fd, $fd); }
-      
       if ($@) {
         my $again = Sys::Socket::Errno->is_accept_again(Sys::Socket::Errno->errno);
-        
         if ($again) {
-          Go->gosched_io_read_sec($fd, $timeout);
+          Go->gosched_io_read($fd, $timeout_duration);
           next;
         }
-        else {
-          die $@;
-        }
+        die $@;
       }
-      else {
-        last;
-      }
+      last;
     }
     
     my $options = {
-      Timeout => $timeout,
+      Timeout => $self->{Timeout},
+      Deadline => $self->{Deadline},
       FD => $client_fd,
       Domain => $self->{Domain},
       Type => $self->{Type},
@@ -163,249 +198,165 @@ class IO::Socket extends IO::Handle {
     
     my $class = type_name $self;
     my $client = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$options]);
-    
-    if ($peer_ref) {
-      $peer_ref->[0] = $client_sockaddr;
-    }
-    
+    if ($peer_ref) { $peer_ref->[0] = $client_sockaddr; }
     return $client;
   }
   
   method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $offset : int = 0) {
-    
-    unless ($length >= 0) {
-      $length = length $buffer;
-    }
-    
-    my $timeout = $self->{Timeout};
-    
+    unless ($length >= 0) { $length = length $buffer; }
     my $fd = $self->{FD};
     my $recv_length = -1;
     while (1) {
+      my $timeout_duration = $self->get_remaining_duration;
       eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $offset); }
-      
       if ($@) {
         my $again = Sys::Socket::Errno->is_read_again(Sys::Socket::Errno->errno);
-        
         if ($again) {
-          Go->gosched_io_read_sec($fd, $timeout);
+          Go->gosched_io_read($fd, $timeout_duration);
           next;
         }
-        else {
-          die $@;
-        }
+        die $@;
       }
-      else {
-        last;
-      }
+      last;
     }
-    
     return $recv_length;
   }
   
   method sendto : int ($buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $offset : int = 0) {
-    
-    unless ($length >= 0) {
-      $length = length $buffer;
-    }
-    
-    my $timeout = $self->{Timeout};
-    
+    unless ($length >= 0) { $length = length $buffer; }
     my $fd = $self->{FD};
-    
     my $send_length = -1;
     while (1) {
-      
+      my $timeout_duration = $self->get_remaining_duration;
       eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $offset); }
-      
       if ($@) {
         my $again = Sys::Socket::Errno->is_write_again(Sys::Socket::Errno->errno);
-        
         if ($again) {
-          Go->gosched_io_write_sec($fd, $timeout);
+          Go->gosched_io_write($fd, $timeout_duration);
           next;
         }
-        else {
-          die $@;
-        }
+        die $@;
       }
-      else {
-        last;
-      }
+      last;
     }
-    
     return $send_length;
   }
   
   method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0) {
-    
-    my $from_ref = (Sys::Socket::Sockaddr[])undef;
-    
-    return $self->recvfrom($buffer, $length, $flags, $from_ref, $offset);
+    return $self->recvfrom($buffer, $length, $flags, (Sys::Socket::Sockaddr[])undef, $offset);
   }
   
   method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0) {
-    
-    my $to = (Sys::Socket::Sockaddr)undef;
-    
-    return $self->sendto($buffer, $flags, $to, $length, $offset);
+    return $self->sendto($buffer, $flags, (Sys::Socket::Sockaddr)undef, $length, $offset);
   }
   
   method sysread : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
-    
-    my $flags = 0;
-    
-    return $self->recv($buffer, $length, $flags, $offset);
+    return $self->recv($buffer, $length, 0, $offset);
   }
   
   method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
-    
     diag "IO::Socket#read method is deprecated. Use sysread method instead.";
-    
-    my $flags = 0;
-    
-    return $self->recv($buffer, $length, $flags, $offset);
+    return $self->recv($buffer, $length, 0, $offset);
   }
   
   method syswrite : int ($buffer : string, $length : int = -1, $offset : int = 0) {
-    
-    my $flags = 0;
-    
-    return $self->send($buffer, $flags, $length, $offset);
+    return $self->send($buffer, 0, $length, $offset);
   }
   
   method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
-    
     diag "IO::Socket#write method is deprecated. Use syswrite method instead.";
-    
-    my $flags = 0;
-    
-    return $self->send($buffer, $flags, $length, $offset);
+    return $self->send($buffer, 0, $length, $offset);
   }
   
   method sockname : Sys::Socket::Sockaddr () {
-    
     my $fd = $self->{FD};
-    
-    my $sockaddr_sock = Sys->getsockname($fd);
-    
-    return $sockaddr_sock;
+    return Sys->getsockname($fd);
   }
   
   method peername : Sys::Socket::Sockaddr () {
-    
     my $fd = $self->{FD};
-    
-    my $sockaddr_peer = Sys->getpeername($fd);
-    
-    return $sockaddr_peer;
+    return Sys->getpeername($fd);
   }
   
   method connected : Sys::Socket::Sockaddr () {
-    
     my $sockaddr = (Sys::Socket::Sockaddr)undef;
-    
     eval { $sockaddr = $self->peername; };
-    
     return $sockaddr;
   }
   
   method atmark : int () {
-    
     my $fd = $self->{FD};
-    
-    my $atmark = Sys::Socket->sockatmark($fd);
-    
-    return $atmark;
+    return Sys::Socket->sockatmark($fd);
   }
   
   method sockopt : string ($level : int, $option_name : int) {
-    
     my $fd = $self->{FD};
-    
-    my $option_value = Sys->getsockopt($fd, $level, $option_name);
-    
-    return $option_value;
+    return Sys->getsockopt($fd, $level, $option_name);
   }
   
   method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int) {
-    
     my $fd = $self->{FD};
-    
     Sys->setsockopt($fd, $level, $option_name, $option_value);
   }
   
   protected method socket : void () {
-    
     my $domain = $self->{Domain};
-    
     my $type = $self->{Type};
-    
     my $protocol = $self->{Proto};
-    
     my $fd = -1;
     Sys->socket(\$fd, $domain, $type, $protocol);
-    
     $self->{FD} = $fd;
   }
   
   protected method connect : void () {
-    
     my $fd = $self->{FD};
-    
     my $sockaddr = $self->{Sockaddr};
-    
-    my $timeout = $self->{Timeout};
-    
+    my $deadline = $self->{Deadline};
+    if ($deadline) {
+      Go->go([$deadline : Go::Time, $fd : int] method : void () {
+        my $now = Go::Time->now;
+        my $diff_duration = $deadline->sub($now);
+        if ($diff_duration->{nsec} > 0) {
+          Go->sleep($diff_duration);
+        }
+        Sys::Socket->close($fd);
+      });
+    }
+
     while (1) {
+      my $timeout_duration = $self->get_remaining_duration;
       eval { Sys->connect($fd, $sockaddr); }
-      
       if ($@) {
         my $again = Sys::Socket::Errno->is_connect_again(Sys::Socket::Errno->errno);
-        
         if ($again) {
-          Go->gosched_io_write_sec($fd, $timeout);
+          Go->gosched_io_write($fd, $timeout_duration);
           next;
         }
-        else {
-          die $@;
-        }
+        die $@;
       }
-      else {
-        last;
-      }
+      last;
     }
   }
   
   protected method bind : void () {
-    
     my $sockaddr = $self->{Sockaddr};
-    
     my $fd = $self->{FD};
-    
     Sys->bind($fd, $sockaddr);
   }
   
   protected method listen : void () {
-    
     my $fd = $self->{FD};
-    
     my $listen = $self->{Listen};
-    
     unless ($listen > 0) {
       die "'Listen' field must be greater than 0.";
     }
-    
     Sys->listen($fd, $listen);
   }
   
   method set_blocking : void ($blocking : int) {
-    
     if ($blocking) {
       die "Calling set_blocking method given a true value on an IO::Socket object is forbidden.";
     }
-    
     $self->SUPER::set_blocking($blocking);
   }
-  
 }
