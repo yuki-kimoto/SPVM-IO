@@ -124,7 +124,7 @@ class IO::Socket extends IO::Handle {
   }
 
   # Calculates the remaining duration based on Deadline and Timeout fields.
-  private method get_remaining_duration : Go::Duration_1l ($is_write : int = 0) {
+  protected method get_remaining_duration : Go::Duration_1l ($is_write : int) {
     my $deadline = $self->{Deadline};
     if ($is_write) {
       if ($self->{WriteDeadline}) { $deadline = $self->{WriteDeadline}; }
