@@ -1036,5 +1036,50 @@ class TestCase::IO::Socket::IP {
     return $success_ref->[0];
   }
   
+  static method accept_deadline : int ($port : int) {
+    
+    my $success_ref = [1];
+    
+    # Server side (This is where the deadline check happens)
+    Go->go([$port : int, $success_ref : int[]] method : void () {
+      eval {
+        my $listen_socket = IO::Socket::IP->new({
+          LocalAddr => "127.0.0.1",
+          LocalPort => $port,
+          Listen => 5,
+          ReuseAddr => 1,
+        });
+        
+        # Set a short deadline for accept.
+        my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.5));
+        $listen_socket->set_deadline($deadline);
+        
+        # This should block and eventually throw DeadlineExceeded because no client connects.
+        my $client_socket = $listen_socket->accept;
+        
+        # If no exception is thrown, it's a failure.
+        warn "accept unexpectedly succeeded before deadline.";
+        $success_ref->[0] = 0;
+        $client_socket->close;
+        $listen_socket->close;
+      }
+      if ($@) {
+        # Check if the error is exactly Go::Context::Error::DeadlineExceeded
+        unless ($@ isa Go::Context::Error::DeadlineExceeded) {
+          warn "Unexpected error type in accept: " . $@;
+          $success_ref->[0] = 0;
+        }
+      }
+    });
+    
+    # Client side: In this test, we do nothing. 
+    # By not connecting, we force the server's accept to timeout.
+    
+    # Run the scheduler until the server goroutine finishes.
+    Go->gosched;
+    
+    return $success_ref->[0];
+  }
+  
 }
 
