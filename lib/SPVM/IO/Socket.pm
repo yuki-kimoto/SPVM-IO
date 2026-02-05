@@ -4,35 +4,97 @@ package SPVM::IO::Socket;
 
 =head1 Name
 
-SPVM::IO::Socket - Sockets
+SPVM::IO::Socket - Sockets with Goroutines and Deadlines
 
 =head1 Description
 
-IO::Socket class in L<SPVM> represents a socket.
+L<SPVM::IO::Socket> is an abstract class that represents a network socket. It is designed to work seamlessly with L<SPVM::Go> and provides powerful timeout management using absolute deadlines.
 
 =head1 Usage
   
-  use IO::Socket;
+  use IO::Socket::IP;
+  use Go;
+  use Go::Time;
+
+  # Create a simple TCP client
+  my $socket = IO::Socket::IP->new({
+    PeerAddr => "example.com",
+    PeerPort => 80,
+  });
+
+  # Set an absolute deadline (5 seconds from now)
+  my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(5.0));
+  $socket->set_deadline($deadline);
+
+  # Send a request
+  my $payload = "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n";
+  $socket->syswrite($payload);
 
 =head1 Details
 
-IO::Socket is an abstract class.
-
-See L</"Well Known Child Classes"> about child classes of this class.
+IO::Socket is an abstract class. For concrete implementations, see L</"Well Known Child Classes">.
 
 =head2 Socket Constant Values
 
-See L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant> about constant values for sockets.
+See L<Sys::Socket::Constant|SPVM::Sys::Socket::Constant> for constant values such as C<AF_INET>, C<SOCK_STREAM>, etc.
 
-=head2 Goroutine
+=head2 Goroutine and Non-blocking I/O
 
-Connect, accept, read, and write operations in IO::Socket class work with L<goroutines|SPVM::Go>.
+All I/O operations in this class (C<connect>, C<accept>, C<read>, C<write>, etc.) are non-blocking and integrated with L<goroutines|SPVM::Go>.
 
-Non-blocking mode of a L<IO::Socket|SPVM::IO::Socket> object is enabled.
+If an I/O operation cannot be completed immediately, the current goroutine yields control to the Go scheduler, allowing other goroutines to run. When the socket becomes ready, the goroutine is automatically resumed. 
 
-If an IO wait occurs, control is transferred to another goroutine.
+B<Example:>
 
-This allows you to write connect, accept, read, and write operations as if they were synchronous.
+  # Running a concurrent TCP server
+  Go->go(method : void () {
+    my $listen = IO::Socket::IP->new({
+      LocalAddr => "0.0.0.0",
+      LocalPort => 8080,
+      Listen    => 10,
+    });
+    
+    while (my $client = $listen->accept) {
+      # Handle each connection in a new goroutine
+      Go->go([$client : IO::Socket] method : void () {
+        my $buf = (mutable string)new_string_len 1024;
+        $client->sysread($buf);
+        $client->syswrite("Hello from Goroutine!");
+        $client->close;
+      });
+    }
+  });
+  
+  Go->gosched;
+
+=head2 Deadlines and Go::Context
+
+This class provides three types of absolute deadlines for precise I/O control:
+
+=over 2
+
+=item 1. L</"Deadline"> - A general deadline for all I/O operations.
+
+=item 2. L</"ReadDeadline"> - A specific deadline for read operations (C<accept>, C<recv>, etc.).
+
+=item 3. L</"WriteDeadline"> - A specific deadline for write operations (C<connect>, C<send>, etc.).
+
+=back
+
+B<Example:>
+
+  # Limit only read operations to 3 seconds
+  my $read_limit = Go::Time->now->add(Go::Duration_1l->new_from_sec(3.0));
+  $socket->set_read_deadline($read_limit);
+  
+  eval {
+    $socket->sysread($buffer);
+  };
+  if ($@ isa Go::Context::Error::DeadlineExceeded) {
+    # Handle the case where no data was received within 3 seconds
+  }
+
+These deadlines represent absolute points in time. This mechanism is designed to be compatible with the cancellation patterns found in C<Go::Context>, ensuring that resources are leaked neither on the server nor on the client side during long-running or stalled connections.
 
 =head1 Well Known Child Classes
 
