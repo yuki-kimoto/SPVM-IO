@@ -1,3 +1,7 @@
+0.247 2026-02-05
+  [Test Fix]
+    * Fix the test suite to properly enable and execute the deadline-related test cases that were previously inactive.
+    
 0.246 2026-02-05
   [Requirement Changes]
     * Require SPVM::Go 0.025.
