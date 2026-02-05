@@ -34,7 +34,7 @@ TestFile::copy_test_files_tmp();
 
 my $test_dir = "$FindBin::Bin";
 
-my $TEST_TMP_DIR = "$test_dir/test_files_tmp";
+my $TEST_TMP_DIR = "$test_dir/.tmp/test_files_tmp";
 
 SPVM::TestCase::IO::File->SET_TEST_DIR($test_dir);
 

@@ -15,6 +15,3 @@
 (^|/)\.tmp(/|$)
 (^|/)\.git(/|$)
 (^|/)\.spvm_build(/|$)
-
-# This distribution specific
-^t/test_files_tmp
