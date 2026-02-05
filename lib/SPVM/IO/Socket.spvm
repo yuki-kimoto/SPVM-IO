@@ -227,10 +227,6 @@ class IO::Socket extends IO::Handle {
     }
     
     my $options = {
-      Timeout => $self->{Timeout},
-      Deadline => $self->{Deadline},
-      ReadDeadline => $self->{ReadDeadline},
-      WriteDeadline => $self->{WriteDeadline},
       FD => $client_fd,
       Domain => $self->{Domain},
       Type => $self->{Type},

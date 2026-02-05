@@ -530,7 +530,7 @@ class TestCase::IO::Socket::IP {
             }
           }
           
-          unless ($client_socket->timeout == 1.0) {
+          unless ($client_socket->timeout == 0) {
             $success_ref->[0] = 0;
           }
           
