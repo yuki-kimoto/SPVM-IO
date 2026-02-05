@@ -1,3 +1,9 @@
+.gitattributes
+.github/workflows/linux-ubuntu-latest-perl-v5.20.3.yml
+.github/workflows/linux-ubuntu-latest.yml
+.github/workflows/macos-latest.yml
+.github/workflows/windows-latest.yml
+.gitignore
 Changes
 lib/SPVM/IO.pm
 lib/SPVM/IO.spvm
@@ -28,6 +34,7 @@ lib/SPVM/IO/Socket/UNIX.spvm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.SKIP
 README.md
 t/IO-Dir.t
 t/IO-File.t
@@ -40,6 +47,7 @@ t/IO-Socket-INET6.t
 t/IO-Socket-IP-ipv6.t
 t/IO-Socket-IP-server.t
 t/IO-Socket-IP.t
+t/IO-Socket-online.t
 t/IO-Socket-UNIX-server.t
 t/IO-Socket.t
 t/IO.t
