@@ -26,6 +26,12 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
   ok(SPVM::TestCase::IO::Socket::IP->read_deadline($port));
 }
 
+# write deadline test
+{
+  my $port = Test::SPVM::Sys::Socket::Util::get_available_port;
+  ok(SPVM::TestCase::IO::Socket::IP->write_deadline($port));
+}
+
 $api->destroy_runtime_permanent_vars;
 
 my $end_memory_blocks_count = $api->get_memory_blocks_count;
