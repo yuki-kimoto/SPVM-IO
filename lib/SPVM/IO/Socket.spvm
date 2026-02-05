@@ -44,7 +44,7 @@ class IO::Socket extends IO::Handle {
   has Sockaddr : protected Sys::Socket::Sockaddr;
 
   # An absolute deadline for I/O operations.
-  has Deadline : rw Go::Time;
+  has Deadline : Go::Time;
   
   # Instance Methods
   protected method init : void ($options : object[] = undef) {
@@ -359,4 +359,13 @@ class IO::Socket extends IO::Handle {
     }
     $self->SUPER::set_blocking($blocking);
   }
+  
+  method deadline : Go::Time () {
+    return $self->{Deadline};
+  }
+
+  method set_deadline : void ($deadline : Go::Time) {
+    $self->{Deadline} = $deadline;
+  }
+  
 }
