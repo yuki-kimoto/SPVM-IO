@@ -179,24 +179,16 @@ class IO::Socket extends IO::Handle {
     my $client_fd = -1;
     my $client_sockaddr = (Sys::Socket::Sockaddr)undef;
     
-    my $deadline = $self->{Deadline};
-    if ($deadline) {
-      Go->go([$deadline : Go::Time, $fd : int] method : void () {
-        my $now = Go::Time->now;
-        my $diff_duration = $deadline->sub($now);
-        if ($diff_duration->{nsec} > 0) {
-          Go->sleep($diff_duration);
-        }
-        Sys::Socket->close($fd);
-      });
-    }
-
     while (1) {
+      # Calculate the duration until the deadline or inactivity timeout.
       my $timeout_duration = $self->get_remaining_duration;
+      
       eval { $client_sockaddr = Sys->accept(\$client_fd, $fd); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_accept_again(Sys::Socket::Errno->errno);
         if ($again) {
+          # Yield the control to the scheduler with the remaining duration.
+          # If the duration expires, an exception is thrown from this method.
           Go->gosched_io_read($fd, $timeout_duration);
           next;
         }
@@ -329,24 +321,16 @@ class IO::Socket extends IO::Handle {
   protected method connect : void () {
     my $fd = $self->{FD};
     my $sockaddr = $self->{Sockaddr};
-    my $deadline = $self->{Deadline};
-    if ($deadline) {
-      Go->go([$deadline : Go::Time, $fd : int] method : void () {
-        my $now = Go::Time->now;
-        my $diff_duration = $deadline->sub($now);
-        if ($diff_duration->{nsec} > 0) {
-          Go->sleep($diff_duration);
-        }
-        Sys::Socket->close($fd);
-      });
-    }
-
+    
     while (1) {
+      # Calculate the duration until the deadline or inactivity timeout.
       my $timeout_duration = $self->get_remaining_duration;
+      
       eval { Sys->connect($fd, $sockaddr); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_connect_again(Sys::Socket::Errno->errno);
         if ($again) {
+          # Yield the control to the scheduler until writable or the timeout expires.
           Go->gosched_io_write($fd, $timeout_duration);
           next;
         }
