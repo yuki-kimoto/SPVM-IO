@@ -1,4 +1,4 @@
-0.247 2026-02-09
+0.248 2026-02-09
   [Incompatible Changes]
     * Remove Deadline field and update set_deadline to set both ReadDeadline and WriteDeadline for Go compatibility.
     * Change I/O timeout exception from Go::Context::Error::DeadlineExceeded to Go::Error::IOTimeout.
