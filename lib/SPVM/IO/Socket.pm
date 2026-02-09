@@ -22,7 +22,7 @@ L<SPVM::IO::Socket> is an abstract class that represents a network socket. It is
     PeerPort => 80,
   });
 
-  # Set an absolute deadline (5 seconds from now)
+  # Set an absolute deadline for both read and write (5 seconds from now)
   my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(5.0));
   $socket->set_deadline($deadline);
 
@@ -69,15 +69,13 @@ B<Example:>
 
 =head2 Deadlines and Go::Context
 
-This class provides three types of absolute deadlines for precise I/O control:
+This class provides two types of absolute deadlines for precise I/O control, similar to Go's C<net.Conn>:
 
 =over 2
 
-=item 1. L</"Deadline"> - A general deadline for all I/O operations.
+=item 1. L</"ReadDeadline"> - A specific deadline for read operations (C<accept>, C<recv>, etc.).
 
-=item 2. L</"ReadDeadline"> - A specific deadline for read operations (C<accept>, C<recv>, etc.).
-
-=item 3. L</"WriteDeadline"> - A specific deadline for write operations (C<connect>, C<send>, etc.).
+=item 2. L</"WriteDeadline"> - A specific deadline for write operations (C<connect>, C<send>, etc.).
 
 =back
 
@@ -94,7 +92,7 @@ B<Example:>
     # Handle the case where no data was received within 3 seconds
   }
 
-These deadlines represent absolute points in time. This mechanism is designed to be compatible with the cancellation patterns found in C<Go::Context>, ensuring that resources are leaked neither on the server nor on the client side during long-running or stalled connections.
+These deadlines represent absolute points in time. You can also use L</"set_deadline"> to set both read and write deadlines to the same value at once. This mechanism is designed to be compatible with the cancellation patterns found in C<Go::Context>.
 
 =head1 Well Known Child Classes
 
@@ -150,23 +148,17 @@ C<has Sockaddr : protected L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>;
 
 A L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> object used by L</"connect"> or L</"bind"> method.
 
-=head2 Deadline
-
-C<has Deadline : protected L<Go::Time|SPVM::Go::Time>;>
-
-An B<absolute deadline> for I/O operations. If this deadline is reached, the operation is interrupted, and a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
-
 =head2 ReadDeadline
 
 C<has ReadDeadline : protected L<Go::Time|SPVM::Go::Time>;>
 
-An B<absolute deadline> for read operations. This field overrides L</"Deadline"> for read operations.
+An B<absolute deadline> for read operations. If this deadline is reached, the operation is interrupted, and a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
 
 =head2 WriteDeadline
 
 C<has WriteDeadline : protected L<Go::Time|SPVM::Go::Time>;>
 
-An B<absolute deadline> for write operations. This field overrides L</"Deadline"> for write operations.
+An B<absolute deadline> for write operations. If this deadline is reached, the operation is interrupted, and a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
 
 =head1 Instance Methods
 
@@ -191,8 +183,6 @@ The following options are available adding to the options for L<IO::Handle#init|
 =item * C<Timeout> : Double = 0.0
 
 =item * C<Listen> : Int = 0
-
-=item * C<Deadline> : L<Go::Time|SPVM::Go::Time> = undef
 
 =item * C<ReadDeadline> : L<Go::Time|SPVM::Go::Time> = undef
 
@@ -236,17 +226,11 @@ C<method set_timeout : void ($timeout : double);>
 
 Sets L</"Timeout"> field to $timeout. This value is used as an inactivity timeout.
 
-=head2 deadline
-
-C<method deadline : L<Go::Time|SPVM::Go::Time> ();>
-
-Returns the value of L</"Deadline"> field.
-
 =head2 set_deadline
 
 C<method set_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
 
-Sets L</"Deadline"> field to $deadline.
+Sets both L</"ReadDeadline"> and L</"WriteDeadline"> fields to C<$deadline>.
 
 =head2 read_deadline
 
@@ -302,7 +286,7 @@ C<protected method connect : void ();>
 
 Performs connect operation.
 
-This method supports the inactivity L</"Timeout"> and the absolute L</"Deadline"> (or L</"WriteDeadline">). If a deadline is set, a monitor goroutine ensures the socket is closed at the deadline.
+This method supports the inactivity L</"Timeout"> and the absolute L</"WriteDeadline">.
 
 Exceptions:
 
@@ -344,7 +328,7 @@ C<method accept : L<IO::Socket|SPVM::IO::Socket> ($peer_ref : L<Sys::Socket::Soc
 
 Performs accept operation and returns a client socket object.
 
-This method respects the inactivity L</"Timeout"> and the absolute L</"Deadline"> (or L</"ReadDeadline">). If a deadline is set, a monitor goroutine ensures the socket is closed at the deadline.
+This method respects the inactivity L</"Timeout"> and the absolute L</"ReadDeadline">.
 
 Returns a new client socket instance.
 
@@ -386,7 +370,7 @@ C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, 
 
 Performs recvfrom operation and returns read length.
 
-If no data is available, it yields until the socket is ready, the B<inactivity timeout> (L</"Timeout">) expires, or the B<deadline> (L</"Deadline"> or L</"ReadDeadline">) is reached.
+If no data is available, it yields until the socket is ready, the B<inactivity timeout> (L</"Timeout">) expires, or the B<read deadline> (L</"ReadDeadline">) is reached.
 
 Exceptions:
 
@@ -402,7 +386,7 @@ C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sock
 
 Performs sendto operation and returns write length.
 
-If the transmit buffer is full, it yields until space becomes available, the B<inactivity timeout> (L</"Timeout">) expires, or the B<deadline> (L</"Deadline"> or L</"WriteDeadline">) is reached.
+If the transmit buffer is full, it yields until space becomes available, the B<inactivity timeout> (L</"Timeout">) expires, or the B<write deadline> (L</"WriteDeadline">) is reached.
 
 Exceptions:
 

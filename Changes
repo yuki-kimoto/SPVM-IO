@@ -1,4 +1,8 @@
 0.247 2026-02-05
+  [Incompatible Changes]
+    * Remove Deadline field and update set_deadline to set both ReadDeadline and WriteDeadline for Go compatibility.
+    
+0.247 2026-02-05
   [Test Fix]
     * Fix the test suite to properly enable and execute the deadline-related test cases that were previously inactive.
     

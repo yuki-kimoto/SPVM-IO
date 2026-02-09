@@ -44,9 +44,6 @@ class IO::Socket extends IO::Handle {
   
   has Sockaddr : protected Sys::Socket::Sockaddr;
 
-  # An absolute deadline for I/O operations.
-  has Deadline : Go::Time;
-  
   # An absolute deadline for read operations.
   has ReadDeadline : Go::Time;
 
@@ -85,11 +82,6 @@ class IO::Socket extends IO::Handle {
       $self->{Timeout} = $options->get("Timeout")->(double);
     }
     
-    # Deadline option
-    if ($options->exists("Deadline")) {
-      $self->{Deadline} = $options->get("Deadline")->(Go::Time);
-    }
-    
     # ReadDeadline option
     if ($options->exists("ReadDeadline")) {
       $self->{ReadDeadline} = $options->get("ReadDeadline")->(Go::Time);
@@ -115,7 +107,6 @@ class IO::Socket extends IO::Handle {
         "Proto",
         "Listen",
         "Timeout",
-        "Deadline",
         "ReadDeadline",
         "WriteDeadline",
       ]
@@ -125,13 +116,7 @@ class IO::Socket extends IO::Handle {
 
   # Calculates the remaining duration based on Deadline and Timeout fields.
   protected method get_remaining_duration : Go::Duration_1l ($is_write : int) {
-    my $deadline = $self->{Deadline};
-    if ($is_write) {
-      if ($self->{WriteDeadline}) { $deadline = $self->{WriteDeadline}; }
-    }
-    else {
-      if ($self->{ReadDeadline}) { $deadline = $self->{ReadDeadline}; }
-    }
+    my $deadline = $is_write ? $self->{WriteDeadline} : $self->{ReadDeadline};
     
     my $default_timeout_sec = $self->{Timeout};
     my $final_duration : Go::Duration_1l;
@@ -139,7 +124,6 @@ class IO::Socket extends IO::Handle {
     if ($deadline) {
       my $now = Go::Time->now;
       
-      # If the deadline has already passed, throw DeadlineExceeded immediately.
       if ($now->after($deadline)) {
         die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
       }
@@ -150,6 +134,7 @@ class IO::Socket extends IO::Handle {
         die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
       }
       
+      # Priority: If Timeout is set and it's shorter than the deadline, use it.
       if ($default_timeout_sec > 0) {
         my $timeout_duration = Go::Duration_1l->new_from_sec($default_timeout_sec);
         if ($timeout_duration->{nsec} < $final_duration->{nsec}) {
@@ -212,7 +197,7 @@ class IO::Socket extends IO::Handle {
           eval { Go->gosched_io_read($fd, $timeout_duration); }
           if ($@) {
             if ($@ isa Go::Error::IOTimeout) {
-              my $deadline = $self->{ReadDeadline} ? $self->{ReadDeadline} : $self->{Deadline};
+              my $deadline = $self->{ReadDeadline};
               if ($deadline && Go::Time->now->after($deadline)) {
                 die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
               }
@@ -252,7 +237,7 @@ class IO::Socket extends IO::Handle {
           eval { Go->gosched_io_read($fd, $timeout_duration); }
           if ($@) {
             if ($@ isa Go::Error::IOTimeout) {
-              my $deadline = $self->{ReadDeadline} ? $self->{ReadDeadline} : $self->{Deadline};
+              my $deadline = $self->{ReadDeadline};
               if ($deadline && Go::Time->now->after($deadline)) {
                 die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
               }
@@ -281,7 +266,7 @@ class IO::Socket extends IO::Handle {
           eval { Go->gosched_io_write($fd, $timeout_duration); }
           if ($@) {
             if ($@ isa Go::Error::IOTimeout) {
-              my $deadline = $self->{WriteDeadline} ? $self->{WriteDeadline} : $self->{Deadline};
+              my $deadline = $self->{WriteDeadline};
               if ($deadline && Go::Time->now->after($deadline)) {
                 die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
               }
@@ -377,7 +362,7 @@ class IO::Socket extends IO::Handle {
           eval { Go->gosched_io_write($fd, $timeout_duration); }
           if ($@) {
             if ($@ isa Go::Error::IOTimeout) {
-              my $deadline = $self->{WriteDeadline} ? $self->{WriteDeadline} : $self->{Deadline};
+              my $deadline = $self->{WriteDeadline};
               if ($deadline && Go::Time->now->after($deadline)) {
                 die Go::Context::Error::DeadlineExceeded "The deadline has been exceeded.";
               }
@@ -414,12 +399,9 @@ class IO::Socket extends IO::Handle {
     $self->SUPER::set_blocking($blocking);
   }
   
-  method deadline : Go::Time () {
-    return $self->{Deadline};
-  }
-
   method set_deadline : void ($deadline : Go::Time) {
-    $self->{Deadline} = $deadline;
+    $self->{ReadDeadline} = $deadline;
+    $self->{WriteDeadline} = $deadline;
   }
   
   method read_deadline : Go::Time () {
