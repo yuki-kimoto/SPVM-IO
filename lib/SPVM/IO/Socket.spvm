@@ -196,12 +196,6 @@ class IO::Socket extends IO::Handle {
         if ($again) {
           eval { Go->gosched_io_read($fd, $timeout_duration); }
           if ($@) {
-            if ($@ isa Go::Error::IOTimeout) {
-              my $deadline = $self->{ReadDeadline};
-              if ($deadline && Go::Time->now->after($deadline)) {
-                die Go::Error::IOTimeout "The deadline has been exceeded.";
-              }
-            }
             die $@;
           }
           next;
@@ -236,12 +230,6 @@ class IO::Socket extends IO::Handle {
         if ($again) {
           eval { Go->gosched_io_read($fd, $timeout_duration); }
           if ($@) {
-            if ($@ isa Go::Error::IOTimeout) {
-              my $deadline = $self->{ReadDeadline};
-              if ($deadline && Go::Time->now->after($deadline)) {
-                die Go::Error::IOTimeout "The deadline has been exceeded.";
-              }
-            }
             die $@;
           }
           next;
@@ -265,12 +253,6 @@ class IO::Socket extends IO::Handle {
         if ($again) {
           eval { Go->gosched_io_write($fd, $timeout_duration); }
           if ($@) {
-            if ($@ isa Go::Error::IOTimeout) {
-              my $deadline = $self->{WriteDeadline};
-              if ($deadline && Go::Time->now->after($deadline)) {
-                die Go::Error::IOTimeout "The deadline has been exceeded.";
-              }
-            }
             die $@;
           }
           next;
@@ -361,12 +343,6 @@ class IO::Socket extends IO::Handle {
         if ($again) {
           eval { Go->gosched_io_write($fd, $timeout_duration); }
           if ($@) {
-            if ($@ isa Go::Error::IOTimeout) {
-              my $deadline = $self->{WriteDeadline};
-              if ($deadline && Go::Time->now->after($deadline)) {
-                die Go::Error::IOTimeout "The deadline has been exceeded.";
-              }
-            }
             die $@;
           }
           next;
