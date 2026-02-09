@@ -88,7 +88,7 @@ B<Example:>
   eval {
     $socket->sysread($buffer);
   };
-  if ($@ isa Go::Context::Error::DeadlineExceeded) {
+  if ($@ isa Go::Error::IOTimeout) {
     # Handle the case where no data was received within 3 seconds
   }
 
@@ -152,13 +152,13 @@ A L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> object used by L</"connec
 
 C<has ReadDeadline : protected L<Go::Time|SPVM::Go::Time>;>
 
-An B<absolute deadline> for read operations. If this deadline is reached, the operation is interrupted, and a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+An B<absolute deadline> for read operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 =head2 WriteDeadline
 
 C<has WriteDeadline : protected L<Go::Time|SPVM::Go::Time>;>
 
-An B<absolute deadline> for write operations. If this deadline is reached, the operation is interrupted, and a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+An B<absolute deadline> for write operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 =head1 Instance Methods
 
@@ -290,7 +290,7 @@ This method supports the inactivity L</"Timeout"> and the absolute L</"WriteDead
 
 Exceptions:
 
-If the absolute deadline is reached, a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+If the absolute deadline is reached, a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 Exceptions thrown by L<Sys#connect> method could be thrown.
 
@@ -334,7 +334,7 @@ Returns a new client socket instance.
 
 Exceptions:
 
-If the absolute deadline is reached, a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+If the absolute deadline is reached, a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 Exceptions thrown by L<Sys#accept|SPVM::Sys|/"accept"> method could be thrown.
 
@@ -374,7 +374,7 @@ If no data is available, it yields until the socket is ready, the B<inactivity t
 
 Exceptions:
 
-If the absolute deadline is reached, a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+If the absolute deadline is reached, a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 Exceptions thrown by L<Sys#recvfrom|SPVM::Sys/"recvfrom"> method could be thrown.
 
@@ -390,7 +390,7 @@ If the transmit buffer is full, it yields until space becomes available, the B<i
 
 Exceptions:
 
-If the absolute deadline is reached, a L<Go::Context::Error::DeadlineExceeded|SPVM::Go::Context::Error::DeadlineExceeded> exception is thrown.
+If the absolute deadline is reached, a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 Exceptions thrown by L<Sys#sendto|SPVM::Sys/"sendto"> method could be thrown.
 
