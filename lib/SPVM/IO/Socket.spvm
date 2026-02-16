@@ -225,6 +225,17 @@ class IO::Socket extends IO::Handle {
     my $class = type_name $self;
     my $client = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$options]);
     if ($peer_ref) { $peer_ref->[0] = $client_sockaddr; }
+    
+    # Apply default TCP settings to the newly accepted client socket.
+    my $domain = $self->{Domain};
+    my $type = $self->{Type};
+    my $is_internet_tcp_socket
+      = ($domain == Sys::Socket::Constant->AF_INET || $domain == Sys::Socket::Constant->AF_INET6)
+      && $type == Sys::Socket::Constant->SOCK_STREAM;
+    if ($is_internet_tcp_socket) {
+      $self->set_default_tcp_settings;
+    }
+    
     return $client;
   }
   
