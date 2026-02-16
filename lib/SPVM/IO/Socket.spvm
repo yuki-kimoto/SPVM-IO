@@ -403,4 +403,18 @@ class IO::Socket extends IO::Handle {
     $self->{WriteDeadline} = $deadline;
   }
   
+  private method set_default_tcp_settings : void () {
+    my $fd = $self->{FD};
+    
+    # 1. Disable Nagle's algorithm (TCP_NODELAY) as Go does by default.
+    my $tcp_nodelay = 1;
+    $self->setsockopt(Sys::Socket::Constant->IPPROTO_TCP, Sys::Socket::Constant->TCP_NODELAY, $tcp_nodelay);
+    
+    # 2. Enable TCP keep-alive with default settings (e.g., 15 seconds)
+    # This matches Go's default behavior for net.Dialer.
+    my $keepalive_onoff = 1;
+    my $keepalive_idle_sec = 15;
+    Sys->set_tcp_keepalive($fd, $keepalive_onoff, $keepalive_idle_sec);
+  }
+  
 }
