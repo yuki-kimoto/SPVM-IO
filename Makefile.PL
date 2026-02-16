@@ -49,7 +49,7 @@ WriteMakefile(
   },
   PREREQ_PM         => {
     %configure_and_runtime_requires,
-    'SPVM::Sys' => '0.540',
+    'SPVM::Sys' => '0.561',
     'SPVM::Math' => '0.11',
     'SPVM::Go' => '0.025',
     'SPVM::Net::DNS::Native' => '0.001',

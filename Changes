@@ -1,4 +1,6 @@
 0.249 2026-02-16
+  [Requirement Changes]
+    * Require SPVM::Sys 0.561.
   [Changes]
     * Apply Go-like default settings (disabling Nagle's algorithm and enabling TCP keep-alive with a 15-second idle time) to TCP sockets when they are created or accepted via IO::Socket#socket and IO::Socket#accept, specifically for internet domain sockets (AF_INET and AF_INET6).
     
