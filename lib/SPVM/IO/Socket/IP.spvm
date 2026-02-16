@@ -167,10 +167,11 @@ class IO::Socket::IP extends IO::Socket {
       $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
     }
     
-    # Nagle algorizm is on over TCP
+    # Set default TCP settings (Nagle off, Keep-alive on) if it's a TCP socket.
+    # This replaces the direct setsockopt(TCP_NODELAY) call.
     my $type = $self->socktype;
     if ($type == SOCKET->SOCK_STREAM) {
-      $self->setsockopt(SOCKET->IPPROTO_TCP, SOCKET->TCP_NODELAY, 1);
+      $self->set_default_tcp_settings;
     }
     
     if (exists $self->{V6Only}) {
@@ -328,6 +329,20 @@ class IO::Socket::IP extends IO::Socket {
     }
     
     return $sockaddr;
+  }
+  
+  private method set_default_tcp_settings : void () {
+    my $fd = $self->{FD};
+    
+    # 1. Disable Nagle's algorithm (TCP_NODELAY) as Go does by default.
+    my $tcp_nodelay = 1;
+    $self->setsockopt(Sys::Socket::Constant->IPPROTO_TCP, Sys::Socket::Constant->TCP_NODELAY, $tcp_nodelay);
+    
+    # 2. Enable TCP keep-alive with default settings (e.g., 15 seconds)
+    # This matches Go's default behavior for net.Dialer.
+    my $keepalive_onoff = 1;
+    my $keepalive_idle_sec = 15;
+    Sys->set_tcp_keepalive($fd, $keepalive_onoff, $keepalive_idle_sec);
   }
   
 }
