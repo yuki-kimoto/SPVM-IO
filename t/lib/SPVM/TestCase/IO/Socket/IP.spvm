@@ -739,7 +739,7 @@ class TestCase::IO::Socket::IP {
     return $success_ref->[0];
   }
   
-  static method read_timeout : int ($port : int) {
+  static method read_timeout : int () {
     
     my $success_ref = [1];
     
@@ -748,8 +748,8 @@ class TestCase::IO::Socket::IP {
     $wg->add(2);
     
     my $wait_server_start_ch = Go->make;
-    
-    Go->go([$wg : Go::Sync::WaitGroup, $port : int, $wait_server_start_ch : Go::Channel] method : void () {
+    my $port_ref = [-1];
+    Go->go([$wg : Go::Sync::WaitGroup, $wait_server_start_ch : Go::Channel, $port_ref : int[]] method : void () {
       
       Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
         $wg->done;
@@ -760,10 +760,11 @@ class TestCase::IO::Socket::IP {
         
         my $server_socket = IO::Socket::IP->new({
           LocalAddr => $localhost,
-          LocalPort => $port,
           Listen    => 5,
           ReuseAddr => 1,
         });
+        
+        $port_ref->[0] = $server_socket->sockport;
         
         $wait_server_start_ch->write(1);
         
@@ -774,7 +775,7 @@ class TestCase::IO::Socket::IP {
       
     });
     
-    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int, $wait_server_start_ch : Go::Channel] method : void () {
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $wait_server_start_ch : Go::Channel, $port_ref : int[]] method : void () {
       
       $wait_server_start_ch->read;
       
@@ -784,7 +785,7 @@ class TestCase::IO::Socket::IP {
       
       {
         my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Timeout => 0.25});
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port_ref->[0], Timeout => 0.25});
         
         my $recv_buffer = (mutable string)new_string_len 1;
         

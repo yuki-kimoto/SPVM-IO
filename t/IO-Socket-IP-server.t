@@ -28,7 +28,7 @@ ok(SPVM::TestCase::IO::Socket::IP->accept_parallel($port));
 
 =cut
 
-ok(SPVM::TestCase::IO::Socket::IP->read_timeout($port));
+ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
 
 SPVM::Fn->destroy_runtime_permanent_vars;
 
