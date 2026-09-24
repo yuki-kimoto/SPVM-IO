@@ -747,7 +747,9 @@ class TestCase::IO::Socket::IP {
     
     $wg->add(2);
     
-    Go->go([$wg : Go::Sync::WaitGroup, $port : int] method : void () {
+    my $wait_server_start_ch = Go->make;
+    
+    Go->go([$wg : Go::Sync::WaitGroup, $port : int, $wait_server_start_ch : Go::Channel] method : void () {
       
       Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
         $wg->done;
@@ -763,6 +765,8 @@ class TestCase::IO::Socket::IP {
           ReuseAddr => 1,
         });
         
+        $wait_server_start_ch->write(1);
+        
         my $client_socket = $server_socket->accept;
         
         Go->sleep_sec(0.5);
@@ -770,7 +774,9 @@ class TestCase::IO::Socket::IP {
       
     });
     
-    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int, $wait_server_start_ch : Go::Channel] method : void () {
+      
+      $wait_server_start_ch->read;
       
       Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
         $wg->done;
@@ -792,7 +798,7 @@ class TestCase::IO::Socket::IP {
       }
     });
     $wg->wait;
-  
+    
     Go->gosched;
     
     unless ($success_ref->[0]) {
