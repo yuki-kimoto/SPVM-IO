@@ -743,58 +743,40 @@ class TestCase::IO::Socket::IP {
     
     my $success_ref = [1];
     
+    Go->go([$port : int] method : void () {
+      
+      {
+        my $localhost = "127.0.0.1";
+        
+        my $server_socket = IO::Socket::IP->new({
+          LocalAddr => $localhost,
+          LocalPort => $port,
+          Listen    => 5,
+          ReuseAddr => 1,
+        });
+        
+        my $client_socket = $server_socket->accept;
+        
+        Go->sleep_sec(0.5);
+      }
+      
+    });
+    
     Go->go([$success_ref : int[], $port : int] method : void () {
-      my $wg = Go::Sync::WaitGroup->new;
       
-      $wg->add(2);
-      
-      # Run a echo server
-      Go->go([$wg : Go::Sync::WaitGroup, $port : int] method : void () {
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Timeout => 0.25});
         
-        Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
-          $wg->done;
-        });
+        my $recv_buffer = (mutable string)new_string_len 1;
         
-        {
-          my $localhost = "127.0.0.1";
-          
-          my $server_socket = IO::Socket::IP->new({
-            LocalAddr => $localhost,
-            LocalPort => $port,
-            Listen    => 5,
-            ReuseAddr => 1,
-          });
-          
-          my $client_socket = $server_socket->accept;
-          
-          Go->sleep_sec(0.5);
+        eval { $socket->recv($recv_buffer); }
+        
+        unless ($@ && $@ isa Go::Error::IOTimeout) {
+          diag;
+          $success_ref->[0] = 0;
         }
-        
-      });
-      
-      # Tests
-      Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
-        
-        Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
-          $wg->done;
-        });
-        
-        {
-          my $host = "127.0.0.1";
-          my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Timeout => 0.25});
-          
-          my $recv_buffer = (mutable string)new_string_len 1;
-          
-          eval { $socket->recv($recv_buffer); }
-          
-          unless ($@ && $@ isa Go::Error::IOTimeout) {
-            diag;
-            $success_ref->[0] = 0;
-          }
-          
-        }
-      });
-      $wg->wait;
+      }
     });
     
     Go->gosched;
@@ -802,6 +784,8 @@ class TestCase::IO::Socket::IP {
     unless ($success_ref->[0]) {
       return 0;
     }
+    
+    warn;
     
     return 1;
   }
