@@ -770,7 +770,7 @@ class TestCase::IO::Socket::IP {
         
         my $recv_buffer = (mutable string)new_string_len 1;
         
-        eval { $socket->recv($recv_buffer); }
+        eval { $socket->sysread($recv_buffer); }
         
         unless ($@ && $@ isa Go::Error::IOTimeout) {
           diag;
