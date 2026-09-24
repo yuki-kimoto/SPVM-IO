@@ -11,6 +11,7 @@ class IO::Socket extends IO::Handle {
   use Sys::Socket::Sockaddr::In6;
   use Sys::Socket::Sockaddr::Un;
   use Sys::Socket::In_addr;
+  use Sys::Socket::Util;
   use Hash;
   use Errno;
   use Go;
@@ -425,7 +426,7 @@ class IO::Socket extends IO::Handle {
     # This matches Go's default behavior for net.Dialer.
     my $keepalive_onoff = 1;
     my $keepalive_idle_sec = 15;
-    Sys->set_tcp_keepalive($fd, $keepalive_onoff, $keepalive_idle_sec);
+    Sys::Socket::Util->set_tcp_keepalive($fd, $keepalive_onoff, $keepalive_idle_sec);
   }
   
 
