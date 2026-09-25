@@ -31,7 +31,7 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
 {
   my $port = $server_manager->port;
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_new($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_new);
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_peerport($port));
   
