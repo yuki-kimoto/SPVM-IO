@@ -11,19 +11,20 @@ class TestCase::IO::Socket::IP {
   use Sys::Signal::Constant as SIGNAL;
   
   our $LOCALHOST : string;
+  our $LOCALHOST_V6 : string;
   INIT {
     unless (Sys::OS->is_windows) {
       Sys::Signal->signal(SIGNAL->SIGPIPE, Sys::Signal->SIG_IGN);
     }
     
     $LOCALHOST = "127.0.0.1";
+    $LOCALHOST_V6 = "::1";
   }
   
   static method ipv4_new : int ($port : int) {
     
     {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
       
       unless ($socket is_type IO::Socket::IP) {
         return 0;
@@ -39,8 +40,7 @@ class TestCase::IO::Socket::IP {
     {
       # IPPROTO_UDP
       {
-        my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Proto => SOCKET->IPPROTO_UDP});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Proto => SOCKET->IPPROTO_UDP});
         
         unless ($socket->protocol == SOCKET->IPPROTO_UDP) {
           return 0;
@@ -57,8 +57,7 @@ class TestCase::IO::Socket::IP {
     {
       # ReuseAddr
       {
-        my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, ReuseAddr => 1});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, ReuseAddr => 1});
         
         my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR);
         
@@ -72,8 +71,7 @@ class TestCase::IO::Socket::IP {
         warn "[Skip Test]Windows do not support SO_REUSEPORT.";
       }
       else {
-        my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, ReusePort => 1});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, ReusePort => 1});
         
         my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT);
         
@@ -84,8 +82,7 @@ class TestCase::IO::Socket::IP {
       
       # Broadcast
       {
-        my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Proto => SOCKET->IPPROTO_UDP, Broadcast => 1});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Proto => SOCKET->IPPROTO_UDP, Broadcast => 1});
         
         my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST);
         
@@ -98,8 +95,7 @@ class TestCase::IO::Socket::IP {
     # Exceptions
     {
       {
-        my $host = "127.0.0.1";
-        eval { my $socket = IO::Socket::IP->new({PeerAddr => $host, Listen => 1}); }
+        eval { my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, Listen => 1}); }
         
         unless ($@) {
           return 0;
@@ -113,12 +109,11 @@ class TestCase::IO::Socket::IP {
   static method ipv4_peerhost : int ($port : int) {
     
     {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
       
       my $peerhost = $socket->peerhost;
       
-      unless ($peerhost eq $host) {
+      unless ($peerhost eq $LOCALHOST) {
         return 0;
       }
     }
@@ -129,8 +124,7 @@ class TestCase::IO::Socket::IP {
   static method ipv4_peerport : int ($port : int) {
     
     {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
       
       my $peerport = $socket->peerport;
       
@@ -145,12 +139,11 @@ class TestCase::IO::Socket::IP {
   static method ipv4_sockhost : int ($port : int) {
     
     {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
       
       my $sockhost = $socket->sockhost;
       
-      unless ($sockhost eq $host) {
+      unless ($sockhost eq $LOCALHOST) {
         return 0;
       }
     }
@@ -161,8 +154,7 @@ class TestCase::IO::Socket::IP {
   static method ipv4_sockport : int ($port : int) {
     
     {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
       
       my $sockport = $socket->sockport;
       
@@ -178,8 +170,7 @@ class TestCase::IO::Socket::IP {
   static method ipv4_sockaddr : int ($port : int) {
     
     {
-      my $addr = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $addr, PeerPort => $port});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
       
       my $sockaddr = $socket->sockaddr;
       
@@ -194,8 +185,7 @@ class TestCase::IO::Socket::IP {
   static method ipv4_peeraddr : int ($port : int) {
     
     {
-      my $addr = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $addr, PeerPort => $port});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
       
       my $peeraddr = $socket->peeraddr;
       
@@ -210,8 +200,7 @@ class TestCase::IO::Socket::IP {
   static method ipv6_new : int ($port : int) {
     
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
       unless ($socket is_type IO::Socket::IP) {
         return 0;
@@ -225,8 +214,7 @@ class TestCase::IO::Socket::IP {
     # Options
     {
       {
-        my $host = "::1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6, V6Only => 1});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6, V6Only => 1});
         
         my $ret = Sys->getsockopt($socket->fileno, SOCKET->IPPROTO_IPV6, SOCKET->IPV6_V6ONLY);
         
@@ -242,12 +230,11 @@ class TestCase::IO::Socket::IP {
   static method ipv6_peerhost : int ($port : int) {
     
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
       my $peerhost = $socket->peerhost;
       
-      unless ($peerhost eq $host) {
+      unless ($peerhost eq $LOCALHOST_V6) {
         return 0;
       }
     }
@@ -258,8 +245,7 @@ class TestCase::IO::Socket::IP {
   static method ipv6_peerport : int ($port : int) {
     
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
       my $peerport = $socket->peerport;
       
@@ -274,12 +260,11 @@ class TestCase::IO::Socket::IP {
   static method ipv6_sockhost : int ($port : int) {
     
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
       my $sockhost = $socket->sockhost;
       
-      unless ($sockhost eq $host) {
+      unless ($sockhost eq $LOCALHOST_V6) {
         return 0;
       }
     }
@@ -290,8 +275,7 @@ class TestCase::IO::Socket::IP {
   static method ipv6_sockport : int ($port : int) {
     
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
       my $sockport = $socket->sockport;
       
@@ -307,8 +291,7 @@ class TestCase::IO::Socket::IP {
   static method ipv6_peeraddr : int ($port : int) {
     
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
       my $peeraddr = $socket->peeraddr;
       
@@ -323,8 +306,7 @@ class TestCase::IO::Socket::IP {
   static method ipv6_sockaddr : int ($port : int) {
     
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
       my $sockaddr = $socket->sockaddr;
       
@@ -389,8 +371,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port_ref->[0]});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0]});
         
         my $write_data = "abc\n";
         
@@ -434,10 +415,9 @@ class TestCase::IO::Socket::IP {
     
     # Basic
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
-      my $write_data = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
+      my $write_data = "GET /hello HTTP/1.0\r\nHost: $LOCALHOST_V6\r\n\r\n";
       $socket->syswrite($write_data);
       
       $socket->shutdown(SOCKET->SHUT_WR);
@@ -473,10 +453,9 @@ class TestCase::IO::Socket::IP {
     
     # Auto socket close
     {
-      my $host = "::1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Domain => SOCKET->AF_INET6});
+      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
       
-      my $write_data = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
+      my $write_data = "GET /hello HTTP/1.0\r\nHost: $LOCALHOST_V6\r\n\r\n";
       $socket->syswrite($write_data);
       
       $socket->shutdown(SOCKET->SHUT_WR);
@@ -684,15 +663,13 @@ class TestCase::IO::Socket::IP {
     my $success_ref = [1];
     
     {
-      my $host = "127.0.0.1";
-      
       # Use a deadline that has already passed to ensure an immediate timeout.
       my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(-1.0));
       
       my $socket = (IO::Socket::IP)undef;
       eval {
         $socket = IO::Socket::IP->new({
-          PeerAddr => $host,
+          PeerAddr => $LOCALHOST,
           PeerPort => $port,
           ReadDeadline => $deadline,
           WriteDeadline => $deadline,
@@ -725,7 +702,7 @@ class TestCase::IO::Socket::IP {
     Go->go([$port : int] method : void () {
       eval {
         my $listen_socket = IO::Socket::IP->new({
-          LocalAddr => "127.0.0.1",
+          LocalAddr => $LOCALHOST,
           LocalPort => $port,
           Listen => 5,
           ReuseAddr => 1,
@@ -745,11 +722,9 @@ class TestCase::IO::Socket::IP {
     # Client side
     Go->go([$port : int, $success_ref : int[]] method : void () {
       eval {
-        my $host = "127.0.0.1";
-        
         # Connect to the server
         my $socket = IO::Socket::IP->new({
-          PeerAddr => $host,
+          PeerAddr => $LOCALHOST,
           PeerPort => $port,
         });
         
@@ -790,7 +765,7 @@ class TestCase::IO::Socket::IP {
     Go->go([$port : int, $ch_ready : Go::Channel] method : void () {
       eval {
         my $listen_socket = IO::Socket::IP->new({
-          LocalAddr => "127.0.0.1",
+          LocalAddr => $LOCALHOST,
           LocalPort => $port,
           Listen => 5,
           ReuseAddr => 1,
@@ -815,9 +790,8 @@ class TestCase::IO::Socket::IP {
       eval {
         $ch_ready->read;
         
-        my $host = "127.0.0.1";
         my $socket = IO::Socket::IP->new({
-          PeerAddr => $host,
+          PeerAddr => $LOCALHOST,
           PeerPort => $port,
         });
         
@@ -855,7 +829,7 @@ class TestCase::IO::Socket::IP {
     Go->go([$port : int, $success_ref : int[]] method : void () {
       eval {
         my $listen_socket = IO::Socket::IP->new({
-          LocalAddr => "127.0.0.1",
+          LocalAddr => $LOCALHOST,
           LocalPort => $port,
           Listen => 5,
           ReuseAddr => 1,
@@ -902,7 +876,7 @@ class TestCase::IO::Socket::IP {
     Go->go([$port : int, $ch_ready : Go::Channel] method : void () {
       eval {
         my $listen_socket = IO::Socket::IP->new({
-          LocalAddr => "127.0.0.1",
+          LocalAddr => $LOCALHOST,
           LocalPort => $port,
           Listen => 5,
           ReuseAddr => 1,
@@ -921,7 +895,7 @@ class TestCase::IO::Socket::IP {
       eval {
         $ch_ready->read;
         my $socket = IO::Socket::IP->new({
-          PeerAddr => "127.0.0.1",
+          PeerAddr => $LOCALHOST,
           PeerPort => $port,
         });
         
@@ -960,7 +934,7 @@ class TestCase::IO::Socket::IP {
     Go->go([$port : int, $ch_ready : Go::Channel] method : void () {
       eval {
         my $listen_socket = IO::Socket::IP->new({
-          LocalAddr => "127.0.0.1",
+          LocalAddr => $LOCALHOST,
           LocalPort => $port,
           Listen => 5,
           ReuseAddr => 1,
@@ -978,7 +952,7 @@ class TestCase::IO::Socket::IP {
       eval {
         $ch_ready->read;
         my $socket = IO::Socket::IP->new({
-          PeerAddr => "127.0.0.1",
+          PeerAddr => $LOCALHOST,
           PeerPort => $port,
         });
         
