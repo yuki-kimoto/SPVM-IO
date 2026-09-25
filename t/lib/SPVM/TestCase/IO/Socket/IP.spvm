@@ -241,7 +241,7 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method ipv4_peerport : int ($port : int) {
+  static method ipv4_peerport : int () {
     
     my $success_ref = [1];
     
@@ -312,7 +312,7 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method ipv4_sockhost : int ($port : int) {
+  static method ipv4_sockhost : int () {
     
     my $success_ref = [1];
     
@@ -383,7 +383,7 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method ipv4_sockport : int ($port : int) {
+  static method ipv4_sockport : int () {
     
     
     my $success_ref = [1];
@@ -456,7 +456,7 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method ipv4_sockaddr : int ($port : int) {
+  static method ipv4_sockaddr : int () {
     
     
     my $success_ref = [1];
@@ -528,7 +528,7 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method ipv4_peeraddr : int ($port : int) {
+  static method ipv4_peeraddr : int () {
     
     
     my $success_ref = [1];

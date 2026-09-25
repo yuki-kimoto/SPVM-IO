@@ -6,46 +6,26 @@ use lib 't/lib';
 
 use SPVM 'TestCase::IO::Socket::IP';
 
-use Test::SPVM::Sys::Socket::ServerManager::IP;
-use Test::SPVM::Sys::Socket::Server;
-
 my $api = SPVM::api();
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
-my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
-  code => sub {
-    my ($server_manager) = @_;
-    
-    my $port = $server_manager->port;
-    
-    my $server = Test::SPVM::Sys::Socket::Server->new_echo_server_ipv4_tcp(port => $port);
-    
-    $server->start;
-    
-    exit 0;
-  },
-);
-
-# IPv4
 {
-  my $port = $server_manager->port;
-  
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_new);
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_peerport($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_peerport);
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockport($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockport);
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_peerhost);
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockhost($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockhost);
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr);
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_peeraddr($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_peeraddr);
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr);
 }
 
 ok(SPVM::TestCase::IO::Socket::IP->accept);
