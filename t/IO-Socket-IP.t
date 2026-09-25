@@ -48,6 +48,12 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   ok(SPVM::TestCase::IO::Socket::IP->ipv4_sockaddr($port));
 }
 
+ok(SPVM::TestCase::IO::Socket::IP->accept);
+
+ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value);
+
+ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
+
 $api->destroy_runtime_permanent_vars;
 
 my $end_memory_blocks_count = $api->get_memory_blocks_count;
