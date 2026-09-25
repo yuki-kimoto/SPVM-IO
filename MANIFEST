@@ -49,7 +49,7 @@ t/IO-Socket-IP-ipv6.t
 t/IO-Socket-IP-server.t
 t/IO-Socket-IP.t
 t/IO-Socket-online.t
-t/IO-Socket-UNIX-server.t
+t/IO-Socket-UNIX.t
 t/IO-Socket.t
 t/IO.t
 t/lib/SPVM/TestCase/IO.spvm
