@@ -2,12 +2,8 @@ use Test::More;
 
 use strict;
 use warnings;
-use FindBin;
-use lib "$FindBin::Bin/lib";
+use lib 't/lib';
 
-BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build" };
-
-use SPVM 'Fn';
 use SPVM 'TestCase::IO::File';
 
 use TestFile;
@@ -32,9 +28,9 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 # Copy test_files to test_files_tmp with replacing os newline
 TestFile::copy_test_files_tmp();
 
-my $test_dir = "$FindBin::Bin";
+my $test_dir = "t";
 
-my $TEST_TMP_DIR = "$test_dir/.tmp/test_files_tmp";
+my $TEST_TMP_DIR = "t/.tmp/test_files_tmp";
 
 SPVM::TestCase::IO::File->SET_TEST_DIR($test_dir);
 
@@ -82,7 +78,7 @@ ok(SPVM::TestCase::IO::File->sysread);
 ok(SPVM::TestCase::IO::File->getlines);
 ok(SPVM::TestCase::IO::File->read_and_seek);
 
-SPVM::Fn->destroy_runtime_permanent_vars;
+$api->destroy_runtime_permanent_vars;
 
 my $end_memory_blocks_count = $api->get_memory_blocks_count;
 is($end_memory_blocks_count, $start_memory_blocks_count);
