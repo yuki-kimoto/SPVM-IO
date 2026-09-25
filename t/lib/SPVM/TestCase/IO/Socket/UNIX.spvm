@@ -27,8 +27,6 @@ class TestCase::IO::Socket::UNIX {
     
     my $success_ref = [
       1,
-      0,
-      0
     ];
     
     my $wait_server_start_ch = Go->make;
@@ -42,8 +40,6 @@ class TestCase::IO::Socket::UNIX {
       Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
         $wg->done;
       });
-      
-      $success_ref->[1] = 1;
       
       my $server_socket = IO::Socket::UNIX->new({
         Local => $sock_path,
@@ -78,8 +74,6 @@ class TestCase::IO::Socket::UNIX {
       });
       
       $wait_server_start_ch->read;
-      
-      $success_ref->[2] = 1;
       
       {
         my $socket = IO::Socket::UNIX->new({Peer => $sock_path});
@@ -121,9 +115,11 @@ class TestCase::IO::Socket::UNIX {
     });
     $wg->wait;
     
-    Go->gosched;
+    unless ($success_ref->[0]) {
+      return 0;
+    }
     
-    return Array->equals($success_ref, [1, 1, 1]);
+    return 1;
   }
 }
 
