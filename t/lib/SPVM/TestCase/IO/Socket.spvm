@@ -6,7 +6,6 @@ class TestCase::IO::Socket {
   use Go;
   use Fn;
   use Sys::Socket::Constant as SOCKET;
-  use TestUtil;
   
   static method fileno : int ($port : int) {
     
