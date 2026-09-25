@@ -5,7 +5,6 @@ use warnings;
 use lib 't/lib';
 
 use SPVM 'TestCase::IO::Socket::IP';
-use SPVM 'TestUtil';
 
 use Test::SPVM::Sys::Socket::ServerManager::IP;
 
