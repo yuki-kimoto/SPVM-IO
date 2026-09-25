@@ -20,8 +20,6 @@ ok(SPVM::TestCase::IO::Socket::IP->accept);
 
 ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value($port));
 
-ok(SPVM::TestCase::IO::Socket::IP->accept_parallel($port));
-
 =cut
 
 ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
