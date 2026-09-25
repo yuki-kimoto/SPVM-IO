@@ -6,17 +6,13 @@ use lib 't/lib';
 
 use SPVM 'TestCase::IO::Socket::IP';
 
-use Test::SPVM::Sys::Socket::ServerManager::IP;
-
 my $api = SPVM::api();
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
-my $port = Test::SPVM::Sys::Socket::Util::get_available_port();
-
 ok(SPVM::TestCase::IO::Socket::IP->accept);
 
-ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value($port));
+ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value);
 
 ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
 

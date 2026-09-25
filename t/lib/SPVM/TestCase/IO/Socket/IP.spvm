@@ -505,15 +505,18 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method accept_timeout_only_field_value : int ($port : int) {
+  static method accept_timeout_only_field_value : int () {
     
     my $success_ref = [1];
+    
+    my $wait_server_start_ch = Go->make;
     
     my $wg = Go::Sync::WaitGroup->new;
     
     $wg->add(2);
     
-    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
+    my $port_ref = [-1];
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel] method : void () {
       
       Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
         $wg->done;
@@ -522,11 +525,14 @@ class TestCase::IO::Socket::IP {
       {
         my $server_socket = IO::Socket::IP->new({
           LocalAddr => $LOCALHOST,
-          LocalPort => $port,
           Listen    => 5,
           ReuseAddr => 1,
           Timeout => 1.0,
         });
+        
+        $port_ref->[0] = $server_socket->sockport;
+        
+        $wait_server_start_ch->write(1);
         
         my $client_socket = (IO::Socket::IP)undef;
         eval { $client_socket = $server_socket->accept; }
@@ -561,10 +567,16 @@ class TestCase::IO::Socket::IP {
       
     });
     
-    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel] method : void () {
+      
+      $wait_server_start_ch->read;
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0]});
         
         my $write_data = "abc\n";
         
@@ -593,8 +605,6 @@ class TestCase::IO::Socket::IP {
           $success_ref->[0] = 0;
         }
       }
-      
-      $wg->done;
     });
     
     $wg->wait;
