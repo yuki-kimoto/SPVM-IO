@@ -56,7 +56,12 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      while (1) {
+        eval { $server_socket->accept; }
+        if ($@) {
+          last;
+        }
+      }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
