@@ -6,7 +6,6 @@ class TestCase::IO::Socket::UNIX {
   use Go;
   use Fn;
   use Sys::Socket::Constant as SOCKET;
-  use TestUtil;
   
   static method new : int ($sock_path : string) {
     
