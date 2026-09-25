@@ -1195,8 +1195,6 @@ class TestCase::IO::Socket::IP {
         
         $socket->syswrite($write_data);
         
-        $socket->shutdown(SOCKET->SHUT_WR);
-        
         my $string_buffer = StringBuffer->new;
         
         my $read_data = (mutable string)new_string_len 1;
@@ -1238,8 +1236,6 @@ class TestCase::IO::Socket::IP {
       my $write_data = "GET /hello HTTP/1.0\r\nHost: $LOCALHOST_V6\r\n\r\n";
       $socket->syswrite($write_data);
       
-      $socket->shutdown(SOCKET->SHUT_WR);
-      
       my $read_data = (mutable string)new_string_len 1000;
       
       my $read_length = $socket->sysread($read_data);
@@ -1275,8 +1271,6 @@ class TestCase::IO::Socket::IP {
       
       my $write_data = "GET /hello HTTP/1.0\r\nHost: $LOCALHOST_V6\r\n\r\n";
       $socket->syswrite($write_data);
-      
-      $socket->shutdown(SOCKET->SHUT_WR);
       
       my $read_data = (mutable string)new_string_len 1000;
       
@@ -1378,8 +1372,6 @@ class TestCase::IO::Socket::IP {
         my $write_data = "abc\n";
         
         $socket->syswrite($write_data);
-        
-        $socket->shutdown(SOCKET->SHUT_WR);
         
         my $string_buffer = StringBuffer->new;
         
