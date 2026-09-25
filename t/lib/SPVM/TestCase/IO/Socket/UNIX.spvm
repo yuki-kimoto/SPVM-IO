@@ -32,20 +32,53 @@ class TestCase::IO::Socket::UNIX {
       0
     ];
     
+    my $wait_server_start_ch = Go->make;
+    
     my $wg = Go::Sync::WaitGroup->new;
     
     $wg->add(2);
     
-    Go->go([$wg : Go::Sync::WaitGroup, $sock_path : string, $success_ref : int[]] method : void () {
+    Go->go([$wg : Go::Sync::WaitGroup, $sock_path : string, $success_ref : int[], $wait_server_start_ch : Go::Channel] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
       
       $success_ref->[1] = 1;
       
-      TestUtil->run_echo_server_accept_once_unix($sock_path, $success_ref);
+      my $server_socket = IO::Socket::UNIX->new({
+        Local => $sock_path,
+        Listen    => 5,
+      });
       
-      $wg->done;
+      $wait_server_start_ch->write(1);
+      
+      unless ($server_socket->hostpath eq $sock_path) {
+        diag;
+        $success_ref->[0] = 0;
+      }
+      
+      my $client_socket = $server_socket->accept;
+      
+      unless ($client_socket->hostpath eq $sock_path) {
+        diag;
+        $success_ref->[0] = 0;
+      }
+      
+      my $data = (mutable string)new_string_len 255;
+      
+      my $read_length = $client_socket->sysread($data);
+      
+      $client_socket->syswrite($data, $read_length);
     });
     
-    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $sock_path : string] method : void () {
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $sock_path : string, $wait_server_start_ch : Go::Channel] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      $wait_server_start_ch->read;
       
       $success_ref->[2] = 1;
       
@@ -69,36 +102,23 @@ class TestCase::IO::Socket::UNIX {
           $success_ref->[0] = 0;
         }
         
-        my $send_buffer = "abc\n";
+        my $write_data = "abc\n";
         
-        $socket->send($send_buffer);
-        
-        $socket->shutdown(SOCKET->SHUT_WR);
+        $socket->syswrite($write_data);
         
         my $string_buffer = StringBuffer->new;
         
-        my $recv_buffer = (mutable string)new_string_len 1;
+        my $read_data = (mutable string)new_string_len 255;
         
-        while (1) {
-          my $recv_length = $socket->recv($recv_buffer);
-          
-          if ($recv_length > 0) {
-            $string_buffer->push($recv_buffer);
-          }
-          
-          if ($recv_buffer eq "\n") {
-            last;
-          }
-        }
+        my $read_length = $socket->sysread($read_data);
         
-        unless ($string_buffer->to_string eq "abc\n") {
+        Fn->shorten($read_data, $read_length);
+        
+        unless ($read_data eq "abc\n") {
           diag;
           $success_ref->[0] = 0;
         }
-        
       }
-      
-      $wg->done;
     });
     $wg->wait;
     
