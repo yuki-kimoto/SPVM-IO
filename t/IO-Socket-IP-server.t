@@ -16,11 +16,7 @@ my $port = Test::SPVM::Sys::Socket::Util::get_available_port();
 
 ok(SPVM::TestCase::IO::Socket::IP->accept);
 
-=pod TODO
-
 ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value($port));
-
-=cut
 
 ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
 

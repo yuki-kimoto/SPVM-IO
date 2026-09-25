@@ -508,117 +508,96 @@ class TestCase::IO::Socket::IP {
   static method accept_timeout_only_field_value : int ($port : int) {
     
     my $success_ref = [1];
-    my $go_server_ref = [0];
-    my $go_tests_ref = [0];
     
-    Go->go([$go_server_ref : int[], $success_ref : int[], $go_tests_ref : int[], $port : int] method : void () {
-      my $wg = Go::Sync::WaitGroup->new;
+    my $wg = Go::Sync::WaitGroup->new;
+    
+    $wg->add(2);
+    
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
       
-      $wg->add(2);
-      
-      # Run a echo server
-      Go->go([$go_server_ref : int[], $wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
-        
-        Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
-          $wg->done;
-        });
-        
-        $go_server_ref->[0] = 1;
-        
-        {
-          my $server_socket = IO::Socket::IP->new({
-            LocalAddr => $LOCALHOST,
-            LocalPort => $port,
-            Listen    => 5,
-            ReuseAddr => 1,
-            Timeout => 1.0,
-          });
-          
-          my $client_socket = (IO::Socket::IP)undef;
-          eval { $client_socket = $server_socket->accept; }
-          
-          if ($@) {
-            if ($@ isa Go::Error::IOTimeout) {
-              return;
-            }
-            else {
-              die $@;
-            }
-          }
-          
-          unless ($client_socket->timeout == 0) {
-            $success_ref->[0] = 0;
-          }
-          
-          while (1) {
-            
-            my $data = (mutable string)new_string_len 1;
-            
-            my $read_length = $client_socket->sysread($data, length $data);
-            
-            if ($read_length > 0) {
-              $client_socket->syswrite($data);
-            }
-            else {
-              last;
-            }
-          }
-        }
-        
-      });
-      
-      # Tests
-      Go->go([$go_tests_ref : int[], $wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
-        
-        $go_tests_ref->[0] = 1;
-        
-        {
-          my $host = "127.0.0.1";
-          my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
-          
-          my $write_data = "abc\n";
-          
-          $socket->syswrite($write_data);
-          
-          $socket->shutdown(SOCKET->SHUT_WR);
-          
-          my $string_buffer = StringBuffer->new;
-          
-          my $read_data = (mutable string)new_string_len 1;
-          
-          while (1) {
-            
-            my $read_length = $socket->sysread($read_data);
-            
-            if ($read_length > 0) {
-              $string_buffer->push($read_data);
-            }
-            
-            if ($read_data eq "\n") {
-              last;
-            }
-          }
-          
-          unless ($string_buffer->to_string eq "abc\n") {
-            $success_ref->[0] = 0;
-          }
-        }
-        
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
         $wg->done;
       });
       
-      $wg->wait;
+      {
+        my $server_socket = IO::Socket::IP->new({
+          LocalAddr => $LOCALHOST,
+          LocalPort => $port,
+          Listen    => 5,
+          ReuseAddr => 1,
+          Timeout => 1.0,
+        });
+        
+        my $client_socket = (IO::Socket::IP)undef;
+        eval { $client_socket = $server_socket->accept; }
+        
+        if ($@) {
+          if ($@ isa Go::Error::IOTimeout) {
+            return;
+          }
+          else {
+            die $@;
+          }
+        }
+        
+        unless ($client_socket->timeout == 0) {
+          $success_ref->[0] = 0;
+        }
+        
+        while (1) {
+          
+          my $data = (mutable string)new_string_len 1;
+          
+          my $read_length = $client_socket->sysread($data, length $data);
+          
+          if ($read_length > 0) {
+            $client_socket->syswrite($data);
+          }
+          else {
+            last;
+          }
+        }
+      }
+      
     });
     
-    Go->gosched;
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
+      
+      {
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        
+        my $write_data = "abc\n";
+        
+        $socket->syswrite($write_data);
+        
+        $socket->shutdown(SOCKET->SHUT_WR);
+        
+        my $string_buffer = StringBuffer->new;
+        
+        my $read_data = (mutable string)new_string_len 1;
+        
+        while (1) {
+          
+          my $read_length = $socket->sysread($read_data);
+          
+          if ($read_length > 0) {
+            $string_buffer->push($read_data);
+          }
+          
+          if ($read_data eq "\n") {
+            last;
+          }
+        }
+        
+        unless ($string_buffer->to_string eq "abc\n") {
+          $success_ref->[0] = 0;
+        }
+      }
+      
+      $wg->done;
+    });
     
-    unless ($go_server_ref->[0]) {
-      return 0;
-    }
-    
-    unless ($go_tests_ref->[0]) {
-      return 0;
-    }
+    $wg->wait;
     
     return $success_ref->[0];
   }
