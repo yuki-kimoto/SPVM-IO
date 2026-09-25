@@ -51,7 +51,7 @@ WriteMakefile(
     %configure_and_runtime_requires,
     'SPVM::Sys' => '0.581',
     'SPVM::Math' => '1.013',
-    'SPVM::Go' => '0.045',
+    'SPVM::Go' => '0.046',
     'SPVM::Net::DNS::Native' => '0.003',
   },
 );
