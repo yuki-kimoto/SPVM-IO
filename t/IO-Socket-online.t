@@ -2,11 +2,8 @@ use Test::More;
 
 use strict;
 use warnings;
-use FindBin;
-use lib "$FindBin::Bin/lib";
-BEGIN { $ENV{SPVM_BUILD_DIR} = "$FindBin::Bin/.spvm_build"; }
+use lib 't/lib';
 
-use SPVM 'Fn';
 use SPVM 'TestCase::IO::Socket::Online';
 
 my $api = SPVM::api();
@@ -36,7 +33,7 @@ subtest 'Concurrency' => sub {
     ok(SPVM::TestCase::IO::Socket::Online->goroutine, "goroutine with concurrent I/O");
 };
 
-SPVM::Fn->destroy_runtime_permanent_vars;
+$api->destroy_runtime_permanent_vars;
 
 my $end_memory_blocks_count = $api->get_memory_blocks_count;
 is($end_memory_blocks_count, $start_memory_blocks_count);
