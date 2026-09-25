@@ -14,9 +14,9 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
 my $port = Test::SPVM::Sys::Socket::Util::get_available_port();
 
-=pod TODO
-
 ok(SPVM::TestCase::IO::Socket::IP->accept($port));
+
+=pod TODO
 
 ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value($port));
 
