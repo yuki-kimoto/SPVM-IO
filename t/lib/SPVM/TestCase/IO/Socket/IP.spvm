@@ -339,102 +339,92 @@ class TestCase::IO::Socket::IP {
   static method accept : int ($port : int) {
     
     my $success_ref = [1];
-    my $go_server_ref = [0];
-    my $go_tests_ref = [0];
     
-    Go->go([$go_server_ref : int[], $success_ref : int[], $go_tests_ref : int[], $port : int] method : void () {
+    my $wg = Go::Sync::WaitGroup->new;
+    
+    $wg->add(2);
+    
+    # Run a echo server
+    Go->go([$wg : Go::Sync::WaitGroup, $port : int] method : void () {
       
-      my $wg = Go::Sync::WaitGroup->new;
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
       
-      $wg->add(2);
+      my $localhost = "127.0.0.1";
       
-      # Run a echo server
-      Go->go([$go_server_ref : int[], $wg : Go::Sync::WaitGroup, $port : int] method : void () {
+      my $server_socket = IO::Socket::IP->new({
+        LocalAddr => $localhost,
+        LocalPort => $port,
+        Listen    => 5,
+        ReuseAddr => 1,
+      });
+      
+      my $client_socket = $server_socket->accept;
+      
+      while (1) {
         
-        $go_server_ref->[0] = 1;
+        my $data = (mutable string)new_string_len 1;
         
-        my $localhost = "127.0.0.1";
+        my $read_length = $client_socket->sysread($data, length $data);
         
-        my $server_socket = IO::Socket::IP->new({
-          LocalAddr => $localhost,
-          LocalPort => $port,
-          Listen    => 5,
-          ReuseAddr => 1,
-        });
+        if ($read_length > 0) {
+          $client_socket->syswrite($data);
+        }
+        else {
+          last;
+        }
+      }
+    });
+    
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
         
-        my $client_socket = $server_socket->accept;
+        my $send_buffer = "abc\n";
+        
+        $socket->send($send_buffer);
+        
+        $socket->shutdown(SOCKET->SHUT_WR);
+        
+        my $string_buffer = StringBuffer->new;
+        
+        my $recv_buffer = (mutable string)new_string_len 1;
         
         while (1) {
           
-          my $data = (mutable string)new_string_len 1;
+          my $recv_length = $socket->recv($recv_buffer);
           
-          my $read_length = $client_socket->sysread($data, length $data);
-          
-          if ($read_length > 0) {
-            $client_socket->syswrite($data);
+          if ($recv_length > 0) {
+            $string_buffer->push($recv_buffer);
           }
-          else {
+          
+          if ($recv_buffer eq "\n") {
             last;
           }
         }
         
-        $wg->done;
-      });
-      
-      # Tests
-      Go->go([$go_tests_ref : int[], $wg : Go::Sync::WaitGroup, $success_ref : int[], $port : int] method : void () {
-        
-        $go_tests_ref->[0] = 1;
-        
-        {
-          my $host = "127.0.0.1";
-          my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
-          
-          my $send_buffer = "abc\n";
-          
-          $socket->send($send_buffer);
-          
-          $socket->shutdown(SOCKET->SHUT_WR);
-          
-          my $string_buffer = StringBuffer->new;
-          
-          my $recv_buffer = (mutable string)new_string_len 1;
-          
-          while (1) {
-            
-            my $recv_length = $socket->recv($recv_buffer);
-            
-            if ($recv_length > 0) {
-              $string_buffer->push($recv_buffer);
-            }
-            
-            if ($recv_buffer eq "\n") {
-              last;
-            }
-          }
-          
-          unless ($string_buffer->to_string eq "abc\n") {
-            $success_ref->[0] = 0;
-          }
+        unless ($string_buffer->to_string eq "abc\n") {
+          $success_ref->[0] = 0;
         }
-        
-        $wg->done;
-      });
-      
-      $wg->wait;
+      }
     });
+    
+    $wg->wait;
     
     Go->gosched;
     
-    unless ($go_server_ref->[0]) {
+    unless ($success_ref->[0]) {
       return 0;
     }
     
-    unless ($go_tests_ref->[0]) {
-      return 0;
-    }
-    
-    return $success_ref->[0];
+    return 1;
   }
   
   static method ipv6_extra : int ($port : int) {
