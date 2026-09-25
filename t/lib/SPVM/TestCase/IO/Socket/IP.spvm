@@ -170,16 +170,73 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method ipv4_peerhost : int ($port : int) {
+  static method ipv4_peerhost : int () {
     
-    {
-      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+    
+    my $success_ref = [1];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    
+    $wg->add(2);
+    
+    my $wait_server_start_ch = Go->make;
+    my $stop_server_ch = Go->make;
+    
+    my $port_ref = [-1];
+    Go->go([$wg : Go::Sync::WaitGroup, $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
       
-      my $peerhost = $socket->peerhost;
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
       
-      unless ($peerhost eq $LOCALHOST) {
-        return 0;
+      my $server_socket = IO::Socket::IP->new({
+        LocalAddr => $LOCALHOST,
+        Listen    => 5,
+        ReuseAddr => 1,
+      });
+      
+      $port_ref->[0] = $server_socket->sockport;
+      
+      $wait_server_start_ch->write(1);
+      
+      Go->go([$stop_server_ch : Go::Channel, $server_socket : IO::Socket::IP] method : void () {
+        
+        $stop_server_ch->read;
+        
+        $server_socket->close;
+      });
+      
+      eval { $server_socket->accept; }
+    });
+    
+    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
+      
+      $wait_server_start_ch->read;
+      
+      my $port = $port_ref->[0];
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      {
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        
+        my $peerhost = $socket->peerhost;
+        
+        unless ($peerhost eq $LOCALHOST) {
+          diag;
+          $success_ref->[0] = 0;
+        }
       }
+      
+      $stop_server_ch->write(1);
+    });
+    
+    $wg->wait;
+    
+    unless ($success_ref->[0]) {
+      return 0;
     }
     
     return 1;
