@@ -436,19 +436,46 @@ class TestCase::IO::Socket {
     return 1;
   }
   
-  static method set_timeout : int ($port : int) {
+  static method set_timeout : int () {
     
-    {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+    my $success_ref = [0];
+    
+    Go->go([$success_ref : int[]] method : void () {
+      $success_ref->[0] = 1;
       
-      $socket->set_timeout(10.5);
+      my $server = Test::Server::Echo->new;
       
-      my $timeout = $socket->timeout;
+      Fn->defer([$server :  Test::Server::Echo] method : void () {
+        $server->stop;
+      });
       
-      unless ($timeout == 10.5) {
-        return 0;
+      Go->go([$server :  Test::Server::Echo] method : void () {
+        $server->start;
+      });
+      
+      $server->wait_start;
+      my $port = $server->port;
+      
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+        
+        $socket->set_timeout(10.5);
+        
+        my $timeout = $socket->timeout;
+        
+        unless ($timeout == 10.5) {
+          diag;
+          $success_ref->[0] = 0;
+          return;
+        }
       }
+      
+    });
+    Go->gosched;
+    
+    unless ($success_ref->[0]) {
+      return 0;
     }
     
     return 1;
