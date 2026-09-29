@@ -1,0 +1,111 @@
+# Copyright (c) 2026 Yuki Kimoto
+# MIT License
+
+class Test::Server::Echo {
+  use Go;
+  use IO::Socket::IP;
+  use Sys::Socket::Constant as SOCKET_C;
+  use Fn;
+  
+  has start_server_ch : ro Go::Channel;
+  
+  has port : ro int;
+  
+  has server_socket : IO::Socket::IP;
+  
+  has accepted_socket : IO::Socket::IP;
+  
+  has is_running : byte;
+  
+  static method new : Test::Server::Echo () {
+    my $self = new Test::Server::Echo;
+    
+    $self->{start_server_ch} = Go->make;
+    
+    return $self;
+  }
+  
+  method start : void () {
+    my $server_socket = IO::Socket::IP->new({
+      LocalAddr => "127.0.0.1",
+      Listen => SOCKET_C->SOMAXCONN,
+    });
+    
+    unless ($server_socket) {
+      die "Failed to create echo server socket: $@";
+    }
+    
+    $self->{server_socket} = $server_socket;
+    $self->{port} = $server_socket->sockport;
+    $self->{is_running} = 1;
+    
+    $self->{start_server_ch}->write(1);
+    
+    while (1) {
+      
+      unless ($self->{is_running}) {
+        last;
+      }
+      
+      Fn->defer([$self : Test::Server::Echo] method : void () {
+        $self->{accepted_socket} = undef;
+      });
+      
+      my $accepted_socket = (IO::Socket::IP)undef;
+      eval {
+        $accepted_socket = $server_socket->accept;
+      };
+      
+      if ($@) {
+        next;
+      }
+      
+      $self->{accepted_socket} = $accepted_socket;
+      
+      my $read_data = (mutable string)new_string_len 1024;
+      
+      while (1) {
+        my $read_length = 0;
+        eval {
+          $read_length = $accepted_socket->sysread($read_data);
+        };
+        
+        if ($@) {
+          last;
+        }
+        
+        if ($read_length <= 0) {
+          last;
+        }
+        
+        my $write_length = 0;
+        eval {
+          $write_length = $accepted_socket->syswrite($read_data, $read_length);
+        };
+        
+        if ($@) {
+          last;
+        }
+      }
+    }
+  }
+  
+  method stop : void () {
+    my $server_socket = $self->{server_socket};
+    if ($server_socket) {
+      $server_socket->close;
+      $self->{server_socket} = undef;
+    }
+    
+    my $accepted_socket = $self->{accepted_socket};
+    if ($accepted_socket) {
+      $accepted_socket->close;
+      $self->{accepted_socket} = undef;
+    }
+    
+    $self->{start_server_ch} = undef;
+    
+    $self->{is_running} = 0;
+  }
+  
+}
