@@ -7,16 +7,38 @@ class TestCase::IO::Socket {
   use Fn;
   use Sys::Socket::Constant as SOCKET;
   
-  static method fileno : int ($port : int) {
+  static method fileno : int () {
     
-    # Socket
-    my $host = "127.0.0.1";
-    my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+    my $success_ref = [1];
     
-    my $fileno = $socket->fileno;
+    Go->go([$success_ref : int[]] method : void () {
+      
+      my $server = Test::Server::Echo->new;
+      
+      Fn->defer([$server :  Test::Server::Echo] method : void () {
+        $server->stop;
+      });
+      
+      Go->go([$server :  Test::Server::Echo] method : void () {
+        $server->start;
+      });
+      
+      $server->wait_start;
+      
+      my $host = "127.0.0.1";
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $server->port});
+      
+      my $fileno = $socket->fileno;
+      
+      unless ($fileno > 2) {
+        diag $fileno;
+        $success_ref->[0] = 0;
+      }
+      
+    });
+    Go->gosched;
     
-    unless ($fileno > 2) {
-      warn $fileno;
+    unless ($success_ref->[0]) {
       return 0;
     }
     
@@ -282,7 +304,6 @@ class TestCase::IO::Socket {
         $server->stop;
       });
       
-      my $server_ref = [(Test::Server::Echo)undef];
       Go->go([$server :  Test::Server::Echo] method : void () {
         $server->start;
       });
