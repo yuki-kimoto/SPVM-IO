@@ -530,17 +530,45 @@ class TestCase::IO::Socket {
     return 1;
   }
   
-  static method atmark : int ($port : int) {
+  static method atmark : int () {
     if (Sys::OS->is_windows) {
       warn "[Skip Test]Windows do not support atmark method.";
     }
     else {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+      my $success_ref = [0];
       
-      my $ret = $socket->atmark;
+      Go->go([$success_ref : int[]] method : void () {
+        $success_ref->[0] = 1;
+        
+        my $server = Test::Server::Echo->new;
+        
+        Fn->defer([$server :  Test::Server::Echo] method : void () {
+          $server->stop;
+        });
+        
+        Go->go([$server :  Test::Server::Echo] method : void () {
+          $server->start;
+        });
+        
+        $server->wait_start;
+        my $port = $server->port;
+        
+        {
+          my $host = "127.0.0.1";
+          my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+          
+          my $ret = $socket->atmark;
+          
+          unless ($ret == 0) {
+            diag;
+            $success_ref->[0] = 0;
+            return;
+          }
+        }
+      });
+      Go->gosched;
       
-      unless ($ret == 0) {
+      unless ($success_ref->[0]) {
         return 0;
       }
     }
