@@ -6,13 +6,9 @@ use lib 't/lib';
 
 use SPVM 'TestCase::IO::Socket::UNIX';
 
-use Test::SPVM::Sys::Socket::ServerManager::IP;
-
 my $api = SPVM::api();
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
-
-my $port = Test::SPVM::Sys::Socket::Util::get_available_port();
 
 use File::Temp ();
 my $tmp_dir = File::Temp->newdir;
