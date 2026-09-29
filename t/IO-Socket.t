@@ -6,30 +6,11 @@ use lib 't/lib';
 
 use SPVM 'TestCase::IO::Socket';
 
-use Test::SPVM::Sys::Socket::ServerManager::IP;
-use Test::SPVM::Sys::Socket::Server;
-
 my $api = SPVM::api();
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
-my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
-  code => sub {
-    my ($server_manager) = @_;
-    
-    my $port = $server_manager->port;
-    
-    my $server = Test::SPVM::Sys::Socket::Server->new_echo_server_ipv4_tcp(port => $port);
-    
-    $server->start;
-    
-    exit 0;
-  },
-);
-
 {
-  my $port = $server_manager->port;
-  
   ok(SPVM::TestCase::IO::Socket->set_blocking);
   
   ok(SPVM::TestCase::IO::Socket->fileno);
