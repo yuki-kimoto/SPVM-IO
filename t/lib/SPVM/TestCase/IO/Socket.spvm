@@ -123,13 +123,36 @@ class TestCase::IO::Socket {
     return 1;
   }
   
-  static method shutdown : int ($port : int) {
+  static method shutdown : int () {
     
-    {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+    my $success_ref = [1];
+    
+    Go->go([$success_ref : int[]] method : void () {
       
-      $socket->shutdown(SOCKET->SHUT_WR);
+      my $server = Test::Server::Echo->new;
+      
+      Fn->defer([$server :  Test::Server::Echo] method : void () {
+        $server->stop;
+      });
+      
+      Go->go([$server :  Test::Server::Echo] method : void () {
+        $server->start;
+      });
+      
+      $server->wait_start;
+      
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $server->port});
+        
+        $socket->shutdown(SOCKET->SHUT_WR);
+      }
+      
+    });
+    Go->gosched;
+    
+    unless ($success_ref->[0]) {
+      return 0;
     }
     
     return 1;

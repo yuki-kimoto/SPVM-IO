@@ -34,7 +34,7 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   
   ok(SPVM::TestCase::IO::Socket->fileno);
   
-  ok(SPVM::TestCase::IO::Socket->shutdown($port));
+  ok(SPVM::TestCase::IO::Socket->shutdown);
   
   ok(SPVM::TestCase::IO::Socket->close($port));
   
