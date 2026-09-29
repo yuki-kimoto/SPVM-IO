@@ -24,15 +24,17 @@ class TestCase::IO::Socket {
       });
       
       $server->wait_start;
+      my $port = $server->port;
       
       my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $server->port});
+      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
       
       my $fileno = $socket->fileno;
       
       unless ($fileno > 2) {
         diag $fileno;
         $success_ref->[0] = 0;
+        return;
       }
       
     });
@@ -140,10 +142,11 @@ class TestCase::IO::Socket {
       });
       
       $server->wait_start;
+      my $port = $server->port;
       
       {
         my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $server->port});
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
         
         $socket->shutdown(SOCKET->SHUT_WR);
       }
@@ -158,13 +161,37 @@ class TestCase::IO::Socket {
     return 1;
   }
   
-  static method close : int ($port : int) {
+  static method close : int () {
     
-    {
-      my $host = "127.0.0.1";
-      my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+    my $success_ref = [1];
+    
+    Go->go([$success_ref : int[]] method : void () {
       
-      $socket->close;
+      my $server = Test::Server::Echo->new;
+      
+      Fn->defer([$server :  Test::Server::Echo] method : void () {
+        $server->stop;
+      });
+      
+      Go->go([$server :  Test::Server::Echo] method : void () {
+        $server->start;
+      });
+      
+      $server->wait_start;
+      my $port = $server->port;
+      
+      {
+        my $host = "127.0.0.1";
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+        
+        $socket->close;
+      }
+      
+    });
+    Go->gosched;
+    
+    unless ($success_ref->[0]) {
+      return 0;
     }
     
     return 1;
@@ -341,6 +368,7 @@ class TestCase::IO::Socket {
       unless ($@) {
         diag;
         $success_ref->[0] = 0;
+        return;
       }
     });
     Go->gosched;
