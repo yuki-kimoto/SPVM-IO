@@ -7,7 +7,9 @@ class Test::Server::Echo {
   use Sys::Socket::Constant as SOCKET_C;
   use Fn;
   
-  has start_server_ch : ro Go::Channel;
+  has start_server_ch : Go::Channel;
+  
+  has stop_server_ch : Go::Channel;
   
   has port : ro int;
   
@@ -21,6 +23,8 @@ class Test::Server::Echo {
     my $self = new Test::Server::Echo;
     
     $self->{start_server_ch} = Go->make;
+    
+    $self->{stop_server_ch} = Go->make;
     
     return $self;
   }
@@ -88,24 +92,33 @@ class Test::Server::Echo {
         }
       }
     }
+    
+    $self->{stop_server_ch}->write(1);
   }
   
   method stop : void () {
-    my $server_socket = $self->{server_socket};
-    if ($server_socket) {
-      $server_socket->close;
-      $self->{server_socket} = undef;
+    if ($self->{is_running}) {
+      my $server_socket = $self->{server_socket};
+      if ($server_socket) {
+        $server_socket->close;
+        $self->{server_socket} = undef;
+      }
+      
+      my $accepted_socket = $self->{accepted_socket};
+      if ($accepted_socket) {
+        $accepted_socket->close;
+        $self->{accepted_socket} = undef;
+      }
+      
+      $self->{start_server_ch} = undef;
+      
+      $self->{is_running} = 0;
+      
+      $self->{stop_server_ch}->read;
     }
-    
-    my $accepted_socket = $self->{accepted_socket};
-    if ($accepted_socket) {
-      $accepted_socket->close;
-      $self->{accepted_socket} = undef;
-    }
-    
-    $self->{start_server_ch} = undef;
-    
-    $self->{is_running} = 0;
   }
   
+  method wait_start : void () {
+    $self->{start_server_ch}->read;
+  }
 }

@@ -30,7 +30,7 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
 {
   my $port = $server_manager->port;
   
-  ok(SPVM::TestCase::IO::Socket->set_blocking($port));
+  ok(SPVM::TestCase::IO::Socket->set_blocking);
   
   ok(SPVM::TestCase::IO::Socket->fileno($port));
   
