@@ -4,15 +4,14 @@ use strict;
 use warnings;
 use lib 't/lib';
 
+use IO::Socket::IP;
+
 use SPVM 'TestCase::IO::Socket::INET6';
 use SPVM 'IO::Socket::INET6';
 
 my $api = SPVM::api();
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
-
-use Test::SPVM::Sys::Socket::ServerManager::IP;
-use Test::SPVM::Sys::Socket::Server;
 
 use SPVM 'Int';
 
@@ -27,24 +26,8 @@ use SPVM 'Int';
   }
 }
 
-my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
-  code => sub {
-    my ($server_manager) = @_;
-    
-    my $port = $server_manager->port;
-    
-    my $server = Test::SPVM::Sys::Socket::Server->new_echo_server_ipv6_tcp(port => $port);
-    
-    $server->start;
-    
-    exit 0;
-  },
-  host => '::1'
-);
-
 {
-  my $port = $server_manager->port;
-  ok(SPVM::TestCase::IO::Socket::INET6->basic($port));
+  ok(SPVM::TestCase::IO::Socket::INET6->basic);
 }
 
 $api->destroy_runtime_permanent_vars;
