@@ -21,6 +21,8 @@ if ($^O ne 'MSWin32') {
   ok(SPVM::TestCase::IO::Poll->events);
 }
 
+ok(SPVM::TestCase::IO::Poll->poll_with_server);
+
 $api->destroy_runtime_permanent_vars;
 
 my $end_memory_blocks_count = $api->get_memory_blocks_count;

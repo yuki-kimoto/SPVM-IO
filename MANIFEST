@@ -38,7 +38,6 @@ MANIFEST.SKIP
 README.md
 t/IO-Dir.t
 t/IO-File.t
-t/IO-Poll-server.t
 t/IO-Poll.t
 t/IO-Select-server.t
 t/IO-Select.t
