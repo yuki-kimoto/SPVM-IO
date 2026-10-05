@@ -27,7 +27,10 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
     ok(SPVM::TestCase::IO::Select->can_write);
     ok(SPVM::TestCase::IO::Select->has_exception);
   }
+  
+  ok(SPVM::TestCase::IO::Select->select_with_server);
 }
+
 
 $api->destroy_runtime_permanent_vars;
 

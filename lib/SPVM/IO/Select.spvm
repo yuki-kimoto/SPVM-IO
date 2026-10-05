@@ -87,16 +87,10 @@ class IO::Select {
     my $fds_list = IntList->new_ref($self->{fds});;
     my $fds = $fds_list->to_array;
     
-    warn;
-    
     my $timeout_int = 0.0;
     my $timeout_fraction = Math->modf($timeout, \$timeout_int);
     
-    warn;
-    
     my $tv = (Sys::Time::Timeval)undef;
-    
-    warn;
     
     if ($timeout >= 0) {
       $tv = Sys::Time::Timeval->new;
@@ -104,25 +98,17 @@ class IO::Select {
       $tv->set_tv_usec((int)($timeout_fraction * 1000000));
     }
     
-    warn;
-    
     # Set fds to fd_set
     my $fd_set = Sys::Select::Fd_set->new;
     Sys::Select->FD_ZERO($fd_set);
-    
-    warn;
     
     for (my $i = 0; $i < @$fds; $i++) {
       my $fd = $fds->[$i];
       Sys::Select->FD_SET($fd, $fd_set);
     }
     
-    warn;
-    
     # select
     my $success_count = Sys::Select->select(SELECT->FD_SETSIZE, $fd_set, undef, undef, $tv);
-    
-    warn;
     
     # Can fds
     my $can_fds = new int[$success_count];
@@ -135,8 +121,6 @@ class IO::Select {
         $can_fds->[$can_fds_index++] = $fd;
       }
     }
-    
-    warn;
     
     return $can_fds;
   }
