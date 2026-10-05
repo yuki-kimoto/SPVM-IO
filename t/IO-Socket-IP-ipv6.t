@@ -4,11 +4,10 @@ use strict;
 use warnings;
 use lib 't/lib';
 
+use IO::Socket::IP;
+
 use SPVM 'TestCase::IO::Socket::INET6';
 use SPVM 'TestCase::IO::Socket::IP';
-
-use Test::SPVM::Sys::Socket::ServerManager::IP;
-use Test::SPVM::Sys::Socket::Server;
 
 my $api = SPVM::api();
 
@@ -25,24 +24,8 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
   }
 }
 
-my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
-  code => sub {
-    my ($server_manager) = @_;
-    
-    my $port = $server_manager->port;
-    
-    my $server = Test::SPVM::Sys::Socket::Server->new_echo_server_ipv6_tcp(port => $port);
-    
-    $server->start;
-    
-    exit 0;
-  },
-  host => '::1'
-);
 
 {
-  my $port = $server_manager->port;
-  
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_new);
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_peerport);
@@ -57,7 +40,7 @@ my $server_manager = Test::SPVM::Sys::Socket::ServerManager::IP->new(
   
   ok(SPVM::TestCase::IO::Socket::IP->ipv6_sockaddr);
   
-  ok(SPVM::TestCase::IO::Socket::IP->ipv6_extra($port));
+  ok(SPVM::TestCase::IO::Socket::IP->ipv6_extra);
   
 }
 

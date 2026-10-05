@@ -5,7 +5,7 @@ class TestCase::IO::Socket::IP {
   use Go::Sync::WaitGroup;
   use Go;
   use Fn;
-  use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Constant as SOCKET_C;
   use Sys::OS;
   use Sys::Signal;
   use Sys::Signal::Constant as SIGNAL;
@@ -93,14 +93,14 @@ class TestCase::IO::Socket::IP {
       {
         # IPPROTO_UDP
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Proto => SOCKET->IPPROTO_UDP});
+          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Proto => SOCKET_C->IPPROTO_UDP});
           
-          unless ($socket->protocol == SOCKET->IPPROTO_UDP) {
+          unless ($socket->protocol == SOCKET_C->IPPROTO_UDP) {
             diag;
             $success_ref->[0] = 0;
           }
           
-          unless ($socket->socktype == SOCKET->SOCK_DGRAM) {
+          unless ($socket->socktype == SOCKET_C->SOCK_DGRAM) {
             diag;
             $success_ref->[0] = 0;
           }
@@ -114,7 +114,7 @@ class TestCase::IO::Socket::IP {
         {
           my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, ReuseAddr => 1});
           
-          my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR);
+          my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->SOL_SOCKET, SOCKET_C->SO_REUSEADDR);
           
           unless ($ret) {
             diag;
@@ -129,7 +129,7 @@ class TestCase::IO::Socket::IP {
         else {
           my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, ReusePort => 1});
           
-          my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT);
+          my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->SOL_SOCKET, SOCKET_C->SO_REUSEPORT);
           
           unless ($ret) {
             diag;
@@ -139,9 +139,9 @@ class TestCase::IO::Socket::IP {
         
         # Broadcast
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Proto => SOCKET->IPPROTO_UDP, Broadcast => 1});
+          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Proto => SOCKET_C->IPPROTO_UDP, Broadcast => 1});
           
-          my $ret = Sys->getsockopt($socket->fileno, SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST);
+          my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->SOL_SOCKET, SOCKET_C->SO_BROADCAST);
           
           unless ($ret) {
             diag;
@@ -623,7 +623,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
-        Domain => SOCKET->AF_INET6,
+        Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
         ReuseAddr => 1,
@@ -654,7 +654,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         unless ($socket is_type IO::Socket::IP) {
           diag;
@@ -669,9 +669,9 @@ class TestCase::IO::Socket::IP {
       
       {
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6, V6Only => 1});
+          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6, V6Only => 1});
           
-          my $ret = Sys->getsockopt($socket->fileno, SOCKET->IPPROTO_IPV6, SOCKET->IPV6_V6ONLY);
+          my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->IPPROTO_IPV6, SOCKET_C->IPV6_V6ONLY);
           
           unless ($ret) {
             diag;
@@ -712,7 +712,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
-        Domain => SOCKET->AF_INET6,
+        Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
         ReuseAddr => 1,
@@ -743,7 +743,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         unless ($socket is_type IO::Socket::IP) {
           diag;
@@ -757,7 +757,7 @@ class TestCase::IO::Socket::IP {
       }
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $peerhost = $socket->peerhost;
         
@@ -799,7 +799,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
-        Domain => SOCKET->AF_INET6,
+        Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
         ReuseAddr => 1,
@@ -830,7 +830,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $peerport = $socket->peerport;
         
@@ -871,7 +871,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
-        Domain => SOCKET->AF_INET6,
+        Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
         ReuseAddr => 1,
@@ -902,7 +902,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $sockhost = $socket->sockhost;
         
@@ -943,7 +943,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
-        Domain => SOCKET->AF_INET6,
+        Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
         ReuseAddr => 1,
@@ -974,7 +974,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $sockport = $socket->sockport;
         
@@ -1016,7 +1016,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
-        Domain => SOCKET->AF_INET6,
+        Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
         ReuseAddr => 1,
@@ -1047,7 +1047,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $peeraddr = $socket->peeraddr;
         
@@ -1088,7 +1088,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
-        Domain => SOCKET->AF_INET6,
+        Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
         ReuseAddr => 1,
@@ -1119,7 +1119,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $sockaddr = $socket->sockaddr;
         
@@ -1232,70 +1232,116 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method ipv6_extra : int ($port : int) {
+  static method ipv6_extra : int () {
+    my $success_ref = [0];
     
-    # Basic
-    {
-      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
-      
-      my $write_data = "GET /hello HTTP/1.0\r\nHost: $LOCALHOST_V6\r\n\r\n";
-      $socket->syswrite($write_data);
-      
-      my $read_data = (mutable string)new_string_len 1000;
-      
-      my $read_length = $socket->sysread($read_data);
-      
-      unless ($read_length > 0 && $read_length < 1000) {
-        
-        warn $read_length;
-        return 0;
-      }
-      
-      Fn->shorten_null_char($read_data);
-      
-      my $content = $read_data;
-      
-      unless (Fn->contains($content, "HTTP")) {
-        
-        warn dump $content;
-        return 0;
-      }
-      
-      unless (Fn->contains($content, "hello")) {
-        
-        warn dump $content;
-        return 0;
-      }
-      
-      $socket->close;
-    }
+    my $wg = Go::Sync::WaitGroup->new;
+    $wg->add(1);
     
-    # Auto socket close
-    {
-      my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET->AF_INET6});
+    Go->go([$success_ref : int[], $wg : Go::Sync::WaitGroup] method : void () {
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      $success_ref->[0] = 1;
       
-      my $write_data = "GET /hello HTTP/1.0\r\nHost: $LOCALHOST_V6\r\n\r\n";
-      $socket->syswrite($write_data);
+      my $server = Test::Server::Echo->new({
+        LocalAddr => "::1",
+        Domain => SOCKET_C->AF_INET6,
+      });
       
-      my $read_data = (mutable string)new_string_len 1000;
+      Fn->defer([$server : Test::Server::Echo] method : void () {
+        $server->stop;
+      });
       
-      my $read_length = $socket->sysread($read_data);
+      Go->go([$server : Test::Server::Echo] method : void () {
+        $server->start;
+      });
       
-      unless ($read_length > 0 && $read_length < 1000) {
+      $server->wait_start;
+      my $port = $server->port;
+      
+      # Basic test
+      {
+        my $host = "::1";
+        my $socket = IO::Socket::IP->new({
+          PeerAddr => $host,
+          PeerPort => $port,
+          Domain => SOCKET_C->AF_INET6,
+        });
         
-        warn $read_length;
-        return 0;
+        unless ($socket is_type IO::Socket::IP) {
+          diag "socket type check failed";
+          $success_ref->[0] = 0;
+          return;
+        }
+        
+        my $write_data = "Hello IPv6 Echo 1";
+        $socket->syswrite($write_data);
+        
+        $socket->shutdown(SOCKET_C->SHUT_WR);
+        
+        my $read_data = (mutable string)new_string_len 1000;
+        
+        my $read_length = $socket->sysread($read_data);
+        
+        unless ($read_length > 0 && $read_length < 1000) {
+          diag $read_length;
+          $success_ref->[0] = 0;
+          return;
+        }
+        
+        Fn->shorten_null_char($read_data);
+        
+        my $content = $read_data;
+        
+        unless ($content eq $write_data) {
+          diag dump $content;
+          $success_ref->[0] = 0;
+          return;
+        }
+        
+        $socket->close;
       }
       
-      Fn->shorten_null_char($read_data);
-      
-      my $content = $read_data;
-      
-      unless (Fn->contains($content, "hello")) {
+      # Auto socket close test
+      {
+        my $host = "::1";
+        my $socket = IO::Socket::IP->new({
+          PeerAddr => $host,
+          PeerPort => $port,
+          Domain => SOCKET_C->AF_INET6,
+        });
         
-        warn dump $content;
-        return 0;
+        my $write_data = "Hello IPv6 Echo 2";
+        $socket->syswrite($write_data);
+        
+        $socket->shutdown(SOCKET_C->SHUT_WR);
+        
+        my $read_data = (mutable string)new_string_len 1000;
+        
+        my $read_length = $socket->sysread($read_data);
+        
+        unless ($read_length > 0 && $read_length < 1000) {
+          diag $read_length;
+          $success_ref->[0] = 0;
+          return;
+        }
+        
+        Fn->shorten_null_char($read_data);
+        
+        my $content = $read_data;
+        
+        unless ($content eq $write_data) {
+          diag dump $content;
+          $success_ref->[0] = 0;
+          return;
+        }
       }
+    });
+    $wg->wait;
+    
+    unless ($success_ref->[0]) {
+      return 0;
     }
     
     return 1;
