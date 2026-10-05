@@ -5,7 +5,7 @@ class TestCase::IO::Socket::INET {
   use Go::Sync::WaitGroup;
   use Go;
   use Fn;
-  use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Constant as SOCKET_C;
   
   static method basic : int () {
     my $success_ref = [0];
@@ -45,7 +45,7 @@ class TestCase::IO::Socket::INET {
         my $write_date = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
         $socket->syswrite($write_date);
         
-        $socket->shutdown(SOCKET->SHUT_WR);
+        $socket->shutdown(SOCKET_C->SHUT_WR);
         
         my $read_date = (mutable string)new_string_len 1000;
         

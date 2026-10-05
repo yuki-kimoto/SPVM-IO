@@ -5,46 +5,82 @@ class TestCase::IO::Socket::INET6 {
   use Go::Sync::WaitGroup;
   use Go;
   use Fn;
+  use Sys::Socket::Constant as SOCKET_C;
   
-  static method basic : int ($port : int) {
+  static method basic : int () {
+    my $success_ref = [0];
     
-    # Basic
-    {
+    my $wg = Go::Sync::WaitGroup->new;
+    $wg->add(1);
+    
+    Go->go([$success_ref : int[], $wg : Go::Sync::WaitGroup] method : void () {
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      $success_ref->[0] = 1;
+      
       my $host = "::1";
-      my $socket = IO::Socket::INET6->new({PeerAddr => $host, PeerPort => $port});
       
-      unless ($socket is_type IO::Socket::INET6) {
-        return 0;
-      }
+      my $server = Test::Server::Echo->new({LocalAddr => $host, Domain => SOCKET_C->AF_INET6});
       
-      my $send_buffer = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
-      $socket->send($send_buffer);
+      Fn->defer([$server : Test::Server::Echo] method : void () {
+        $server->stop;
+      });
       
-      my $recv_buffer = (mutable string)new_string_len 1000;
+      Go->go([$server : Test::Server::Echo] method : void () {
+        $server->start;
+      });
       
-      my $recv_length = $socket->recv($recv_buffer);
+      $server->wait_start;
+      my $port = $server->port;
       
-      unless ($recv_length > 0 && $recv_length < 1000) {
+      {
+        my $socket = IO::Socket::INET6->new({PeerAddr => $host, PeerPort => $port});
         
-        warn $recv_length;
-        return 0;
-      }
-      
-      Fn->shorten_null_char($recv_buffer);
-      
-      my $content = $recv_buffer;
-      
-      unless (Fn->contains($content, "HTTP")) {
+        unless ($socket is_type IO::Socket::INET6) {
+          diag "socket type check failed";
+          $success_ref->[0] = 0;
+          return;
+        }
         
-        warn dump $content;
-        return 0;
-      }
-      
-      unless (Fn->contains($content, "hello")) {
+        my $write_date = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
+        $socket->syswrite($write_date);
         
-        warn dump $content;
-        return 0;
+        $socket->shutdown(SOCKET_C->SHUT_WR);
+        
+        my $read_date = (mutable string)new_string_len 1000;
+        
+        my $read_length = $socket->sysread($read_date);
+        
+        unless ($read_length > 0 && $read_length < 1000) {
+          diag $read_length;
+          $success_ref->[0] = 0;
+          return;
+        }
+        
+        Fn->shorten_null_char($read_date);
+        
+        my $content = $read_date;
+        
+        unless (Fn->contains($content, "HTTP")) {
+          diag dump $content;
+          $success_ref->[0] = 0;
+          return;
+        }
+        
+        unless (Fn->contains($content, "hello")) {
+          diag dump $content;
+          $success_ref->[0] = 0;
+          return;
+        }
+        
+        $socket->close;
       }
+    });
+    $wg->wait;
+    
+    unless ($success_ref->[0]) {
+      return 0;
     }
     
     return 1;

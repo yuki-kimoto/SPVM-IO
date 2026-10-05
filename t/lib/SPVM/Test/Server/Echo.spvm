@@ -19,21 +19,42 @@ class Test::Server::Echo {
   
   has is_running : byte;
   
-  static method new : Test::Server::Echo () {
+  has LocalAddr : ro string;
+  
+  has Domain : ro int;
+  
+  static method new : Test::Server::Echo ($options : object[] = undef) {
     my $self = new Test::Server::Echo;
     
     $self->{start_server_ch} = Go->make;
     
     $self->{stop_server_ch} = Go->make;
     
+    my $options = Fn->to_hash($options);
+    
+    $self->{LocalAddr} = $options->exists("LocalAddr") ? $options->{"LocalAddr"}->(string) : "127.0.0.1";
+    
+    if ($options->exists("Domain")) {
+      $self->{Domain} =  $options->{"Domain"}->(int);
+    }
+    
     return $self;
   }
   
   method start : void () {
-    my $server_socket = IO::Socket::IP->new({
-      LocalAddr => "127.0.0.1",
+    my $LocalAddr = $self->{LocalAddr};
+    
+    my $server_options_h = Hash->new({
+      LocalAddr => $LocalAddr,
       Listen => SOCKET_C->SOMAXCONN,
     });
+    
+    if (exists $self->{Domain}) {
+      $server_options_h->{"Domain"} = $self->{Domain};
+    }
+    
+    # Create server socket with LocalAddr
+    my $server_socket = IO::Socket::IP->new($server_options_h->to_options);
     
     unless ($server_socket) {
       die "Failed to create echo server socket: $@";
