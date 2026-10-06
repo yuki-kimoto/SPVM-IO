@@ -15,6 +15,7 @@ class IO::Handle {
   use Scope::Guard;
   use Hash;
   use Sys::OS;
+  use Sys::Socket::Util;
   
   # Fields
   has FD : protected int;
@@ -60,29 +61,7 @@ class IO::Handle {
   
   method set_blocking : void ($blocking : int) {
     
-    my $current_blocking = $self->{Blocking};
-    
-    my $fd = $self->{FD};
-    
-    if (Sys::OS->is_windows) {
-      my $flags = [(int)!$blocking];
-      $self->ioctl(IOCTL->FIONBIO, $flags);
-    }
-    else {
-      my $newmode = $self->fcntl(IO->F_GETFL);
-      
-      if ($blocking == 0) {
-        $newmode &= ~IO->O_NDELAY;
-        $newmode |= IO->O_NONBLOCK;
-      }
-      else {
-        $newmode &= ~(IO->O_NDELAY|IO->O_NONBLOCK);
-      }
-      
-      $self->fcntl(IO->F_SETFL, $newmode);
-    }
-    
-    $self->{Blocking} = (byte)$blocking;
+    Sys::Socket::Util->set_blocking($self->{FD}, $blocking);
   }
   
   method close : void () { die "Not implemented."; }
