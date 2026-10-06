@@ -1554,33 +1554,39 @@ class TestCase::IO::Socket::IP {
     return $success_ref->[0];
   }
   
-  static method read_deadline : int ($port : int) {
+  static method read_deadline : int () {
     
     my $success_ref = [1];
     
-    # Server side
-    Go->go([$port : int] method : void () {
-      eval {
-        my $listen_socket = IO::Socket::IP->new({
-          LocalAddr => $LOCALHOST,
-          LocalPort => $port,
-          Listen => 5,
-          ReuseAddr => 1,
-        });
-        
-        my $client_socket = $listen_socket->accept;
-        
-        # Sleep longer than the client's deadline to trigger the timeout.
-        Go->sleep(Go::Duration_1l->new_from_sec(1.0));
-        
-        $client_socket->close;
-        $listen_socket->close;
-      }
-      if ($@) { warn "Server error: " . $@; }
-    });
-    
-    # Client side
-    Go->go([$port : int, $success_ref : int[]] method : void () {
+    Go->go([$success_ref : int[]] method : void () {
+      my $start_server_ch = Go->make;
+      
+      my $port_ref = [-1];
+      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
+        eval {
+          my $listen_socket = IO::Socket::IP->new({
+            LocalAddr => $LOCALHOST,
+            Listen => 5,
+            ReuseAddr => 1,
+          });
+          
+          $port_ref->[0] = $listen_socket->sockport;
+          
+          $start_server_ch->write(1);
+          
+          my $client_socket = $listen_socket->accept;
+          
+          Go->sleep(Go::Duration_1l->new_from_sec(1.0));
+          
+          $client_socket->close;
+          $listen_socket->close;
+        }
+        if ($@) { warn "Server error: " . $@; }
+      });
+      
+      $start_server_ch->read;
+      my $port = $port_ref->[0];
+      
       eval {
         # Connect to the server
         my $socket = IO::Socket::IP->new({
@@ -1609,8 +1615,6 @@ class TestCase::IO::Socket::IP {
         }
       }
     });
-    
-    # Run the scheduler until all goroutines are finished.
     Go->gosched;
     
     return $success_ref->[0];
