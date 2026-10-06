@@ -1781,34 +1781,41 @@ class TestCase::IO::Socket::IP {
     
     return $success_ref->[0];
   }
-
-  # Test for WriteDeadline
-  static method write_deadline_specific : int ($port : int) {
+  
+  static method write_deadline_specific : int () {
     
     my $success_ref = [1];
-    my $ch_ready = Go->make(1);
     
-    # Server side
-    Go->go([$port : int, $ch_ready : Go::Channel] method : void () {
+    Go->go([$success_ref : int[]] method : void () {
+      my $start_server_ch = Go->make;
+      
+      my $port_ref = [-1];
+      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
+        eval {
+          my $listen_socket = IO::Socket::IP->new({
+            LocalAddr => $LOCALHOST,
+            Listen => 5,
+            ReuseAddr => 1,
+          });
+          
+          $port_ref->[0] = $listen_socket->sockport;
+          
+          $start_server_ch->write(1);
+          
+          my $client_socket = $listen_socket->accept;
+          
+          Go->sleep(Go::Duration_1l->new_from_sec(1.5));
+          
+          $client_socket->close;
+          $listen_socket->close;
+        }
+        if ($@) { diag "Server error: " . $@; }
+      });
+      
+      $start_server_ch->read;
+      my $port = $port_ref->[0];
+      
       eval {
-        my $listen_socket = IO::Socket::IP->new({
-          LocalAddr => $LOCALHOST,
-          LocalPort => $port,
-          Listen => 5,
-          ReuseAddr => 1,
-        });
-        $ch_ready->write(1);
-        my $client_socket = $listen_socket->accept;
-        Go->sleep(Go::Duration_1l->new_from_sec(1.5));
-        $client_socket->close;
-        $listen_socket->close;
-      }
-    });
-    
-    # Client side
-    Go->go([$port : int, $success_ref : int[], $ch_ready : Go::Channel] method : void () {
-      eval {
-        $ch_ready->read;
         my $socket = IO::Socket::IP->new({
           PeerAddr => $LOCALHOST,
           PeerPort => $port,
@@ -1832,8 +1839,8 @@ class TestCase::IO::Socket::IP {
         $success_ref->[0] = 0;
       }
     });
-    
     Go->gosched;
+    
     return $success_ref->[0];
   }
   
