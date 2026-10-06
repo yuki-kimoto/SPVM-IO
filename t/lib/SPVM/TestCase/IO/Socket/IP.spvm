@@ -124,7 +124,7 @@ class TestCase::IO::Socket::IP {
         
         # ReusePort
         if (Sys::OS->is_windows) {
-          warn "[Skip Test]Windows do not support SO_REUSEPORT.";
+          diag "[Skip Test]Windows do not support SO_REUSEPORT.";
         }
         else {
           my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, ReusePort => 1});
@@ -1539,13 +1539,13 @@ class TestCase::IO::Socket::IP {
       if ($@) {
         # Check if the error is Go::Error::IOTimeout.
         unless ($@ isa Go::Error::IOTimeout) {
-          warn "Unexpected error: " . $@;
+          diag "Unexpected error: " . $@;
           $success_ref->[0] = 0;
         }
       }
       else {
         # If the socket is created, the deadline check failed.
-        warn "Connection unexpectedly succeeded despite an expired deadline.";
+        diag "Connection unexpectedly succeeded despite an expired deadline.";
         $success_ref->[0] = 0;
         if ($socket) { $socket->close; }
       }
@@ -1581,7 +1581,7 @@ class TestCase::IO::Socket::IP {
           $client_socket->close;
           $listen_socket->close;
         }
-        if ($@) { warn "Server error: " . $@; }
+        if ($@) { diag "Server error: " . $@; }
       });
       
       $start_server_ch->read;
@@ -1603,14 +1603,14 @@ class TestCase::IO::Socket::IP {
         $socket->sysread($buffer);
         
         # If no exception is thrown, it's a failure.
-        warn "sysread unexpectedly succeeded or returned 0 before deadline.";
+        diag "sysread unexpectedly succeeded or returned 0 before deadline.";
         $success_ref->[0] = 0;
         $socket->close;
       }
       if ($@) {
         # Check if the error is exactly Go::Error::IOTimeout
         unless ($@ isa Go::Error::IOTimeout) {
-          warn "Unexpected error type: " . $@;
+          diag "Unexpected error type: " . $@;
           $success_ref->[0] = 0;
         }
       }
@@ -1648,7 +1648,7 @@ class TestCase::IO::Socket::IP {
           $client_socket->close;
           $listen_socket->close;
         }
-        if ($@) { warn "Server error: " . $@; }
+        if ($@) { diag "Server error: " . $@; }
       });
       
       $start_server_ch->read;
@@ -1673,11 +1673,11 @@ class TestCase::IO::Socket::IP {
       }
       if ($@) {
         unless ($@ isa Go::Error::IOTimeout) {
-          warn "Unexpected error: " . $@;
+          diag "Unexpected error: " . $@;
           $success_ref->[0] = 0;
         }
       } else {
-        warn "Exited loop without exception";
+        diag "Exited loop without exception";
         $success_ref->[0] = 0;
       }
     });
@@ -1708,7 +1708,7 @@ class TestCase::IO::Socket::IP {
         my $client_socket = $listen_socket->accept;
         
         # If no exception is thrown, it's a failure.
-        warn "accept unexpectedly succeeded before deadline.";
+        diag "accept unexpectedly succeeded before deadline.";
         $success_ref->[0] = 0;
         $client_socket->close;
         $listen_socket->close;
@@ -1716,7 +1716,7 @@ class TestCase::IO::Socket::IP {
       if ($@) {
         # Check if the error is exactly Go::Error::IOTimeout
         unless ($@ isa Go::Error::IOTimeout) {
-          warn "Unexpected error type in accept: " . $@;
+          diag "Unexpected error type in accept: " . $@;
           $success_ref->[0] = 0;
         }
       }
@@ -1774,12 +1774,12 @@ class TestCase::IO::Socket::IP {
         my $buffer = (mutable string)new_string_len 1024;
         $socket->sysread($buffer);
         
-        warn "sysread unexpectedly succeeded before ReadDeadline.";
+        diag "sysread unexpectedly succeeded before ReadDeadline.";
         $success_ref->[0] = 0;
       }
       if ($@) {
         unless ($@ isa Go::Error::IOTimeout) {
-          warn "Unexpected error type in sysread: " . $@;
+          diag "Unexpected error type in sysread: " . $@;
           $success_ref->[0] = 0;
         }
       }
@@ -1832,7 +1832,7 @@ class TestCase::IO::Socket::IP {
       }
       if ($@) {
         unless ($@ isa Go::Error::IOTimeout) {
-          warn "Unexpected error type in syswrite: " . $@;
+          diag "Unexpected error type in syswrite: " . $@;
           $success_ref->[0] = 0;
         }
       } else {
