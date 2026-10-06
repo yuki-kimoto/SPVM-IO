@@ -1519,7 +1519,7 @@ class TestCase::IO::Socket::IP {
     return 1;
   }
   
-  static method connect_deadline : int ($port : int) {
+  static method connect_deadline : int () {
     
     my $success_ref = [1];
     
@@ -1531,7 +1531,6 @@ class TestCase::IO::Socket::IP {
       eval {
         $socket = IO::Socket::IP->new({
           PeerAddr => $LOCALHOST,
-          PeerPort => $port,
           ReadDeadline => $deadline,
           WriteDeadline => $deadline,
         });

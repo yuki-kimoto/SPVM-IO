@@ -13,9 +13,7 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
 # connect deadline test
 {
-  # Get an available port dynamically
-  my $port = Test::SPVM::Sys::Socket::Util::get_available_port;
-  ok(SPVM::TestCase::IO::Socket::IP->connect_deadline($port));
+  ok(SPVM::TestCase::IO::Socket::IP->connect_deadline);
 }
 
 # read deadline test
