@@ -1,3 +1,15 @@
+0.251 2026-10-06
+  
+  [Internal Changes]
+    * Use Sys::Socket::Util#set_tcp_keepalive method for IO::Socket#set_tcp_keepalive method.
+    * Use Sys::Socket::Util#set_blocking method for IO::Handle#set_blocking method.
+  [Requirement Changes]
+    * Require SPVM::Go 0.047.
+  [Test Improvement]
+    * Add Test::Server::Echo for tests.
+    * Remove Test::SPVM::Sys::Socket::XXX classes from tests.
+      I've rewritten the server tests from the unreliable implementation using Perl's fork to a portable test suite using only SPVM::Go.
+    
 0.250 2026-09-26
   [Bug Fix]
     * Fix a bug that socket close does not cancel io wait.
