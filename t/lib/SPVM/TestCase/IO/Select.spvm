@@ -6,6 +6,7 @@ class TestCase::IO::Select {
   use Sys::IO::Constant as IO;
   use IO::Socket::IP;
   use Sys::Socket::Constant as SOCKET;
+  use Test::Server::Echo;
 
   static method add : int () {
     my $select = IO::Select->new;

@@ -7,6 +7,7 @@ class TestCase::IO::Poll {
   use IO::Socket::IP;
   use Sys::Socket::Constant as SOCKET;
   use Go::Sync::WaitGroup;
+  use Test::Server::Echo;
 
   static method new : int () {
     

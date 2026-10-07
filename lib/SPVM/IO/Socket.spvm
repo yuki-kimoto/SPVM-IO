@@ -22,8 +22,6 @@ class IO::Socket extends IO::Handle {
   use Go::Duration_1l;
   use Go::Error::IOTimeout;
   
-  use Test::Server::Echo;
-  
   # Enumerations
   protected enum {
     SOCKET_CATEGORY_UNKNOWN,

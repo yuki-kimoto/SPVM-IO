@@ -1,5 +1,8 @@
+0.252 2026-10-07
+  [Bug Fix]
+    * Remove loading Test::Server::Echo in IO::Socket.
+
 0.251 2026-10-06
-  
   [Internal Changes]
     * Use Sys::Socket::Util#set_tcp_keepalive method for IO::Socket#set_tcp_keepalive method.
     * Use Sys::Socket::Util#set_blocking method for IO::Handle#set_blocking method.

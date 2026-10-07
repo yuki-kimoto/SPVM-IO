@@ -9,6 +9,7 @@ class TestCase::IO::Socket::IP {
   use Sys::OS;
   use Sys::Signal;
   use Sys::Signal::Constant as SIGNAL;
+  use Test::Server::Echo;
   
   our $LOCALHOST : string;
   our $LOCALHOST_V6 : string;
