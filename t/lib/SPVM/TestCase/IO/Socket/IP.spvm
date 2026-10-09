@@ -94,7 +94,7 @@ class TestCase::IO::Socket::IP {
       {
         # IPPROTO_UDP
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Proto => SOCKET_C->IPPROTO_UDP});
+          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Type => SOCKET_C->SOCK_DGRAM, Proto => SOCKET_C->IPPROTO_UDP});
           
           unless ($socket->protocol == SOCKET_C->IPPROTO_UDP) {
             diag;
@@ -140,7 +140,7 @@ class TestCase::IO::Socket::IP {
         
         # Broadcast
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Proto => SOCKET_C->IPPROTO_UDP, Broadcast => 1});
+          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Type => SOCKET_C->SOCK_DGRAM, Broadcast => 1});
           
           my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->SOL_SOCKET, SOCKET_C->SO_BROADCAST);
           

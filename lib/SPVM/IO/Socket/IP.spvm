@@ -4,7 +4,7 @@
 class IO::Socket::IP extends IO::Socket {
   version_from IO;
   
-  use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Constant as SOCKET_C;
   use Sys::Socket::Sockaddr;
   use Sys::Socket::In_addr_base;
   
@@ -65,26 +65,12 @@ class IO::Socket::IP extends IO::Socket {
     my $options = Hash->new($options);
     
     # Domain option
-    my $domain = $options->get_or_default("Domain", SOCKET->AF_INET)->(int);
-    
-    # Proto option
-    my $proto = $options->get_or_default("Proto", SOCKET->IPPROTO_TCP)->(int);
+    my $domain = $options->get_or_default("Domain", SOCKET_C->AF_INET)->(int);
     
     # Type option
-    my $type = -1;
-    if ($options->exists("Type")) {
-      $type = $options->get("Type")->(int);
-    }
-    else {
-      if ($proto == SOCKET->IPPROTO_TCP) {
-        $type = SOCKET->SOCK_STREAM;
-      }
-      elsif ($proto == SOCKET->IPPROTO_UDP) {
-        $type = SOCKET->SOCK_DGRAM;
-      }
-    }
+    my $type = $options->get_or_default("Type", SOCKET_C->SOCK_STREAM)->(int);
     
-    $self->SUPER::init(Fn->merge_options($options->to_array, {Domain => $domain, Proto => $proto, Type => $type}));
+    $self->SUPER::init(Fn->merge_options($options->to_array, {Domain => $domain, Type => $type}));
     
     # LocalAddr
     if ($options->exists("LocalAddr")) {
@@ -170,26 +156,26 @@ class IO::Socket::IP extends IO::Socket {
     }
     
     if ($reuse_addr) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEADDR, 1);
+      $self->setsockopt(SOCKET_C->SOL_SOCKET, SOCKET_C->SO_REUSEADDR, 1);
     }
     
     if ($reuse_port) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_REUSEPORT, 1);
+      $self->setsockopt(SOCKET_C->SOL_SOCKET, SOCKET_C->SO_REUSEPORT, 1);
     }
     
     if ($broadcast) {
-      $self->setsockopt(SOCKET->SOL_SOCKET, SOCKET->SO_BROADCAST, 1);
+      $self->setsockopt(SOCKET_C->SOL_SOCKET, SOCKET_C->SO_BROADCAST, 1);
     }
     
     # Set default TCP settings (Nagle off, Keep-alive on) if it's a TCP socket.
     # This replaces the direct setsockopt(TCP_NODELAY) call.
     my $type = $self->socktype;
-    if ($type == SOCKET->SOCK_STREAM) {
+    if ($type == SOCKET_C->SOCK_STREAM) {
       $self->set_default_tcp_settings;
     }
     
     if (exists $self->{V6Only}) {
-      $self->setsockopt(SOCKET->IPPROTO_IPV6, SOCKET->IPV6_V6ONLY, !!$self->{V6Only});
+      $self->setsockopt(SOCKET_C->IPPROTO_IPV6, SOCKET_C->IPV6_V6ONLY, !!$self->{V6Only});
     }
     
     my $SocketCategory = $self->{SocketCategory};
@@ -220,10 +206,10 @@ class IO::Socket::IP extends IO::Socket {
     my $in_addr_base = (Sys::Socket::In_addr_base)undef;
     
     my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
+    if ($domain == SOCKET_C->AF_INET) {
       $in_addr_base = $self->IO::Socket::IP::Import::IPv4::sockaddr;
     }
-    elsif ($domain == SOCKET->AF_INET6) {
+    elsif ($domain == SOCKET_C->AF_INET6) {
       $in_addr_base = $self->IO::Socket::IP::Import::IPv6::sockaddr;
     }
     else {
@@ -238,10 +224,10 @@ class IO::Socket::IP extends IO::Socket {
     my $sockhost = (string)undef;
     
     my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
+    if ($domain == SOCKET_C->AF_INET) {
       $sockhost = $self->IO::Socket::IP::Import::IPv4::sockhost;
     }
-    elsif ($domain == SOCKET->AF_INET6) {
+    elsif ($domain == SOCKET_C->AF_INET6) {
       $sockhost = $self->IO::Socket::IP::Import::IPv6::sockhost;
     }
     else {
@@ -256,10 +242,10 @@ class IO::Socket::IP extends IO::Socket {
     my $sockport = -1;;
     
     my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
+    if ($domain == SOCKET_C->AF_INET) {
       $sockport = $self->IO::Socket::IP::Import::IPv4::sockport;
     }
-    elsif ($domain == SOCKET->AF_INET6) {
+    elsif ($domain == SOCKET_C->AF_INET6) {
       $sockport = $self->IO::Socket::IP::Import::IPv6::sockport;
     }
     else {
@@ -274,10 +260,10 @@ class IO::Socket::IP extends IO::Socket {
     my $in_addr_base = (Sys::Socket::In_addr_base)undef;
     
     my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
+    if ($domain == SOCKET_C->AF_INET) {
       $in_addr_base = $self->IO::Socket::IP::Import::IPv4::peeraddr;
     }
-    elsif ($domain == SOCKET->AF_INET6) {
+    elsif ($domain == SOCKET_C->AF_INET6) {
       $in_addr_base = $self->IO::Socket::IP::Import::IPv6::peeraddr;
     }
     else {
@@ -292,10 +278,10 @@ class IO::Socket::IP extends IO::Socket {
     my $peerhost = (string)undef;
     
     my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
+    if ($domain == SOCKET_C->AF_INET) {
       $peerhost = $self->IO::Socket::IP::Import::IPv4::peerhost;
     }
-    elsif ($domain == SOCKET->AF_INET6) {
+    elsif ($domain == SOCKET_C->AF_INET6) {
       $peerhost = $self->IO::Socket::IP::Import::IPv6::peerhost;
     }
     else {
@@ -310,10 +296,10 @@ class IO::Socket::IP extends IO::Socket {
     my $peerport = -1;;
     
     my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
+    if ($domain == SOCKET_C->AF_INET) {
       $peerport = $self->IO::Socket::IP::Import::IPv4::peerport;
     }
-    elsif ($domain == SOCKET->AF_INET6) {
+    elsif ($domain == SOCKET_C->AF_INET6) {
       $peerport = $self->IO::Socket::IP::Import::IPv6::peerport;
     }
     else {
@@ -332,10 +318,10 @@ class IO::Socket::IP extends IO::Socket {
     my $sockaddr = (Sys::Socket::Sockaddr)undef;
     
     my $domain = $self->{Domain};
-    if ($domain == SOCKET->AF_INET) {
+    if ($domain == SOCKET_C->AF_INET) {
       $sockaddr = $self->IO::Socket::IP::Import::IPv4::create_sockaddr($address, $port);
     }
-    elsif ($domain == SOCKET->AF_INET6) {
+    elsif ($domain == SOCKET_C->AF_INET6) {
       $sockaddr = $self->IO::Socket::IP::Import::IPv6::create_sockaddr($address, $port);
     }
     else {
