@@ -149,7 +149,8 @@ class IO::Socket::IP extends IO::Socket {
       $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_ACCEPTED;
     }
     else {
-      die "[Unexpected Error]Unexpected socket category.";
+      # Default is a client for UDP without PeerAddr
+      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
     }
     
   }
@@ -204,10 +205,11 @@ class IO::Socket::IP extends IO::Socket {
     my $SocketCategory = $self->{SocketCategory};
     switch ($SocketCategory) {
       case IO::Socket->SOCKET_CATEGORY_CLIENT : {
-        my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
-        $self->{Sockaddr} = $sockaddr;
-        
-        $self->connect;
+        if ($peer_address) {
+          my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
+          $self->{Sockaddr} = $sockaddr;
+          $self->connect;
+        }
       }
       case IO::Socket->SOCKET_CATEGORY_SERVER : {
         my $sockaddr = $self->create_sockaddr($local_address, $local_port);

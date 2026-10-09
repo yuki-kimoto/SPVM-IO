@@ -80,9 +80,11 @@ class IO::Socket::UNIX extends IO::Socket {
     
     # Client
     if ($peer) {
-      my $sockaddr = Sys::Socket::Util->sockaddr_un($peer);
-      $self->{Sockaddr} = $sockaddr;
-      $self->connect;
+      if ($peer) {
+        my $sockaddr = Sys::Socket::Util->sockaddr_un($peer);
+        $self->{Sockaddr} = $sockaddr;
+        $self->connect;
+      }
     }
     # Server
     elsif ($listen > 0) {

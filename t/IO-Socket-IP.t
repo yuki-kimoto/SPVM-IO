@@ -36,6 +36,8 @@ ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
 
 ok(SPVM::TestCase::IO::Socket::IP->udp);
 
+ok(SPVM::TestCase::IO::Socket::IP->udp_sendto);
+
 $api->destroy_runtime_permanent_vars;
 
 my $end_memory_blocks_count = $api->get_memory_blocks_count;
