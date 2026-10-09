@@ -119,6 +119,8 @@ This object represents a IPv4 or IPv6 domain socket.
 
 If L</"ReuseAddr"> field is a true value, C<SO_REUSEADD> option of this socket is set to 1.
 
+If L</"ReuseAddr"> field is a true value, C<SO_REUSEADD> option of this socket is set to 1.
+
 If L</"ReusePort"> field is a true value, C<SO_REUSEPORT> option of this socket is set to 1.
 
 If L</"Broadcast"> field is a true value, C<SO_BROADCAST> option of this socket is set to 1.
@@ -187,13 +189,9 @@ If this option is specified, L</"V6OnlySpecified"> is set to 1 and L</"V6Only"> 
 
 L<Domain|SPVM::IO::Socket/"Domain"> field is set to C<AF_INET> if C<Domain> option is not specified.
 
-L<Proto|SPVM::IO::Socket/"Proto"> field is set to C<IPPROTO_TCP> if C<Proto> option is not specified.
+If L</"Domain"> is not specified and L</"LocalAddr"> or L</"PeerAddr"> is a valid IPv6 address, the default value of L</"Domain"> is automatically set to C<AF_INET6>.
 
-L<Type|SPVM::IO::Socket/"Type"> field is set to the following value according to the value of L<Proto|SPVM::IO::Socket/"Proto"> field.
-
-If the value of C<Proto> is C<IPPROTO_TCP>, the C<Type> field is set to C<SOCK_STREAM>.
-
-If the value of C<Proto> is C<IPPROTO_UDP>, the C<Type> field is set to C<SOCK_DGRAM>.
+L<Type|SPVM::IO::Socket/"Type"> field is set to C<SOCK_STREAM> if C<Type> option is not specified.
 
 =head2 configure
 
