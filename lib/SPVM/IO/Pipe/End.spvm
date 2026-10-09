@@ -48,4 +48,15 @@ class IO::Pipe::End extends IO::Handle {
     return $write_length;
   }
   
+  method close : void () {
+    unless ($self->opened) {
+      die "This socket is not opened or already closed.";
+    }
+    
+    my $fd = $self->{FD};
+    Go->gosched_pipe_cancel($fd);
+    Sys::Socket->close($fd);
+    $self->{FD} = -1;
+  }
+  
 }
