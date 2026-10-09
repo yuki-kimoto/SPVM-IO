@@ -142,7 +142,7 @@ class IO::Socket::IP extends IO::Socket {
     if ($self->{PeerAddr}) {
       $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
     }
-    elsif ($self->{Listen}) {
+    elsif ($self->{LocalAddr} || $self->{Listen}) {
       $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_SERVER;
     }
     elsif ($self->{FD} >= 0) {
