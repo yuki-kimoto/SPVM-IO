@@ -22,7 +22,7 @@ class TestCase::IO::Socket::INET6 {
       
       my $host = "::1";
       
-      my $server = Test::Server::Echo->new({LocalAddr => $host, Domain => SOCKET_C->AF_INET6});
+      my $server = Test::Server::Echo->new({LocalAddr => $host});
       
       Fn->defer([$server : Test::Server::Echo] method : void () {
         $server->stop;

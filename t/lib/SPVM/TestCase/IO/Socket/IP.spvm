@@ -1247,7 +1247,6 @@ class TestCase::IO::Socket::IP {
       
       my $server = Test::Server::Echo->new({
         LocalAddr => "::1",
-        Domain => SOCKET_C->AF_INET6,
       });
       
       Fn->defer([$server : Test::Server::Echo] method : void () {
@@ -1267,7 +1266,6 @@ class TestCase::IO::Socket::IP {
         my $socket = IO::Socket::IP->new({
           PeerAddr => $host,
           PeerPort => $port,
-          Domain => SOCKET_C->AF_INET6,
         });
         
         unless ($socket is_type IO::Socket::IP) {
@@ -1310,7 +1308,6 @@ class TestCase::IO::Socket::IP {
         my $socket = IO::Socket::IP->new({
           PeerAddr => $host,
           PeerPort => $port,
-          Domain => SOCKET_C->AF_INET6,
         });
         
         my $write_data = "Hello IPv6 Echo 2";

@@ -64,8 +64,31 @@ class IO::Socket::IP extends IO::Socket {
     
     my $options = Hash->new($options);
     
-    # Domain option
-    my $domain = $options->get_or_default("Domain", SOCKET_C->AF_INET)->(int);
+    # Domain
+    my $domain = SOCKET_C->AF_INET;
+    if ($options->exists("Domain")) {
+      $domain = $options->get("Domain")->(int);
+    }
+    else {
+      my $addr = (string)undef;
+      if ($options->exists("LocalAddr")) {
+        $addr = $options->get("LocalAddr")->(string);
+      }
+      elsif ($options->exists("PeerAddr")) {
+        $addr = $options->get("PeerAddr")->(string);
+      }
+      
+      if ($addr) {
+        my $in_addr = (Sys::Socket::In_addr_base)undef;
+        eval {
+          $in_addr = Sys::Socket::Util->inet_pton(SOCKET_C->AF_INET6, $addr);
+        };
+        
+        if ($in_addr) {
+          $domain = SOCKET_C->AF_INET6;
+        }
+      }
+    }
     
     # Type option
     my $type = $options->get_or_default("Type", SOCKET_C->SOCK_STREAM)->(int);
