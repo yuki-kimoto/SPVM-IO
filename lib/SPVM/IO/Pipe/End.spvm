@@ -6,13 +6,18 @@ class IO::Pipe::End extends IO::Handle {
   use Sys;
   use Go;
   
-  static method new_from_fd : IO::Pipe::End ($fd : int) {
+  static method new : IO::Pipe::End ($options : object[] = undef) {
     
     my $self = new IO::Pipe::End;
     
-    $self->{FD} = $fd;
+    $self->init($options);
     
     return $self;
+  }
+  
+  protected method init : void ($options : object[] = undef) {
+    
+    $self->SUPER::init($options);
   }
   
   method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
