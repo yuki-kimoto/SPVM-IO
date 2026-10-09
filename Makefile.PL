@@ -54,6 +54,9 @@ WriteMakefile(
     'SPVM::Go' => '0.047',
     'SPVM::Net::DNS::Native' => '0.003',
   },
+  TEST_REQUIRES => {
+    'SPVM::File::Temp' => '0.029',
+  },
 );
 
 # Add Build shared library make rule
