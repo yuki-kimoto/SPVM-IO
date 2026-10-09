@@ -49,10 +49,7 @@ class IO::Socket::UNIX extends IO::Socket {
     # Type option
     my $type = $options->get_or_default("Type", SOCKET_C->SOCK_STREAM)->(int);
     
-    # Proto option
-    my $proto = 0;
-    
-    $self->SUPER::init(Fn->merge_options($options->to_array, {Domain => $domain, Proto => $proto, Type => $type}));
+    $self->SUPER::init(Fn->merge_options($options->to_array, {Domain => $domain, Type => $type}));
     
     # Peer option
     $self->{Peer} = $options->get_or_default("Peer", undef)->(string);
