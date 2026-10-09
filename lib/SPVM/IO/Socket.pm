@@ -130,12 +130,6 @@ C<has Proto : protected int;>
 
 A socket protocol, such as C<IPPROTO_TCP>, C<IPPROTO_UDP>.
 
-=head2 Timeout
-
-C<has Timeout : protected double;>
-
-An B<inactivity timeout> in seconds for read, write, connect, and accept operations. This represents the maximum allowed idle time for a single I/O operation.
-
 =head2 Listen
 
 C<has Listen : protected int;>
@@ -147,18 +141,6 @@ The number of listen backlog.
 C<has Sockaddr : protected L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>;>
 
 A L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr> object used by L</"connect"> or L</"bind"> method.
-
-=head2 ReadDeadline
-
-C<has ReadDeadline : protected L<Go::Time|SPVM::Go::Time>;>
-
-An B<absolute deadline> for read operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
-
-=head2 WriteDeadline
-
-C<has WriteDeadline : protected L<Go::Time|SPVM::Go::Time>;>
-
-An B<absolute deadline> for write operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 =head1 Instance Methods
 

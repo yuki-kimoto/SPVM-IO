@@ -41,16 +41,8 @@ class IO::Socket extends IO::Handle {
   
   has Listen : protected int;
   
-  has Timeout : protected double;
-  
   has Sockaddr : protected Sys::Socket::Sockaddr;
 
-  # An absolute deadline for read operations.
-  has ReadDeadline : Go::Time;
-
-  # An absolute deadline for write operations.
-  has WriteDeadline : Go::Time;
-  
   # Instance Methods
   protected method init : void ($options : object[] = undef) {
     
@@ -78,21 +70,6 @@ class IO::Socket extends IO::Handle {
       $self->{Listen} = $options->get("Listen")->(int);
     }
     
-    # Timeout option
-    if ($options->exists("Timeout")) {
-      $self->{Timeout} = $options->get("Timeout")->(double);
-    }
-    
-    # ReadDeadline option
-    if ($options->exists("ReadDeadline")) {
-      $self->{ReadDeadline} = $options->get("ReadDeadline")->(Go::Time);
-    }
-    
-    # WriteDeadline option
-    if ($options->exists("WriteDeadline")) {
-      $self->{WriteDeadline} = $options->get("WriteDeadline")->(Go::Time);
-    }
-    
     # Blocking option
     if ($options->exists("Blocking")) {
       die "Blocking option is not allowed in IO::Socket class and its child classes.";
@@ -107,59 +84,11 @@ class IO::Socket extends IO::Handle {
         "Type",
         "Proto",
         "Listen",
-        "Timeout",
-        "ReadDeadline",
-        "WriteDeadline",
       ]
     );
     return $option_names;
   }
 
-  # Calculates the remaining duration based on Deadline and Timeout fields.
-  protected method get_remaining_duration : Go::Duration_1l ($is_write : int) {
-    my $deadline = $is_write ? $self->{WriteDeadline} : $self->{ReadDeadline};
-    
-    my $timeout_sec = $self->{Timeout};
-    
-    unless ($timeout_sec >= 0) {
-      die "[Unexpected Error]\$timeout_sec must be non-negative value.";
-    }
-    
-    my $final_duration : Go::Duration_1l;
-    
-    if ($deadline) {
-      my $now = Go::Time->now;
-      
-      if ($now->after($deadline)) {
-        die Go::Error::IOTimeout "The deadline has been exceeded.";
-      }
-      else {
-        if ($timeout_sec == 0) {
-          $final_duration = $deadline->sub($now);
-        }
-        else {
-          my $timeout_deadline = $now->add_sec($timeout_sec);
-          
-          if ($timeout_deadline->after($deadline)) {
-            $final_duration = $deadline->sub($now);
-          }
-          else {
-            $final_duration = Go::Duration_1l->new_from_sec($timeout_sec);
-          }
-        }
-      }
-      
-      unless ($final_duration->{nsec} > 0) {
-        die Go::Error::IOTimeout "The deadline has been exceeded.";
-      }
-    }
-    else {
-      $final_duration = Go::Duration_1l->new_from_sec($timeout_sec);
-    }
-    
-    return $final_duration;
-  }
-  
   method timeout : double () {
     return $self->{Timeout};
   }

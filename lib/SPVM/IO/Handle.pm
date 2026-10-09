@@ -38,6 +38,24 @@ C<has Blocking : protected byte;>
 
 A flag for blocking IO.
 
+=head2 Timeout
+
+C<has Timeout : protected double;>
+
+An B<inactivity timeout> in seconds for read, write, connect, and accept operations. This represents the maximum allowed idle time for a single I/O operation.
+
+=head2 ReadDeadline
+
+C<has ReadDeadline : protected L<Go::Time|SPVM::Go::Time>;>
+
+An B<absolute deadline> for read operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
+
+=head2 WriteDeadline
+
+C<has WriteDeadline : protected L<Go::Time|SPVM::Go::Time>;>
+
+An B<absolute deadline> for write operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
+
 =head1 Class Methods
 
 =head1 Instance Methods
