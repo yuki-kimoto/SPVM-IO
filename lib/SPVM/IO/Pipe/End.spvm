@@ -3,6 +3,9 @@
 
 class IO::Pipe::End extends IO::Handle {
   
+  use Sys;
+  use Go;
+  
   static method new_from_fd : IO::Pipe::End ($fd : int) {
     
     my $self = new IO::Pipe::End;
@@ -10,6 +13,38 @@ class IO::Pipe::End extends IO::Handle {
     $self->{FD} = $fd;
     
     return $self;
+  }
+  
+  method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
+    
+    unless ($length > -1) {
+      $length = length $string;
+    }
+    
+    my $fd = $self->{FD};
+    my $timeout_duration = $self->get_remaining_duration(0);
+    
+    my $read_length = Go->gosched_pipe_read($fd, $string, $length, $offset, $timeout_duration);
+    
+    return $read_length;
+  }
+  
+  method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
+    
+    unless ($length > -1) {
+      $length = length $string;
+    }
+    
+    my $fd = $self->{FD};
+    my $timeout_duration = $self->get_remaining_duration(1);
+    
+    my $write_length = Go->gosched_pipe_write($fd, $string, $length, $offset, $timeout_duration);
+    
+    return $write_length;
+  }
+  
+  protected method get_remaining_duration : Go::Duration_1l ($is_write : int) {
+    die "Not implemented.";
   }
   
 }
