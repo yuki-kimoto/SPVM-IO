@@ -4,7 +4,7 @@
 class IO::Socket::UNIX extends IO::Socket {
   version_from IO;
   
-  use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Constant as SOCKET_C;
   use Sys::Socket::Util;
   use Array;
   
@@ -44,10 +44,10 @@ class IO::Socket::UNIX extends IO::Socket {
     my $options = Hash->new($options);
     
     # Domain option
-    my $domain = SOCKET->AF_UNIX;
+    my $domain = SOCKET_C->AF_UNIX;
     
     # Type option
-    my $type = $options->get_or_default("Type", SOCKET->SOCK_STREAM)->(int);
+    my $type = $options->get_or_default("Type", SOCKET_C->SOCK_STREAM)->(int);
     
     # Proto option
     my $proto = 0;
@@ -79,6 +79,8 @@ class IO::Socket::UNIX extends IO::Socket {
       $self->socket;
     }
     
+    my $type = $self->socktype;
+    
     # Client
     if ($peer) {
       my $sockaddr = Sys::Socket::Util->sockaddr_un($peer);
@@ -90,7 +92,9 @@ class IO::Socket::UNIX extends IO::Socket {
       my $sockaddr = Sys::Socket::Util->sockaddr_un($local);
       $self->{Sockaddr} = $sockaddr;
       $self->bind;
-      $self->listen;
+      if ($type == SOCKET_C->SOCK_STREAM) {
+        $self->listen;
+      }
     }
     # Accepted client
     elsif ($fd > 0) {
