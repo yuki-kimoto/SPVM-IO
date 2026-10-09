@@ -43,8 +43,4 @@ class IO::Pipe::End extends IO::Handle {
     return $write_length;
   }
   
-  protected method get_remaining_duration : Go::Duration_1l ($is_write : int) {
-    die "Not implemented.";
-  }
-  
 }
