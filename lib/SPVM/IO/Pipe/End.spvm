@@ -1,0 +1,15 @@
+# Copyright (c) 2026 Yuki Kimoto
+# MIT License
+
+class IO::Pipe::End extends IO::Handle {
+  
+  static method new_from_fd : IO::Pipe::End ($fd : int) {
+    
+    my $self = new IO::Pipe::End;
+    
+    $self->{FD} = $fd;
+    
+    return $self;
+  }
+  
+}

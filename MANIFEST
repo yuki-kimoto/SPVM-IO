@@ -13,6 +13,10 @@ lib/SPVM/IO/File.pm
 lib/SPVM/IO/File.spvm
 lib/SPVM/IO/Handle.pm
 lib/SPVM/IO/Handle.spvm
+lib/SPVM/IO/Pipe.pm
+lib/SPVM/IO/Pipe.spvm
+lib/SPVM/IO/Pipe/End.pm
+lib/SPVM/IO/Pipe/End.spvm
 lib/SPVM/IO/Poll.pm
 lib/SPVM/IO/Poll.spvm
 lib/SPVM/IO/Select.pm
@@ -38,6 +42,7 @@ MANIFEST.SKIP
 README.md
 t/IO-Dir.t
 t/IO-File.t
+t/IO-Pipe.t
 t/IO-Poll.t
 t/IO-Select.t
 t/IO-Socket-INET.t
@@ -53,6 +58,7 @@ t/lib/SPVM/Test/Server/Echo.spvm
 t/lib/SPVM/TestCase/IO.spvm
 t/lib/SPVM/TestCase/IO/Dir.spvm
 t/lib/SPVM/TestCase/IO/File.spvm
+t/lib/SPVM/TestCase/IO/Pipe.spvm
 t/lib/SPVM/TestCase/IO/Poll.spvm
 t/lib/SPVM/TestCase/IO/Select.spvm
 t/lib/SPVM/TestCase/IO/Socket.spvm

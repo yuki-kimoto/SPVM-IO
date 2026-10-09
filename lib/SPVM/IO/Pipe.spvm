@@ -1,0 +1,28 @@
+# Copyright (c) 2026 Yuki Kimoto
+# MIT License
+
+class IO::Pipe {
+  
+  use Sys;
+  use IO::Pipe::End;
+  
+  has handles : ro IO::Pipe::End[];
+  
+  static method new : IO::Pipe () {
+    
+    my $fd0 = -1;
+    my $fd1 = -1;
+    
+    my $non_blocking = 1;
+    Sys->pipepair(\$fd0, \$fd1, $non_blocking);
+    
+    my $handles = new IO::Pipe::End[2];
+    $handles->[0] = IO::Pipe::End->new_from_fd($fd0);
+    $handles->[1] = IO::Pipe::End->new_from_fd($fd1);
+    
+    my $self = new IO::Pipe;
+    $self->{handles} = $handles;
+    
+    return $self;
+  }
+}

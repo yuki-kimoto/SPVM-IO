@@ -1,0 +1,8 @@
+class TestCase::IO::Pipe {
+  use IO::Pipe;
+  
+  static method basic : int () {
+    
+    return 1;
+  }
+}
