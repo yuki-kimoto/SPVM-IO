@@ -185,6 +185,35 @@ class IO::Handle {
     return $final_duration;
   }
   
+  method timeout : double () {
+    return $self->{Timeout};
+  }
+  
+  method set_timeout : void ($timeout : double) {
+    $self->{Timeout} = $timeout;
+  }
+  
+  method set_deadline : void ($deadline : Go::Time) {
+    $self->{ReadDeadline} = $deadline;
+    $self->{WriteDeadline} = $deadline;
+  }
+  
+  method read_deadline : Go::Time () {
+    return $self->{ReadDeadline};
+  }
+  
+  method set_read_deadline : void ($deadline : Go::Time) {
+    $self->{ReadDeadline} = $deadline;
+  }
+  
+  method write_deadline : Go::Time () {
+    return $self->{WriteDeadline};
+  }
+  
+  method set_write_deadline : void ($deadline : Go::Time) {
+    $self->{WriteDeadline} = $deadline;
+  }
+  
   method DESTROY : void () {
     
     if ($self->opened) {

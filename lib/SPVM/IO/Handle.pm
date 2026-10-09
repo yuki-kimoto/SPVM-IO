@@ -168,6 +168,48 @@ Trancates the stream associated with the file descriptoer L</"FD">.
 
 This method is implemented in a child class.
 
+=head2 timeout
+
+C<method timeout : double ();>
+
+Returns the value of L</"Timeout"> field.
+
+=head2 set_timeout
+
+C<method set_timeout : void ($timeout : double);>
+
+Sets L</"Timeout"> field to $timeout. This value is used as an inactivity timeout.
+
+=head2 set_deadline
+
+C<method set_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
+
+Sets both L</"ReadDeadline"> and L</"WriteDeadline"> fields to C<$deadline>.
+
+=head2 read_deadline
+
+C<method read_deadline : L<Go::Time|SPVM::Go::Time> ();>
+
+Returns the value of L</"ReadDeadline"> field.
+
+=head2 set_read_deadline
+
+C<method set_read_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
+
+Sets L</"ReadDeadline"> field to $deadline.
+
+=head2 write_deadline
+
+C<method write_deadline : L<Go::Time|SPVM::Go::Time> ();>
+
+Returns the value of L</"WriteDeadline"> field.
+
+=head2 set_write_deadline
+
+C<method set_write_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
+
+Sets L</"WriteDeadline"> field to $deadline.
+
 =head2 DESTROY
 
 C<method DESTROY : void ();>

@@ -89,14 +89,6 @@ class IO::Socket extends IO::Handle {
     return $option_names;
   }
 
-  method timeout : double () {
-    return $self->{Timeout};
-  }
-  
-  method set_timeout : void ($timeout : double) {
-    $self->{Timeout} = $timeout;
-  }
-  
   method sockdomain : int () {
     return $self->{Domain};
   }
@@ -322,27 +314,6 @@ class IO::Socket extends IO::Handle {
       die "Calling set_blocking method given a true value on an IO::Socket object is forbidden.";
     }
     $self->SUPER::set_blocking($blocking);
-  }
-  
-  method set_deadline : void ($deadline : Go::Time) {
-    $self->{ReadDeadline} = $deadline;
-    $self->{WriteDeadline} = $deadline;
-  }
-  
-  method read_deadline : Go::Time () {
-    return $self->{ReadDeadline};
-  }
-
-  method set_read_deadline : void ($deadline : Go::Time) {
-    $self->{ReadDeadline} = $deadline;
-  }
-
-  method write_deadline : Go::Time () {
-    return $self->{WriteDeadline};
-  }
-
-  method set_write_deadline : void ($deadline : Go::Time) {
-    $self->{WriteDeadline} = $deadline;
   }
   
   protected method set_default_tcp_settings : void () {
