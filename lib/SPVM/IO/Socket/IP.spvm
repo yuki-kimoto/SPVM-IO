@@ -202,16 +202,10 @@ class IO::Socket::IP extends IO::Socket {
       $self->setsockopt(SOCKET_C->IPPROTO_IPV6, SOCKET_C->IPV6_V6ONLY, !!$self->{V6Only});
     }
     
-    my $SocketCategory = $self->{SocketCategory};
-    switch ($SocketCategory) {
-      case IO::Socket->SOCKET_CATEGORY_CLIENT : {
-      }
-      case IO::Socket->SOCKET_CATEGORY_SERVER : {
-        my $sockaddr = $self->create_sockaddr($local_address, $local_port);
-        $self->{LocalSockaddr} = $sockaddr;
-        
-        $self->bind;
-      }
+    if ($local_address || exists $self->{LocalPort}) {
+      my $sockaddr = $self->create_sockaddr($local_address, $local_port);
+      $self->{LocalSockaddr} = $sockaddr;
+      $self->bind;
     }
     
     if ($peer_address) {
