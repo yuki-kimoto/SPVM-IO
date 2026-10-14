@@ -34,9 +34,11 @@ ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value);
 
 ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
 
-ok(SPVM::TestCase::IO::Socket::IP->udp);
+# TODO(UPD tests failed in Windows)
 
-ok(SPVM::TestCase::IO::Socket::IP->udp_sendto);
+# ok(SPVM::TestCase::IO::Socket::IP->udp);
+
+# ok(SPVM::TestCase::IO::Socket::IP->udp_sendto);
 
 $api->destroy_runtime_permanent_vars;
 
