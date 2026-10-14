@@ -207,13 +207,13 @@ class IO::Socket::IP extends IO::Socket {
       case IO::Socket->SOCKET_CATEGORY_CLIENT : {
         if ($peer_address) {
           my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
-          $self->{Sockaddr} = $sockaddr;
+          $self->{PeerSockaddr} = $sockaddr;
           $self->connect;
         }
       }
       case IO::Socket->SOCKET_CATEGORY_SERVER : {
         my $sockaddr = $self->create_sockaddr($local_address, $local_port);
-        $self->{Sockaddr} = $sockaddr;
+        $self->{LocalSockaddr} = $sockaddr;
         
         $self->bind;
       }

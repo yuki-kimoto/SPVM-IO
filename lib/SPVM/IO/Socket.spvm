@@ -41,8 +41,10 @@ class IO::Socket extends IO::Handle {
   
   has Listen : protected int;
   
-  has Sockaddr : protected Sys::Socket::Sockaddr;
-
+  has LocalSockaddr : protected Sys::Socket::Sockaddr;
+  
+  has PeerSockaddr : protected Sys::Socket::Sockaddr;
+  
   # Instance Methods
   protected method init : void ($options : object[] = undef) {
     
@@ -274,7 +276,7 @@ class IO::Socket extends IO::Handle {
   
   protected method connect : void () {
     my $fd = $self->{FD};
-    my $sockaddr = $self->{Sockaddr};
+    my $sockaddr = $self->{PeerSockaddr};
     
     while (1) {
       my $timeout_duration = $self->get_remaining_duration(1);
@@ -295,7 +297,7 @@ class IO::Socket extends IO::Handle {
   }
   
   protected method bind : void () {
-    my $sockaddr = $self->{Sockaddr};
+    my $sockaddr = $self->{LocalSockaddr};
     my $fd = $self->{FD};
     Sys->bind($fd, $sockaddr);
   }

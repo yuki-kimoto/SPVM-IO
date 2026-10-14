@@ -82,14 +82,14 @@ class IO::Socket::UNIX extends IO::Socket {
     if ($peer) {
       if ($peer) {
         my $sockaddr = Sys::Socket::Util->sockaddr_un($peer);
-        $self->{Sockaddr} = $sockaddr;
+        $self->{PeerSockaddr} = $sockaddr;
         $self->connect;
       }
     }
     # Server
     elsif ($listen > 0) {
       my $sockaddr = Sys::Socket::Util->sockaddr_un($local);
-      $self->{Sockaddr} = $sockaddr;
+      $self->{LocalSockaddr} = $sockaddr;
       $self->bind;
       if ($type == SOCKET_C->SOCK_STREAM) {
         $self->listen;
