@@ -214,7 +214,7 @@ class IO::Socket::IP extends IO::Socket {
       $self->connect;
     }
     
-    if (exists $self->{Listen}) {
+    if ($self->{Listen} > 0) {
       $self->listen;
     }
     
