@@ -205,11 +205,6 @@ class IO::Socket::IP extends IO::Socket {
     my $SocketCategory = $self->{SocketCategory};
     switch ($SocketCategory) {
       case IO::Socket->SOCKET_CATEGORY_CLIENT : {
-        if ($peer_address) {
-          my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
-          $self->{PeerSockaddr} = $sockaddr;
-          $self->connect;
-        }
       }
       case IO::Socket->SOCKET_CATEGORY_SERVER : {
         my $sockaddr = $self->create_sockaddr($local_address, $local_port);
@@ -217,6 +212,12 @@ class IO::Socket::IP extends IO::Socket {
         
         $self->bind;
       }
+    }
+    
+    if ($peer_address) {
+      my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
+      $self->{PeerSockaddr} = $sockaddr;
+      $self->connect;
     }
     
     if (exists $self->{Listen}) {
