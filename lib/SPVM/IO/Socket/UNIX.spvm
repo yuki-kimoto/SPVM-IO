@@ -56,10 +56,6 @@ class IO::Socket::UNIX extends IO::Socket {
     
     # Local option
     $self->{Local} = $options->get_or_default("Local", undef)->(string);
-    
-    if ($self->{Peer} && $self->{Local}) {
-      die "Peer option and Local option cannot be used together.";
-    }
   }
   
   protected method configure : void () {
