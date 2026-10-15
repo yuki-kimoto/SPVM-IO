@@ -186,8 +186,6 @@ class IO::Socket::IP extends IO::Socket {
       $self->connect;
     }
     
-    # Set default TCP settings (Nagle off, Keep-alive on) if it's a TCP socket.
-    # This replaces the direct setsockopt(TCP_NODELAY) call.
     my $type = $self->socktype;
     if ($type == SOCKET_C->SOCK_STREAM) {
       $self->set_default_tcp_settings;
