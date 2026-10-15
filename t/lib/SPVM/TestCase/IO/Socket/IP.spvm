@@ -1880,29 +1880,50 @@ class TestCase::IO::Socket::IP {
       my $i = 0;
       while ($i < 2) {
         my $buffer = (mutable string)new_string_len 1024;
-        my $from_ref = new Sys::Socket::Sockaddr[1];
-        my $read_length = $server_socket->recvfrom($buffer, length $buffer, 0, $from_ref);
+        # Initialize the array element with a Sockaddr instance to avoid EFAULT (10014)
+        my $from_ref = [Sys::Socket::Sockaddr->new];
+        my $read_length = -1;
         
-        if ($read_length < 0) {
-          my $errno = Sys::Socket::Errno->errno;
-          if ($errno == Sys::Socket::Errno->ECONNRESET) {
-            next;
+        while (1) {
+          eval {
+            $read_length = $server_socket->recvfrom($buffer, length $buffer, 0, $from_ref);
+          };
+          if ($@) {
+            my $errno = Sys::Socket::Errno->errno;
+            if ($errno == Sys::Socket::Errno->ECONNRESET) {
+              next;
+            }
+            $success_ref->[0] = 0;
+            last;
           }
-          $success_ref->[0] = 0;
+          last;
+        }
+        
+        unless ($success_ref->[0]) {
           last;
         }
         
         if ($read_length > 0) {
           my $message = Fn->substr($buffer, 0, $read_length);
           my $peer = $from_ref->[0];
-          my $sent_length = $server_socket->sendto($message, 0, $peer);
+          my $sent_length = -1;
           
-          if ($sent_length < 0) {
-            my $errno = Sys::Socket::Errno->errno;
-            if ($errno == Sys::Socket::Errno->ECONNRESET) {
-              next;
+          while (1) {
+            eval {
+              $sent_length = $server_socket->sendto($message, 0, $peer);
+            };
+            if ($@) {
+              my $errno = Sys::Socket::Errno->errno;
+              if ($errno == Sys::Socket::Errno->ECONNRESET) {
+                next;
+              }
+              $success_ref->[0] = 0;
+              last;
             }
-            $success_ref->[0] = 0;
+            last;
+          }
+          
+          unless ($success_ref->[0]) {
             last;
           }
         }
@@ -1933,26 +1954,46 @@ class TestCase::IO::Socket::IP {
         my $i = 0;
         while ($i < 2) {
           my $write_data = "packet " . ($i + 1) . "\n";
-          my $sent_length = $socket->send($write_data);
+          my $sent_length = -1;
           
-          if ($sent_length < 0) {
-            my $errno = Sys::Socket::Errno->errno;
-            if ($errno == Sys::Socket::Errno->ECONNRESET) {
-              next;
+          while (1) {
+            eval {
+              $sent_length = $socket->send($write_data);
+            };
+            if ($@) {
+              my $errno = Sys::Socket::Errno->errno;
+              if ($errno == Sys::Socket::Errno->ECONNRESET) {
+                next;
+              }
+              $success_ref->[0] = 0;
+              last;
             }
-            $success_ref->[0] = 0;
+            last;
+          }
+          
+          unless ($success_ref->[0]) {
             last;
           }
           
           my $read_data = (mutable string)new_string_len 1024;
-          my $read_length = $socket->recv($read_data, length $read_data);
+          my $read_length = -1;
           
-          if ($read_length < 0) {
-            my $errno = Sys::Socket::Errno->errno;
-            if ($errno == Sys::Socket::Errno->ECONNRESET) {
-              next;
+          while (1) {
+            eval {
+              $read_length = $socket->recv($read_data, length $read_data);
+            };
+            if ($@) {
+              my $errno = Sys::Socket::Errno->errno;
+              if ($errno == Sys::Socket::Errno->ECONNRESET) {
+                next;
+              }
+              $success_ref->[0] = 0;
+              last;
             }
-            $success_ref->[0] = 0;
+            last;
+          }
+          
+          unless ($success_ref->[0]) {
             last;
           }
           
