@@ -43,7 +43,7 @@ class TestCase::IO::Socket::UNIX {
       
       my $server_socket = IO::Socket::UNIX->new({
         Local => $sock_path,
-        Listen    => 5,
+        Listen    => 0,
       });
       
       $wait_server_start_ch->write(1);

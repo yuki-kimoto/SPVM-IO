@@ -23,7 +23,7 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
   my $socket = IO::Socket::IP->new({
     LocalAddr => 'localhost',
     LocalPort => 9000,
-    Listen    => 5,
+    Listen    => 0, # SOMAXCONN
   });
    
   # IPv6 Client Socket
@@ -131,7 +131,9 @@ If the value of L</"V6Only"> field is a true value, it is set to 1, otherwise 0.
 
 If L</"PeerAddr"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
 
-If L<Listen|SPVM::IO::Socket/"Listen"> field is a positive value, this object becomes a server socket. It calls L<bind|SPVM::IO::Socket/"bind"> method and L<listen|SPVM::IO::Socket/"listen"> method.
+If L<Listen|SPVM::IO::Socket/"Listen"> field is specified, this object becomes a server socket. It calls L<listen|SPVM::IO::Socket/"listen"> method. If the value of C<Listen> is 0 or less, C<SOMAXCONN> is automatically used. Furthermore.
+
+The L<bind|SPVM::IO::Socket/"bind"> method is called when either L<LocalAddr|SPVM::IO::Socket/"LocalAddr"> or L<LocalPort|SPVM::IO::Socket/"LocalPort"> is specified.
 
 See L</"init"> method about the options $options.
 

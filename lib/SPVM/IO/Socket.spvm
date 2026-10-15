@@ -5,7 +5,7 @@ class IO::Socket extends IO::Handle {
   version_from IO;
   
   use Sys::Socket;
-  use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Constant as SOCKET_C;
   use Sys::Socket::Sockaddr;
   use Sys::Socket::Sockaddr::In;
   use Sys::Socket::Sockaddr::In6;
@@ -303,12 +303,19 @@ class IO::Socket extends IO::Handle {
   }
   
   protected method listen : void () {
-    my $fd = $self->{FD};
-    my $listen = $self->{Listen};
-    unless ($listen > 0) {
-      die "'Listen' field must be greater than 0.";
+    if (exists $self->{Listen}) {
+      my $fd = $self->{FD};
+      
+      my $listen = $self->{Listen};
+      if ($listen <= 0) {
+        $listen = SOCKET_C->SOMAXCONN;
+      }
+      
+      Sys->listen($fd, $listen);
     }
-    Sys->listen($fd, $listen);
+    else {
+      die "[Unexpected Error]'Listen' option not specified.'";
+    }
   }
   
   method set_blocking : void ($blocking : int) {

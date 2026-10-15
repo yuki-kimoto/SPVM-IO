@@ -46,7 +46,7 @@ class Test::Server::Echo {
     
     my $server_options_h = Hash->new({
       LocalAddr => $LocalAddr,
-      Listen => SOCKET_C->SOMAXCONN,
+      Listen => 0,
     });
     
     if (exists $self->{Domain}) {

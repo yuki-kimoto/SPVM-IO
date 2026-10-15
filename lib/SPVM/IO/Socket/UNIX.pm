@@ -59,7 +59,9 @@ This object represents a UNIX domain socket.
 
 If L</"Peer"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
 
-If L</"Listen"> field is a positive value, this object becomes a server socket. It calls L<bind|SPVM::IO::Socket/"bind"> method and L<listen|SPVM::IO::Socket/"listen"> method.
+If L</"Listen"> field is specified, this object becomes a server socket and calls the L<listen|SPVM::IO::Socket/"listen"> method. If the value of C<Listen> is 0 or less, C<SOMAXCONN> is used.
+
+The L<bind|SPVM::IO::Socket/"bind"> method is called when the L</"Local"> field is specified.
 
 See L</"init"> method about the options $options.
 
