@@ -330,4 +330,28 @@ class IO::Socket::IP extends IO::Socket {
     return $sockaddr;
   }
   
+  protected method set_default_tcp_settings : void () {
+    my $fd = $self->{FD};
+    
+    # 1. Disable Nagle's algorithm (TCP_NODELAY) as Go does by default.
+    my $tcp_nodelay = 1;
+    $self->setsockopt(Sys::Socket::Constant->IPPROTO_TCP, Sys::Socket::Constant->TCP_NODELAY, $tcp_nodelay);
+    
+    # 2. Enable TCP keep-alive with default settings (e.g., 15 seconds)
+    # This matches Go's default behavior for net.Dialer.
+    my $keepalive_onoff = 1;
+    my $keepalive_idle_sec = 15;
+    Sys::Socket::Util->set_tcp_keepalive($fd, $keepalive_onoff, $keepalive_idle_sec);
+  }
+  
+  protected method set_default_udp_settings : void () {
+    
+    # Disable UDP connection reset on Windows
+    if (Sys::OS->is_windows) {
+      my $SIO_UDP_CONNRESET = 0x98000007;
+      my $optval = 0;
+      $self->ioctl($SIO_UDP_CONNRESET, $optval);
+    }
+  }
+
 }
