@@ -1877,20 +1877,37 @@ class TestCase::IO::Socket::IP {
       });
       
       # Handle 2 packet exchanges
-      for (my $i = 0; $i < 2; $i++) {
+      my $i = 0;
+      while ($i < 2) {
         my $buffer = (mutable string)new_string_len 1024;
         my $from_ref = new Sys::Socket::Sockaddr[1];
         my $read_length = $server_socket->recvfrom($buffer, length $buffer, 0, $from_ref);
         
-        if ($read_length > 0) {
-          my $message = Fn->substr($buffer, 0, $read_length);
-          my $peer = $from_ref->[0];
-          $server_socket->sendto($message, 0, $peer);
-        }
-        else {
+        if ($read_length < 0) {
+          my $errno = Sys::Socket::Errno->errno;
+          if ($errno == Sys::Socket::Errno->ECONNRESET) {
+            next;
+          }
           $success_ref->[0] = 0;
           last;
         }
+        
+        if ($read_length > 0) {
+          my $message = Fn->substr($buffer, 0, $read_length);
+          my $peer = $from_ref->[0];
+          my $sent_length = $server_socket->sendto($message, 0, $peer);
+          
+          if ($sent_length < 0) {
+            my $errno = Sys::Socket::Errno->errno;
+            if ($errno == Sys::Socket::Errno->ECONNRESET) {
+              next;
+            }
+            $success_ref->[0] = 0;
+            last;
+          }
+        }
+        
+        $i++;
       }
     });
     
@@ -1913,12 +1930,31 @@ class TestCase::IO::Socket::IP {
         });
         
         # Perform 2 packet read/write exchanges
-        for (my $i = 0; $i < 2; $i++) {
+        my $i = 0;
+        while ($i < 2) {
           my $write_data = "packet " . ($i + 1) . "\n";
-          $socket->send($write_data);
+          my $sent_length = $socket->send($write_data);
+          
+          if ($sent_length < 0) {
+            my $errno = Sys::Socket::Errno->errno;
+            if ($errno == Sys::Socket::Errno->ECONNRESET) {
+              next;
+            }
+            $success_ref->[0] = 0;
+            last;
+          }
           
           my $read_data = (mutable string)new_string_len 1024;
           my $read_length = $socket->recv($read_data, length $read_data);
+          
+          if ($read_length < 0) {
+            my $errno = Sys::Socket::Errno->errno;
+            if ($errno == Sys::Socket::Errno->ECONNRESET) {
+              next;
+            }
+            $success_ref->[0] = 0;
+            last;
+          }
           
           if ($read_length > 0) {
             my $response = Fn->substr($read_data, 0, $read_length);
@@ -1926,9 +1962,8 @@ class TestCase::IO::Socket::IP {
               $success_ref->[0] = 0;
             }
           }
-          else {
-            $success_ref->[0] = 0;
-          }
+          
+          $i++;
         }
       }
       
