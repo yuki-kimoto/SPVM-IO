@@ -134,25 +134,6 @@ class IO::Socket::IP extends IO::Socket {
     if ($options->exists("V6Only")) {
       $self->{V6Only} = $options->{"V6Only"}->(byte);
     }
-    
-    if ($self->{PeerAddr} && $self->{Listen} > 0) {
-      die "PeerAddr option and Listen option cannot be used together.";
-    }
-    
-    if ($self->{PeerAddr}) {
-      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
-    }
-    elsif ($self->{LocalAddr} || $self->{Listen}) {
-      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_SERVER;
-    }
-    elsif ($self->{FD} >= 0) {
-      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_ACCEPTED;
-    }
-    else {
-      # Default is a client for UDP without PeerAddr
-      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
-    }
-    
   }
   
   protected method configure : void () {
