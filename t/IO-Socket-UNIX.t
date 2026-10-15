@@ -10,13 +10,9 @@ my $api = SPVM::api();
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
-use File::Temp ();
-my $tmp_dir = File::Temp->newdir;
-my $sock_path = "$tmp_dir/test.sock";
+ok(SPVM::TestCase::IO::Socket::UNIX->new);
 
-ok(SPVM::TestCase::IO::Socket::UNIX->new($sock_path));
-
-ok(SPVM::TestCase::IO::Socket::UNIX->accept($sock_path));
+ok(SPVM::TestCase::IO::Socket::UNIX->accept);
 
 $api->destroy_runtime_permanent_vars;
 

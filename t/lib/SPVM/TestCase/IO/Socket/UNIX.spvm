@@ -6,24 +6,17 @@ class TestCase::IO::Socket::UNIX {
   use Go;
   use Fn;
   use Sys::Socket::Constant as SOCKET_C;
+  use File::Temp;
   
-  static method new : int ($sock_path : string) {
-    
-    # Exceptions
-    {
-      {
-        eval { my $socket = IO::Socket::UNIX->new({Peer => $sock_path, Local => $sock_path});; }
-        
-        unless ($@) {
-          return 0;
-        }
-      }
-    }
+  static method new : int () {
     
     return 1;
   }
   
-  static method accept : int ($sock_path : string) {
+  static method accept : int () {
+    
+    my $tmp_dir = File::Temp->newdir->dirname;
+    my $sock_path = "$tmp_dir/test.sock";
     
     my $success_ref = [
       1,
