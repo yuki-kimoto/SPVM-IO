@@ -134,6 +134,10 @@ class IO::Socket::IP extends IO::Socket {
     if ($options->exists("V6Only")) {
       $self->{V6Only} = $options->{"V6Only"}->(byte);
     }
+    
+    if (exists $self->{Listen} && $options->exists("PeerAddr")) {
+      die "'Listen' and 'PeerAddr' options must not be specified togother.";
+    }
   }
   
   protected method configure : void () {

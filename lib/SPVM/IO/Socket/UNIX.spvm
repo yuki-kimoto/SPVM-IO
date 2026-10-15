@@ -56,6 +56,10 @@ class IO::Socket::UNIX extends IO::Socket {
     
     # Local option
     $self->{Local} = $options->get_or_default("Local", undef)->(string);
+    
+    if (exists $self->{Listen} && $options->exists("Peer")) {
+      die "'Listen' and 'Peer' options must not be specified togother.";
+    }
   }
   
   protected method configure : void () {
