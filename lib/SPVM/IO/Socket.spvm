@@ -123,13 +123,13 @@ class IO::Socket extends IO::Handle {
   
   method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
     my $fd = $self->{FD};
-    my $client_fd = -1;
-    my $client_sockaddr = (Sys::Socket::Sockaddr)undef;
+    my $accepted_fd = -1;
+    my $accepted_sockaddr = (Sys::Socket::Sockaddr)undef;
     
     while (1) {
       my $timeout_duration = $self->get_remaining_duration(0);
       
-      eval { $client_sockaddr = Sys->accept(\$client_fd, $fd); }
+      eval { $accepted_sockaddr = Sys->accept(\$accepted_fd, $fd); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_accept_again(Sys::Socket::Errno->errno);
         if ($again) {
@@ -144,17 +144,19 @@ class IO::Socket extends IO::Handle {
     }
     
     my $options = {
-      FD => $client_fd,
+      FD => $accepted_fd,
       Domain => $self->{Domain},
       Type => $self->{Type},
       Proto => $self->{Proto},
     };
     
     my $class = type_name $self;
-    my $client = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$options]);
-    if ($peer_ref) { $peer_ref->[0] = $client_sockaddr; }
+    my $accepted = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$options]);
+    if ($peer_ref) { $peer_ref->[0] = $accepted_sockaddr; }
     
-    return $client;
+    $self->{SocketCategory} = &SOCKET_CATEGORY_ACCEPTED;
+
+    return $accepted;
   }
   
   method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $offset : int = 0) {
@@ -287,6 +289,7 @@ class IO::Socket extends IO::Handle {
       }
       last;
     }
+    $self->{SocketCategory} = &SOCKET_CATEGORY_CLIENT;
   }
   
   protected method bind : void () {
@@ -305,6 +308,7 @@ class IO::Socket extends IO::Handle {
       }
       
       Sys->listen($fd, $listen);
+      $self->{SocketCategory} = &SOCKET_CATEGORY_SERVER;
     }
     else {
       die "'Listen' option not specified.'";
