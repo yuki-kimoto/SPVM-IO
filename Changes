@@ -1,4 +1,4 @@
-0.254 2026-10-09
+0.254 2026-10-15
   [Internal Changes]
     * Separate Sockaddr field to PeerSockaddr and LocalSockaddr fields.
     * Do not set and use SocketCategory.
@@ -17,6 +17,7 @@
   [Bug Fix]
     * Remove listen logic in UDP.
     * Call bind if Local is defined in IO::Socket::UNIX.
+    * Call bind if LocalAddr or LocalPort is defined in IO::Socket::IP.
   
 0.253 2026-10-09
   [New Features]
