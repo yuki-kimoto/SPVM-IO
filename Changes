@@ -1,3 +1,23 @@
+0.254 2026-10-09
+  [Internal Changes]
+    * Separate Sockaddr field to PeerSockaddr and LocalSockaddr fields.
+    * Do not set and use SocketCategory.
+    * Remove duplicate TCP settings.
+  [Requirement Changes]
+    * Require SPVM::Sys 0.583.
+    * Require SPVM::File::Temp for tests.
+  [New Features]
+    * Add IPv6 auto detection to IO::Socket::IP.
+    * Support UPD non connect client socket.
+  [Incompatible Changes]
+    * Remove Type detection from Proto in IO::Socket::IP.
+    * Fix listen logic. If Listen option exists, call listen.
+    * Set default listen backlog to SOMAXCONN if Listen option is zero or less.
+    * Move set_default_tcp_settings and set_default_udp_settings from IO::Socket to IO::Socket::IP.
+  [Bug Fix]
+    * Remove listen logic in UDP.
+    * Call bind if Local is defined in IO::Socket::UNIX.
+  
 0.253 2026-10-09
   [New Features]
     * Add IO::Pipe class.
