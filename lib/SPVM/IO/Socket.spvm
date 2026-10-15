@@ -70,6 +70,9 @@ class IO::Socket extends IO::Handle {
     # Listen option
     if ($options->exists("Listen")) {
       $self->{Listen} = $options->get("Listen")->(int);
+      if ($self->{Listen} <= 0) {
+        $self->{Listen} = SOCKET_C->SOMAXCONN;;
+      }
     }
     
     # Blocking option
@@ -303,7 +306,7 @@ class IO::Socket extends IO::Handle {
   }
   
   protected method listen : void () {
-    if (exists $self->{Listen}) {
+    if ($self->{Listen} > 0) {
       my $fd = $self->{FD};
       
       my $listen = $self->{Listen};
@@ -314,7 +317,7 @@ class IO::Socket extends IO::Handle {
       Sys->listen($fd, $listen);
     }
     else {
-      die "[Unexpected Error]'Listen' option not specified.'";
+      die "'Listen' option not specified.'";
     }
   }
   

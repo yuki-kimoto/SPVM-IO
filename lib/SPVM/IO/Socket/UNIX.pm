@@ -26,7 +26,7 @@ IO::Socket::UNIX class in L<SPVM> represents an UNIX domain socket.
   my $sock_path = "/tmp/test.sock";
   my $socket = IO::Socket::UNIX->new({
     Local => $sock_path,
-    Listen    => 5,
+    Listen    => 0,
   });
 
 =head1 Super Class

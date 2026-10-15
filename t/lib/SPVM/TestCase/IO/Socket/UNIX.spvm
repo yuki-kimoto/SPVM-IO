@@ -5,7 +5,7 @@ class TestCase::IO::Socket::UNIX {
   use Go::Sync::WaitGroup;
   use Go;
   use Fn;
-  use Sys::Socket::Constant as SOCKET;
+  use Sys::Socket::Constant as SOCKET_C;
   
   static method new : int ($sock_path : string) {
     
@@ -45,6 +45,11 @@ class TestCase::IO::Socket::UNIX {
         Local => $sock_path,
         Listen    => 0,
       });
+      
+      unless (Fn->contains(dump $server_socket, SOCKET_C->SOMAXCONN)) {
+        diag;
+        $success_ref->[0] = 0;
+      }
       
       $wait_server_start_ch->write(1);
       

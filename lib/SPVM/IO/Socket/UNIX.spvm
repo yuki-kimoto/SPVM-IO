@@ -86,7 +86,7 @@ class IO::Socket::UNIX extends IO::Socket {
       $self->bind;
     }
     
-    if (exists $self->{Listen}) {
+    if ($self->{Listen} > 0) {
       $self->listen;
     }
     
