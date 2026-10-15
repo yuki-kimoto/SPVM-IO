@@ -36,7 +36,7 @@ ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
 
 # TODO(UPD tests failed in Windows)
 
-# ok(SPVM::TestCase::IO::Socket::IP->udp);
+ok(SPVM::TestCase::IO::Socket::IP->udp);
 
 # ok(SPVM::TestCase::IO::Socket::IP->udp_sendto);
 
