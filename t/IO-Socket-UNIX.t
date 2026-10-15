@@ -14,6 +14,8 @@ ok(SPVM::TestCase::IO::Socket::UNIX->new);
 
 ok(SPVM::TestCase::IO::Socket::UNIX->accept);
 
+ok(SPVM::TestCase::IO::Socket::UNIX->dgram);
+
 $api->destroy_runtime_permanent_vars;
 
 my $end_memory_blocks_count = $api->get_memory_blocks_count;
