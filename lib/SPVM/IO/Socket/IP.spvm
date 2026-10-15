@@ -177,6 +177,7 @@ class IO::Socket::IP extends IO::Socket {
     if ($local_address || exists $self->{LocalPort}) {
       my $sockaddr = $self->create_sockaddr($local_address, $local_port);
       $self->{LocalSockaddr} = $sockaddr;
+      # bind must before connect
       $self->bind;
     }
     
@@ -349,8 +350,8 @@ class IO::Socket::IP extends IO::Socket {
   
   protected method set_default_udp_settings : void () {
     
-    # Disable UDP connection reset on Windows
-    if (Sys::OS->is_windows) {
+    # Disable UDP connection reset on Windows for IPv4 sockets only
+    if (Sys::OS->is_windows && $self->{Domain} == SOCKET_C->AF_INET) {
       my $SIO_UDP_CONNRESET = 0x98000007;
       my $optval = 0;
       $self->ioctl($SIO_UDP_CONNRESET, [$optval]);
