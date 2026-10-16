@@ -1,3 +1,13 @@
+0.254 2026-10-16
+  [Test Improvement]
+    * Add DGRAM tests in IO::SocketIP and IO::Socket::UNIX.
+  [Requirement Changes]
+    * Require SPVM::Sys 0.584.
+  [Changes]
+    * Add Listen and PeerAddr validation in IO::Socket::IP.
+    * Add Listen and Peer validation in IO::Socket::UNIX.
+  [Internal Changes]
+    * Set SocketCategory again.
 0.254 2026-10-15
   [Internal Changes]
     * Separate Sockaddr field to PeerSockaddr and LocalSockaddr fields.
