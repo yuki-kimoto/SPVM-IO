@@ -135,7 +135,14 @@ class IO::Socket::IP extends IO::Socket {
       $self->{V6Only} = $options->{"V6Only"}->(byte);
     }
     
-    if (exists $self->{Listen} && $options->exists("PeerAddr")) {
+    if (exists $self->{Listen}) {
+      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_SERVER;
+    }
+    elsif (exists $self->{PeerAddr}) {
+      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
+    }
+    
+    if (exists $self->{Listen} && exists $self->{PeerAddr}) {
       die "'Listen' and 'PeerAddr' options must not be specified togother.";
     }
   }

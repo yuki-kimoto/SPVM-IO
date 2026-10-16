@@ -71,7 +71,7 @@ class IO::Socket extends IO::Handle {
     if ($options->exists("Listen")) {
       $self->{Listen} = $options->get("Listen")->(int);
       if ($self->{Listen} <= 0) {
-        $self->{Listen} = SOCKET_C->SOMAXCONN;;
+        $self->{Listen} = SOCKET_C->SOMAXCONN;
       }
     }
     
@@ -155,7 +155,7 @@ class IO::Socket extends IO::Handle {
     if ($peer_ref) { $peer_ref->[0] = $accepted_sockaddr; }
     
     $self->{SocketCategory} = &SOCKET_CATEGORY_ACCEPTED;
-
+    
     return $accepted;
   }
   
@@ -289,7 +289,6 @@ class IO::Socket extends IO::Handle {
       }
       last;
     }
-    $self->{SocketCategory} = &SOCKET_CATEGORY_CLIENT;
   }
   
   protected method bind : void () {
@@ -308,7 +307,6 @@ class IO::Socket extends IO::Handle {
       }
       
       Sys->listen($fd, $listen);
-      $self->{SocketCategory} = &SOCKET_CATEGORY_SERVER;
     }
     else {
       die "'Listen' option not specified.'";
