@@ -1,4 +1,4 @@
-0.254 2026-10-16
+0.255 2026-10-16
   [Test Improvement]
     * Add DGRAM tests in IO::SocketIP and IO::Socket::UNIX.
   [Requirement Changes]
