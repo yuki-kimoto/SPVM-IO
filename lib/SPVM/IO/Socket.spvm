@@ -116,7 +116,7 @@ class IO::Socket extends IO::Handle {
       die "This socket is not opened or already closed.";
     }
     my $fd = $self->{FD};
-    Go->gosched_io_cancel($fd);
+    Go->gosched_poll_cancel($fd);
     Sys::Socket->close($fd);
     $self->{FD} = -1;
   }
