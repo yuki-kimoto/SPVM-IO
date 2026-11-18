@@ -17,6 +17,7 @@ class IO::Handle {
   use Sys::OS;
   use Sys::Socket::Util;
   use Go::Time;
+  use Go::Context;
   
   # Fields
   has FD : protected int;
@@ -28,6 +29,8 @@ class IO::Handle {
   has ReadDeadline : Go::Time;
   
   has WriteDeadline : Go::Time;
+  
+  has Context : Go::Context;
   
   # Class Methods
   
@@ -54,6 +57,10 @@ class IO::Handle {
       $self->{WriteDeadline} = $options->get("WriteDeadline")->(Go::Time);
     }
     
+    # Context
+    if ($options->exists("Context")) {
+      $self->{Context} = $options->get("Context")->(Go::Context);
+    }
   }
   
   method option_names : string[] () {
@@ -63,6 +70,7 @@ class IO::Handle {
       "Timeout",
       "ReadDeadline",
       "WriteDeadline",
+      "Context",
     ];
     
     return $option_names;

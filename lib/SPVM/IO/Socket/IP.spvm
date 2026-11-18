@@ -167,6 +167,8 @@ class IO::Socket::IP extends IO::Socket {
     
     my $fd = $self->{FD};
     
+    my $context = $self->{Context};
+    
     unless ($fd >= 0) {
       $self->socket;
     }
@@ -195,7 +197,12 @@ class IO::Socket::IP extends IO::Socket {
     if ($peer_address) {
       my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
       $self->{PeerSockaddr} = $sockaddr;
-      $self->connect;
+      if ($self->{Context}) {
+        $self->connect_v2($self->{Context});
+      }
+      else {
+        $self->connect;
+      }
     }
     
     my $type = $self->socktype;
