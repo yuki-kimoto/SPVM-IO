@@ -31,19 +31,19 @@ class IO::Socket extends IO::Handle {
   }
   
   # Fields
-  has SocketCategory : int;
+  has socket_category : int;
   
-  has Domain : protected int;
+  has domain : protected int;
   
-  has Type : protected int;
+  has type : protected int;
   
-  has Proto : protected int;
+  has proto : protected int;
   
-  has Listen : protected int;
+  has listen : protected int;
   
-  has LocalSockaddr : protected Sys::Socket::Sockaddr;
+  has local_sockaddr : protected Sys::Socket::Sockaddr;
   
-  has PeerSockaddr : protected Sys::Socket::Sockaddr;
+  has peer_sockaddr : protected Sys::Socket::Sockaddr;
   
   # Instance Methods
   protected method init : void ($options : object[] = undef) {
@@ -54,24 +54,24 @@ class IO::Socket extends IO::Handle {
     
     # Domain option
     if ($options->exists("Domain")) {
-      $self->{Domain} = $options->get("Domain")->(int);
+      $self->{domain} = $options->get("Domain")->(int);
     }
     
     # Proto option
     if ($options->exists("Proto")) {
-      $self->{Proto} = $options->get("Proto")->(int);
+      $self->{proto} = $options->get("Proto")->(int);
     }
     
     # Type option
     if ($options->exists("Type")) {
-      $self->{Type} = $options->get("Type")->(int);
+      $self->{type} = $options->get("Type")->(int);
     }
     
     # Listen option
     if ($options->exists("Listen")) {
-      $self->{Listen} = $options->get("Listen")->(int);
-      if ($self->{Listen} <= 0) {
-        $self->{Listen} = SOCKET_C->SOMAXCONN;
+      $self->{listen} = $options->get("Listen")->(int);
+      if ($self->{listen} <= 0) {
+        $self->{listen} = SOCKET_C->SOMAXCONN;
       }
     }
     
@@ -95,19 +95,19 @@ class IO::Socket extends IO::Handle {
   }
 
   method sockdomain : int () {
-    return $self->{Domain};
+    return $self->{domain};
   }
   
   method socktype : int (){
-    return $self->{Type};
+    return $self->{type};
   }
   
   method protocol : int () {
-    return $self->{Proto};
+    return $self->{proto};
   }
   
   method shutdown : void ($how : int) {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     Sys->shutdown($fd, $how);
   }
   
@@ -115,14 +115,14 @@ class IO::Socket extends IO::Handle {
     unless ($self->opened) {
       die "This socket is not opened or already closed.";
     }
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     Go->gosched_poll_cancel($fd);
     Sys::Socket->close($fd);
-    $self->{FD} = -1;
+    $self->{fd} = -1;
   }
   
   method accept : IO::Socket ($context : Go::Context, $peer_ref : Sys::Socket::Sockaddr[] = undef) {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     my $accepted_fd = -1;
     my $accepted_sockaddr = (Sys::Socket::Sockaddr)undef;
     
@@ -146,23 +146,23 @@ class IO::Socket extends IO::Handle {
     my $options = {
       Context => Go->bg,
       FD => $accepted_fd,
-      Domain => $self->{Domain},
-      Type => $self->{Type},
-      Proto => $self->{Proto},
+      Domain => $self->{domain},
+      Type => $self->{type},
+      Proto => $self->{proto},
     };
     
     my $class = type_name $self;
     my $accepted = (IO::Socket)Native::MethodCall->call_class_method($class, "new", [(object)$options]);
     if ($peer_ref) { $peer_ref->[0] = $accepted_sockaddr; }
     
-    $self->{SocketCategory} = &SOCKET_CATEGORY_ACCEPTED;
+    $self->{socket_category} = &SOCKET_CATEGORY_ACCEPTED;
     
     return $accepted;
   }
   
   method recvfrom : int ($context : Go::Context, $buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $offset : int = 0) {
     unless ($length >= 0) { $length = length $buffer; }
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     my $recv_length = -1;
     while (1) {
       $context = $self->get_context_with_deadline($context, 0);
@@ -185,7 +185,7 @@ class IO::Socket extends IO::Handle {
   
   method sendto : int ($context : Go::Context, $buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $offset : int = 0) {
     unless ($length >= 0) { $length = length $buffer; }
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     my $send_length = -1;
     while (1) {
       $context = $self->get_context_with_deadline($context, 0);
@@ -222,12 +222,12 @@ class IO::Socket extends IO::Handle {
   }
   
   method sockname : Sys::Socket::Sockaddr () {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     return Sys->getsockname($fd);
   }
   
   method peername : Sys::Socket::Sockaddr () {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     return Sys->getpeername($fd);
   }
   
@@ -238,32 +238,32 @@ class IO::Socket extends IO::Handle {
   }
   
   method atmark : int () {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     return Sys::Socket->sockatmark($fd);
   }
   
   method sockopt : string ($level : int, $option_name : int) {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     return Sys->getsockopt($fd, $level, $option_name);
   }
   
   method setsockopt : void ($level : int, $option_name : int, $option_value : object of string|Int) {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     Sys->setsockopt($fd, $level, $option_name, $option_value);
   }
   
   protected method socket : void () {
-    my $domain = $self->{Domain};
-    my $type = $self->{Type};
-    my $protocol = $self->{Proto};
+    my $domain = $self->{domain};
+    my $type = $self->{type};
+    my $protocol = $self->{proto};
     my $fd = -1;
     Sys->socket(\$fd, $domain, $type, $protocol);
-    $self->{FD} = $fd;
+    $self->{fd} = $fd;
   }
   
   protected method connect : void ($context : Go::Context) {
-    my $fd = $self->{FD};
-    my $sockaddr = $self->{PeerSockaddr};
+    my $fd = $self->{fd};
+    my $sockaddr = $self->{peer_sockaddr};
     
     while (1) {
       $context = $self->get_context_with_deadline($context, 0);
@@ -284,16 +284,16 @@ class IO::Socket extends IO::Handle {
   }
   
   protected method bind : void () {
-    my $sockaddr = $self->{LocalSockaddr};
-    my $fd = $self->{FD};
+    my $sockaddr = $self->{local_sockaddr};
+    my $fd = $self->{fd};
     Sys->bind($fd, $sockaddr);
   }
   
   protected method listen : void () {
-    if ($self->{Listen} > 0) {
-      my $fd = $self->{FD};
+    if ($self->{listen} > 0) {
+      my $fd = $self->{fd};
       
-      my $listen = $self->{Listen};
+      my $listen = $self->{listen};
       if ($listen <= 0) {
         $listen = SOCKET_C->SOMAXCONN;
       }

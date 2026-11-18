@@ -37,15 +37,15 @@ L<IO::Socket|SPVM::IO::Socket>
 
 =head1 Fields
 
-=head2 Local
+=head2 local
 
-C<has Local : string;>
+C<has local : string;>
 
 A local path.
 
-=head2 Peer
+=head2 peer
 
-C<has Peer : string;>
+C<has peer : string;>
 
 A peer path.
 
@@ -59,11 +59,11 @@ Creates a new L<IO::Socket::UNIX|SPVM::IO::Socket::UNIX> object given the option
 
 This object represents a UNIX domain socket.
 
-If L</"Peer"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
+If L</"peer"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
 
-If L</"Listen"> field is specified, this object becomes a server socket and calls the L<listen|SPVM::IO::Socket/"listen"> method. If the value of C<Listen> is 0 or less, C<SOMAXCONN> is used.
+If L</"listen"> field is specified, this object becomes a server socket and calls the L<listen|SPVM::IO::Socket/"listen"> method. If the value of C<Listen> is 0 or less, C<SOMAXCONN> is used.
 
-The L<bind|SPVM::IO::Socket/"bind"> method is called when the L</"Local"> field is specified.
+The L<bind|SPVM::IO::Socket/"bind"> method is called when the L</"local"> field is specified.
 
 See L</"init"> method about the options $options.
 
@@ -87,19 +87,19 @@ The following options are available adding the options for L<IO::Socket#init|SPV
 
 =item * C<Peer> : string = undef
 
-L</"Peer"> field is set to this value.
+L</"peer"> field is set to this value.
 
 =item * C<Local> : string = undef
 
-L</"Local"> field is set to this value.
+L</"local"> field is set to this value.
 
 =back
 
-L<Domain|IO::Socket#Domain> field is always set to C<AF_UNIX>.
+L<domain|IO::Socket#domain> field is always set to C<AF_UNIX>.
 
-L<Type|IO::Socket#Type> field is set to C<SOCK_STREAM> if C<Type> option is not specified.
+L<type|IO::Socket#type> field is set to C<SOCK_STREAM> if C<Type> option is not specified.
 
-L<Proto|IO::Socket#Proto> field is always set to 0.
+L<proto|IO::Socket#proto> field is always set to 0.
 
 =head2 hostpath
 
@@ -154,4 +154,3 @@ Yes, if Windows is recent.
 Copyright (c) 2023 Yuki Kimoto
 
 MIT License
-

@@ -12,21 +12,21 @@ class IO::Socket::IP extends IO::Socket {
   use IO::Socket::IP::Import::IPv6;
   
   # Fields
-  has LocalAddr : protected string;
+  has local_addr : protected string;
   
-  has LocalPort : protected int;
+  has local_port : protected int;
   
-  has PeerAddr : protected string;
+  has peer_addr : protected string;
   
-  has PeerPort : protected int;
+  has peer_port : protected int;
   
-  has ReuseAddr : protected byte;
+  has reuse_addr : protected byte;
   
-  has ReusePort : protected byte;
+  has reuse_port : protected byte;
   
-  has Broadcast : protected byte;
+  has broadcast : protected byte;
   
-  has V6Only : byte;
+  has v6_only : byte;
   
   # Class Methods
   static method new : IO::Socket::IP ($options : object[] = undef) {
@@ -97,77 +97,77 @@ class IO::Socket::IP extends IO::Socket {
     
     # LocalAddr
     if ($options->exists("LocalAddr")) {
-      $self->{LocalAddr} = $options->get("LocalAddr")->(string);
+      $self->{local_addr} = $options->get("LocalAddr")->(string);
     }
     
     # LocalPort
     if ($options->exists("LocalPort")) {
-      $self->{LocalPort} = $options->get("LocalPort")->(int);
+      $self->{local_port} = $options->get("LocalPort")->(int);
     }
     
     # PeerAddr
     if ($options->exists("PeerAddr")) {
-      $self->{PeerAddr} = $options->get("PeerAddr")->(string);
+      $self->{peer_addr} = $options->get("PeerAddr")->(string);
     }
     
     # PeerPort
     if ($options->exists("PeerPort")) {
-      $self->{PeerPort} = $options->get("PeerPort")->(int);
+      $self->{peer_port} = $options->get("PeerPort")->(int);
     }
     
     # ReuseAddr
     if ($options->exists("ReuseAddr")) {
-      $self->{ReuseAddr} = $options->get("ReuseAddr")->(byte);
+      $self->{reuse_addr} = $options->get("ReuseAddr")->(byte);
     }
     
     # ReusePort
     if ($options->exists("ReusePort")) {
-      $self->{ReusePort} = $options->get("ReusePort")->(byte);
+      $self->{reuse_port} = $options->get("ReusePort")->(byte);
     }
     
     # Broadcast
     if ($options->exists("Broadcast")) {
-      $self->{Broadcast} = $options->get("Broadcast")->(byte);
+      $self->{broadcast} = $options->get("Broadcast")->(byte);
     }
     
     # V6Only option
     if ($options->exists("V6Only")) {
-      $self->{V6Only} = $options->{"V6Only"}->(byte);
+      $self->{v6_only} = $options->{"V6Only"}->(byte);
     }
     
-    if (exists $self->{Listen}) {
-      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_SERVER;
+    if (exists $self->{listen}) {
+      $self->{socket_category} = IO::Socket->SOCKET_CATEGORY_SERVER;
     }
-    elsif (exists $self->{PeerAddr}) {
-      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
+    elsif (exists $self->{peer_addr}) {
+      $self->{socket_category} = IO::Socket->SOCKET_CATEGORY_CLIENT;
     }
     
-    if (exists $self->{Listen} && exists $self->{PeerAddr}) {
+    if (exists $self->{listen} && exists $self->{peer_addr}) {
       die "'Listen' and 'PeerAddr' options must not be specified togother.";
     }
   }
   
   protected method configure : void () {
     
-    my $reuse_addr = $self->{ReuseAddr};
+    my $reuse_addr = $self->{reuse_addr};
     
-    my $reuse_port = $self->{ReusePort};
+    my $reuse_port = $self->{reuse_port};
     
-    my $broadcast = $self->{Broadcast};
+    my $broadcast = $self->{broadcast};
     
-    my $peer_address = $self->{PeerAddr};
+    my $peer_address = $self->{peer_addr};
     
-    my $peer_port = $self->{PeerPort};
+    my $peer_port = $self->{peer_port};
     
-    my $local_address = $self->{LocalAddr};
+    my $local_address = $self->{local_addr};
     
-    my $local_port = $self->{LocalPort};
+    my $local_port = $self->{local_port};
     
-    my $listen = $self->{Listen};
+    my $listen = $self->{listen};
     
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
-    my $context = $self->{Context};
+    my $context = $self->{context};
     
     unless ($fd >= 0) {
       $self->socket;
@@ -183,25 +183,25 @@ class IO::Socket::IP extends IO::Socket {
     if ($broadcast) {
       $self->setsockopt(SOCKET_C->SOL_SOCKET, SOCKET_C->SO_BROADCAST, 1);
     }
-    if (exists $self->{V6Only}) {
-      $self->setsockopt(SOCKET_C->IPPROTO_IPV6, SOCKET_C->IPV6_V6ONLY, !!$self->{V6Only});
+    if (exists $self->{v6_only}) {
+      $self->setsockopt(SOCKET_C->IPPROTO_IPV6, SOCKET_C->IPV6_V6ONLY, !!$self->{v6_only});
     }
     
-    if ($local_address || exists $self->{LocalPort}) {
+    if ($local_address || exists $self->{local_port}) {
       my $sockaddr = $self->create_sockaddr($local_address, $local_port);
-      $self->{LocalSockaddr} = $sockaddr;
+      $self->{local_sockaddr} = $sockaddr;
       # bind must before connect
       $self->bind;
     }
     
-    unless ($self->{Context}) {
+    unless ($self->{context}) {
       die "Context must be defined. You perhaps forget to specify 'Context' option.";
     }
     
     if ($peer_address) {
       my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
-      $self->{PeerSockaddr} = $sockaddr;
-      $self->connect($self->{Context});
+      $self->{peer_sockaddr} = $sockaddr;
+      $self->connect($self->{context});
     }
     
     my $type = $self->socktype;
@@ -212,7 +212,7 @@ class IO::Socket::IP extends IO::Socket {
     # This must be after calling connect method because Mac does not support non-blocking mode to non-connected socket.
     $self->set_blocking(0);
     
-    if ($self->{Listen} > 0) {
+    if ($self->{listen} > 0) {
       $self->listen;
     }
   }
@@ -222,7 +222,7 @@ class IO::Socket::IP extends IO::Socket {
     
     my $in_addr_base = (Sys::Socket::In_addr_base)undef;
     
-    my $domain = $self->{Domain};
+    my $domain = $self->{domain};
     if ($domain == SOCKET_C->AF_INET) {
       $in_addr_base = $self->IO::Socket::IP::Import::IPv4::sockaddr;
     }
@@ -240,7 +240,7 @@ class IO::Socket::IP extends IO::Socket {
     
     my $sockhost = (string)undef;
     
-    my $domain = $self->{Domain};
+    my $domain = $self->{domain};
     if ($domain == SOCKET_C->AF_INET) {
       $sockhost = $self->IO::Socket::IP::Import::IPv4::sockhost;
     }
@@ -258,7 +258,7 @@ class IO::Socket::IP extends IO::Socket {
     
     my $sockport = -1;;
     
-    my $domain = $self->{Domain};
+    my $domain = $self->{domain};
     if ($domain == SOCKET_C->AF_INET) {
       $sockport = $self->IO::Socket::IP::Import::IPv4::sockport;
     }
@@ -276,7 +276,7 @@ class IO::Socket::IP extends IO::Socket {
     
     my $in_addr_base = (Sys::Socket::In_addr_base)undef;
     
-    my $domain = $self->{Domain};
+    my $domain = $self->{domain};
     if ($domain == SOCKET_C->AF_INET) {
       $in_addr_base = $self->IO::Socket::IP::Import::IPv4::peeraddr;
     }
@@ -294,7 +294,7 @@ class IO::Socket::IP extends IO::Socket {
     
     my $peerhost = (string)undef;
     
-    my $domain = $self->{Domain};
+    my $domain = $self->{domain};
     if ($domain == SOCKET_C->AF_INET) {
       $peerhost = $self->IO::Socket::IP::Import::IPv4::peerhost;
     }
@@ -312,7 +312,7 @@ class IO::Socket::IP extends IO::Socket {
     
     my $peerport = -1;;
     
-    my $domain = $self->{Domain};
+    my $domain = $self->{domain};
     if ($domain == SOCKET_C->AF_INET) {
       $peerport = $self->IO::Socket::IP::Import::IPv4::peerport;
     }
@@ -334,7 +334,7 @@ class IO::Socket::IP extends IO::Socket {
     
     my $sockaddr = (Sys::Socket::Sockaddr)undef;
     
-    my $domain = $self->{Domain};
+    my $domain = $self->{domain};
     if ($domain == SOCKET_C->AF_INET) {
       $sockaddr = $self->IO::Socket::IP::Import::IPv4::create_sockaddr($address, $port);
     }
@@ -349,7 +349,7 @@ class IO::Socket::IP extends IO::Socket {
   }
   
   protected method set_default_tcp_settings : void () {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     # 1. Disable Nagle's algorithm (TCP_NODELAY) as Go does by default.
     my $tcp_nodelay = 1;

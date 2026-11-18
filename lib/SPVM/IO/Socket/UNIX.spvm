@@ -9,9 +9,9 @@ class IO::Socket::UNIX extends IO::Socket {
   use Array;
   
   # Fields
-  has Local : string;
+  has local : string;
   
-  has Peer : string;
+  has peer : string;
   
   # Class Methods
   static method new : IO::Socket::UNIX ($options : object[] = undef) {
@@ -53,37 +53,37 @@ class IO::Socket::UNIX extends IO::Socket {
     
     # Peer option
     if ($options->exists("Peer")) {
-      $self->{Peer} = $options->get("Peer")->(string);
+      $self->{peer} = $options->get("Peer")->(string);
     }
     
     # Local option
     if ($options->exists("Local")) {
-      $self->{Local} = $options->get("Local")->(string);
+      $self->{local} = $options->get("Local")->(string);
     }
     
-    if (exists $self->{Listen}) {
-      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_SERVER;
+    if (exists $self->{listen}) {
+      $self->{socket_category} = IO::Socket->SOCKET_CATEGORY_SERVER;
     }
-    elsif (exists $self->{Peer}) {
-      $self->{SocketCategory} = IO::Socket->SOCKET_CATEGORY_CLIENT;
+    elsif (exists $self->{peer}) {
+      $self->{socket_category} = IO::Socket->SOCKET_CATEGORY_CLIENT;
     }
     
-    if (exists $self->{Listen} && exists $self->{Peer}) {
+    if (exists $self->{listen} && exists $self->{peer}) {
       die "'Listen' and 'Peer' options must not be specified togother.";
     }
   }
   
   protected method configure : void () {
     
-    my $peer = $self->{Peer};
+    my $peer = $self->{peer};
     
-    my $local = $self->{Local};
+    my $local = $self->{local};
     
-    my $listen = $self->{Listen};
+    my $listen = $self->{listen};
     
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
-    unless ($self->{Context}) {
+    unless ($self->{context}) {
       die "Context must be defined. You perhaps forget to specify 'Context' option.";
     }
     
@@ -93,21 +93,21 @@ class IO::Socket::UNIX extends IO::Socket {
     
     if ($local) {
       my $sockaddr = 
-      $self->{LocalSockaddr} = Sys::Socket::Util->sockaddr_un($local);
+      $self->{local_sockaddr} = Sys::Socket::Util->sockaddr_un($local);
       # bind mube be before connect
       $self->bind;
     }
     
     if ($peer) {
       my $sockaddr = Sys::Socket::Util->sockaddr_un($peer);
-      $self->{PeerSockaddr} = $sockaddr;
-      $self->connect($self->{Context});
+      $self->{peer_sockaddr} = $sockaddr;
+      $self->connect($self->{context});
     }
     
     # This must be after calling connect method because Mac does not support non-blocking mode to non-connected socket.
     $self->set_blocking(0);
     
-    if ($self->{Listen} > 0) {
+    if ($self->{listen} > 0) {
       $self->listen;
     }
   }

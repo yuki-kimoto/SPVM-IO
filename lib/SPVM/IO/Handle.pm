@@ -26,33 +26,33 @@ This class is a Perl's L<IO::Handle> porting.
 
 =head1 Fields
 
-=head2 FD
+=head2 fd
 
-C<has FD : protected int;>
+C<has fd : protected int;>
 
 A file descriptor.
 
-=head2 Blocking
+=head2 blocking
 
-C<has Blocking : protected byte;>
+C<has blocking : protected byte;>
 
 A flag for blocking IO.
 
-=head2 Context
+=head2 context
 
-C<has Context : L<Go::Context|SPVM::Go::Context>;>
+C<has context : L<Go::Context|SPVM::Go::Context>;>
 
 Context.
 
-=head2 ReadDeadline
+=head2 read_deadline
 
-C<has ReadDeadline : protected L<Go::Time|SPVM::Go::Time>;>
+C<has read_deadline : protected L<Go::Time|SPVM::Go::Time>;>
 
 An B<absolute deadline> for read operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
-=head2 WriteDeadline
+=head2 write_deadline
 
-C<has WriteDeadline : protected L<Go::Time|SPVM::Go::Time>;>
+C<has write_deadline : protected L<Go::Time|SPVM::Go::Time>;>
 
 An B<absolute deadline> for write operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
@@ -72,11 +72,11 @@ Options:
 
 =item * C<FD : Int = -1>
 
-L</"FD"> field is set to this value.
+L</"fd"> field is set to this value.
 
 =item * C<Blocking : Int = 1>
 
-L</"Blocking"> field is set to this value.
+L</"blocking"> field is set to this value.
 
 If this value is 0, L</"set_blocking"> method is called with 0.
 
@@ -86,35 +86,35 @@ If this value is 0, L</"set_blocking"> method is called with 0.
 
 C<method fileno : int ();>
 
-Returns the value of L</"FD"> field.
+Returns the value of L</"fd"> field.
 
 =head2 opened
 
 C<method opened : int ();>
 
-If L</"FD"> is greater than or equal to 0, returns 1. Otherwise returns 0.
+If L</"fd"> is greater than or equal to 0, returns 1. Otherwise returns 0.
 
 =head2 blocking
 
 C<method blocking : int ();>
 
-Retruns the value of L</"Blocking"> field.
+Retruns the value of L</"blocking"> field.
 
 =head2 set_blocking
 
 C<method set_blocking : void ($blocking : int);>
 
-If $blocking is a false value and L</"Blocking"> field is a true value, enables the non-blocking mode of the file descriptor L</"FD">.
+If $blocking is a false value and L</"blocking"> field is a true value, enables the non-blocking mode of the file descriptor L</"fd">.
 
-If $blocking is a true value and L</"Blocking"> field is a false value, disables the non-blocking mode of the file descriptor L</"FD">.
+If $blocking is a true value and L</"blocking"> field is a false value, disables the non-blocking mode of the file descriptor L</"fd">.
 
-And sets L</"Blocking"> field to $blocking.
+And sets L</"blocking"> field to $blocking.
 
 =head2 close
 
 C<method close : int ();>
 
-Closes the handle associated with the file descriptoer L</"FD">.
+Closes the handle associated with the file descriptoer L</"fd">.
 
 This method is implemented in a child class.
 
@@ -122,7 +122,7 @@ This method is implemented in a child class.
 
 C<method sysread : int ($context : Go::Context, $string : mutable string, $length : int = -1, $offset : int = 0);>
 
-Reads the length $length of data from the stream associated with the file descriptoer L</"FD"> and store it to the offset $offset position of the string $string.
+Reads the length $length of data from the stream associated with the file descriptoer L</"fd"> and store it to the offset $offset position of the string $string.
 
 And returns the read length.
 
@@ -130,7 +130,7 @@ And returns the read length.
 
 C<method syswrite : int ($context : Go::Context, $string : string, $length : int = -1, $offset : int = 0);>
 
-Writes the length $length from the offset $offset of the string $string to the stream associated with the file descriptoer L</"FD">.
+Writes the length $length from the offset $offset of the string $string to the stream associated with the file descriptoer L</"fd">.
 
 And returns the write length.
 
@@ -138,25 +138,25 @@ And returns the write length.
 
 C<method stat : Sys::IO::Stat ();>
 
-Calls L<Sys#stat|SPVM::Sys/"stat"> method with the file descriptor L</"FD">, and returns the return value.
+Calls L<Sys#stat|SPVM::Sys/"stat"> method with the file descriptor L</"fd">, and returns the return value.
 
 =head2 fcntl
 
 C<method fcntl : int ($command : int, $command_arg : object = undef of Int|Sys::IO::Flock|object);>
 
-Calls L<Sys#fcntl|SPVM::Sys/"fcntl"> method with the file descriptor L</"FD">, and returns the return value.
+Calls L<Sys#fcntl|SPVM::Sys/"fcntl"> method with the file descriptor L</"fd">, and returns the return value.
 
 =head2 ioctl
 
 C<static method ioctl : int ($fd : int, $request : int, $request_arg_ref : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef);>
 
-Calls L<Sys#ioctl|SPVM::Sys/"ioctl"> method with the file descriptor L</"FD">, and returns the return value.
+Calls L<Sys#ioctl|SPVM::Sys/"ioctl"> method with the file descriptor L</"fd">, and returns the return value.
 
 =head2 sync
 
 C<method sync : void ();>
 
-Syncs the stream associated with the file descriptoer L</"FD">.
+Syncs the stream associated with the file descriptoer L</"fd">.
 
 This method is implemented in a child class.
 
@@ -164,7 +164,7 @@ This method is implemented in a child class.
 
 C<method truncate : void ($legnth : long);>
 
-Trancates the stream associated with the file descriptoer L</"FD">.
+Trancates the stream associated with the file descriptoer L</"fd">.
 
 This method is implemented in a child class.
 
@@ -172,31 +172,31 @@ This method is implemented in a child class.
 
 C<method set_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
 
-Sets both L</"ReadDeadline"> and L</"WriteDeadline"> fields to C<$deadline>.
+Sets both L</"read_deadline"> and L</"write_deadline"> fields to C<$deadline>.
 
 =head2 read_deadline
 
 C<method read_deadline : L<Go::Time|SPVM::Go::Time> ();>
 
-Returns the value of L</"ReadDeadline"> field.
+Returns the value of L</"read_deadline"> field.
 
 =head2 set_read_deadline
 
 C<method set_read_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
 
-Sets L</"ReadDeadline"> field to $deadline.
+Sets L</"read_deadline"> field to $deadline.
 
 =head2 write_deadline
 
 C<method write_deadline : L<Go::Time|SPVM::Go::Time> ();>
 
-Returns the value of L</"WriteDeadline"> field.
+Returns the value of L</"write_deadline"> field.
 
 =head2 set_write_deadline
 
 C<method set_write_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
 
-Sets L</"WriteDeadline"> field to $deadline.
+Sets L</"write_deadline"> field to $deadline.
 
 =head2 DESTROY
 
@@ -235,4 +235,3 @@ If this handle is opened(L</"opened"> method returns a true value), closes the h
 Copyright (c) 2023 Yuki Kimoto
 
 MIT License
-

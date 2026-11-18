@@ -26,7 +26,7 @@ class IO::Pipe::End extends IO::Handle {
       $length = length $string;
     }
     
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     $context = $self->get_context_with_deadline($context, 0);
     my $read_length = Go->gosched_pipe_read($context, $fd, $string, $length, $offset);
@@ -40,7 +40,7 @@ class IO::Pipe::End extends IO::Handle {
       $length = length $string;
     }
     
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     $context = $self->get_context_with_deadline($context, 1);
     my $write_length = Go->gosched_pipe_write($context, $fd, $string, $length, $offset);
@@ -53,10 +53,10 @@ class IO::Pipe::End extends IO::Handle {
       die "This socket is not opened or already closed.";
     }
     
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     Go->gosched_pipe_cancel($fd);
     Sys::Socket->close($fd);
-    $self->{FD} = -1;
+    $self->{fd} = -1;
   }
   
 }

@@ -11,11 +11,11 @@ class IO::File extends IO::Handle {
   use Sys::IO::Constant as IO;
   
   # Fields
-  has FileStream : Sys::IO::FileStream;
+  has file_stream : Sys::IO::FileStream;
   
-  has InputLineNumber : long;
+  has input_line_number : long;
   
-  has AutoFlush : protected byte;
+  has auto_flush : protected byte;
   
   # Class methods
   static method new : IO::File ($file_name : string = undef, $open_mode : object of string|Int = undef, $perms : int = -1) {
@@ -48,7 +48,7 @@ class IO::File extends IO::Handle {
   }
   
   method input_line_number : long () {
-    return $self->{InputLineNumber};
+    return $self->{input_line_number};
   }
   
   method open : void ($file_name : string, $open_mode : object of string|Int = undef, $perms : int = -1) {
@@ -85,11 +85,11 @@ class IO::File extends IO::Handle {
     
     my $file_stream = $file_stream_ref->[0];
     
-    $self->{FileStream} = $file_stream;
+    $self->{file_stream} = $file_stream;
     
     my $fd = Sys->fileno($file_stream);
     
-    $self->{FD} = $fd;
+    $self->{fd} = $fd;
   }
   
   private static method _int_mode_to_string : string($int_mode : int) {
@@ -132,18 +132,18 @@ class IO::File extends IO::Handle {
       die "This file is not opened or already closed.";
     }
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     Sys::IO->fclose($file_stream);
     
-    $self->{FD} = -1;
+    $self->{fd} = -1;
     
-    $self->{InputLineNumber} = 0;
+    $self->{input_line_number} = 0;
   }
   
   method read : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     unless ($length >= 0) {
       $length = length $string;
@@ -156,7 +156,7 @@ class IO::File extends IO::Handle {
   
   method getc : int () {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     my $char = Sys->getc($file_stream);
     
@@ -165,12 +165,12 @@ class IO::File extends IO::Handle {
   
   method getline : string () {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     my $line = Sys->readline($file_stream);
     
     if ($line) {
-      $self->{InputLineNumber}++;
+      $self->{input_line_number}++;
     }
     
     return $line;
@@ -178,7 +178,7 @@ class IO::File extends IO::Handle {
   
   method getlines : string () {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     my $string_buffer = StringBuffer->new;
     while (1) {
@@ -198,7 +198,7 @@ class IO::File extends IO::Handle {
   
   method write : int ($string : string, $length : int = -1, $offset : int = 0) {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     unless ($length >= 0) {
       $length = length $string;
@@ -206,7 +206,7 @@ class IO::File extends IO::Handle {
     
     my $write_length = Sys::IO->fwrite($string, 1, $length, $file_stream);
     
-    my $auto_flush = $self->{AutoFlush};
+    my $auto_flush = $self->{auto_flush};
     if ($auto_flush) {
       $self->flush;
     }
@@ -230,14 +230,14 @@ class IO::File extends IO::Handle {
   
   method flush : void () {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     Sys::IO->fflush($file_stream);
   }
   
   method eof : int () {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     my $is_eof = Sys::IO->feof($file_stream);
     
@@ -246,7 +246,7 @@ class IO::File extends IO::Handle {
   
   method error : int () {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     my $is_error = Sys::IO->ferror($file_stream);
     
@@ -255,14 +255,14 @@ class IO::File extends IO::Handle {
   
   method clearerr : void () {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     Sys::IO->clearerr($file_stream);
   }
   
   method ungetc : int ($c : int) {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     my $c_pushed = Sys::IO->ungetc($c, $file_stream);
     
@@ -270,13 +270,13 @@ class IO::File extends IO::Handle {
   }
   
   method sync : void () {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     Sys::IO->fsync($fd);
   }
   
   method truncate : void ($legnth : long) {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     Sys::IO->ftruncate($fd, $legnth);
   }
@@ -297,31 +297,31 @@ class IO::File extends IO::Handle {
     
     my $file_stream = $file_stream_ref->[0];
     
-    $self->{FileStream} = $file_stream;
+    $self->{file_stream} = $file_stream;
     
-    $self->{FD} = $fd;
+    $self->{fd} = $fd;
   }
   
   method autoflush : int () {
     
-    return $self->{AutoFlush};
+    return $self->{auto_flush};
   }
   
   method set_autoflush : void ($autoflush : int) {
     
-    $self->{AutoFlush} = (byte)$autoflush;
+    $self->{auto_flush} = (byte)$autoflush;
   }
   
   method seek : void ($offset : long, $whence : int) {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     Sys->seek($file_stream, $offset, $whence);
   }
   
   method tell : long () {
     
-    my $file_stream = $self->{FileStream};
+    my $file_stream = $self->{file_stream};
     
     return Sys->tell($file_stream);
   }

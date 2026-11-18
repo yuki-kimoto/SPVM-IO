@@ -20,15 +20,15 @@ class IO::Handle {
   use Go::Context;
   
   # Fields
-  has FD : protected int;
+  has fd : protected int;
   
-  has Blocking : protected byte;
+  has blocking : protected byte;
   
-  has ReadDeadline : Go::Time;
+  has read_deadline : Go::Time;
   
-  has WriteDeadline : Go::Time;
+  has write_deadline : Go::Time;
   
-  has Context : Go::Context;
+  has context : Go::Context;
   
   # Class Methods
   
@@ -39,21 +39,21 @@ class IO::Handle {
     
     my $options = Hash->new($options);
     
-    $self->{FD} = $options->get_or_default("FD", -1)->(int);
+    $self->{fd} = $options->get_or_default("FD", -1)->(int);
     
-    $self->{Blocking} = $options->get_or_default("Blocking", 1)->(byte);
+    $self->{blocking} = $options->get_or_default("Blocking", 1)->(byte);
     
     if ($options->exists("ReadDeadline")) {
-      $self->{ReadDeadline} = $options->get("ReadDeadline")->(Go::Time);
+      $self->{read_deadline} = $options->get("ReadDeadline")->(Go::Time);
     }
     
     if ($options->exists("WriteDeadline")) {
-      $self->{WriteDeadline} = $options->get("WriteDeadline")->(Go::Time);
+      $self->{write_deadline} = $options->get("WriteDeadline")->(Go::Time);
     }
     
-    # Context
+    # context
     if ($options->exists("Context")) {
-      $self->{Context} = $options->get("Context")->(Go::Context);
+      $self->{context} = $options->get("Context")->(Go::Context);
     }
   }
   
@@ -70,22 +70,22 @@ class IO::Handle {
   }
   
   method opened : int () {
-    my $opened = $self->{FD} >= 0;
+    my $opened = $self->{fd} >= 0;
     
     return $opened;
   }
   
   method fileno : int () {
-    return $self->{FD};
+    return $self->{fd};
   }
   
   method blocking : int () {
-    return $self->{Blocking};
+    return $self->{blocking};
   }
   
   method set_blocking : void ($blocking : int) {
     
-    Sys::Socket::Util->set_blocking($self->{FD}, $blocking);
+    Sys::Socket::Util->set_blocking($self->{fd}, $blocking);
   }
   
   method close : void () { die "Not implemented."; }
@@ -97,7 +97,7 @@ class IO::Handle {
       $length = length $string;
     }
     
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     my $read_length = Sys->sysread($fd, $string, $length, $offset);
     
@@ -107,7 +107,7 @@ class IO::Handle {
   
   method syswrite : int ($context : Go::Context, $string : string, $length : int = -1, $offset : int = 0) {
     
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     my $write_length = Sys->syswrite($fd, $string, $length, $offset);
     
@@ -115,7 +115,7 @@ class IO::Handle {
   }
   
   method stat : Sys::IO::Stat () {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     my $stat = Sys->fstat($fd);
     
@@ -123,7 +123,7 @@ class IO::Handle {
   }
   
   method fcntl : int ($command : int, $command_arg : object of Int|Sys::IO::Flock|object = undef) {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     my $fcntl_ret = Sys->fcntl($fd, $command, $command_arg);
     
@@ -131,7 +131,7 @@ class IO::Handle {
   }
   
   method ioctl : int ($request : int, $request_arg : object of byte[]|short[]|int[]|long[]|float[]|double[]|object = undef) {
-    my $fd = $self->{FD};
+    my $fd = $self->{fd};
     
     my $ioctl_ret =  Sys->ioctl($fd, $request, $request_arg);
     
@@ -147,7 +147,7 @@ class IO::Handle {
       die "\$context must be defined.";
     }
     
-    my $deadline = $is_write ? $self->{WriteDeadline} : $self->{ReadDeadline};
+    my $deadline = $is_write ? $self->{write_deadline} : $self->{read_deadline};
     
     my $result_context = $deadline ? Go::Context->with_deadline($context, $deadline)->context : $context;
     
@@ -155,24 +155,24 @@ class IO::Handle {
   }
   
   method set_deadline : void ($deadline : Go::Time) {
-    $self->{ReadDeadline} = $deadline;
-    $self->{WriteDeadline} = $deadline;
+    $self->{read_deadline} = $deadline;
+    $self->{write_deadline} = $deadline;
   }
   
   method read_deadline : Go::Time () {
-    return $self->{ReadDeadline};
+    return $self->{read_deadline};
   }
   
   method set_read_deadline : void ($deadline : Go::Time) {
-    $self->{ReadDeadline} = $deadline;
+    $self->{read_deadline} = $deadline;
   }
   
   method write_deadline : Go::Time () {
-    return $self->{WriteDeadline};
+    return $self->{write_deadline};
   }
   
   method set_write_deadline : void ($deadline : Go::Time) {
-    $self->{WriteDeadline} = $deadline;
+    $self->{write_deadline} = $deadline;
   }
   
   method DESTROY : void () {

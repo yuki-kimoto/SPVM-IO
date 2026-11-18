@@ -1,3 +1,7 @@
+0.260 2026-11-18
+  [Incompatible Changes]
+    * Field names become snake cases.
+    
 0.259 2026-11-18
   [Internal Changes]
     * Catch up with latest Go.

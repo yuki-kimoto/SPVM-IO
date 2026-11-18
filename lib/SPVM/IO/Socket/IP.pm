@@ -48,67 +48,67 @@ L<IO::Socket|SPVM::IO::Socket>
 
 =head1 Fields
 
-=head2 LocalAddr
+=head2 local_addr
 
-C<has LocalAddr : protected string;>
+C<has local_addr : protected string;>
 
 A local address.
 
-=head2 LocalPort
+=head2 local_port
 
-C<has LocalPort : protected int;>
+C<has local_port : protected int;>
 
 A local port.
 
-=head2 PeerAddr
+=head2 peer_addr
 
-C<has PeerAddr : protected string;>
+C<has peer_addr : protected string;>
 
 A peer address.
 
-=head2 PeerPort
+=head2 peer_port
 
-C<has PeerPort : protected int;>
+C<has peer_port : protected int;>
 
 A peer port.
 
-=head2 ReuseAddr
+=head2 reuse_addr
 
-C<has ReuseAddr : protected byte;>
+C<has reuse_addr : protected byte;>
 
 The value of L<SO_REUSEADDR|https://linux.die.net/man/3/setsockopt> socket option.
 
 This field expects a boolean value.
 
-=head2 ReusePort
+=head2 reuse_port
 
-C<has ReusePort : protected byte;>
+C<has reuse_port : protected byte;>
 
 The value of C<SO_REUSEPORT> socket option.
 
 This field expects a boolean value.
 
-=head2 Broadcast
+=head2 broadcast
 
-C<has Broadcast : protected byte;>
+C<has broadcast : protected byte;>
 
 The value of L<SO_BROADCAST|https://linux.die.net/man/3/setsockopt> socket option.
 
 This field expects a boolean value.
 
-=head2 V6Only
+=head2 v6_only
 
-  has V6Only : byte;
+  has v6_only : byte;
 
 The value of L<IPV6_V6ONLY|https://man7.org/linux/man-pages/man7/ipv6.7.html> socket option.
 
 This field expects a boolean value.
 
-=head2 V6OnlySpecified
+=head2 v6_only_specified
 
-  has V6OnlySpecified : byte;
+  has v6_only_specified : byte;
 
-If this field is a true value, C<V6Only> option is specified on L</"init"> method.
+If this field is a true value, C<v6_only> option is specified on L</"init"> method.
 
 =head1 Class Methods
 
@@ -120,23 +120,23 @@ Creates a new L<IO::Socket::IP|SPVM::IO::Socket::IP> object given the options $o
 
 This object represents a IPv4 or IPv6 domain socket.
 
-If L</"ReuseAddr"> field is a true value, C<SO_REUSEADD> option of this socket is set to 1.
+If L</"reuse_addr"> field is a true value, C<SO_REUSEADD> option of this socket is set to 1.
 
-If L</"ReuseAddr"> field is a true value, C<SO_REUSEADD> option of this socket is set to 1.
+If L</"reuse_addr"> field is a true value, C<SO_REUSEADD> option of this socket is set to 1.
 
-If L</"ReusePort"> field is a true value, C<SO_REUSEPORT> option of this socket is set to 1.
+If L</"reuse_port"> field is a true value, C<SO_REUSEPORT> option of this socket is set to 1.
 
-If L</"Broadcast"> field is a true value, C<SO_BROADCAST> option of this socket is set to 1.
+If L</"broadcast"> field is a true value, C<SO_BROADCAST> option of this socket is set to 1.
 
-If the value of L</"V6OnlySpecified"> field is a true value, C<IPV6_V6ONLY> option of this socket is set to the following value.
+If the value of L</"v6_only_specified"> field is a true value, C<IPV6_V6ONLY> option of this socket is set to the following value.
 
-If the value of L</"V6Only"> field is a true value, it is set to 1, otherwise 0.
+If the value of L</"v6_only"> field is a true value, it is set to 1, otherwise 0.
 
-If L</"PeerAddr"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
+If L</"peer_addr"> field is specified, this object becomes a client socket. It calls L<connect|SPVM::IO::Socket/"connect"> method.
 
 If L<Listen|SPVM::IO::Socket/"Listen"> field is specified, this object becomes a server socket. It calls L<listen|SPVM::IO::Socket/"listen"> method. If the value of C<Listen> is 0 or less, C<SOMAXCONN> is automatically used. Furthermore.
 
-The L<bind|SPVM::IO::Socket/"bind"> method is called when either L<LocalAddr|SPVM::IO::Socket/"LocalAddr"> or L<LocalPort|SPVM::IO::Socket/"LocalPort"> is specified.
+The L<bind|SPVM::IO::Socket/"bind"> method is called when either L<local_addr|SPVM::IO::Socket/"local_addr"> or L<local_port|SPVM::IO::Socket/"local_port"> is specified.
 
 See L</"init"> method about the options $options.
 
@@ -160,43 +160,43 @@ Nagle algorizm is on over TCP.
 
 =item * C<ReuseAddr> : string = undef
 
-L</"ReuseAddr"> field is set to this value.
+L</"reuse_addr"> field is set to this value.
 
 =item * C<ReusePort> : Int = 0
 
-L</"ReusePort"> field is set to this value.
+L</"reuse_port"> field is set to this value.
 
 =item * C<Broadcast> : Int = 0
 
-L</"Broadcast"> field is set to this value.
+L</"broadcast"> field is set to this value.
 
 =item * C<PeerAddr> : string = undef
 
-L</"PeerAddr"> field is set to this value.
+L</"peer_addr"> field is set to this value.
 
 =item * C<PeerPort> : Int = 0
 
-L</"PeerPort"> field is set to this value.
+L</"peer_port"> field is set to this value.
 
 =item * C<LocalAddr> : string = undef
 
-L</"LocalAddr"> field is set to this value.
+L</"local_addr"> field is set to this value.
 
 =item * C<LocalPort> : Int = 0
 
-L</"LocalPort"> field is set to this value.
+L</"local_port"> field is set to this value.
 
 =item * C<V6Only> : Int = undef
 
-If this option is specified, L</"V6OnlySpecified"> is set to 1 and L</"V6Only"> field is set to this value.
+If this option is specified, L</"v6_only_specified"> is set to 1 and L</"v6_only"> field is set to this value.
 
 =back
 
-L<Domain|SPVM::IO::Socket/"Domain"> field is set to C<AF_INET> if C<Domain> option is not specified.
+L<domain|SPVM::IO::Socket/"domain"> field is set to C<AF_INET> if C<Domain> option is not specified.
 
-If L</"Domain"> is not specified and L</"LocalAddr"> or L</"PeerAddr"> is a valid IPv6 address, the default value of L</"Domain"> is automatically set to C<AF_INET6>.
+If L</"domain"> is not specified and L</"local_addr"> or L</"peer_addr"> is a valid IPv6 address, the default value of L</"domain"> is automatically set to C<AF_INET6>.
 
-L<Type|SPVM::IO::Socket/"Type"> field is set to C<SOCK_STREAM> if C<Type> option is not specified.
+L<type|SPVM::IO::Socket/"type"> field is set to C<SOCK_STREAM> if C<Type> option is not specified.
 
 =head2 configure
 
@@ -210,9 +210,9 @@ C<method sockaddr : L<Sys::Socket::In_addr_base|SPVM::Sys::Socket::In_addr_base>
 
 Returns the local address.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockaddr|SPVM::IO::Socket::IP::Import::IPv4/"sockaddr"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockaddr|SPVM::IO::Socket::IP::Import::IPv4/"sockaddr"> method.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockaddr|SPVM::IO::Socket::IP::Import::IPv6/"sockaddr"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockaddr|SPVM::IO::Socket::IP::Import::IPv6/"sockaddr"> method.
 
 =head2 sockhost
 
@@ -220,9 +220,9 @@ C<method sockhost : string ();>
 
 Returns the local host name.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockhost|SPVM::IO::Socket::IP::Import::IPv4/"sockhost"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockhost|SPVM::IO::Socket::IP::Import::IPv4/"sockhost"> method.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockhost|SPVM::IO::Socket::IP::Import::IPv6/"sockhost"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockhost|SPVM::IO::Socket::IP::Import::IPv6/"sockhost"> method.
 
 =head2 sockport
 
@@ -232,9 +232,9 @@ Returns the local port.
 
 Implementation:
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockport|SPVM::IO::Socket::IP::Import::IPv4/"sockport"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#sockport|SPVM::IO::Socket::IP::Import::IPv4/"sockport"> method.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockport|SPVM::IO::Socket::IP::Import::IPv6/"sockport"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#sockport|SPVM::IO::Socket::IP::Import::IPv6/"sockport"> method.
 
 =head2 peeraddr
 
@@ -244,9 +244,9 @@ Return the peer address.
 
 Implementation:
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peeraddr|SPVM::IO::Socket::IP::Import::IPv4/"peeraddr"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peeraddr|SPVM::IO::Socket::IP::Import::IPv4/"peeraddr"> method.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peeraddr|SPVM::IO::Socket::IP::Import::IPv6/"peeraddr"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peeraddr|SPVM::IO::Socket::IP::Import::IPv6/"peeraddr"> method.
 
 =head2 peerhost
 
@@ -256,9 +256,9 @@ Returns the peer host name.
 
 Implementation:
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerhost|SPVM::IO::Socket::IP::Import::IPv4/"peerhost"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerhost|SPVM::IO::Socket::IP::Import::IPv4/"peerhost"> method.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerhost|SPVM::IO::Socket::IP::Import::IPv6/"peerhost"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerhost|SPVM::IO::Socket::IP::Import::IPv6/"peerhost"> method.
 
 =head2 peerport
 
@@ -268,9 +268,9 @@ Returns the peer port.
 
 Implementation:
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerport|SPVM::IO::Socket::IP::Import::IPv4/"peerport"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#peerport|SPVM::IO::Socket::IP::Import::IPv4/"peerport"> method.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerport|SPVM::IO::Socket::IP::Import::IPv6/"peerport"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#peerport|SPVM::IO::Socket::IP::Import::IPv6/"peerport"> method.
 
 =head2 accept
 
@@ -288,9 +288,9 @@ $address is allowed to be a domain name, a host name, an IP address. The name re
 
 Implementation:
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#create_sockaddr|SPVM::IO::Socket::IP::Import::IPv4/"create_sockaddr"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET>, this method calls L<IO::Socket::IP::Import::IPv4#create_sockaddr|SPVM::IO::Socket::IP::Import::IPv4/"create_sockaddr"> method.
 
-If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#create_sockaddr|SPVM::IO::Socket::IP::Import::IPv6/"create_sockaddr"> method.
+If L<domain|SPVM::IO::Socket/"domain"> field is C<AF_INET6>, this method calls L<IO::Socket::IP::Import::IPv6#create_sockaddr|SPVM::IO::Socket::IP::Import::IPv6/"create_sockaddr"> method.
 
 =head1 Well Known Child Classes
 
@@ -329,4 +329,3 @@ If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L
 Copyright (c) 2023 Yuki Kimoto
 
 MIT License
-

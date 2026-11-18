@@ -30,21 +30,21 @@ L<IO::Handle|SPVM::IO::Handle>
 
 =head1 Fields
 
-=head2 FileStream
+=head2 file_stream
 
-C<has FileStream : Sys::IO::FileStream;>
+C<has file_stream : Sys::IO::FileStream;>
 
-A file stream associated with the file descriptoer L<FD|SPVM::IO::Handle/"FD">.
+A file stream associated with the file descriptoer L<fd|SPVM::IO::Handle/"fd">.
 
-=head2 InputLineNumber
+=head2 input_line_number
 
-C<has InputLineNumber : long;>
+C<has input_line_number : long;>
 
 The current line number. This value is incremented by L</"getline"> method.
 
-=head2 AutoFlush
+=head2 auto_flush
 
-C<has AutoFlush : protected byte;>
+C<has auto_flush : protected byte;>
 
 A flag for auto flush.
 
@@ -96,9 +96,9 @@ If type type of $open_mode is string, this method calls L<Sys#open|SPVM::Sys/"op
 
 Otherwise if the type of $open_mode is Int, this method calls L<Sys#sysopen|SPVM::Sys/"sysopen"> method given $open_mode, $file_name, $perms, and calls L<Sys#fdopen|SPVM::Sys/"fdopen"> method.
 
-L</"FileStream"> field is set to the opened file stream.
+L</"file_stream"> field is set to the opened file stream.
 
-L</"InputLineNumber"> field is set to 0.
+L</"input_line_number"> field is set to 0.
 
 Exceptions:
 
@@ -114,19 +114,19 @@ If a file is already opened, an exception is thrown.
 
 C<method input_line_number : long ();>
 
-Returns the value of L</"InputLineNumber"> field.
+Returns the value of L</"input_line_number"> field.
 
 =head2 close
 
 C<method close : void;>
 
-Closes the file stream L</"FileStream">.
+Closes the file stream L</"file_stream">.
 
 This method calls L<Sys::IO#fclose|SPVM::Sys::IO/"fclose"> method.
 
-L</"InputLineNumber"> field is set to 0.
+L</"input_line_number"> field is set to 0.
 
-L<FD|SPVM::IO::Handle/"FD"> field is set to -1.
+L<fd|SPVM::IO::Handle/"fd"> field is set to -1.
 
 Exceptions:
 
@@ -136,7 +136,7 @@ Exceptions thrown by L<Sys::IO#fclose|SPVM::Sys::IO/"fclose"> method could be th
 
 C<method read : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
 
-Reads the length $length of data from the file stream L</"FileStream"> and store it to the offset $offset position of the string $string.
+Reads the length $length of data from the file stream L</"file_stream"> and store it to the offset $offset position of the string $string.
 
 This method calls L<Sys#read|SPVM::Sys/"read"> method.
 
@@ -148,9 +148,9 @@ Exceptions thrown by L<Sys#read|SPVM::Sys/"read"> method could be thrown.
 
 C<method getc : int ();>
 
-Reads a character from the file stream L</"FileStream">, and returns the line.
+Reads a character from the file stream L</"file_stream">, and returns the line.
 
-This method calls L<Sys#getc|SPVM::Sys/"getc"> method with the file stream L</"FileStream">.
+This method calls L<Sys#getc|SPVM::Sys/"getc"> method with the file stream L</"file_stream">.
 
 Exceptions:
 
@@ -160,13 +160,13 @@ Exceptions thrown by L<Sys#getc|SPVM::Sys/"getc"> method could be thrown.
 
 C<method getline : string ();>
 
-Reads a line from the file stream L</"FileStream">, incrementes the input line number L</"InputLineNumber"> by 1, and returns the line.
+Reads a line from the file stream L</"file_stream">, incrementes the input line number L</"input_line_number"> by 1, and returns the line.
 
 A line is the part that ends with C<\n> or C<EOF>.
 
 If C<EOF> has been reached, returns C<undef>.
 
-This method calls L<Sys#readline|SPVM::Sys/"readline"> method with the file stream L</"FileStream">.
+This method calls L<Sys#readline|SPVM::Sys/"readline"> method with the file stream L</"file_stream">.
 
 Exceptions:
 
@@ -176,7 +176,7 @@ Exceptions thrown by L<Sys#readline|SPVM::Sys/"readline"> method could be thrown
 
 C<method getlines : string ();>
 
-Reads all lines from the file stream L</"FileStream">, joins them to a string, and returns it.
+Reads all lines from the file stream L</"file_stream">, joins them to a string, and returns it.
 
 This method calls L</"getline"> method repeatedly.
 
@@ -190,11 +190,11 @@ Exceptions thrown by L</"getline"> method could be thrown.
 
 C<method write : int ($string : string, $length : int = -1, $offset : int = 0);>
 
-Writes the length $length from the offset $offset of the string $string to the file stream L</"FileStream">.
+Writes the length $length from the offset $offset of the string $string to the file stream L</"file_stream">.
 
 This method calls L<Sys::IO#fwrite|SPVM::Sys::IO/"fwrite"> method.
 
-If L</"AutoFlush"> field is a true value, thie method calls L</"flush"> method after the write operation.
+If L</"auto_flush"> field is a true value, thie method calls L</"flush"> method after the write operation.
 
 Exceptions:
 
@@ -204,7 +204,7 @@ Exceptions thrown by L<Sys::IO#fwrite|SPVM::Sys::IO/"fwrite"> method could be th
 
 C<method print : void ($string : string);>
 
-Outputs the string $string to the file stream L</"FileStream">.
+Outputs the string $string to the file stream L</"file_stream">.
 
 Same as the following method call.
 
@@ -214,7 +214,7 @@ Same as the following method call.
 
 C<method printf : void ($format : string, $args : object...);>
 
-Outputs a string fomatted with the format $format and its parameters $args to the file stream L</"FileStream">.
+Outputs a string fomatted with the format $format and its parameters $args to the file stream L</"file_stream">.
 
 Same as the following method call.
 
@@ -225,7 +225,7 @@ Same as the following method call.
 
 C<method say : void ($string : string);>
 
-Outputs the string $string and C<\n> to the file stream L</"FileStream">.
+Outputs the string $string and C<\n> to the file stream L</"file_stream">.
 
 Same as the following method call.
 
@@ -248,9 +248,9 @@ Exceptions thrown by L<Sys::IO#fflush|SPVM::Sys::IO/"fflush"> method could be th
 
 C<method error : int ();>
 
-If the file stream L</"FileStream"> reaches the end of file, returns 1, otherwise returns 0.
+If the file stream L</"file_stream"> reaches the end of file, returns 1, otherwise returns 0.
 
-This method calls L<Sys::IO#ferror|SPVM::Sys::IO/"ferror"> method with the file stream L</"FileStream">.
+This method calls L<Sys::IO#ferror|SPVM::Sys::IO/"ferror"> method with the file stream L</"file_stream">.
 
 Exceptions:
 
@@ -260,9 +260,9 @@ Exceptions thrown by L<Sys::IO#ferror|SPVM::Sys::IO/"ferror"> method could be th
 
 C<method clearerr : void ();>
 
-Clears the error satus of the file stream L</"FileStream">.
+Clears the error satus of the file stream L</"file_stream">.
 
-This method calls L<Sys::IO#clearerr|SPVM::Sys::IO/"clearerr"> method with the file stream L</"FileStream">.
+This method calls L<Sys::IO#clearerr|SPVM::Sys::IO/"clearerr"> method with the file stream L</"file_stream">.
 
 Exceptions:
 
@@ -272,9 +272,9 @@ Exceptions thrown by L<Sys::IO#clearerr|SPVM::Sys::IO/"clearerr"> method could b
 
 C<method eof : int ();>
 
-If the file stream L</"FileStream"> reaches the end of file, returns 1, otherwise returns 0.
+If the file stream L</"file_stream"> reaches the end of file, returns 1, otherwise returns 0.
 
-This method calls L<Sys::IO#feof|SPVM::Sys::IO/"feof"> method with the file stream L</"FileStream">.
+This method calls L<Sys::IO#feof|SPVM::Sys::IO/"feof"> method with the file stream L</"file_stream">.
 
 Exceptions:
 
@@ -284,9 +284,9 @@ Exceptions thrown by L<Sys::IO#feof|SPVM::Sys::IO/"feof"> method could be thrown
 
 C<method ungetc : int ($c : int);>
 
-Pushes the character $c back to the file stream L</"FileStream"> and returns the character that is actually pushed.
+Pushes the character $c back to the file stream L</"file_stream"> and returns the character that is actually pushed.
 
-This method calls L<Sys::IO#ungetc|SPVM::Sys::IO/"ungetc"> method with the file stream L</"FileStream">.
+This method calls L<Sys::IO#ungetc|SPVM::Sys::IO/"ungetc"> method with the file stream L</"file_stream">.
 
 Exceptions:
 
@@ -296,9 +296,9 @@ Exceptions thrown by L<Sys::IO#ungetc|SPVM::Sys::IO/"ungetc"> method could be th
 
 C<method sync : void ();>
 
-Transfers all modified in-core data of the file referred to by the file descriptor L<FD|SPVM::IO::Handle/"FD"> to the disk device.
+Transfers all modified in-core data of the file referred to by the file descriptor L<fd|SPVM::IO::Handle/"fd"> to the disk device.
 
-This method calls L<Sys::IO#fsync|SPVM::Sys::IO/"fsync"> method with the file descriptor L<FD|SPVM::IO::Handle/"FD">.
+This method calls L<Sys::IO#fsync|SPVM::Sys::IO/"fsync"> method with the file descriptor L<fd|SPVM::IO::Handle/"fd">.
 
 Exceptions:
 
@@ -308,9 +308,9 @@ Exceptions thrown by L<Sys::IO#fsync|SPVM::Sys::IO/"fsync"> method could be thro
 
 C<method truncate : void ($legnth : long);>
 
-Causes the regular file named by referenced by the file descriptor L<FD|SPVM::IO::Handle/"FD"> to be truncated to a size of precisely $legnth bytes.
+Causes the regular file named by referenced by the file descriptor L<fd|SPVM::IO::Handle/"fd"> to be truncated to a size of precisely $legnth bytes.
 
-This method calls L<Sys::IO#ftruncate|SPVM::Sys::IO/"ftruncate"> method with the file descriptor L<FD|SPVM::IO::Handle/"FD">.
+This method calls L<Sys::IO#ftruncate|SPVM::Sys::IO/"ftruncate"> method with the file descriptor L<fd|SPVM::IO::Handle/"fd">.
 
 Exceptions:
 
@@ -324,9 +324,9 @@ Opens a file given the file descriptor $fd and the open mode $open_mode.
 
 This method calls L<Sys#fdopen|SPVM::Sys/"fdopen"> method.
 
-L</"FileStream"> field is set to the opened file stream.
+L</"file_stream"> field is set to the opened file stream.
 
-L</"InputLineNumber"> field is set to 0.
+L</"input_line_number"> field is set to 0.
 
 Exceptions:
 
@@ -338,25 +338,25 @@ If a file is already opened, an exception is thrown.
 
 C<method autoflush : int ();>
 
-Returns the value of L</"AutoFlush"> field.
+Returns the value of L</"auto_flush"> field.
 
 =head2 set_autoflush
 
 C<method set_autoflush : void ($autoflush : int);>
 
-Sets L</"AutoFlush"> field to $autoflush.
+Sets L</"auto_flush"> field to $autoflush.
 
 =head2 seek
 
 C<method seek : void ($offset : long, $whence : int);>
 
-Calls L<Sys#seek|SPVM::Sys/"seek"> method given the value of L</"FileStream"> field, $offset, $whence.
+Calls L<Sys#seek|SPVM::Sys/"seek"> method given the value of L</"file_stream"> field, $offset, $whence.
 
 =head2 tell
 
 C<method tell : long ();>
 
-Calls L<Sys#tell|SPVM::Sys/"tell"> method given the value of L</"FileStream"> field, and returns its return value.
+Calls L<Sys#tell|SPVM::Sys/"tell"> method given the value of L</"file_stream"> field, and returns its return value.
 
 =head1 See Also
 
@@ -381,4 +381,3 @@ This class is a Perl's L<IO::File|IO::File> porting to L<SPVM>.
 Copyright (c) 2023 Yuki Kimoto
 
 MIT License
-
