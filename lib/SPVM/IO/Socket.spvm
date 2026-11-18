@@ -165,7 +165,7 @@ class IO::Socket extends IO::Handle {
     my $accepted_sockaddr = (Sys::Socket::Sockaddr)undef;
     
     while (1) {
-      my $timeout_duration = $self->get_remaining_duration(0);
+      $context = $self->get_context_with_deadline($context, 0);
       
       eval { $accepted_sockaddr = Sys->accept(\$accepted_fd, $fd); }
       if ($@) {
@@ -246,7 +246,7 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{FD};
     my $recv_length = -1;
     while (1) {
-      my $timeout_duration = $self->get_remaining_duration(0);
+      $context = $self->get_context_with_deadline($context, 0);
       eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $offset); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_read_again(Sys::Socket::Errno->errno);
@@ -268,7 +268,7 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{FD};
     my $send_length = -1;
     while (1) {
-      my $timeout_duration = $self->get_remaining_duration(1);
+      $context = $self->get_context_with_deadline($context, 0);
       eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $offset); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_write_again(Sys::Socket::Errno->errno);
@@ -394,7 +394,7 @@ class IO::Socket extends IO::Handle {
     my $sockaddr = $self->{PeerSockaddr};
     
     while (1) {
-      my $timeout_duration = $self->get_remaining_duration(1);
+      $context = $self->get_context_with_deadline($context, 0);
       
       eval { Sys->connect($fd, $sockaddr); }
       if ($@) {

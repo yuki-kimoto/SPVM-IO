@@ -195,7 +195,7 @@ class IO::Socket::IP extends IO::Socket {
     if ($peer_address) {
       my $sockaddr = $self->create_sockaddr($peer_address, $peer_port);
       $self->{PeerSockaddr} = $sockaddr;
-      $self->connect_v2(Go->bg);
+      $self->connect;
     }
     
     my $type = $self->socktype;
