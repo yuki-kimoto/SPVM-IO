@@ -144,6 +144,7 @@ class IO::Socket extends IO::Handle {
     }
     
     my $options = {
+      Context => Go->bg,
       FD => $accepted_fd,
       Domain => $self->{Domain},
       Type => $self->{Type},
