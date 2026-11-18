@@ -1,3 +1,11 @@
+0.258 2026-11-18
+  [Internal Changes]
+    * Remove _v2 methods.
+  [Incompatible Changes]
+    * Context option must be specified.
+    * Remove Timeout option, timeout, set_timeout methods.
+  [Bug Fix]
+    * Fix accept.
 0.257 2026-11-18
   [Incompatible Changes]
     * Methods that read or write sockets must needs Go::Context.
