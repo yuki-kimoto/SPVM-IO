@@ -58,7 +58,7 @@ class TestCase::IO::Socket::IP {
       });
       
       while (1) {
-        eval { $server_socket->accept; }
+        eval { $server_socket->accept_v2(Go->bg); }
         if ($@) {
           last;
         }
@@ -1190,7 +1190,7 @@ class TestCase::IO::Socket::IP {
         
         my $data = (mutable string)new_string_len 1;
         
-        my $read_length = $client_socket->sysread($data, length $data);
+        my $read_length = $client_socket->sysread_v2(Go->bg, $data, length $data);
         
         if ($read_length > 0) {
           $client_socket->syswrite($data);
@@ -1214,7 +1214,7 @@ class TestCase::IO::Socket::IP {
         
         my $write_data = "abc\n";
         
-        $socket->syswrite($write_data);
+        $socket->syswrite_v2(Go->bg, $write_data);
         
         my $string_buffer = StringBuffer->new;
         
