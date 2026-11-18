@@ -121,28 +121,6 @@ class IO::Handle {
     return $write_length;
   }
   
-  method sysread_v2 : int ($context : Go::Context, $string : mutable string, $length : int = -1, $offset : int = 0) {
-    
-    unless ($length > -1) {
-      $length = length $string;
-    }
-    
-    my $fd = $self->{FD};
-    
-    my $read_length = Sys->sysread($fd, $string, $length, $offset);
-    
-    return $read_length;
-  }
-  
-  method syswrite_v2 : int ($context : Go::Context, $string : string, $length : int = -1, $offset : int = 0) {
-    
-    my $fd = $self->{FD};
-    
-    my $write_length = Sys->syswrite($fd, $string, $length, $offset);
-    
-    return $write_length;
-  }
-  
   method stat : Sys::IO::Stat () {
     my $fd = $self->{FD};
     

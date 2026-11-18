@@ -15,16 +15,16 @@ L<SPVM::IO::Pipe::End> represents one end of a non-blocking pipe. It inherits fr
   use IO::Pipe;
   use Go;
   use Go::Time;
-
+  
   my $pipe = IO::Pipe->new;
-  my $handles =$pipe->handles;
+  my $handles = $pipe->handles;
   
   # Write data to the pipe
-  $handles->[1]->syswrite("Hello SPVM Pipe");
-
+  $handles->[1]->syswrite(Go->bg, "Hello SPVM Pipe");
+  
   # Read data from the pipe
   my $buffer = (mutable string)new_string_len(100);
-  $handles->[0]->sysread($buffer);
+  $handles->[0]->sysread(Go->bg, $buffer);
 
 =head2 Goroutine and Non-blocking I/O
 
@@ -52,7 +52,7 @@ Initializes the pipe end handle.
 
 =head2 sysread
 
-C<method sysread : int ($string : mutable string, $length : int = -1,$offset : int = 0);>
+C<method sysread : int ($context : Go::Context, $string : mutable string, $length : int = -1,$offset : int = 0);>
 
 Performs non-blocking read operation on the pipe.
 
@@ -64,7 +64,7 @@ Exceptions thrown by L<Go#gosched_pipe_read|SPVM::Go/"gosched_pipe_read"> method
 
 =head2 syswrite
 
-C<method syswrite : int ($string : string, $length : int = -1,$offset : int = 0);>
+C<method syswrite : int ($context : Go::Context, $string : string, $length : int = -1,$offset : int = 0);>
 
 Performs non-blocking write operation on the pipe.
 
