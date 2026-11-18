@@ -98,7 +98,7 @@ class IO::Handle {
   method close : void () { die "Not implemented."; }
   
   # $length is optional instead of Perl's one
-  method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
+  method sysread : int ($context : Go::Context, $string : mutable string, $length : int = -1, $offset : int = 0) {
     
     unless ($length > -1) {
       $length = length $string;
@@ -111,7 +111,8 @@ class IO::Handle {
     return $read_length;
   }
   
-  method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
+  
+  method syswrite : int ($context : Go::Context, $string : string, $length : int = -1, $offset : int = 0) {
     
     my $fd = $self->{FD};
     

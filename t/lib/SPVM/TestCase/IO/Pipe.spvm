@@ -22,10 +22,10 @@ class TestCase::IO::Pipe {
       });
       
       my $out_str = "Hello SPVM Pipe 0\n";
-      $handles->[0]->syswrite($out_str);
+      $handles->[0]->syswrite(Go->bg, $out_str);
       
       my $in_str = (mutable string)new_string_len(length $out_str);
-      my $read_length = $handles->[0]->sysread($in_str);
+      my $read_length = $handles->[0]->sysread(Go->bg, $in_str);
       
       unless ($read_length == length $out_str && $in_str eq $out_str) {
         diag;
@@ -40,7 +40,7 @@ class TestCase::IO::Pipe {
       });
       
       my $in_str = (mutable string)new_string_len(19);
-      my $read_length = $handles->[1]->sysread($in_str);
+      my $read_length = $handles->[1]->sysread(Go->bg, $in_str);
       
       unless ($read_length > 0) {
         diag;
@@ -48,7 +48,7 @@ class TestCase::IO::Pipe {
         return;
       }
       
-      $handles->[1]->syswrite($in_str, $read_length);
+      $handles->[1]->syswrite(Go->bg, $in_str, $read_length);
     });
     
     $wg->wait;

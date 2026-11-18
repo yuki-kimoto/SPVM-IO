@@ -49,6 +49,7 @@ B<Example:>
   # Running a concurrent TCP server
   Go->go(method : void () {
     my $listen = IO::Socket::IP->new({
+      Context => Go->bg,
       LocalAddr => "0.0.0.0",
       LocalPort => 8080,
       Listen    => 10,
@@ -58,8 +59,8 @@ B<Example:>
       # Handle each connection in a new goroutine
       Go->go([$client : IO::Socket] method : void () {
         my $buf = (mutable string)new_string_len 1024;
-        $client->sysread($buf);
-        $client->syswrite("Hello from Goroutine!");
+        $client->sysread(Go->bg, $buf);
+        $client->syswrite(Go->bg, "Hello from Goroutine!");
         $client->close;
       });
     }
@@ -86,7 +87,7 @@ B<Example:>
   $socket->set_read_deadline($read_limit);
   
   eval {
-    $socket->sysread($buffer);
+    $socket->sysread(Go->bg, $buffer);
   };
   if ($@ isa Go::Error::IOTimeout) {
     # Handle the case where no data was received within 3 seconds
@@ -306,7 +307,7 @@ If this socket is not opened or already closed, an exception is thrown.
 
 =head2 recvfrom
 
-C<method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $offset : int = 0)>
+C<method recvfrom : int ($context : Go::Context, $buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $offset : int = 0)>
 
 Performs recvfrom operation and returns read length.
 
@@ -322,7 +323,7 @@ Exceptions thrown by L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method cou
 
 =head2 sendto
 
-C<method sendto : int ($buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $offset : int = 0);>
+C<method sendto : int ($context : Go::Context, $buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $offset : int = 0);>
 
 Performs sendto operation and returns write length.
 
@@ -338,7 +339,7 @@ Exceptions thrown by L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method c
 
 =head2 recv
 
-C<method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0);>
+C<method recv : int ($context : Go::Context, $buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0);>
 
 Performs recv operation by calling L</"recvfrom"> with $from_ref set to undef.
 
@@ -348,7 +349,7 @@ Exceptions thrown by L</"recvfrom"> method could be thrown.
 
 =head2 send
 
-C<method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0);>
+C<method send : int ($context : Go::Context, $buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0);>
 
 Performs send operation by calling L</"sendto"> with $to set to undef.
 
@@ -358,7 +359,7 @@ Exceptions thrown by L</"sendto"> method could be thrown.
 
 =head2 sysread
 
-C<method sysread : int ($buffer : mutable string, $length : int = -1, $offset : int = 0);>
+C<method sysread : int ($context : Go::Context, $buffer : mutable string, $length : int = -1, $offset : int = 0);>
 
 Perform sysread operation by calling L</"recv"> with $flags set to 0.
 
@@ -368,7 +369,7 @@ Exceptions thrown by L</"recv"> method could be thrown.
 
 =head2 syswrite
 
-C<method syswrite : int ($buffer : string, $length : int = -1, $offset : int = 0);>
+C<method syswrite : int ($context : Go::Context, $buffer : string, $length : int = -1, $offset : int = 0);>
 
 Perform syswrite operation by calling L</"send"> with $flags set to 0.
 

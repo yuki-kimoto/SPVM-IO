@@ -35,7 +35,7 @@ class TestCase::IO::Socket::INET {
       
       {
         my $host = "127.0.0.1";
-        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port, Context => Go->bg});
         
         unless ($socket is_type IO::Socket::IP) {
           diag "socket type check failed";
@@ -44,13 +44,13 @@ class TestCase::IO::Socket::INET {
         }
         
         my $write_date = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
-        $socket->syswrite($write_date);
+        $socket->syswrite(Go->bg, $write_date);
         
         $socket->shutdown(SOCKET_C->SHUT_WR);
         
         my $read_date = (mutable string)new_string_len 1000;
         
-        my $read_length = $socket->sysread($read_date);
+        my $read_length = $socket->sysread(Go->bg, $read_date);
         
         unless ($read_length > 0 && $read_length < 1000) {
           diag $read_length;

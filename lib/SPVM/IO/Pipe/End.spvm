@@ -20,30 +20,30 @@ class IO::Pipe::End extends IO::Handle {
     $self->SUPER::init($options);
   }
   
-  method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0) {
+  method sysread : int ($context : Go::Context, $string : mutable string, $length : int = -1, $offset : int = 0) {
     
     unless ($length > -1) {
       $length = length $string;
     }
     
     my $fd = $self->{FD};
-    my $timeout_duration = $self->get_remaining_duration(0);
     
-    my $read_length = Go->gosched_pipe_read($fd, $string, $length, $offset, $timeout_duration);
+    $context = $self->get_context_with_deadline($context, 0);
+    my $read_length = Go->gosched_pipe_read_v2($context, $fd, $string, $length, $offset);
     
     return $read_length;
   }
   
-  method syswrite : int ($string : string, $length : int = -1, $offset : int = 0) {
+  method syswrite : int ($context : Go::Context, $string : string, $length : int = -1, $offset : int = 0) {
     
     unless ($length > -1) {
       $length = length $string;
     }
     
     my $fd = $self->{FD};
-    my $timeout_duration = $self->get_remaining_duration(1);
     
-    my $write_length = Go->gosched_pipe_write($fd, $string, $length, $offset, $timeout_duration);
+    $context = $self->get_context_with_deadline($context, 1);
+    my $write_length = Go->gosched_pipe_write_v2($context, $fd, $string, $length, $offset);
     
     return $write_length;
   }

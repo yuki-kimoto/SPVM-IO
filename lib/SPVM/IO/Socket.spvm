@@ -121,19 +121,19 @@ class IO::Socket extends IO::Handle {
     $self->{FD} = -1;
   }
   
-  method accept : IO::Socket ($peer_ref : Sys::Socket::Sockaddr[] = undef) {
+  method accept : IO::Socket ($context : Go::Context, $peer_ref : Sys::Socket::Sockaddr[] = undef) {
     my $fd = $self->{FD};
     my $accepted_fd = -1;
     my $accepted_sockaddr = (Sys::Socket::Sockaddr)undef;
     
     while (1) {
-      my $timeout_duration = $self->get_remaining_duration(0);
+      $context = $self->get_context_with_deadline($context, 0);
       
       eval { $accepted_sockaddr = Sys->accept(\$accepted_fd, $fd); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_accept_again(Sys::Socket::Errno->errno);
         if ($again) {
-          Go->gosched_io_read($fd, $timeout_duration);
+          Go->gosched_poll_read($context, $fd);
           next;
         }
         else {
@@ -197,17 +197,17 @@ class IO::Socket extends IO::Handle {
     return $accepted;
   }
   
-  method recvfrom : int ($buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $offset : int = 0) {
+  method recvfrom : int ($context : Go::Context, $buffer : mutable string, $length : int, $flags : int, $from_ref : Sys::Socket::Sockaddr[], $offset : int = 0) {
     unless ($length >= 0) { $length = length $buffer; }
     my $fd = $self->{FD};
     my $recv_length = -1;
     while (1) {
-      my $timeout_duration = $self->get_remaining_duration(0);
+      $context = $self->get_context_with_deadline($context, 0);
       eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $offset); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_read_again(Sys::Socket::Errno->errno);
         if ($again) {
-          Go->gosched_io_read($fd, $timeout_duration);
+          Go->gosched_poll_read($context, $fd);
           next;
         }
         else {
@@ -219,17 +219,18 @@ class IO::Socket extends IO::Handle {
     return $recv_length;
   }
   
-  method sendto : int ($buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $offset : int = 0) {
+  
+  method sendto : int ($context : Go::Context, $buffer : string, $flags : int, $to : Sys::Socket::Sockaddr, $length : int = -1, $offset : int = 0) {
     unless ($length >= 0) { $length = length $buffer; }
     my $fd = $self->{FD};
     my $send_length = -1;
     while (1) {
-      my $timeout_duration = $self->get_remaining_duration(1);
+      $context = $self->get_context_with_deadline($context, 0);
       eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $offset); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_write_again(Sys::Socket::Errno->errno);
         if ($again) {
-          Go->gosched_io_write($fd, $timeout_duration);
+          Go->gosched_poll_write($context, $fd);
           next;
         }
         else {
@@ -285,12 +286,12 @@ class IO::Socket extends IO::Handle {
     return $send_length;
   }
   
-  method recv : int ($buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0) {
-    return $self->recvfrom($buffer, $length, $flags, (Sys::Socket::Sockaddr[])undef, $offset);
+  method recv : int ($context : Go::Context, $buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0) {
+    return $self->recvfrom($context, $buffer, $length, $flags, (Sys::Socket::Sockaddr[])undef, $offset);
   }
   
-  method send : int ($buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0) {
-    return $self->sendto($buffer, $flags, (Sys::Socket::Sockaddr)undef, $length, $offset);
+  method send : int ($context : Go::Context, $buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0) {
+    return $self->sendto($context, $buffer, $flags, (Sys::Socket::Sockaddr)undef, $length, $offset);
   }
   
   method recv_v2 : int ($context : Go::Context, $buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0) {
@@ -301,22 +302,12 @@ class IO::Socket extends IO::Handle {
     return $self->sendto_v2($context, $buffer, $flags, (Sys::Socket::Sockaddr)undef, $length, $offset);
   }
   
-  method sysread : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
-    return $self->recv($buffer, $length, 0, $offset);
+  method sysread : int ($context : Go::Context, $buffer : mutable string, $length : int = -1, $offset : int = 0) {
+    return $self->recv($context, $buffer, $length, 0, $offset);
   }
   
-  method read : int ($buffer : mutable string, $length : int = -1, $offset : int = 0) {
-    diag "IO::Socket#read method is deprecated. Use sysread method instead.";
-    return $self->recv($buffer, $length, 0, $offset);
-  }
-  
-  method syswrite : int ($buffer : string, $length : int = -1, $offset : int = 0) {
-    return $self->send($buffer, 0, $length, $offset);
-  }
-  
-  method write : int ($buffer : string, $length : int = -1, $offset : int = 0) {
-    diag "IO::Socket#write method is deprecated. Use syswrite method instead.";
-    return $self->send($buffer, 0, $length, $offset);
+  method syswrite : int ($context : Go::Context, $buffer : string, $length : int = -1, $offset : int = 0) {
+    return $self->send($context, $buffer, 0, $length, $offset);
   }
   
   method sysread_v2 : int ($context : Go::Context, $buffer : mutable string, $length : int = -1, $offset : int = 0) {
@@ -367,18 +358,18 @@ class IO::Socket extends IO::Handle {
     $self->{FD} = $fd;
   }
   
-  protected method connect : void () {
+  protected method connect : void ($context : Go::Context) {
     my $fd = $self->{FD};
     my $sockaddr = $self->{PeerSockaddr};
     
     while (1) {
-      my $timeout_duration = $self->get_remaining_duration(1);
+      $context = $self->get_context_with_deadline($context, 0);
       
       eval { Sys->connect($fd, $sockaddr); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_connect_again(Sys::Socket::Errno->errno);
         if ($again) {
-          Go->gosched_io_write($fd, $timeout_duration);
+          Go->gosched_poll_write($context, $fd);
           next;
         }
         else {

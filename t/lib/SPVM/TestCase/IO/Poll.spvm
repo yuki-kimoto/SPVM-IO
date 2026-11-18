@@ -350,12 +350,12 @@ class TestCase::IO::Poll {
         my $host = "127.0.0.1";
         
         my $sockets = [
-          IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port}),
-          IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port}),
-          IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port}),
+          IO::Socket::IP->new({Context => Go->bg, PeerAddr => $host, PeerPort => $port}),
+          IO::Socket::IP->new({Context => Go->bg, PeerAddr => $host, PeerPort => $port}),
+          IO::Socket::IP->new({Context => Go->bg, PeerAddr => $host, PeerPort => $port}),
         ];
         
-        my $socket_disable = IO::Socket::IP->new({PeerAddr => $host, PeerPort => $port});
+        my $socket_disable = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $host, PeerPort => $port});
         
         my $poll = IO::Poll->new;
         
@@ -402,7 +402,7 @@ class TestCase::IO::Poll {
         for my $socket (@$sockets) {
           
           my $write_date = "GET /hello HTTP/1.0\r\nHost: $host\r\n\r\n";
-          $socket->syswrite($write_date);
+          $socket->syswrite(Go->bg, $write_date);
           
           $socket->shutdown(SOCKET->SHUT_WR);
           
@@ -420,7 +420,7 @@ class TestCase::IO::Poll {
           
           my $read_data = (mutable string)new_string_len 1000;
           
-          my $read_length = $socket->sysread($read_data);
+          my $read_length = $socket->sysread(Go->bg, $read_data);
           
           unless ($read_length > 0 && $read_length < 1000) {
             diag $read_length;

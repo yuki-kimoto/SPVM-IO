@@ -19,12 +19,14 @@ IO::Socket::UNIX class in L<SPVM> represents an UNIX domain socket.
   # Client
   my $sock_path = "/tmp/test.sock";
   my $socket = IO::Socket::UNIX->new({
+    Context => Go->bg,
     Peer => $sock_path,
   });
   
   # Server
   my $sock_path = "/tmp/test.sock";
   my $socket = IO::Socket::UNIX->new({
+    Context => Go->bg,
     Local => $sock_path,
     Listen    => 0,
   });

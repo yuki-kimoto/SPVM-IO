@@ -44,6 +44,12 @@ C<has Timeout : protected double;>
 
 An B<inactivity timeout> in seconds for read, write, connect, and accept operations. This represents the maximum allowed idle time for a single I/O operation.
 
+=head2 Context
+
+C<has Context : L<Go::Context|SPVM::Go::Context>;>
+
+Context.
+
 =head2 ReadDeadline
 
 C<has ReadDeadline : protected L<Go::Time|SPVM::Go::Time>;>
@@ -120,7 +126,7 @@ This method is implemented in a child class.
 
 =head2 sysread
 
-C<method sysread : int ($string : mutable string, $length : int = -1, $offset : int = 0);>
+C<method sysread : int ($context : Go::Context, $string : mutable string, $length : int = -1, $offset : int = 0);>
 
 Reads the length $length of data from the stream associated with the file descriptoer L</"FD"> and store it to the offset $offset position of the string $string.
 
@@ -128,7 +134,7 @@ And returns the read length.
 
 =head2 syswrite
 
-C<method syswrite : int ($string : string, $length : int = -1, $offset : int = 0);>
+C<method syswrite : int ($context : Go::Context, $string : string, $length : int = -1, $offset : int = 0);>
 
 Writes the length $length from the offset $offset of the string $string to the stream associated with the file descriptoer L</"FD">.
 

@@ -13,6 +13,7 @@ SPVM::IO::Socket::INET - IPv4 Sockets
   my $host = "google.com";
   my $port = 80;
   my $socket = IO::Socket::INET->new({
+    Context => Go->bg,
     PeerAddr => $host,
     PeerPort => $port
   });

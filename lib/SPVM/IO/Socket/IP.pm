@@ -15,12 +15,14 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
   my $host = "www.perl.org";
   my $port = 80;
   my $socket = IO::Socket::IP->new({
+    Context => Go->bg,
     PeerAddr => $host,
     PeerPort => $port
   });
   
   # Server Socket
   my $socket = IO::Socket::IP->new({
+    Context => Go->bg,
     LocalAddr => 'localhost',
     LocalPort => 9000,
     Listen    => 0, # SOMAXCONN
@@ -30,6 +32,7 @@ SPVM::IO::Socket::IP - IPv4/IPv6 Sockets
   my $host = "google.com";
   my $port = 80;
   my $socket = IO::Socket::IP->new({
+    Context => Go->bg,
     PeerAddr => $host,
     PeerPort => $port,
     Domain => SOCKET->AF_INET6,
@@ -271,7 +274,7 @@ If L<Domain|SPVM::IO::Socket/"Domain"> field is C<AF_INET6>, this method calls L
 
 =head2 accept
 
-C<method accept : L<IO::Socket::IP|SPVM::IO::Socket::IP> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
+C<method accept : L<IO::Socket::IP|SPVM::IO::Socket::IP> ($context : Go::Context, $peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
 
 This method is the same as L<accept|SPVM::IO::Socket/"accept"> method, but its return type is different.
 

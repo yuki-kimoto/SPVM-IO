@@ -76,7 +76,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port});
         
         unless ($socket is_type IO::Socket::IP) {
           diag;
@@ -91,7 +91,7 @@ class TestCase::IO::Socket::IP {
       }
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Context => Go->bg});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port, Context => Go->bg});
         
         unless ($socket is_type IO::Socket::IP) {
           diag;
@@ -109,7 +109,7 @@ class TestCase::IO::Socket::IP {
       {
         # IPPROTO_UDP
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Type => SOCKET_C->SOCK_DGRAM, Proto => SOCKET_C->IPPROTO_UDP});
+          my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port, Type => SOCKET_C->SOCK_DGRAM, Proto => SOCKET_C->IPPROTO_UDP});
           
           unless ($socket->protocol == SOCKET_C->IPPROTO_UDP) {
             diag;
@@ -128,7 +128,7 @@ class TestCase::IO::Socket::IP {
       {
         # ReuseAddr
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, ReuseAddr => 1});
+          my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port, ReuseAddr => 1});
           
           my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->SOL_SOCKET, SOCKET_C->SO_REUSEADDR);
           
@@ -143,7 +143,7 @@ class TestCase::IO::Socket::IP {
           diag "[Skip Test]Windows do not support SO_REUSEPORT.";
         }
         else {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, ReusePort => 1});
+          my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port, ReusePort => 1});
           
           my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->SOL_SOCKET, SOCKET_C->SO_REUSEPORT);
           
@@ -155,7 +155,7 @@ class TestCase::IO::Socket::IP {
         
         # Broadcast
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Type => SOCKET_C->SOCK_DGRAM, Broadcast => 1});
+          my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port, Type => SOCKET_C->SOCK_DGRAM, Broadcast => 1});
           
           my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->SOL_SOCKET, SOCKET_C->SO_BROADCAST);
           
@@ -169,7 +169,7 @@ class TestCase::IO::Socket::IP {
       # Exceptions
       {
         {
-          eval { my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, Listen => 1}); }
+          eval { my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, Listen => 1}); }
           
           unless ($@) {
             diag;
@@ -226,7 +226,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -240,7 +240,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port});
         
         my $peerhost = $socket->peerhost;
         
@@ -297,7 +297,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -311,7 +311,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port});
         
         my $peerport = $socket->peerport;
         
@@ -368,7 +368,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -382,7 +382,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port});
         
         my $sockhost = $socket->sockhost;
         
@@ -440,7 +440,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -454,7 +454,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port});
         
         my $sockport = $socket->sockport;
         
@@ -513,7 +513,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -527,7 +527,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port});
         
         my $sockaddr = $socket->sockaddr;
         
@@ -584,7 +584,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -598,7 +598,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port});
         
         my $peeraddr = $socket->peeraddr;
         
@@ -656,7 +656,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -670,7 +670,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         unless ($socket is_type IO::Socket::IP) {
           diag;
@@ -685,7 +685,7 @@ class TestCase::IO::Socket::IP {
       
       {
         {
-          my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6, V6Only => 1});
+          my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6, V6Only => 1});
           
           my $ret = Sys->getsockopt($socket->fileno, SOCKET_C->IPPROTO_IPV6, SOCKET_C->IPV6_V6ONLY);
           
@@ -745,7 +745,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -759,7 +759,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         unless ($socket is_type IO::Socket::IP) {
           diag;
@@ -773,7 +773,7 @@ class TestCase::IO::Socket::IP {
       }
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $peerhost = $socket->peerhost;
         
@@ -832,7 +832,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -846,7 +846,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $peerport = $socket->peerport;
         
@@ -904,7 +904,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -918,7 +918,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $sockhost = $socket->sockhost;
         
@@ -976,7 +976,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -990,7 +990,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $sockport = $socket->sockport;
         
@@ -1049,7 +1049,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -1063,7 +1063,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $peeraddr = $socket->peeraddr;
         
@@ -1121,7 +1121,7 @@ class TestCase::IO::Socket::IP {
         $server_socket->close;
       });
       
-      eval { $server_socket->accept; }
+      eval { $server_socket->accept(Go->bg); }
     });
     
     Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel, $stop_server_ch : Go::Channel] method : void () {
@@ -1135,7 +1135,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST_V6, PeerPort => $port, Domain => SOCKET_C->AF_INET6});
         
         my $sockaddr = $socket->sockaddr;
         
@@ -1184,7 +1184,7 @@ class TestCase::IO::Socket::IP {
       
       $wait_server_start_ch->write(1);
       
-      my $client_socket = $server_socket->accept;
+      my $client_socket = $server_socket->accept(Go->bg);
       
       while (1) {
         
@@ -1193,7 +1193,7 @@ class TestCase::IO::Socket::IP {
         my $read_length = $client_socket->sysread_v2(Go->bg, $data, length $data);
         
         if ($read_length > 0) {
-          $client_socket->syswrite($data);
+          $client_socket->syswrite(Go->bg, $data);
         }
         else {
           last;
@@ -1210,7 +1210,7 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0]});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0]});
         
         my $write_data = "abc\n";
         
@@ -1222,7 +1222,7 @@ class TestCase::IO::Socket::IP {
         
         while (1) {
           
-          my $read_length = $socket->sysread($read_data);
+          my $read_length = $socket->sysread(Go->bg, $read_data);
           
           if ($read_length > 0) {
             $string_buffer->push($read_data);
@@ -1279,6 +1279,7 @@ class TestCase::IO::Socket::IP {
       {
         my $host = "::1";
         my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           PeerAddr => $host,
           PeerPort => $port,
         });
@@ -1290,13 +1291,13 @@ class TestCase::IO::Socket::IP {
         }
         
         my $write_data = "Hello IPv6 Echo 1";
-        $socket->syswrite($write_data);
+        $socket->syswrite(Go->bg, $write_data);
         
         $socket->shutdown(SOCKET_C->SHUT_WR);
         
         my $read_data = (mutable string)new_string_len 1000;
         
-        my $read_length = $socket->sysread($read_data);
+        my $read_length = $socket->sysread(Go->bg, $read_data);
         
         unless ($read_length > 0 && $read_length < 1000) {
           diag $read_length;
@@ -1321,18 +1322,19 @@ class TestCase::IO::Socket::IP {
       {
         my $host = "::1";
         my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           PeerAddr => $host,
           PeerPort => $port,
         });
         
         my $write_data = "Hello IPv6 Echo 2";
-        $socket->syswrite($write_data);
+        $socket->syswrite(Go->bg, $write_data);
         
         $socket->shutdown(SOCKET_C->SHUT_WR);
         
         my $read_data = (mutable string)new_string_len 1000;
         
-        my $read_length = $socket->sysread($read_data);
+        my $read_length = $socket->sysread(Go->bg, $read_data);
         
         unless ($read_length > 0 && $read_length < 1000) {
           diag $read_length;
@@ -1390,7 +1392,7 @@ class TestCase::IO::Socket::IP {
         $wait_server_start_ch->write(1);
         
         my $client_socket = (IO::Socket::IP)undef;
-        eval { $client_socket = $server_socket->accept; }
+        eval { $client_socket = $server_socket->accept(Go->bg); }
         
         if ($@) {
           if ($@ isa Go::Error::IOTimeout) {
@@ -1409,10 +1411,10 @@ class TestCase::IO::Socket::IP {
           
           my $data = (mutable string)new_string_len 1;
           
-          my $read_length = $client_socket->sysread($data, length $data);
+          my $read_length = $client_socket->sysread(Go->bg, $data, length $data);
           
           if ($read_length > 0) {
-            $client_socket->syswrite($data);
+            $client_socket->syswrite(Go->bg, $data);
           }
           else {
             last;
@@ -1431,11 +1433,11 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0]});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0]});
         
         my $write_data = "abc\n";
         
-        $socket->syswrite($write_data);
+        $socket->syswrite(Go->bg, $write_data);
         
         my $string_buffer = StringBuffer->new;
         
@@ -1443,7 +1445,7 @@ class TestCase::IO::Socket::IP {
         
         while (1) {
           
-          my $read_length = $socket->sysread($read_data);
+          my $read_length = $socket->sysread(Go->bg, $read_data);
           
           if ($read_length > 0) {
             $string_buffer->push($read_data);
@@ -1492,7 +1494,7 @@ class TestCase::IO::Socket::IP {
         
         $wait_server_start_ch->write(1);
         
-        my $client_socket = $server_socket->accept;
+        my $client_socket = $server_socket->accept(Go->bg);
         
         Go->sleep_sec(0.5);
       }
@@ -1508,11 +1510,11 @@ class TestCase::IO::Socket::IP {
       });
       
       {
-        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0], Timeout => 0.25});
+        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0], Timeout => 0.25});
         
         my $read_data = (mutable string)new_string_len 1;
         
-        eval { $socket->sysread($read_data); }
+        eval { $socket->sysread(Go->bg, $read_data); }
         
         unless ($@ && $@ isa Go::Error::IOTimeout) {
           diag;
@@ -1543,6 +1545,7 @@ class TestCase::IO::Socket::IP {
       my $socket = (IO::Socket::IP)undef;
       eval {
         $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           PeerAddr => $LOCALHOST,
           ReadDeadline => $deadline,
           WriteDeadline => $deadline,
@@ -1587,7 +1590,7 @@ class TestCase::IO::Socket::IP {
           
           $start_server_ch->write(1);
           
-          my $client_socket = $listen_socket->accept;
+          my $client_socket = $listen_socket->accept(Go->bg);
           
           Go->sleep(Go::Duration_1l->new_from_sec(1.0));
           
@@ -1603,6 +1606,7 @@ class TestCase::IO::Socket::IP {
       eval {
         # Connect to the server
         my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           PeerAddr => $LOCALHOST,
           PeerPort => $port,
         });
@@ -1613,7 +1617,7 @@ class TestCase::IO::Socket::IP {
         
         my $buffer = (mutable string)new_string_len 1024;
         
-        $socket->sysread($buffer);
+        $socket->sysread(Go->bg, $buffer);
         
         # If no exception is thrown, it's a failure.
         diag "sysread unexpectedly succeeded or returned 0 before deadline.";
@@ -1653,7 +1657,7 @@ class TestCase::IO::Socket::IP {
           
           $start_server_ch->write(1);
           
-          my $client_socket = $listen_socket->accept;
+          my $client_socket = $listen_socket->accept(Go->bg);
           
           # Keep the connection alive longer than the client's deadline.
           Go->sleep(Go::Duration_1l->new_from_sec(2.0));
@@ -1669,6 +1673,7 @@ class TestCase::IO::Socket::IP {
       
       eval {
         my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           PeerAddr => $LOCALHOST,
           PeerPort => $port,
         });
@@ -1681,7 +1686,7 @@ class TestCase::IO::Socket::IP {
         my $payload = Fn->repeat("a", 8192);
         
         while (1) {
-          $socket->syswrite($payload);
+          $socket->syswrite(Go->bg, $payload);
         }
       }
       if ($@) {
@@ -1714,7 +1719,7 @@ class TestCase::IO::Socket::IP {
         my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.5));
         $listen_socket->set_deadline($deadline);
         
-        my $client_socket = $listen_socket->accept;
+        my $client_socket = $listen_socket->accept(Go->bg);
         
         diag "accept unexpectedly succeeded before deadline.";
         $success_ref->[0] = 0;
@@ -1753,7 +1758,7 @@ class TestCase::IO::Socket::IP {
           
           $start_server_ch->write(1);
           
-          my $client_socket = $listen_socket->accept;
+          my $client_socket = $listen_socket->accept(Go->bg);
           
           Go->sleep(Go::Duration_1l->new_from_sec(1.0));
           
@@ -1768,6 +1773,7 @@ class TestCase::IO::Socket::IP {
       
       eval {
         my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           PeerAddr => $LOCALHOST,
           PeerPort => $port,
         });
@@ -1778,7 +1784,7 @@ class TestCase::IO::Socket::IP {
         $socket->set_read_deadline($read_deadline);
         
         my $buffer = (mutable string)new_string_len 1024;
-        $socket->sysread($buffer);
+        $socket->sysread(Go->bg, $buffer);
         
         diag "sysread unexpectedly succeeded before ReadDeadline.";
         $success_ref->[0] = 0;
@@ -1815,7 +1821,7 @@ class TestCase::IO::Socket::IP {
           
           $start_server_ch->write(1);
           
-          my $client_socket = $listen_socket->accept;
+          my $client_socket = $listen_socket->accept(Go->bg);
           
           Go->sleep(Go::Duration_1l->new_from_sec(1.5));
           
@@ -1830,6 +1836,7 @@ class TestCase::IO::Socket::IP {
       
       eval {
         my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           PeerAddr => $LOCALHOST,
           PeerPort => $port,
         });
@@ -1840,7 +1847,7 @@ class TestCase::IO::Socket::IP {
         
         my $payload = Fn->repeat("a", 8192);
         while (1) {
-          $socket->syswrite($payload);
+          $socket->syswrite(Go->bg, $payload);
         }
       }
       if ($@) {
@@ -1901,7 +1908,7 @@ class TestCase::IO::Socket::IP {
         
         while (1) {
           eval {
-            $read_length = $server_socket->recvfrom($buffer, length $buffer, 0, $from_ref);
+            $read_length = $server_socket->recvfrom(Go->bg, $buffer, length $buffer, 0, $from_ref);
           };
           if ($@) {
             my $errno = Sys::Socket::Errno->errno;
@@ -1925,7 +1932,7 @@ class TestCase::IO::Socket::IP {
           
           while (1) {
             eval {
-              $sent_length = $server_socket->sendto($message, 0, $peer);
+              $sent_length = $server_socket->sendto(Go->bg, $message, 0, $peer);
             };
             if ($@) {
               my $errno = Sys::Socket::Errno->errno;
@@ -1960,6 +1967,7 @@ class TestCase::IO::Socket::IP {
       
       {
         my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           PeerAddr => $LOCALHOST,
           PeerPort => $port,
           Type     => SOCKET_C->SOCK_DGRAM,
@@ -1973,7 +1981,7 @@ class TestCase::IO::Socket::IP {
           
           while (1) {
             eval {
-              $sent_length = $socket->send($write_data);
+              $sent_length = $socket->send(Go->bg, $write_data);
             };
             if ($@) {
               my $errno = Sys::Socket::Errno->errno;
@@ -1995,7 +2003,7 @@ class TestCase::IO::Socket::IP {
           
           while (1) {
             eval {
-              $read_length = $socket->recv($read_data, length $read_data);
+              $read_length = $socket->recv(Go->bg, $read_data, length $read_data);
             };
             if ($@) {
               my $errno = Sys::Socket::Errno->errno;
@@ -2073,12 +2081,12 @@ class TestCase::IO::Socket::IP {
       for (my $i = 0; $i < 2; $i++) {
         my $buffer = (mutable string)new_string_len 1024;
         my $from_ref = new Sys::Socket::Sockaddr[1];
-        my $read_length = $server_socket->recvfrom($buffer, length $buffer, 0, $from_ref);
+        my $read_length = $server_socket->recvfrom(Go->bg, $buffer, length $buffer, 0, $from_ref);
         
         if ($read_length > 0) {
           my $message = Fn->substr($buffer, 0, $read_length);
           my $peer = $from_ref->[0];
-          $server_socket->sendto($message, 0, $peer);
+          $server_socket->sendto(Go->bg, $message, 0, $peer);
         }
         else {
           $success_ref->[0] = 0;
@@ -2109,10 +2117,10 @@ class TestCase::IO::Socket::IP {
         # Perform 2 packet read/write exchanges using sendto
         for (my $i = 0; $i < 2; $i++) {
           my $write_data = "packet " . ($i + 1) . "\n";
-          $socket->sendto($write_data, 0, $dest_addr);
+          $socket->sendto(Go->bg, $write_data, 0, $dest_addr);
           
           my $read_data = (mutable string)new_string_len 1024;
-          my $read_length = $socket->recv($read_data, length $read_data);
+          my $read_length = $socket->recv(Go->bg, $read_data, length $read_data);
           
           if ($read_length > 0) {
             my $response = Fn->substr($read_data, 0, $read_length);
