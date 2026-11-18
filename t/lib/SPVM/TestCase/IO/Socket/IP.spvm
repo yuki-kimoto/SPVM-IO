@@ -1377,519 +1377,6 @@ class TestCase::IO::Socket::IP {
     
     return 1;
   }
-
-=pod TODO
-
-  static method accept_timeout_only_field_value : int () {
-    
-    my $success_ref = [1];
-    
-    my $wait_server_start_ch = Go->make;
-    
-    my $wg = Go::Sync::WaitGroup->new;
-    
-    $wg->add(2);
-    
-    my $port_ref = [-1];
-    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel] method : void () {
-      
-      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
-        $wg->done;
-      });
-      
-      {
-        my $server_socket = IO::Socket::IP->new({
-          Context => Go->bg,
-          LocalAddr => $LOCALHOST,
-          Listen    => 5,
-          ReuseAddr => 1,
-          Timeout => 1.0,
-        });
-        
-        $port_ref->[0] = $server_socket->sockport;
-        
-        $wait_server_start_ch->write(1);
-        
-        my $client_socket = (IO::Socket::IP)undef;
-        eval { $client_socket = $server_socket->accept(Go->bg); }
-        
-        if ($@) {
-          if ($@ isa Go::Error::IOTimeout) {
-            return;
-          }
-          else {
-            die $@;
-          }
-        }
-        
-        unless ($client_socket->timeout == 0) {
-          $success_ref->[0] = 0;
-        }
-        
-        while (1) {
-          
-          my $data = (mutable string)new_string_len 1;
-          
-          my $read_length = $client_socket->sysread(Go->bg, $data, length $data);
-          
-          if ($read_length > 0) {
-            $client_socket->syswrite(Go->bg, $data);
-          }
-          else {
-            last;
-          }
-        }
-      }
-      
-    });
-    
-    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $port_ref : int[], $wait_server_start_ch : Go::Channel] method : void () {
-      
-      $wait_server_start_ch->read;
-      
-      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
-        $wg->done;
-      });
-      
-      {
-        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0]});
-        
-        my $write_data = "abc\n";
-        
-        $socket->syswrite(Go->bg, $write_data);
-        
-        my $string_buffer = StringBuffer->new;
-        
-        my $read_data = (mutable string)new_string_len 1;
-        
-        while (1) {
-          
-          my $read_length = $socket->sysread(Go->bg, $read_data);
-          
-          if ($read_length > 0) {
-            $string_buffer->push($read_data);
-          }
-          
-          if ($read_data eq "\n") {
-            last;
-          }
-        }
-        
-        unless ($string_buffer->to_string eq "abc\n") {
-          $success_ref->[0] = 0;
-        }
-      }
-    });
-    
-    $wg->wait;
-    
-    return $success_ref->[0];
-  }
-  
-  static method read_timeout : int () {
-    
-    my $success_ref = [1];
-    
-    my $wg = Go::Sync::WaitGroup->new;
-    
-    $wg->add(2);
-    
-    my $wait_server_start_ch = Go->make;
-    my $port_ref = [-1];
-    Go->go([$wg : Go::Sync::WaitGroup, $wait_server_start_ch : Go::Channel, $port_ref : int[]] method : void () {
-      
-      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
-        $wg->done;
-      });
-      
-      {
-        my $server_socket = IO::Socket::IP->new({
-          Context => Go->bg,
-          LocalAddr => $LOCALHOST,
-          Listen    => 5,
-          ReuseAddr => 1,
-        });
-        
-        $port_ref->[0] = $server_socket->sockport;
-        
-        $wait_server_start_ch->write(1);
-        
-        my $client_socket = $server_socket->accept(Go->bg);
-        
-        Go->sleep_sec(0.5);
-      }
-      
-    });
-    
-    Go->go([$wg : Go::Sync::WaitGroup, $success_ref : int[], $wait_server_start_ch : Go::Channel, $port_ref : int[]] method : void () {
-      
-      $wait_server_start_ch->read;
-      
-      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
-        $wg->done;
-      });
-      
-      {
-        my $socket = IO::Socket::IP->new({Context => Go->bg, PeerAddr => $LOCALHOST, PeerPort => $port_ref->[0], Timeout => 0.25});
-        
-        my $read_data = (mutable string)new_string_len 1;
-        
-        eval { $socket->sysread(Go->bg, $read_data); }
-        
-        unless ($@ && $@ isa Go::Error::IOTimeout) {
-          diag;
-          $success_ref->[0] = 0;
-        }
-        
-      }
-    });
-    $wg->wait;
-    
-    Go->gosched;
-    
-    unless ($success_ref->[0]) {
-      return 0;
-    }
-    
-    return 1;
-  }
-
-=cut
-
-  static method connect_deadline : int () {
-    
-    my $success_ref = [1];
-    
-    {
-      # Use a deadline that has already passed to ensure an immediate timeout.
-      my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(-1.0));
-      
-      my $socket = (IO::Socket::IP)undef;
-      eval {
-        $socket = IO::Socket::IP->new({
-          Context => Go->bg,
-          PeerAddr => $LOCALHOST,
-          ReadDeadline => $deadline,
-          WriteDeadline => $deadline,
-        });
-      }
-      
-      if ($@) {
-        # Check if the error is Go::Error::IOTimeout.
-        unless ($@ isa Go::Error::IOTimeout) {
-          diag "Unexpected error: " . $@;
-          $success_ref->[0] = 0;
-        }
-      }
-      else {
-        # If the socket is created, the deadline check failed.
-        diag "Connection unexpectedly succeeded despite an expired deadline.";
-        $success_ref->[0] = 0;
-        if ($socket) { $socket->close; }
-      }
-    }
-    
-    return $success_ref->[0];
-  }
-  
-  static method read_deadline : int () {
-    
-    my $success_ref = [1];
-    
-    Go->go([$success_ref : int[]] method : void () {
-      my $start_server_ch = Go->make;
-      
-      my $port_ref = [-1];
-      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
-        eval {
-          my $listen_socket = IO::Socket::IP->new({
-            Context => Go->bg,
-            LocalAddr => $LOCALHOST,
-            Listen => 5,
-            ReuseAddr => 1,
-          });
-          
-          $port_ref->[0] = $listen_socket->sockport;
-          
-          $start_server_ch->write(1);
-          
-          my $client_socket = $listen_socket->accept(Go->bg);
-          
-          Go->sleep(Go::Duration_1l->new_from_sec(1.0));
-          
-          $client_socket->close;
-          $listen_socket->close;
-        }
-        if ($@) { diag "Server error: " . $@; }
-      });
-      
-      $start_server_ch->read;
-      my $port = $port_ref->[0];
-      
-      eval {
-        # Connect to the server
-        my $socket = IO::Socket::IP->new({
-          Context => Go->bg,
-          PeerAddr => $LOCALHOST,
-          PeerPort => $port,
-        });
-        
-        # Set a short deadline (0.5 seconds from now)
-        my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.5));
-        $socket->set_deadline($deadline);
-        
-        my $buffer = (mutable string)new_string_len 1024;
-        
-        $socket->sysread(Go->bg, $buffer);
-        
-        # If no exception is thrown, it's a failure.
-        diag "sysread unexpectedly succeeded or returned 0 before deadline.";
-        $success_ref->[0] = 0;
-        $socket->close;
-      }
-      if ($@) {
-        # Check if the error is exactly Go::Error::IOTimeout
-        unless ($@ isa Go::Error::IOTimeout) {
-          diag "Unexpected error type: " . $@;
-          $success_ref->[0] = 0;
-        }
-      }
-    });
-    Go->gosched;
-    
-    return $success_ref->[0];
-  }
-  
-  static method write_deadline : int () {
-    
-    my $success_ref = [1];
-    
-    Go->go([$success_ref : int[]] method : void () {
-      my $start_server_ch = Go->make;
-      
-      my $port_ref = [-1];
-      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
-        eval {
-          my $listen_socket = IO::Socket::IP->new({
-            Context => Go->bg,
-            LocalAddr => $LOCALHOST,
-            Listen => 5,
-            ReuseAddr => 1,
-          });
-          
-          $port_ref->[0] = $listen_socket->sockport;
-          
-          $start_server_ch->write(1);
-          
-          my $client_socket = $listen_socket->accept(Go->bg);
-          
-          # Keep the connection alive longer than the client's deadline.
-          Go->sleep(Go::Duration_1l->new_from_sec(2.0));
-          
-          $client_socket->close;
-          $listen_socket->close;
-        }
-        if ($@) { diag "Server error: " . $@; }
-      });
-      
-      $start_server_ch->read;
-      my $port = $port_ref->[0];
-      
-      eval {
-        my $socket = IO::Socket::IP->new({
-          Context => Go->bg,
-          PeerAddr => $LOCALHOST,
-          PeerPort => $port,
-        });
-        
-        # Set a very short deadline to ensure it triggers.
-        my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.5));
-        $socket->set_deadline($deadline);
-        
-        # Smaller payload, but send many times.
-        my $payload = Fn->repeat("a", 8192);
-        
-        while (1) {
-          $socket->syswrite(Go->bg, $payload);
-        }
-      }
-      if ($@) {
-        unless ($@ isa Go::Error::IOTimeout) {
-          diag "Unexpected error: " . $@;
-          $success_ref->[0] = 0;
-        }
-      } else {
-        diag "Exited loop without exception";
-        $success_ref->[0] = 0;
-      }
-    });
-    Go->gosched;
-    
-    return $success_ref->[0];
-  }
-  
-  static method accept_deadline : int () {
-    
-    my $success_ref = [1];
-    
-    Go->go([$success_ref : int[]] method : void () {
-      eval {
-        my $listen_socket = IO::Socket::IP->new({
-          Context => Go->bg,
-          LocalAddr => $LOCALHOST,
-          Listen => 5,
-          ReuseAddr => 1,
-        });
-        
-        my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.5));
-        $listen_socket->set_deadline($deadline);
-        
-        my $client_socket = $listen_socket->accept(Go->bg);
-        
-        diag "accept unexpectedly succeeded before deadline.";
-        $success_ref->[0] = 0;
-        $client_socket->close;
-        $listen_socket->close;
-      }
-      if ($@) {
-        unless ($@ isa Go::Error::IOTimeout) {
-          diag "Unexpected error type in accept: " . $@;
-          $success_ref->[0] = 0;
-        }
-      }
-    });
-    Go->gosched;
-    
-    return $success_ref->[0];
-  }
-  
-  static method read_deadline_specific : int () {
-    
-    my $success_ref = [1];
-    
-    Go->go([$success_ref : int[]] method : void () {
-      my $start_server_ch = Go->make;
-      
-      my $port_ref = [-1];
-      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
-        eval {
-          my $listen_socket = IO::Socket::IP->new({
-            Context => Go->bg,
-            LocalAddr => $LOCALHOST,
-            Listen => 5,
-            ReuseAddr => 1,
-          });
-          
-          $port_ref->[0] = $listen_socket->sockport;
-          
-          $start_server_ch->write(1);
-          
-          my $client_socket = $listen_socket->accept(Go->bg);
-          
-          Go->sleep(Go::Duration_1l->new_from_sec(1.0));
-          
-          $client_socket->close;
-          $listen_socket->close;
-        }
-        if ($@) { diag "Server error: " . $@; }
-      });
-      
-      $start_server_ch->read;
-      my $port = $port_ref->[0];
-      
-      eval {
-        my $socket = IO::Socket::IP->new({
-          Context => Go->bg,
-          PeerAddr => $LOCALHOST,
-          PeerPort => $port,
-        });
-        
-        my $read_deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.3));
-        my $far_deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(10.0));
-        
-        $socket->set_read_deadline($read_deadline);
-        
-        my $buffer = (mutable string)new_string_len 1024;
-        $socket->sysread(Go->bg, $buffer);
-        
-        diag "sysread unexpectedly succeeded before ReadDeadline.";
-        $success_ref->[0] = 0;
-      }
-      if ($@) {
-        unless ($@ isa Go::Error::IOTimeout) {
-          diag "Unexpected error type in sysread: " . $@;
-          $success_ref->[0] = 0;
-        }
-      }
-    });
-    Go->gosched;
-    
-    return $success_ref->[0];
-  }
-  
-  static method write_deadline_specific : int () {
-    
-    my $success_ref = [1];
-    
-    Go->go([$success_ref : int[]] method : void () {
-      my $start_server_ch = Go->make;
-      
-      my $port_ref = [-1];
-      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
-        eval {
-          my $listen_socket = IO::Socket::IP->new({
-            Context => Go->bg,
-            LocalAddr => $LOCALHOST,
-            Listen => 5,
-            ReuseAddr => 1,
-          });
-          
-          $port_ref->[0] = $listen_socket->sockport;
-          
-          $start_server_ch->write(1);
-          
-          my $client_socket = $listen_socket->accept(Go->bg);
-          
-          Go->sleep(Go::Duration_1l->new_from_sec(1.5));
-          
-          $client_socket->close;
-          $listen_socket->close;
-        }
-        if ($@) { diag "Server error: " . $@; }
-      });
-      
-      $start_server_ch->read;
-      my $port = $port_ref->[0];
-      
-      eval {
-        my $socket = IO::Socket::IP->new({
-          Context => Go->bg,
-          PeerAddr => $LOCALHOST,
-          PeerPort => $port,
-        });
-        
-        # Set a short WriteDeadline.
-        my $write_deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(0.3));
-        $socket->set_write_deadline($write_deadline);
-        
-        my $payload = Fn->repeat("a", 8192);
-        while (1) {
-          $socket->syswrite(Go->bg, $payload);
-        }
-      }
-      if ($@) {
-        unless ($@ isa Go::Error::IOTimeout) {
-          diag "Unexpected error type in syswrite: " . $@;
-          $success_ref->[0] = 0;
-        }
-      } else {
-        $success_ref->[0] = 0;
-      }
-    });
-    Go->gosched;
-    
-    return $success_ref->[0];
-  }
   
   static method udp : int () {
     
@@ -2175,5 +1662,413 @@ class TestCase::IO::Socket::IP {
     
     return 1;
   }
+  
+  static method connect_deadline : int () {
+    
+    my $success_ref = [1];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    $wg->add(1);
+    Go->go([$success_ref : int[], $wg : Go::Sync::WaitGroup] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      my $start_server_ch = Go->make;
+      
+      my $port_ref = [-1];
+      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
+        eval {
+          my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
+            LocalAddr => $LOCALHOST,
+            Listen => 5,
+            ReuseAddr => 1,
+          });
+          
+          $port_ref->[0] = $listen_socket->sockport;
+          
+          $start_server_ch->write(1);
+          
+          eval {
+            my $client_socket = $listen_socket->accept(Go->bg);
+            if ($client_socket) { $client_socket->close; }
+          };
+          
+          $listen_socket->close;
+        }
+        if ($@) { diag "Server error: " . $@; }
+      });
+      
+      $start_server_ch->read;
+      my $port = $port_ref->[0];
+      
+      {
+        # Create a context with a negative timeout to ensure an immediate connection timeout.
+        my $ctx_derived = Go::Context->with_timeout_sec(Go::Context->background, -1.0);
+        my $ctx = $ctx_derived->context;
+        
+        my $socket = (IO::Socket::IP)undef;
+        eval {
+          $socket = IO::Socket::IP->new({
+            Context => $ctx,
+            PeerAddr => $LOCALHOST,
+            PeerPort => $port,
+          });
+        }
+        
+        if ($@) {
+          # Check if the error is Go::Error::IOTimeout.
+          unless ($@ isa Go::Error::IOTimeout) {
+            diag "Unexpected error: " . $@;
+            $success_ref->[0] = 0;
+          }
+        }
+        else {
+          # If the socket is created, the deadline check failed.
+          diag "Connection unexpectedly succeeded despite an expired context.";
+          $success_ref->[0] = 0;
+          if ($socket) { $socket->close; }
+        }
+      }
+    });
+    $wg->wait;
+    
+    return $success_ref->[0];
+  }
+  
+  static method read_deadline : int () {
+    
+    my $success_ref = [1];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    $wg->add(1);
+    Go->go([$success_ref : int[], $wg : Go::Sync::WaitGroup] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      my $start_server_ch = Go->make;
+      
+      my $port_ref = [-1];
+      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
+        eval {
+          my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
+            LocalAddr => $LOCALHOST,
+            Listen => 5,
+            ReuseAddr => 1,
+          });
+          
+          $port_ref->[0] = $listen_socket->sockport;
+          
+          $start_server_ch->write(1);
+          
+          my $client_socket = $listen_socket->accept(Go->bg);
+          
+          Go->sleep(Go::Duration_1l->new_from_sec(1.0));
+          
+          $client_socket->close;
+          $listen_socket->close;
+        }
+        if ($@) { diag "Server error: " . $@; }
+      });
+      
+      $start_server_ch->read;
+      my $port = $port_ref->[0];
+      
+      eval {
+        # Connect to the server
+        my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
+          PeerAddr => $LOCALHOST,
+          PeerPort => $port,
+        });
+        
+        # Create a context with a short timeout (0.5 seconds) for sysread
+        my $ctx_derived = Go::Context->with_timeout_sec(Go::Context->background, 0.5);
+        my $ctx = $ctx_derived->context;
+        
+        my $buffer = (mutable string)new_string_len 1024;
+        
+        $socket->sysread($ctx, $buffer);
+        
+        # If no exception is thrown, it's a failure.
+        diag "sysread unexpectedly succeeded or returned 0 before timeout.";
+        $success_ref->[0] = 0;
+        $socket->close;
+      }
+      if ($@) {
+        # Check if the error is exactly Go::Error::IOTimeout
+        unless ($@ isa Go::Error::IOTimeout) {
+          diag "Unexpected error type: " . $@;
+          $success_ref->[0] = 0;
+        }
+      }
+    });
+    $wg->wait;
+    
+    return $success_ref->[0];
+  }
+  
+  static method write_deadline : int () {
+    
+    my $success_ref = [1];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    $wg->add(1);
+    Go->go([$success_ref : int[], $wg : Go::Sync::WaitGroup] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      my $start_server_ch = Go->make;
+      
+      my $port_ref = [-1];
+      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
+        eval {
+          my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
+            LocalAddr => $LOCALHOST,
+            Listen => 5,
+            ReuseAddr => 1,
+          });
+          
+          $port_ref->[0] = $listen_socket->sockport;
+          
+          $start_server_ch->write(1);
+          
+          my $client_socket = $listen_socket->accept(Go->bg);
+          
+          # Keep the connection alive longer than the client's timeout.
+          Go->sleep(Go::Duration_1l->new_from_sec(2.0));
+          
+          $client_socket->close;
+          $listen_socket->close;
+        }
+        if ($@) { diag "Server error: " . $@; }
+      });
+      
+      $start_server_ch->read;
+      my $port = $port_ref->[0];
+      
+      eval {
+        my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
+          PeerAddr => $LOCALHOST,
+          PeerPort => $port,
+        });
+        
+        # Create a context with a very short timeout to ensure it triggers.
+        my $ctx_derived = Go::Context->with_timeout_sec(Go::Context->background, 0.5);
+        my $ctx = $ctx_derived->context;
+        
+        # Smaller payload, but send many times.
+        my $payload = Fn->repeat("a", 8192);
+        
+        while (1) {
+          $socket->syswrite($ctx, $payload);
+        }
+      }
+      if ($@) {
+        unless ($@ isa Go::Error::IOTimeout) {
+          diag "Unexpected error: " . $@;
+          $success_ref->[0] = 0;
+        }
+      } else {
+        diag "Exited loop without exception";
+        $success_ref->[0] = 0;
+      }
+    });
+    $wg->wait;
+    
+    return $success_ref->[0];
+  }
+  
+  static method accept_deadline : int () {
+    
+    my $success_ref = [1];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    $wg->add(1);
+    Go->go([$success_ref : int[], $wg : Go::Sync::WaitGroup] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      eval {
+        my $listen_socket = IO::Socket::IP->new({
+          Context => Go->bg,
+          LocalAddr => $LOCALHOST,
+          Listen => 5,
+          ReuseAddr => 1,
+        });
+        
+        # Create a context with a short timeout (0.5 seconds) for accept.
+        my $ctx_derived = Go::Context->with_timeout_sec(Go::Context->background, 0.5);
+        my $ctx = $ctx_derived->context;
+        
+        my $client_socket = $listen_socket->accept($ctx);
+        
+        diag "accept unexpectedly succeeded before timeout.";
+        $success_ref->[0] = 0;
+        if ($client_socket) { $client_socket->close; }
+        $listen_socket->close;
+      }
+      if ($@) {
+        unless ($@ isa Go::Error::IOTimeout) {
+          diag "Unexpected error type in accept: " . $@;
+          $success_ref->[0] = 0;
+        }
+      }
+    });
+    $wg->wait;
+    
+    return $success_ref->[0];
+  }
+  
+  static method read_deadline_specific : int () {
+    
+    my $success_ref = [1];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    $wg->add(1);
+    Go->go([$success_ref : int[], $wg : Go::Sync::WaitGroup] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      my $start_server_ch = Go->make;
+      
+      my $port_ref = [-1];
+      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
+        eval {
+          my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
+            LocalAddr => $LOCALHOST,
+            Listen => 5,
+            ReuseAddr => 1,
+          });
+          
+          $port_ref->[0] = $listen_socket->sockport;
+          
+          $start_server_ch->write(1);
+          
+          my $client_socket = $listen_socket->accept(Go->bg);
+          
+          Go->sleep(Go::Duration_1l->new_from_sec(1.0));
+          
+          $client_socket->close;
+          $listen_socket->close;
+        }
+        if ($@) { diag "Server error: " . $@; }
+      });
+      
+      $start_server_ch->read;
+      my $port = $port_ref->[0];
+      
+      eval {
+        my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
+          PeerAddr => $LOCALHOST,
+          PeerPort => $port,
+        });
+        
+        my $ctx_derived = Go::Context->with_timeout_sec(Go::Context->background, 0.3);
+        my $ctx = $ctx_derived->context;
+        
+        my $buffer = (mutable string)new_string_len 1024;
+        $socket->sysread($ctx, $buffer);
+        
+        diag "sysread unexpectedly succeeded before timeout.";
+        $success_ref->[0] = 0;
+      }
+      if ($@) {
+        unless ($@ isa Go::Error::IOTimeout) {
+          diag "Unexpected error type in sysread: " . $@;
+          $success_ref->[0] = 0;
+        }
+      }
+    });
+    $wg->wait;
+    
+    return $success_ref->[0];
+  }
+  
+  static method write_deadline_specific : int () {
+    
+    my $success_ref = [1];
+    
+    my $wg = Go::Sync::WaitGroup->new;
+    $wg->add(1);
+    Go->go([$success_ref : int[], $wg : Go::Sync::WaitGroup] method : void () {
+      
+      Fn->defer([$wg : Go::Sync::WaitGroup] method : void () {
+        $wg->done;
+      });
+      
+      my $start_server_ch = Go->make;
+      
+      my $port_ref = [-1];
+      Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
+        eval {
+          my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
+            LocalAddr => $LOCALHOST,
+            Listen => 5,
+            ReuseAddr => 1,
+          });
+          
+          $port_ref->[0] = $listen_socket->sockport;
+          
+          $start_server_ch->write(1);
+          
+          my $client_socket = $listen_socket->accept(Go->bg);
+          
+          Go->sleep(Go::Duration_1l->new_from_sec(1.5));
+          
+          $client_socket->close;
+          $listen_socket->close;
+        }
+        if ($@) { diag "Server error: " . $@; }
+      });
+      
+      $start_server_ch->read;
+      my $port = $port_ref->[0];
+      
+      eval {
+        my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
+          PeerAddr => $LOCALHOST,
+          PeerPort => $port,
+        });
+        
+        my $ctx_derived = Go::Context->with_timeout_sec(Go::Context->background, 0.3);
+        my $ctx = $ctx_derived->context;
+        
+        my $payload = Fn->repeat("a", 8192);
+        while (1) {
+          $socket->syswrite($ctx, $payload);
+        }
+      }
+      if ($@) {
+        unless ($@ isa Go::Error::IOTimeout) {
+          diag "Unexpected error type in syswrite: " . $@;
+          $success_ref->[0] = 0;
+        }
+      } else {
+        $success_ref->[0] = 0;
+      }
+    });
+    $wg->wait;
+    
+    return $success_ref->[0];
+  }
+  
 }
 

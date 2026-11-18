@@ -44,18 +44,6 @@ C<has context : L<Go::Context|SPVM::Go::Context>;>
 
 Context.
 
-=head2 read_deadline
-
-C<has read_deadline : protected L<Go::Time|SPVM::Go::Time>;>
-
-An B<absolute deadline> for read operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
-
-=head2 write_deadline
-
-C<has write_deadline : protected L<Go::Time|SPVM::Go::Time>;>
-
-An B<absolute deadline> for write operations. If this deadline is reached, the operation is interrupted, and a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
-
 =head1 Class Methods
 
 =head1 Instance Methods
@@ -167,36 +155,6 @@ C<method truncate : void ($legnth : long);>
 Trancates the stream associated with the file descriptoer L</"fd">.
 
 This method is implemented in a child class.
-
-=head2 set_deadline
-
-C<method set_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
-
-Sets both L</"read_deadline"> and L</"write_deadline"> fields to C<$deadline>.
-
-=head2 read_deadline
-
-C<method read_deadline : L<Go::Time|SPVM::Go::Time> ();>
-
-Returns the value of L</"read_deadline"> field.
-
-=head2 set_read_deadline
-
-C<method set_read_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
-
-Sets L</"read_deadline"> field to $deadline.
-
-=head2 write_deadline
-
-C<method write_deadline : L<Go::Time|SPVM::Go::Time> ();>
-
-Returns the value of L</"write_deadline"> field.
-
-=head2 set_write_deadline
-
-C<method set_write_deadline : void ($deadline : L<Go::Time|SPVM::Go::Time>);>
-
-Sets L</"write_deadline"> field to $deadline.
 
 =head2 DESTROY
 

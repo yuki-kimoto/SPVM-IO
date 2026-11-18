@@ -10,7 +10,7 @@ SPVM::IO::Socket::UNIX - UNIX Domain Socket
 
 =head1 Description
 
-IO::Socket::UNIX class in L<SPVM> represents an UNIX domain socket.
+IO::Socket::UNIX class in L<SPVM> represents an UNIX domain socket. It is designed to work seamlessly with L<Go|SPVM::Go> and L<Go::Context|SPVM::Go::Context>.
 
 =head1 Usage
 

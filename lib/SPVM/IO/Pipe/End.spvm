@@ -27,8 +27,6 @@ class IO::Pipe::End extends IO::Handle {
     }
     
     my $fd = $self->{fd};
-    
-    $context = $self->get_context_with_deadline($context, 0);
     my $read_length = Go->gosched_pipe_read($context, $fd, $string, $length, $offset);
     
     return $read_length;
@@ -41,8 +39,6 @@ class IO::Pipe::End extends IO::Handle {
     }
     
     my $fd = $self->{fd};
-    
-    $context = $self->get_context_with_deadline($context, 1);
     my $write_length = Go->gosched_pipe_write($context, $fd, $string, $length, $offset);
     
     return $write_length;

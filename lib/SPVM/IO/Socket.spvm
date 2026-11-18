@@ -20,7 +20,6 @@ class IO::Socket extends IO::Handle {
   use Native::MethodCall;
   use Go::Time;
   use Go::Duration_1l;
-  use Go::Error::IOTimeout;
   
   # Enumerations
   protected enum {
@@ -127,8 +126,6 @@ class IO::Socket extends IO::Handle {
     my $accepted_sockaddr = (Sys::Socket::Sockaddr)undef;
     
     while (1) {
-      $context = $self->get_context_with_deadline($context, 0);
-      
       eval { $accepted_sockaddr = Sys->accept(\$accepted_fd, $fd); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_accept_again(Sys::Socket::Errno->errno);
@@ -165,7 +162,6 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{fd};
     my $recv_length = -1;
     while (1) {
-      $context = $self->get_context_with_deadline($context, 0);
       eval { $recv_length = Sys->recvfrom($fd, $buffer, $length, $flags, $from_ref, $offset); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_read_again(Sys::Socket::Errno->errno);
@@ -188,7 +184,6 @@ class IO::Socket extends IO::Handle {
     my $fd = $self->{fd};
     my $send_length = -1;
     while (1) {
-      $context = $self->get_context_with_deadline($context, 0);
       eval { $send_length = Sys->sendto($fd, $buffer, $flags, $to, $length, $offset); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_write_again(Sys::Socket::Errno->errno);
@@ -266,8 +261,6 @@ class IO::Socket extends IO::Handle {
     my $sockaddr = $self->{peer_sockaddr};
     
     while (1) {
-      $context = $self->get_context_with_deadline($context, 0);
-      
       eval { Sys->connect($fd, $sockaddr); }
       if ($@) {
         my $again = Sys::Socket::Errno->is_connect_again(Sys::Socket::Errno->errno);

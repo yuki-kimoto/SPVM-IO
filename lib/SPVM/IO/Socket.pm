@@ -4,11 +4,11 @@ package SPVM::IO::Socket;
 
 =head1 Name
 
-SPVM::IO::Socket - Sockets with Goroutines and Deadlines
+SPVM::IO::Socket - Sockets
 
 =head1 Description
 
-L<SPVM::IO::Socket> is an abstract class that represents a network socket. It is designed to work seamlessly with L<SPVM::Go> and provides powerful timeout management using absolute deadlines.
+IO::Socket in L<SPVM> is an abstract class that represents a network socket. It is designed to work seamlessly with L<Go|SPVM::Go> and L<Go::Context|SPVM::Go::Context>.
 
 =head1 Usage
   
@@ -18,13 +18,10 @@ L<SPVM::IO::Socket> is an abstract class that represents a network socket. It is
 
   # Create a simple TCP client
   my $socket = IO::Socket::IP->new({
+    Context => Go->bg,
     PeerAddr => "example.com",
     PeerPort => 80,
   });
-
-  # Set an absolute deadline for both read and write (5 seconds from now)
-  my $deadline = Go::Time->now->add(Go::Duration_1l->new_from_sec(5.0));
-  $socket->set_deadline($deadline);
 
   # Send a request
   my $payload = "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n";
@@ -67,33 +64,6 @@ B<Example:>
   });
   
   Go->gosched;
-
-=head2 Deadlines and Go::Context
-
-This class provides two types of absolute deadlines for precise I/O control, similar to Go's C<net.Conn>:
-
-=over 2
-
-=item 1. L</"ReadDeadline"> - A specific deadline for read operations (C<accept>, C<recv>, etc.).
-
-=item 2. L</"WriteDeadline"> - A specific deadline for write operations (C<connect>, C<send>, etc.).
-
-=back
-
-B<Example:>
-
-  # Limit only read operations to 3 seconds
-  my $read_limit = Go::Time->now->add(Go::Duration_1l->new_from_sec(3.0));
-  $socket->set_read_deadline($read_limit);
-  
-  eval {
-    $socket->sysread(Go->bg, $buffer);
-  };
-  if ($@ isa Go::Error::IOTimeout) {
-    # Handle the case where no data was received within 3 seconds
-  }
-
-These deadlines represent absolute points in time. You can also use L</"set_deadline"> to set both read and write deadlines to the same value at once. This mechanism is designed to be compatible with the cancellation patterns found in C<Go::Context>.
 
 =head1 Well Known Child Classes
 
@@ -163,13 +133,7 @@ The following options are available adding to the options for L<IO::Handle#init|
 
 =item * C<Proto> : Int = 0
 
-=item * C<Timeout> : Double = 0.0
-
 =item * C<Listen> : Int = 0
-
-=item * C<ReadDeadline> : L<Go::Time|SPVM::Go::Time> = undef
-
-=item * C<WriteDeadline> : L<Go::Time|SPVM::Go::Time> = undef
 
 =back
 
@@ -223,15 +187,11 @@ Exceptions thrown by L<Sys#socket|Sys/"socket"> method could be thrown.
 
 =head2 connect
 
-C<protected method connect : void ();>
+C<protected method connect : void ($context : L<Go::Context|SPVM::Go::Context>);>
 
-Performs connect operation.
-
-This method supports the inactivity L</"Timeout"> and the absolute L</"WriteDeadline">.
+Performs connect operation with a context $context.
 
 Exceptions:
-
-If the absolute deadline is reached, a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 Exceptions thrown by L<Sys#connect> method could be thrown.
 
@@ -265,17 +225,13 @@ Exceptions thrown by L<Sys#listen|SPVM::Sys|/"listen"> method could be thrown.
 
 =head2 accept
 
-C<method accept : L<IO::Socket|SPVM::IO::Socket> ($peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
+C<method accept : L<IO::Socket|SPVM::IO::Socket> ($context : L<Go::Context|SPVM::Go::Context>, $peer_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[] = undef);>
 
 Performs accept operation and returns a client socket object.
-
-This method respects the inactivity L</"Timeout"> and the absolute L</"ReadDeadline">.
 
 Returns a new client socket instance.
 
 Exceptions:
-
-If the absolute deadline is reached, a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 Exceptions thrown by L<Sys#accept|SPVM::Sys|/"accept"> method could be thrown.
 
@@ -307,39 +263,35 @@ If this socket is not opened or already closed, an exception is thrown.
 
 =head2 recvfrom
 
-C<method recvfrom : int ($context : Go::Context, $buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $offset : int = 0)>
+C<method recvfrom : int ($context : L<Go::Context|SPVM::Go::Context>, $buffer : mutable string, $length : int, $flags : int, $from_ref : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>[], $offset : int = 0)>
 
-Performs recvfrom operation and returns read length.
+Performs recvfrom operation and returns read length with a context $context.
 
-If no data is available, it yields until the socket is ready, the B<inactivity timeout> (L</"Timeout">) expires, or the B<read deadline> (L</"ReadDeadline">) is reached.
+If no data is available, it yields until the socket is ready.
 
 Exceptions:
-
-If the absolute deadline is reached, a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
 
 Exceptions thrown by L<Sys#recvfrom|SPVM::Sys/"recvfrom"> method could be thrown.
 
-Exceptions thrown by L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method could be thrown (e.g., L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout>).
+Exceptions thrown by L<Go#gosched_io_read|SPVM::Go/"gosched_io_read"> method could be thrown.
 
 =head2 sendto
 
-C<method sendto : int ($context : Go::Context, $buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $offset : int = 0);>
+C<method sendto : int ($context : L<Go::Context|SPVM::Go::Context>, $buffer : string, $flags : int, $to : L<Sys::Socket::Sockaddr|SPVM::Sys::Socket::Sockaddr>, $length : int = -1, $offset : int = 0);>
 
-Performs sendto operation and returns write length.
+Performs sendto operation and returns write length with a context.
 
-If the transmit buffer is full, it yields until space becomes available, the B<inactivity timeout> (L</"Timeout">) expires, or the B<write deadline> (L</"WriteDeadline">) is reached.
+If the transmit buffer is full, it yields until space becomes available.
 
 Exceptions:
 
-If the absolute deadline is reached, a L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout> exception is thrown.
-
 Exceptions thrown by L<Sys#sendto|SPVM::Sys/"sendto"> method could be thrown.
 
-Exceptions thrown by L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method could be thrown (e.g., L<Go::Error::IOTimeout|SPVM::Go::Error::IOTimeout>).
+Exceptions thrown by L<Go#gosched_io_write|SPVM::Go/"gosched_io_write"> method could be thrown.
 
 =head2 recv
 
-C<method recv : int ($context : Go::Context, $buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0);>
+C<method recv : int ($context : L<Go::Context|SPVM::Go::Context>, $buffer : mutable string, $length : int = -1, $flags : int = 0, $offset : int = 0);>
 
 Performs recv operation by calling L</"recvfrom"> with $from_ref set to undef.
 
@@ -349,7 +301,7 @@ Exceptions thrown by L</"recvfrom"> method could be thrown.
 
 =head2 send
 
-C<method send : int ($context : Go::Context, $buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0);>
+C<method send : int ($context : L<Go::Context|SPVM::Go::Context>, $buffer : string, $flags : int = 0, $length : int = -1, $offset : int = 0);>
 
 Performs send operation by calling L</"sendto"> with $to set to undef.
 
@@ -359,7 +311,7 @@ Exceptions thrown by L</"sendto"> method could be thrown.
 
 =head2 sysread
 
-C<method sysread : int ($context : Go::Context, $buffer : mutable string, $length : int = -1, $offset : int = 0);>
+C<method sysread : int ($context : L<Go::Context|SPVM::Go::Context>, $buffer : mutable string, $length : int = -1, $offset : int = 0);>
 
 Perform sysread operation by calling L</"recv"> with $flags set to 0.
 
@@ -369,7 +321,7 @@ Exceptions thrown by L</"recv"> method could be thrown.
 
 =head2 syswrite
 
-C<method syswrite : int ($context : Go::Context, $buffer : string, $length : int = -1, $offset : int = 0);>
+C<method syswrite : int ($context : L<Go::Context|SPVM::Go::Context>, $buffer : string, $length : int = -1, $offset : int = 0);>
 
 Perform syswrite operation by calling L</"send"> with $flags set to 0.
 

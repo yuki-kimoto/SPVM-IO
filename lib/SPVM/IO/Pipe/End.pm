@@ -4,11 +4,11 @@ package SPVM::IO::Pipe::End;
 
 =head1 Name
 
-SPVM::IO::Pipe::End - Pipe End with Goroutines and Deadlines
+SPVM::IO::Pipe::End - Pipe End
 
 =head1 Description
 
-L<SPVM::IO::Pipe::End> represents one end of a non-blocking pipe. It inherits from L<SPVM::IO::Handle> and is integrated with L<SPVM::Go> for cooperative scheduling and deadline management.
+IO::Pipe::End in L<SPVM> represents one end of a non-blocking pipe. It is designed to work seamlessly with L<Go|SPVM::Go> and L<Go::Context|SPVM::Go::Context>.
 
 =head1 Usage
   
@@ -52,11 +52,11 @@ Initializes the pipe end handle.
 
 =head2 sysread
 
-C<method sysread : int ($context : Go::Context, $string : mutable string, $length : int = -1,$offset : int = 0);>
+C<method sysread : int ($context : L<Go::Context|SPVM::Go::Context>, $string : mutable string, $length : int = -1,$offset : int = 0);>
 
 Performs non-blocking read operation on the pipe.
 
-If no data is available, it yields until the pipe is ready, the inactivity timeout expires, or the read deadline is reached.
+If no data is available, it yields until the pipe is ready.
 
 Exceptions:
 
@@ -64,11 +64,11 @@ Exceptions thrown by L<Go#gosched_pipe_read|SPVM::Go/"gosched_pipe_read"> method
 
 =head2 syswrite
 
-C<method syswrite : int ($context : Go::Context, $string : string, $length : int = -1,$offset : int = 0);>
+C<method syswrite : int ($context : L<Go::Context|SPVM::Go::Context>, $string : string, $length : int = -1,$offset : int = 0);>
 
 Performs non-blocking write operation on the pipe.
 
-If the buffer is full, it yields until space becomes available, the inactivity timeout expires, or the write deadline is reached.
+If the buffer is full, it yields until space becomes available.
 
 Exceptions:
 

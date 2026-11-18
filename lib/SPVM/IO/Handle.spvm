@@ -24,11 +24,7 @@ class IO::Handle {
   
   has blocking : protected byte;
   
-  has read_deadline : Go::Time;
-  
-  has write_deadline : Go::Time;
-  
-  has context : Go::Context;
+  has context : Go::Context; # This context is used only for connect method executed by new method.
   
   # Class Methods
   
@@ -43,15 +39,6 @@ class IO::Handle {
     
     $self->{blocking} = $options->get_or_default("Blocking", 1)->(byte);
     
-    if ($options->exists("ReadDeadline")) {
-      $self->{read_deadline} = $options->get("ReadDeadline")->(Go::Time);
-    }
-    
-    if ($options->exists("WriteDeadline")) {
-      $self->{write_deadline} = $options->get("WriteDeadline")->(Go::Time);
-    }
-    
-    # context
     if ($options->exists("Context")) {
       $self->{context} = $options->get("Context")->(Go::Context);
     }
@@ -61,8 +48,6 @@ class IO::Handle {
     my $option_names = [
       "FD",
       "Blocking",
-      "ReadDeadline",
-      "WriteDeadline",
       "Context",
     ];
     
@@ -141,39 +126,6 @@ class IO::Handle {
   method sync : void () { die "Not implemented."; }
   
   method truncate : void ($legnth : long) { die "Not implemented."; }
-  
-  protected method get_context_with_deadline : Go::Context ($context : Go::Context, $is_write : int) {
-    unless ($context) {
-      die "\$context must be defined.";
-    }
-    
-    my $deadline = $is_write ? $self->{write_deadline} : $self->{read_deadline};
-    
-    my $result_context = $deadline ? Go::Context->with_deadline($context, $deadline)->context : $context;
-    
-    return $result_context;
-  }
-  
-  method set_deadline : void ($deadline : Go::Time) {
-    $self->{read_deadline} = $deadline;
-    $self->{write_deadline} = $deadline;
-  }
-  
-  method read_deadline : Go::Time () {
-    return $self->{read_deadline};
-  }
-  
-  method set_read_deadline : void ($deadline : Go::Time) {
-    $self->{read_deadline} = $deadline;
-  }
-  
-  method write_deadline : Go::Time () {
-    return $self->{write_deadline};
-  }
-  
-  method set_write_deadline : void ($deadline : Go::Time) {
-    $self->{write_deadline} = $deadline;
-  }
   
   method DESTROY : void () {
     
