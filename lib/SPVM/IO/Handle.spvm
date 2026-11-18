@@ -207,6 +207,18 @@ class IO::Handle {
     return $final_duration;
   }
   
+  protected method get_context_with_deadline : Go::Context ($context : Go::Context, $is_write : int) {
+    unless ($context) {
+      die "\$context must be defined.";
+    }
+    
+    my $deadline = $is_write ? $self->{WriteDeadline} : $self->{ReadDeadline};
+    
+    my $result_context = $deadline ? Go::Context->with_deadline($context, $deadline)->context : $context;
+    
+    return $result_context;
+  }
+  
   method timeout : double () {
     return $self->{Timeout};
   }
