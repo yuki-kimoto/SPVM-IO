@@ -90,6 +90,21 @@ class TestCase::IO::Socket::IP {
         
       }
       
+      {
+        my $socket = IO::Socket::IP->new({PeerAddr => $LOCALHOST, PeerPort => $port, Context => Go->bg});
+        
+        unless ($socket is_type IO::Socket::IP) {
+          diag;
+          $success_ref->[0] = 0;
+        }
+        
+        unless ($socket->connected) {
+          diag;
+          $success_ref->[0] = 0;
+        }
+        
+      }
+      
       # Proto
       {
         # IPPROTO_UDP
