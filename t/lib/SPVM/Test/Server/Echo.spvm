@@ -45,6 +45,7 @@ class Test::Server::Echo {
     my $LocalAddr = $self->{LocalAddr};
     
     my $server_options_h = Hash->new({
+      Context => Go->bg,
       LocalAddr => $LocalAddr,
       Listen => 0,
     });

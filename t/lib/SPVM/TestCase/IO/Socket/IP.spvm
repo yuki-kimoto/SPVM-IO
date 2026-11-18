@@ -41,6 +41,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Listen    => 5,
         ReuseAddr => 1,
@@ -210,6 +211,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Listen    => 5,
         ReuseAddr => 1,
@@ -281,6 +283,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Listen    => 5,
         ReuseAddr => 1,
@@ -352,6 +355,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Listen    => 5,
         ReuseAddr => 1,
@@ -424,6 +428,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Listen    => 5,
         ReuseAddr => 1,
@@ -497,6 +502,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Listen    => 5,
         ReuseAddr => 1,
@@ -568,6 +574,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Listen    => 5,
         ReuseAddr => 1,
@@ -639,6 +646,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
@@ -728,6 +736,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
@@ -815,6 +824,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
@@ -887,6 +897,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
@@ -959,6 +970,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
@@ -1032,6 +1044,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
@@ -1104,6 +1117,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         Domain => SOCKET_C->AF_INET6,
         LocalAddr => $LOCALHOST_V6,
         Listen    => 5,
@@ -1175,6 +1189,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Listen    => 5,
         ReuseAddr => 1,
@@ -1261,6 +1276,7 @@ class TestCase::IO::Socket::IP {
       $success_ref->[0] = 1;
       
       my $server = Test::Server::Echo->new({
+        Context => Go->bg,
         LocalAddr => "::1",
       });
       
@@ -1381,6 +1397,7 @@ class TestCase::IO::Socket::IP {
       
       {
         my $server_socket = IO::Socket::IP->new({
+          Context => Go->bg,
           LocalAddr => $LOCALHOST,
           Listen    => 5,
           ReuseAddr => 1,
@@ -1485,6 +1502,7 @@ class TestCase::IO::Socket::IP {
       
       {
         my $server_socket = IO::Socket::IP->new({
+          Context => Go->bg,
           LocalAddr => $LOCALHOST,
           Listen    => 5,
           ReuseAddr => 1,
@@ -1581,6 +1599,7 @@ class TestCase::IO::Socket::IP {
       Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
         eval {
           my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
             LocalAddr => $LOCALHOST,
             Listen => 5,
             ReuseAddr => 1,
@@ -1648,6 +1667,7 @@ class TestCase::IO::Socket::IP {
       Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
         eval {
           my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
             LocalAddr => $LOCALHOST,
             Listen => 5,
             ReuseAddr => 1,
@@ -1711,6 +1731,7 @@ class TestCase::IO::Socket::IP {
     Go->go([$success_ref : int[]] method : void () {
       eval {
         my $listen_socket = IO::Socket::IP->new({
+          Context => Go->bg,
           LocalAddr => $LOCALHOST,
           Listen => 5,
           ReuseAddr => 1,
@@ -1749,6 +1770,7 @@ class TestCase::IO::Socket::IP {
       Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
         eval {
           my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
             LocalAddr => $LOCALHOST,
             Listen => 5,
             ReuseAddr => 1,
@@ -1812,6 +1834,7 @@ class TestCase::IO::Socket::IP {
       Go->go([$port_ref : int[], $start_server_ch : Go::Channel] method : void () {
         eval {
           my $listen_socket = IO::Socket::IP->new({
+            Context => Go->bg,
             LocalAddr => $LOCALHOST,
             Listen => 5,
             ReuseAddr => 1,
@@ -1885,6 +1908,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Type      => SOCKET_C->SOCK_DGRAM,
       });
@@ -2064,6 +2088,7 @@ class TestCase::IO::Socket::IP {
       });
       
       my $server_socket = IO::Socket::IP->new({
+        Context => Go->bg,
         LocalAddr => $LOCALHOST,
         Type      => SOCKET_C->SOCK_DGRAM,
       });
@@ -2108,6 +2133,7 @@ class TestCase::IO::Socket::IP {
       
       {
         my $socket = IO::Socket::IP->new({
+          Context => Go->bg,
           Type => SOCKET_C->SOCK_DGRAM,
         });
         

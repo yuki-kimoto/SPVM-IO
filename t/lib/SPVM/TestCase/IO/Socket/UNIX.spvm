@@ -35,6 +35,7 @@ class TestCase::IO::Socket::UNIX {
       });
       
       my $server_socket = IO::Socket::UNIX->new({
+        Context => Go->bg,
         Local => $sock_path,
         Listen    => 0,
       });
@@ -143,6 +144,7 @@ class TestCase::IO::Socket::UNIX {
       });
       
       my $server_socket = IO::Socket::UNIX->new({
+        Context => Go->bg,
         Local => $server_sock_path,
         Type  => SOCKET_C->SOCK_DGRAM,
       });
@@ -220,6 +222,7 @@ class TestCase::IO::Socket::UNIX {
       
       {
         my $socket = IO::Socket::UNIX->new({
+          Context => Go->bg,
           Local => $client_sock_path,
           Peer  => $server_sock_path,
           Type  => SOCKET_C->SOCK_DGRAM,
