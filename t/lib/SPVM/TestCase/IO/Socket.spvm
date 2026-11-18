@@ -392,7 +392,9 @@ class TestCase::IO::Socket {
     
     return 1;
   }
-  
+
+=pod TODO
+
   static method timeout : int () {
     
     my $success_ref = [0];
@@ -436,7 +438,7 @@ class TestCase::IO::Socket {
     
     return 1;
   }
-  
+
   static method set_timeout : int () {
     
     my $success_ref = [0];
@@ -482,6 +484,8 @@ class TestCase::IO::Socket {
     return 1;
   }
   
+=cut
+
   static method connected : int () {
     
     my $success_ref = [0];

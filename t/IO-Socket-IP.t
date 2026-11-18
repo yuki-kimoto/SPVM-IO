@@ -30,9 +30,8 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
 ok(SPVM::TestCase::IO::Socket::IP->accept);
 
-ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value);
-
 # TODO
+# ok(SPVM::TestCase::IO::Socket::IP->accept_timeout_only_field_value);
 # ok(SPVM::TestCase::IO::Socket::IP->read_timeout);
 
 ok(SPVM::TestCase::IO::Socket::IP->udp);

@@ -1377,7 +1377,9 @@ class TestCase::IO::Socket::IP {
     
     return 1;
   }
-  
+
+=pod TODO
+
   static method accept_timeout_only_field_value : int () {
     
     my $success_ref = [1];
@@ -1551,7 +1553,9 @@ class TestCase::IO::Socket::IP {
     
     return 1;
   }
-  
+
+=cut
+
   static method connect_deadline : int () {
     
     my $success_ref = [1];

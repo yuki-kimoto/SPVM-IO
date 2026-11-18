@@ -23,9 +23,9 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
   
   ok(SPVM::TestCase::IO::Socket->extra);
   
-  ok(SPVM::TestCase::IO::Socket->timeout);
-  
-  ok(SPVM::TestCase::IO::Socket->set_timeout);
+  # TODO
+  # ok(SPVM::TestCase::IO::Socket->timeout);
+  # ok(SPVM::TestCase::IO::Socket->set_timeout);
   
   ok(SPVM::TestCase::IO::Socket->connected);
   

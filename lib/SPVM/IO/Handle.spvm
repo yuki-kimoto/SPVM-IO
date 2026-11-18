@@ -24,8 +24,6 @@ class IO::Handle {
   
   has Blocking : protected byte;
   
-  has Timeout : protected double;
-  
   has ReadDeadline : Go::Time;
   
   has WriteDeadline : Go::Time;
@@ -45,10 +43,6 @@ class IO::Handle {
     
     $self->{Blocking} = $options->get_or_default("Blocking", 1)->(byte);
     
-    if ($options->exists("Timeout")) {
-      $self->{Timeout} = $options->get("Timeout")->(double);
-    }
-    
     if ($options->exists("ReadDeadline")) {
       $self->{ReadDeadline} = $options->get("ReadDeadline")->(Go::Time);
     }
@@ -67,7 +61,6 @@ class IO::Handle {
     my $option_names = [
       "FD",
       "Blocking",
-      "Timeout",
       "ReadDeadline",
       "WriteDeadline",
       "Context",
@@ -149,51 +142,6 @@ class IO::Handle {
   
   method truncate : void ($legnth : long) { die "Not implemented."; }
   
-  # Calculates the remaining duration based on Deadline and Timeout fields.
-  protected method get_remaining_duration : Go::Duration_1l ($is_write : int) {
-    my $deadline = $is_write ? $self->{WriteDeadline} : $self->{ReadDeadline};
-    
-    my $timeout_sec = $self->{Timeout};
-    
-    unless ($timeout_sec >= 0) {
-      die "[Unexpected Error]\$timeout_sec must be non-negative value.";
-    }
-    
-    my $final_duration : Go::Duration_1l;
-    
-    if ($deadline) {
-      my $now = Go::Time->now;
-      
-      if ($now->after($deadline)) {
-        die Go::Error::IOTimeout "The deadline has been exceeded.";
-      }
-      else {
-        if ($timeout_sec == 0) {
-          $final_duration = $deadline->sub($now);
-        }
-        else {
-          my $timeout_deadline = $now->add_sec($timeout_sec);
-          
-          if ($timeout_deadline->after($deadline)) {
-            $final_duration = $deadline->sub($now);
-          }
-          else {
-            $final_duration = Go::Duration_1l->new_from_sec($timeout_sec);
-          }
-        }
-      }
-      
-      unless ($final_duration->{nsec} > 0) {
-        die Go::Error::IOTimeout "The deadline has been exceeded.";
-      }
-    }
-    else {
-      $final_duration = Go::Duration_1l->new_from_sec($timeout_sec);
-    }
-    
-    return $final_duration;
-  }
-  
   protected method get_context_with_deadline : Go::Context ($context : Go::Context, $is_write : int) {
     unless ($context) {
       die "\$context must be defined.";
@@ -204,14 +152,6 @@ class IO::Handle {
     my $result_context = $deadline ? Go::Context->with_deadline($context, $deadline)->context : $context;
     
     return $result_context;
-  }
-  
-  method timeout : double () {
-    return $self->{Timeout};
-  }
-  
-  method set_timeout : void ($timeout : double) {
-    $self->{Timeout} = $timeout;
   }
   
   method set_deadline : void ($deadline : Go::Time) {

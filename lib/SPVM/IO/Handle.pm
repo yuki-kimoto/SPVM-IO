@@ -38,12 +38,6 @@ C<has Blocking : protected byte;>
 
 A flag for blocking IO.
 
-=head2 Timeout
-
-C<has Timeout : protected double;>
-
-An B<inactivity timeout> in seconds for read, write, connect, and accept operations. This represents the maximum allowed idle time for a single I/O operation.
-
 =head2 Context
 
 C<has Context : L<Go::Context|SPVM::Go::Context>;>
@@ -173,18 +167,6 @@ C<method truncate : void ($legnth : long);>
 Trancates the stream associated with the file descriptoer L</"FD">.
 
 This method is implemented in a child class.
-
-=head2 timeout
-
-C<method timeout : double ();>
-
-Returns the value of L</"Timeout"> field.
-
-=head2 set_timeout
-
-C<method set_timeout : void ($timeout : double);>
-
-Sets L</"Timeout"> field to $timeout. This value is used as an inactivity timeout.
 
 =head2 set_deadline
 
